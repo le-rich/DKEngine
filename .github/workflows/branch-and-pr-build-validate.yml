@@ -2,9 +2,13 @@ name: Branch and PR Build Validate
 
 on:
   push:
+    branches:
+      - '*'  # This will run the workflow on any branch push
     branches-ignore:
       - master  # Ignore pushes to master, run on all other branches
   pull_request:
+    branches:
+      - '*'  # This will run the workflow on any branch when a PR is opened or updated
     branches-ignore:
       - master  # Ignore pull requests targeting master, run on all other branches
 
