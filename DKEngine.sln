@@ -11,6 +11,49 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Physics", "Physics\Physics.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UI", "UI\UI.vcxproj", "{2E825CB0-DE55-4F0B-A560-9548A33442A0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{686626F8-3F9F-495E-A323-8787ED7222C6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "glad", "glad", "{A82E50DC-0C10-42C5-9F66-FE24647683E9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "include", "include", "{41FBA118-C03C-4CFB-9344-8FBF159A5CCB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "glad", "glad", "{E732953F-7E79-47A3-96FC-1847D8F9D421}"
+	ProjectSection(SolutionItems) = preProject
+		External\glad\include\glad\glad.h = External\glad\include\glad\glad.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "KHR", "KHR", "{45A1CB56-6883-40C5-95C1-6ACAF5B02803}"
+	ProjectSection(SolutionItems) = preProject
+		External\glad\include\KHR\khrplatform.h = External\glad\include\KHR\khrplatform.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E18016C4-24EC-4710-BBBE-2650C267FF73}"
+	ProjectSection(SolutionItems) = preProject
+		External\glad\src\glad.c = External\glad\src\glad.c
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GLFW", "GLFW", "{B49FD6CF-D2BD-4935-9D9F-ECB3D42C6700}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "x64", "x64", "{7AB1CA7A-8E41-4E03-929E-A1A5FFAE8E16}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "include", "include", "{189B5BC6-551C-4DA4-96A0-770F1AFD7178}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GLFW", "GLFW", "{0C09A3E5-D920-4612-9ACE-A29EBFC15AC7}"
+	ProjectSection(SolutionItems) = preProject
+		External\GLFW\x64\include\GLFW\glfw3.h = External\GLFW\x64\include\GLFW\glfw3.h
+		External\GLFW\x64\include\GLFW\glfw3native.h = External\GLFW\x64\include\GLFW\glfw3native.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{0D8AE5B9-E68A-4E30-8B91-9E78891D4BBA}"
+	ProjectSection(SolutionItems) = preProject
+		External\GLFW\x64\lib\glfw3.lib = External\GLFW\x64\lib\glfw3.lib
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{33BB77DC-3ED6-4640-A376-52F4F02303F2}"
+	ProjectSection(SolutionItems) = preProject
+		External\glad\lib\glad.lib = External\glad\lib\glad.lib
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -54,6 +97,19 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A82E50DC-0C10-42C5-9F66-FE24647683E9} = {686626F8-3F9F-495E-A323-8787ED7222C6}
+		{41FBA118-C03C-4CFB-9344-8FBF159A5CCB} = {A82E50DC-0C10-42C5-9F66-FE24647683E9}
+		{E732953F-7E79-47A3-96FC-1847D8F9D421} = {41FBA118-C03C-4CFB-9344-8FBF159A5CCB}
+		{45A1CB56-6883-40C5-95C1-6ACAF5B02803} = {41FBA118-C03C-4CFB-9344-8FBF159A5CCB}
+		{E18016C4-24EC-4710-BBBE-2650C267FF73} = {A82E50DC-0C10-42C5-9F66-FE24647683E9}
+		{B49FD6CF-D2BD-4935-9D9F-ECB3D42C6700} = {686626F8-3F9F-495E-A323-8787ED7222C6}
+		{7AB1CA7A-8E41-4E03-929E-A1A5FFAE8E16} = {B49FD6CF-D2BD-4935-9D9F-ECB3D42C6700}
+		{189B5BC6-551C-4DA4-96A0-770F1AFD7178} = {7AB1CA7A-8E41-4E03-929E-A1A5FFAE8E16}
+		{0C09A3E5-D920-4612-9ACE-A29EBFC15AC7} = {189B5BC6-551C-4DA4-96A0-770F1AFD7178}
+		{0D8AE5B9-E68A-4E30-8B91-9E78891D4BBA} = {7AB1CA7A-8E41-4E03-929E-A1A5FFAE8E16}
+		{33BB77DC-3ED6-4640-A376-52F4F02303F2} = {A82E50DC-0C10-42C5-9F66-FE24647683E9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B539A217-C268-4BB2-B1E8-624C71DE29E3}
