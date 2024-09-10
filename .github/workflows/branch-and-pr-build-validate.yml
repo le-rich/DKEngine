@@ -1,0 +1,29 @@
+name: Branch and PR Build Validate
+
+on:
+  push:
+    branches-ignore: [ "master" ]      # Except master
+  pull_request: 
+    branches-ignore: [ "master" ]  # Except master
+  workflow_dispatch:
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Visual Studio
+      uses: microsoft/setup-msbuild@v1
+      with:
+        vs-version: 'latest'  # Use the latest version of Visual Studio
+
+    - name: Build Solution
+      # Build the solution using MSBuild
+      run: msbuild DKEngine.sln /p:Configuration=Release
+
