@@ -4,11 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Core", "Core\Core.vcxproj", "{6830DF2E-2DA1-4BF7-B475-6C45523DED54}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FDF1F4CB-0084-47A9-8BAE-921D65A2BCF2} = {FDF1F4CB-0084-47A9-8BAE-921D65A2BCF2}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Rendering", "Rendering\Rendering.vcxproj", "{FDF1F4CB-0084-47A9-8BAE-921D65A2BCF2}"
-	ProjectSection(ProjectDependencies) = postProject
-		{6830DF2E-2DA1-4BF7-B475-6C45523DED54} = {6830DF2E-2DA1-4BF7-B475-6C45523DED54}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Physics", "Physics\Physics.vcxproj", "{A90F7323-C5BE-4E28-BBF0-2ED7C7223D82}"
 EndProject

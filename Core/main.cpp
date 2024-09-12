@@ -3,6 +3,139 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
+
+#define ASSERT(x) if (!(x)) __debugbreak();
+// wrap openGL functions 
+#define GLCall(x) GLClearError();\
+    x;\
+    ASSERT(GLLogCall(#x, __FILE__, __LINE__)) // #x makes x a string. Prints error code, file, and line with error.
+
+static void GLClearError()
+{
+    while (glGetError() != GL_NO_ERROR);
+}
+
+static bool GLLogCall(const char* function, const char* file, int line)
+{
+    while (GLenum error = glGetError()) // will run until error is false
+    {
+        std::cout << "[OpenGL Error] (" << error << "): " << function <<
+            " " << file << ":" << line << std::endl;
+        return false;
+    }
+    return true;
+}
+
+static unsigned int  CompileShader(unsigned int type, const std::string& source)
+{
+    unsigned int id = glCreateShader(type);
+    const char* src = source.c_str();
+
+    // Specifies the source of this shader
+    // needs a shader (the id of it), # of source codes, ptr to the shader string ptr, how much of the code to run (nullptr for not whole string)
+    GLCall(glShaderSource(id, 1, &src, nullptr));
+    GLCall(glCompileShader(id));
+
+    int result;
+    // Pass: a shader (UID), query the status, pass address
+    GLCall(glGetShaderiv(id, GL_COMPILE_STATUS, &result));
+    if (result == GL_FALSE) // did not compile successfully
+    {
+        int length;
+        GLCall(glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length));
+        char* message = (char*)alloca(length * sizeof(char));
+        GLCall(glGetShaderInfoLog(id, length, &length, message));
+        std::cout << "Failed to compile" <<
+            (type == GL_VERTEX_SHADER ? "vertex" : "fragment") << " shader!" << std::endl;
+        std::cout << message << std::endl;
+        GLCall(glDeleteShader(id));
+        return 0;
+    }
+
+    return id;
+}
+
+// returns a UID for this shader
+static unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
+{
+    unsigned int program = glCreateProgram();
+    // Create shaders
+    unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
+    unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
+    // Attach shaders to program (link files to program)
+    GLCall(glAttachShader(program, vs));
+    GLCall(glAttachShader(program, fs));
+    GLCall(glLinkProgram(program));
+    GLCall(glValidateProgram(program));
+    // Delete the shaders since they have been linked to the program
+    GLCall(glDeleteShader(vs));
+    GLCall(glDeleteShader(fs));
+
+    return program;
+}
+
+void drawTriangle()
+{
+    float positions[6] = {
+        -0.5f, -0.5f,
+         0.0f,  0.5f,
+         0.5f, -0.5f
+    };
+
+    // Create and bind a Vertex Array Object (VAO)
+    GLuint vao;
+    GLCall(glGenVertexArrays(1, &vao));
+    GLCall(glBindVertexArray(vao));
+
+    // send vertex buffer to GPU
+    unsigned int vbo;
+    GLCall(glGenBuffers(1, &vbo));
+    GLCall(glBindBuffer(GL_ARRAY_BUFFER, vbo));
+    GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW));
+
+    std::string vertexShader =
+        "#version 330 core\n"
+        "\n"
+        "layout(location = 0) in vec4 position;\n"
+        "\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = position;\n"
+        "}\n";
+    std::string fragmentShader =
+        "#version 330 core\n"
+        "\n"
+        "layout(location = 0) out vec4 color;\n"
+        "\n"
+        "void main()\n"
+        "{\n"
+        "    color = vec4(1.0, 0.0, 0.0, 1.0);\n"
+        "}\n";
+    unsigned int shader = CreateShader(vertexShader, fragmentShader);
+    GLCall(glUseProgram(shader));
+
+    // layout of buffer
+    GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (void*)0));
+    GLCall(glEnableVertexAttribArray(0));
+
+    // Unbind the VAO to avoid unintended modifications
+    glBindVertexArray(0);
+    
+    // drawing
+    GLCall(glBindVertexArray(vao));
+    GLCall(glDrawArrays(GL_TRIANGLES, 0, 3));
+    GLCall(glBindVertexArray(vao));
+
+    // cleanup
+    GLCall(glDeleteBuffers(1, &vbo));
+    GLCall(glDeleteVertexArrays(1, &vao));
+    GLCall(glDeleteProgram(shader));
+}
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
@@ -11,6 +144,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 int main(int argc, char* argv[])
 {
 	std::cout << "Do you know what DK Stands for? Donkey Kong? Nah. Drift King." << std::endl;
+	
 
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -39,6 +173,8 @@ int main(int argc, char* argv[])
 
 	while (!glfwWindowShouldClose(window))
 	{
+		glClear(GL_COLOR_BUFFER_BIT);
+		drawTriangle();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
