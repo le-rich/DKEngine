@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -80,10 +78,8 @@ static unsigned int CreateShader(const std::string& vertexShader, const std::str
     return program;
 }
 
-void drawSquare()
+void draw(const Shape& shape)
 {
-    Square square;
-
     // Create and bind a Vertex Array Object (VAO)
     GLuint vao;
     GLCall(glGenVertexArrays(1, &vao));
@@ -93,14 +89,15 @@ void drawSquare()
     GLuint vbo;
     GLCall(glGenBuffers(1, &vbo));
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, vbo));
-    GLCall(glBufferData(GL_ARRAY_BUFFER, square.vertices.size() * sizeof(float), square.vertices.data(), GL_STATIC_DRAW));
+    GLCall(glBufferData(GL_ARRAY_BUFFER, shape.vertices.size() * sizeof(float), shape.vertices.data(), GL_STATIC_DRAW));
 
     // send index buffer to GPU
     GLuint ibo; // stands for index buffer object
     GLCall(glGenBuffers(1, &ibo));
     GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
-    GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, square.indices.size() * sizeof(float), square.indices.data(), GL_STATIC_DRAW));
+    GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, shape.indices.size() * sizeof(float), shape.indices.data(), GL_STATIC_DRAW));
 
+    // create vertex & fragment shader programs
     std::string vertexShader =
         "#version 330 core\n"
         "\n"
@@ -131,67 +128,7 @@ void drawSquare()
 
     // drawing
     GLCall(glBindVertexArray(vao));
-    GLCall(glDrawElements(square.drawMode, square.indices.size(), GL_UNSIGNED_INT, nullptr));
-    GLCall(glBindVertexArray(vao));
-
-    // cleanup
-    GLCall(glDeleteBuffers(1, &vbo));
-    GLCall(glDeleteVertexArrays(1, &vao));
-    GLCall(glDeleteProgram(shader));
-}
-
-void drawTriangle()
-{
-    Triangle triangle;
-
-    // Create and bind a Vertex Array Object (VAO)
-    GLuint vao;
-    GLCall(glGenVertexArrays(1, &vao));
-    GLCall(glBindVertexArray(vao));
-
-    // send vertex buffer to GPU
-    GLuint vbo;
-    GLCall(glGenBuffers(1, &vbo));
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, vbo));
-    GLCall(glBufferData(GL_ARRAY_BUFFER, triangle.vertices.size() * sizeof(float), triangle.vertices.data(), GL_STATIC_DRAW));
-
-    // send index buffer to GPU
-    GLuint ibo; // stands for index buffer object
-    GLCall(glGenBuffers(1, &ibo));
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
-    GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, triangle.indices.size() * sizeof(float), triangle.indices.data(), GL_STATIC_DRAW));
-
-    std::string vertexShader =
-        "#version 330 core\n"
-        "\n"
-        "layout(location = 0) in vec4 position;\n"
-        "\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Position = position;\n"
-        "}\n";
-    std::string fragmentShader =
-        "#version 330 core\n"
-        "\n"
-        "layout(location = 0) out vec4 color;\n"
-        "\n"
-        "void main()\n"
-        "{\n"
-        "    color = vec4(1.0, 0.0, 0.0, 1.0);\n"
-        "}\n";
-    unsigned int shader = CreateShader(vertexShader, fragmentShader);
-    GLCall(glUseProgram(shader));
-
-    // layout of buffer
-    GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (void*)0));
-    GLCall(glEnableVertexAttribArray(0));
-
-    // Unbind the VAO to avoid unintended modifications
-    glBindVertexArray(0);
-    
-    // drawing
-    GLCall(glBindVertexArray(vao));
-    GLCall(glDrawElements(triangle.drawMode, triangle.indices.size(), GL_UNSIGNED_INT, nullptr));
+    GLCall(glDrawElements(shape.drawMode, shape.indices.size(), GL_UNSIGNED_INT, nullptr));
     GLCall(glBindVertexArray(vao));
 
     // cleanup
@@ -235,10 +172,13 @@ int main(int argc, char* argv[])
 
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+    Triangle triangle;
+    Square square;
+
 	while (!glfwWindowShouldClose(window))
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
-		drawSquare();
+        draw(square);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
