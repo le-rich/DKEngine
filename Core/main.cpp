@@ -8,9 +8,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
-int main(int argc, char* argv[])
-{
-	std::cout << "Do you know what DK Stands for? Donkey Kong? Nah. Drift King." << std::endl;
+
+int run_glfw() {
 
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -25,7 +24,7 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 	glfwMakeContextCurrent(window);
-	
+
 	// Load GLAD
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
@@ -44,6 +43,21 @@ int main(int argc, char* argv[])
 	}
 
 	glfwTerminate();
+}
+
+
+
+
+int main(int argc, char* argv[])
+{
+
+	std::cout << "Do you know what DK Stands for? Donkey Kong? Nah. Drift King." << std::endl;
+
+	// TODO: Make this a call to the Render Project
+	//run_glfw();
+
+
+
 	return 0;
 }
 
