@@ -8,6 +8,8 @@
 #include <string>
 #include <sstream>
 
+#include "primitives.h"
+
 #define ASSERT(x) if (!(x)) __debugbreak();
 // wrap openGL functions 
 #define GLCall(x) GLClearError();\
@@ -80,6 +82,8 @@ static unsigned int CreateShader(const std::string& vertexShader, const std::str
 
 void drawSquare()
 {
+    Square square;
+
     float positions[] = {
        -0.5f, -0.5f, // 0
         0.5f, -0.5f, // 1
@@ -101,13 +105,13 @@ void drawSquare()
     GLuint vbo;
     GLCall(glGenBuffers(1, &vbo));
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, vbo));
-    GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW));
+    GLCall(glBufferData(GL_ARRAY_BUFFER, square.vertices.size() * sizeof(float), square.vertices.data(), GL_STATIC_DRAW));
 
     // send index buffer to GPU
     GLuint ibo; // stands for index buffer object
     GLCall(glGenBuffers(1, &ibo));
     GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
-    GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(float), indices, GL_STATIC_DRAW));
+    GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, square.indices.size() * sizeof(float), square.indices.data(), GL_STATIC_DRAW));
 
     std::string vertexShader =
         "#version 330 core\n"
@@ -139,7 +143,7 @@ void drawSquare()
 
     // drawing
     GLCall(glBindVertexArray(vao));
-    GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+    GLCall(glDrawElements(square.drawMode, 6, GL_UNSIGNED_INT, nullptr));
     GLCall(glBindVertexArray(vao));
 
     // cleanup
@@ -150,12 +154,7 @@ void drawSquare()
 
 void drawTriangle()
 {
-    // tri vertices
-    float positions[] = {
-        -0.5f, -0.5f,
-         0.0f,  0.5f,
-         0.5f, -0.5f
-    };
+    Triangle triangle;
 
     // Create and bind a Vertex Array Object (VAO)
     GLuint vao;
@@ -166,7 +165,7 @@ void drawTriangle()
     GLuint vbo;
     GLCall(glGenBuffers(1, &vbo));
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, vbo));
-    GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW));
+    GLCall(glBufferData(GL_ARRAY_BUFFER, triangle.vertices.size() * sizeof(float), triangle.vertices.data(), GL_STATIC_DRAW));
 
     std::string vertexShader =
         "#version 330 core\n"
@@ -198,7 +197,7 @@ void drawTriangle()
     
     // drawing
     GLCall(glBindVertexArray(vao));
-    GLCall(glDrawArrays(GL_TRIANGLES, 0, 3));
+    GLCall(glDrawArrays(triangle.drawMode, 0, 3));
     GLCall(glBindVertexArray(vao));
 
     // cleanup
@@ -241,6 +240,8 @@ int main(int argc, char* argv[])
 	glViewport(0, 0, 800, 600);
 
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+    
 
 	while (!glfwWindowShouldClose(window))
 	{
