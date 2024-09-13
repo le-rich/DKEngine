@@ -1,7 +1,6 @@
 #include <cstdint>
 #include <queue>
 
-using namespace std;
 using Entity = uint32_t;
 
 
@@ -27,7 +26,7 @@ public:
 
 private:
 	const Entity MAX_ENTITIES = 3000;
-	queue<Entity> entities{};
+	std::queue<Entity> entities{};
 
 
-}
+};
