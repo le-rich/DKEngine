@@ -11,6 +11,10 @@ void Particle::setMass(real mass) {
 	inverseMass = (real)1.0 / mass;
 }
 
+real Particle::getKineticEnergy() {
+	return 0.5 * (1.0f / inverseMass) * velocity.magnitude();
+}
+
 
 void Particle::integrate(real duration) {
 

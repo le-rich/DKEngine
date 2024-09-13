@@ -12,6 +12,7 @@ namespace AE86 {
 		void setInverseMass(real invMass);
 		void setMass(real mass);
 		void integrate(real duration);
+		real getKineticEnergy();
 	protected:
 		/**
 		 * Holds the linear positino of the particle
