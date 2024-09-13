@@ -84,18 +84,6 @@ void drawSquare()
 {
     Square square;
 
-    float positions[] = {
-       -0.5f, -0.5f, // 0
-        0.5f, -0.5f, // 1
-        0.5f,  0.5f, // 2
-       -0.5f,  0.5f  // 3
-    };
-
-    GLuint indices[] = {
-        0, 1, 2,
-        2, 3, 0
-    };
-
     // Create and bind a Vertex Array Object (VAO)
     GLuint vao;
     GLCall(glGenVertexArrays(1, &vao));
@@ -143,7 +131,7 @@ void drawSquare()
 
     // drawing
     GLCall(glBindVertexArray(vao));
-    GLCall(glDrawElements(square.drawMode, 6, GL_UNSIGNED_INT, nullptr));
+    GLCall(glDrawElements(square.drawMode, square.indices.size(), GL_UNSIGNED_INT, nullptr));
     GLCall(glBindVertexArray(vao));
 
     // cleanup
@@ -166,6 +154,12 @@ void drawTriangle()
     GLCall(glGenBuffers(1, &vbo));
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, vbo));
     GLCall(glBufferData(GL_ARRAY_BUFFER, triangle.vertices.size() * sizeof(float), triangle.vertices.data(), GL_STATIC_DRAW));
+
+    // send index buffer to GPU
+    GLuint ibo; // stands for index buffer object
+    GLCall(glGenBuffers(1, &ibo));
+    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
+    GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, triangle.indices.size() * sizeof(float), triangle.indices.data(), GL_STATIC_DRAW));
 
     std::string vertexShader =
         "#version 330 core\n"
@@ -197,7 +191,7 @@ void drawTriangle()
     
     // drawing
     GLCall(glBindVertexArray(vao));
-    GLCall(glDrawArrays(triangle.drawMode, 0, 3));
+    GLCall(glDrawElements(triangle.drawMode, triangle.indices.size(), GL_UNSIGNED_INT, nullptr));
     GLCall(glBindVertexArray(vao));
 
     // cleanup
@@ -214,7 +208,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 int main(int argc, char* argv[])
 {
 	std::cout << "Do you know what DK Stands for? Donkey Kong? Nah. Drift King." << std::endl;
-	
+
 
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -240,8 +234,6 @@ int main(int argc, char* argv[])
 	glViewport(0, 0, 800, 600);
 
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-    
 
 	while (!glfwWindowShouldClose(window))
 	{

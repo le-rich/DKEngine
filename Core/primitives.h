@@ -8,10 +8,10 @@
 struct Shape
 {
     std::vector<float> vertices;
-    std::vector<int> indices;
+    std::vector<GLuint> indices;
     GLenum drawMode;
 
-    Shape(const std::vector<float>& vertices, const std::vector<int>& indices, GLenum mode)
+    Shape(const std::vector<float>& vertices, const std::vector<GLuint>& indices, GLenum mode)
         : vertices(vertices), indices(indices), drawMode(mode) {}
 };
 
@@ -22,7 +22,10 @@ struct Triangle : public Shape
         -0.5f, -0.5f,
          0.0f,  0.5f,
          0.5f, -0.5f
-        }, {}, GL_TRIANGLES) {}
+    }, 
+    {
+        0, 1, 2
+    }, GL_TRIANGLES) {}
 };
 
 // Derived struct for Square
