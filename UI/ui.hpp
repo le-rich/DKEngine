@@ -1,17 +1,19 @@
 #include <iostream>
 
-using namespace std;
-
 
 class UI {
 
 public:
 	void initialize() {
-		cout << "Physics init" << endl;
+		std::cout << "Physics init" << std::endl;
 	}
 
 	void draw() {
-		cout << "Drawing UI" << endl;
+		std::cout << "Drawing UI" << std::endl;
+	}
+
+	void Update() {
+		std::cout << "UI update" << std::endl;
 	}
 
 };

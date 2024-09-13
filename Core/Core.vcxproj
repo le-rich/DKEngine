@@ -117,7 +117,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\richa\Documents\DKEngine\External\GLFW\x64\include;C:\Users\richa\Documents\DKEngine\External\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\UI\;$(SolutionDir)\Rendering\;$(SolutionDir)\Physics\;C:\Users\richa\Documents\DKEngine\External\GLFW\x64\include;C:\Users\richa\Documents\DKEngine\External\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

@@ -5,14 +5,18 @@
 class Render {
 
 public:
-	
+
 	void initialize() {
-		cout << "Physics init" << endl;
+		std::cout << "Physics init" << std::endl;
 	}
 
 	void render() {
-		cout << "Drawing UI" << endl;
+		std::cout << "Drawing UI" << std::endl;
 	}
 
-}
+
+	void Update() {
+		std::cout << "Render update" << std::endl;
+	}
+};
 

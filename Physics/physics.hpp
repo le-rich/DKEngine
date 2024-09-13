@@ -1,18 +1,15 @@
 
 
-
-
 class Physics {
 
 public:
 
 	void initialize() {
-		cout << "Physics init" << endl;
+		std::cout << "Physics init" << std::endl;
 	}
 
 	void Update() {
-		cout << "Updating" << endl;
+		std::cout << "Updating Physics" << std::endl;
 	}
-
 
 };
