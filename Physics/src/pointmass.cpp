@@ -33,7 +33,6 @@ void PointMass::integrate(real duration) {
 	// update linear velocity from acceleration
 	velocity.addScaledVector(resultingAcc, duration);
 
-
 	// impose drag/damping
-	velocity.addScaledVector(resultingAcc, duration);
+	velocity *= real_pow(damping, duration);
 }
