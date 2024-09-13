@@ -3,6 +3,11 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <ui.hpp>
+#include <physics.hpp>
+#include <render.hpp>
+
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
@@ -10,7 +15,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 
 int run_glfw() {
-
+	 
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -54,7 +59,9 @@ int main(int argc, char* argv[])
 	std::cout << "Do you know what DK Stands for? Donkey Kong? Nah. Drift King." << std::endl;
 
 	// TODO: Make this a call to the Render Project
-	//run_glfw();
+	run_glfw();
+
+
 
 
 

@@ -1,4 +1,18 @@
 #include <iostream>
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+
+
+class Render {
+
+public:
+	
+	void initialize() {
+		cout << "Physics init" << endl;
+	}
+
+	void render() {
+		cout << "Drawing UI" << endl;
+	}
+
+}
+
