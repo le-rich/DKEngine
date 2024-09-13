@@ -78,9 +78,80 @@ static unsigned int CreateShader(const std::string& vertexShader, const std::str
     return program;
 }
 
+void drawSquare()
+{
+    float positions[] = {
+       -0.5f, -0.5f, // 0
+        0.5f, -0.5f, // 1
+        0.5f,  0.5f, // 2
+       -0.5f,  0.5f  // 3
+    };
+
+    GLuint indices[] = {
+        0, 1, 2,
+        2, 3, 0
+    };
+
+    // Create and bind a Vertex Array Object (VAO)
+    GLuint vao;
+    GLCall(glGenVertexArrays(1, &vao));
+    GLCall(glBindVertexArray(vao));
+
+    // send vertex buffer to GPU
+    GLuint vbo;
+    GLCall(glGenBuffers(1, &vbo));
+    GLCall(glBindBuffer(GL_ARRAY_BUFFER, vbo));
+    GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW));
+
+    // send index buffer to GPU
+    GLuint ibo; // stands for index buffer object
+    GLCall(glGenBuffers(1, &ibo));
+    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
+    GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(float), indices, GL_STATIC_DRAW));
+
+    std::string vertexShader =
+        "#version 330 core\n"
+        "\n"
+        "layout(location = 0) in vec4 position;\n"
+        "\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = position;\n"
+        "}\n";
+    std::string fragmentShader =
+        "#version 330 core\n"
+        "\n"
+        "layout(location = 0) out vec4 color;\n"
+        "\n"
+        "void main()\n"
+        "{\n"
+        "    color = vec4(1.0, 0.0, 0.0, 1.0);\n"
+        "}\n";
+    GLuint shader = CreateShader(vertexShader, fragmentShader);
+    GLCall(glUseProgram(shader));
+
+    // layout of buffer
+    GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (void*)0));
+    GLCall(glEnableVertexAttribArray(0));
+
+    // Unbind the VAO to avoid unintended modifications
+    glBindVertexArray(0);
+
+    // drawing
+    GLCall(glBindVertexArray(vao));
+    GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+    GLCall(glBindVertexArray(vao));
+
+    // cleanup
+    GLCall(glDeleteBuffers(1, &vbo));
+    GLCall(glDeleteVertexArrays(1, &vao));
+    GLCall(glDeleteProgram(shader));
+}
+
 void drawTriangle()
 {
-    float positions[6] = {
+    // tri vertices
+    float positions[] = {
         -0.5f, -0.5f,
          0.0f,  0.5f,
          0.5f, -0.5f
@@ -92,7 +163,7 @@ void drawTriangle()
     GLCall(glBindVertexArray(vao));
 
     // send vertex buffer to GPU
-    unsigned int vbo;
+    GLuint vbo;
     GLCall(glGenBuffers(1, &vbo));
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, vbo));
     GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW));
@@ -174,7 +245,7 @@ int main(int argc, char* argv[])
 	while (!glfwWindowShouldClose(window))
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
-		drawTriangle();
+		drawSquare();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
