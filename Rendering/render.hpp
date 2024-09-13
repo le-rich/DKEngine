@@ -7,7 +7,7 @@ class Render {
 public:
 
 	void initialize() {
-		std::cout << "Physics init" << std::endl;
+		std::cout << "Render init" << std::endl;
 	}
 
 	void render() {
