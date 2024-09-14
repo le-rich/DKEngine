@@ -76,6 +76,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>include/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -90,6 +91,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>include/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -104,13 +106,11 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\External\glad\include;..\External\GLFW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glad.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\External\glad\lib;..\External\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -121,17 +121,42 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\External\glad\include;..\External\GLFW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glad.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\External\glad\lib;..\External\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Objects\Camera.h" />
+    <ClInclude Include="include\Buffers\FrameBufferr.h" />
+    <ClInclude Include="include\Buffers\IndexBuffer.h" />
+    <ClInclude Include="include\Buffers\UniformBuffer.h" />
+    <ClInclude Include="include\Buffers\VertexBuffer.h" />
+    <ClInclude Include="include\Resources\Material.h" />
+    <ClInclude Include="include\Resources\Mesh.h" />
+    <ClInclude Include="include\Resources\Shader.h" />
+    <ClInclude Include="include\Resources\Texture.h" />
+    <ClInclude Include="include\Data\Vertex.h" />
+    <ClInclude Include="include\Objects\Light.h" />
+    <ClInclude Include="include\Buffers\VertexArray.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Objects\Camera.cpp" />
+    <ClCompile Include="src\Objects\Light.cpp" />
+    <ClCompile Include="src\Resources\Material.cpp" />
+    <ClCompile Include="src\Resources\Mesh.cpp" />
+    <ClCompile Include="src\Resources\Shader.cpp" />
+    <ClCompile Include="src\Buffers\FrameBufferr.cpp" />
+    <ClCompile Include="src\Buffers\IndexBuffer.cpp" />
+    <ClCompile Include="src\Buffers\UniformBuffer.cpp" />
+    <ClCompile Include="src\Buffers\VertexBuffer.cpp" />
+    <ClCompile Include="src\Resources\Texture.cpp" />
+    <ClCompile Include="src\Buffers\VertexArray.cpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
