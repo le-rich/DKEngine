@@ -59,6 +59,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{33BB77DC-3ED
 		External\glad\lib\glad.lib = External\glad\lib\glad.lib
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ECS", "ECS", "{7402A3F7-CEA0-4AB6-A87E-98490C8189C8}"
+	ProjectSection(SolutionItems) = preProject
+		Core\ECS\Component.h = Core\ECS\Component.h
+		Core\ECS\Entity.h = Core\ECS\Entity.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Managers", "Managers", "{297F51F6-04BF-4638-85ED-B0C60674381F}"
+	ProjectSection(SolutionItems) = preProject
+		Core\ECS\Managers\ComponentManager.h = Core\ECS\Managers\ComponentManager.h
+		Core\ECS\Managers\EntityManager.h = Core\ECS\Managers\EntityManager.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utils", "Utils", "{A78A39B7-D458-4428-9481-ADDB4EDD5E95}"
+	ProjectSection(SolutionItems) = preProject
+		Core\ECS\Utils\IDUtils.h = Core\ECS\Utils\IDUtils.h
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -115,6 +132,8 @@ Global
 		{0C09A3E5-D920-4612-9ACE-A29EBFC15AC7} = {189B5BC6-551C-4DA4-96A0-770F1AFD7178}
 		{0D8AE5B9-E68A-4E30-8B91-9E78891D4BBA} = {7AB1CA7A-8E41-4E03-929E-A1A5FFAE8E16}
 		{33BB77DC-3ED6-4640-A376-52F4F02303F2} = {A82E50DC-0C10-42C5-9F66-FE24647683E9}
+		{297F51F6-04BF-4638-85ED-B0C60674381F} = {7402A3F7-CEA0-4AB6-A87E-98490C8189C8}
+		{A78A39B7-D458-4428-9481-ADDB4EDD5E95} = {7402A3F7-CEA0-4AB6-A87E-98490C8189C8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B539A217-C268-4BB2-B1E8-624C71DE29E3}

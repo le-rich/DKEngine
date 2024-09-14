@@ -2,6 +2,8 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <Entity.h>
+#include <Component.h>
 
 
 #include <thread>
@@ -96,8 +98,6 @@ int main(int argc, char* argv[])
 	//render_thread.join();
 	physics_thread.join();
 	ui_thread.join();
-
-
 
 	return 0;
 }

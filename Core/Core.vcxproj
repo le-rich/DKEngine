@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>..\External\glad\include;..\External\GLFW\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\Sepeh\source\repos\DKEngine\Core\ECS;..\External\glad\include;..\External\GLFW\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\External\GLFW\x64\lib;$(LibraryPath)</LibraryPath>
     <PublicIncludeDirectories>..\External\GLFW\include;..\External\glad\include;$(PublicIncludeDirectories)</PublicIncludeDirectories>
     <AllProjectIncludesArePublic>true</AllProjectIncludesArePublic>
@@ -117,7 +117,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\UI\;$(SolutionDir)\Rendering\;$(SolutionDir)\Physics\;C:\Users\richa\Documents\DKEngine\External\GLFW\x64\include;C:\Users\richa\Documents\DKEngine\External\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\UI\;$(SolutionDir)\Rendering\;$(SolutionDir)\Core\ECS\;$(SolutionDir)\Physics\;C:\Users\richa\Documents\DKEngine\External\GLFW\x64\include;C:\Users\richa\Documents\DKEngine\Core\ECS;C:\Users\richa\Documents\DKEngine\External\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
