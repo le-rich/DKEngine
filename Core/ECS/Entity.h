@@ -1,5 +1,7 @@
-#include <Utils/IDUtils.h>
-#include <Managers/ComponentManager.h>
+#pragma once
+
+#include "Utils/IDUtils.h"
+#include "Managers/ComponentManager.h"
 
 template<typename T>
 class Entity {
@@ -7,10 +9,8 @@ class Entity {
     // unique id for entity
     static const ObjectID ENTITY_ID;
 
-    // ComponentArray attachedComponents;
-
     // retrieve id of entity
-    static get_entity_id 
+    static ObjectID GetEntityId()
     {
         return ENTITY_ID;
     }

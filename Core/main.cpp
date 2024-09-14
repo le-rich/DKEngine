@@ -1,16 +1,15 @@
 #include <iostream>
 
+#include "Component.h"
+#include "Entity.h"
+#include "ui.h"
+#include "physics.h"
+#include "render.h"
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <Entity.h>
-#include <Component.h>
-
-
-#include <thread>
 #include <mutex>
-#include <ui.h>
-#include <physics.h>
-#include <render.h>
+#include <thread>
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
