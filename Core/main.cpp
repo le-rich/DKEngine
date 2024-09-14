@@ -30,7 +30,7 @@ static bool GLLogCall(const char* function, const char* file, int line)
     return true;
 }
 
-static unsigned int  CompileShader(unsigned int type, const std::string& source)
+static unsigned int CompileShader(unsigned int type, const std::string& source)
 {
     unsigned int id = glCreateShader(type);
     const char* src = source.c_str();
@@ -172,6 +172,7 @@ int main(int argc, char* argv[])
 
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+    // Get primitive shapes
     Triangle triangle;
     Square square;
 
