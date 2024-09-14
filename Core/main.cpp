@@ -6,9 +6,9 @@
 
 #include <thread>
 #include <mutex>
-#include <ui.hpp>
-#include <physics.hpp>
-#include <render.hpp>
+#include <ui.h>
+#include <physics.h>
+#include <render.h>
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)

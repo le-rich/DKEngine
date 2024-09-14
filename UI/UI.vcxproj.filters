@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ui.hpp">
+    <ClInclude Include="ui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

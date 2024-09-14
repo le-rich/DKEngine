@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="physics.hpp">
+    <ClInclude Include="physics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
