@@ -1,7 +1,10 @@
-#include <iostream>
-
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
+#include <iostream>
+
+#include "Renderer.h"
+#include "Primitives.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -11,6 +14,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 int main(int argc, char* argv[])
 {
 	std::cout << "Do you know what DK Stands for? Donkey Kong? Nah. Drift King." << std::endl;
+
 
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -37,8 +41,16 @@ int main(int argc, char* argv[])
 
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+    // primitive shapes
+    Triangle triangle;
+    Square square;
+
+	Renderer renderer = Renderer();
+
 	while (!glfwWindowShouldClose(window))
 	{
+		glClear(GL_COLOR_BUFFER_BIT);
+		renderer.Draw(triangle); // draw tri or square
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
