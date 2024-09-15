@@ -117,7 +117,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\Rendering\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>/include;$(SolutionDir)/Rendering/include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -135,7 +135,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\Rendering\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>/include;$(SolutionDir)/Rendering/include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -149,6 +149,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Physics\Physics.vcxproj">
+      <Project>{a90f7323-c5be-4e28-bbf0-2ed7c7223d82}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Rendering\Rendering.vcxproj">
+      <Project>{fdf1f4cb-0084-47a9-8bae-921d65a2bcf2}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
