@@ -5,11 +5,11 @@
 #include <string>
 #include <sstream>
 
-#include <Primitives.h>
-#include <Renderer.h>
+#include "Primitives.h"
+#include "Renderer.h"
 
 // Static member initialization
-const std::string Renderer::vertexShader =
+const std::string Renderer::VERTEX_SHADER =
 "#version 330 core\n"
 "layout(location = 0) in vec4 position;\n"
 "void main()\n"
@@ -17,7 +17,7 @@ const std::string Renderer::vertexShader =
 "    gl_Position = position;\n"
 "}\n";
 
-const std::string Renderer::fragmentShader =
+const std::string Renderer::FRAGMENT_SHADER =
 "#version 330 core\n"
 "layout(location = 0) out vec4 color;\n"
 "void main()\n"
@@ -36,7 +36,7 @@ Renderer::~Renderer() {
 }
 
 void Renderer::Init() {
-    shaderProgram = CreateShader(vertexShader, fragmentShader);
+    shaderProgram = CreateShader(VERTEX_SHADER, FRAGMENT_SHADER);
 }
 
 void Renderer::Draw(const Shape& shape) {

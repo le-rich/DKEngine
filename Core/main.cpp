@@ -2,15 +2,9 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
-#include <fstream>
-#include <string>
-#include <sstream>
 
-//#include "../Rendering/include/Primitives.h"
-//#include "../Rendering/include/Renderer.h"
-
-#include <Renderer.h>
-#include <Primitives.h>
+#include "Renderer.h"
+#include "Primitives.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -56,7 +50,7 @@ int main(int argc, char* argv[])
 	while (!glfwWindowShouldClose(window))
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
-		renderer.Draw(triangle);
+		renderer.Draw(triangle); // draw tri or square
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

@@ -4,8 +4,8 @@
 #include <glad/glad.h>
 #include <string>
 
-#include <Primitives.h>
-#include <Renderer.h>
+#include "Primitives.h"
+#include "Renderer.h"
 
 // Macro definitions for error handling
 #define ASSERT(x) if (!(x)) __debugbreak();
@@ -16,8 +16,8 @@
 class Renderer
 {
 public:
-    static const std::string vertexShader;
-    static const std::string fragmentShader;
+    static const std::string VERTEX_SHADER;
+    static const std::string FRAGMENT_SHADER;
 
     GLuint shaderProgram;
 
