@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(800, 600, "DKEngine", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(1280, 720, "DKEngine", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -42,13 +42,11 @@ int main(int argc, char* argv[])
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 130");
-
-	bool exampleCheckboxValue = false;
-	float exampleSliderValue = 0.0;
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -62,18 +60,38 @@ int main(int argc, char* argv[])
 
 		//opengl drawing goes here
 
-		//New ImGui Window
-		ImGui::Begin("Testing ImGui Window");
-		ImGui::Text("Body text for window");
-		ImGui::Checkbox("Example Checkbox", &exampleCheckboxValue);
-		ImGui::SliderFloat("Example Slider", &exampleSliderValue, -1.0f, 1.0f);
+		ImGuiViewport* viewport = ImGui::GetMainViewport();
+		ImGui::SetNextWindowPos(viewport->WorkPos);
+		ImGui::SetNextWindowSize(viewport->WorkSize);
+		ImGui::SetNextWindowViewport(viewport->ID);
+
+		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+
+		ImGui::Begin("Dockspace Main", nullptr, window_flags);
+
+		ImGuiID dockspace_id = ImGui::GetID("DockSpace");
+		ImGui::DockSpace(dockspace_id);
+
 		ImGui::End();
 
-		//Second ImGui Window
-		ImGui::Begin("Second Window");
-		ImGui::Text("Body text for window 2");
-		ImGui::Checkbox("Example Checkbox", &exampleCheckboxValue);
-		ImGui::SliderFloat("Example Slider", &exampleSliderValue, -1.0f, 1.0f);
+		ImGui::Begin("Hierarchy");
+		ImGui::Text("Hierarchy goes here");
+		ImGui::End();
+
+		ImGui::Begin("Viewport");
+		ImGui::Text("Viewport goes here");
+		ImGui::End();
+
+		ImGui::Begin("Browser");
+		ImGui::Text("Browser goes here");
+		ImGui::End();
+
+		ImGui::Begin("Inspector");
+		ImGui::Text("Inspector goes here");
+		ImGui::End();
+
+		ImGui::Begin("Console");
+		ImGui::Text("Console goes here");
 		ImGui::End();
 
 		//Render ImGui windows
