@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../ECS/Entity.h"
+#include "../include/Entity.h"
 
 class ComponentManager{
 

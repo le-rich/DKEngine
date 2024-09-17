@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "include/Component.h"
-#include "include/Entity.h"
+#include "Component.h"
+#include "Entity.h"
 #include "ui.h"
 #include "physics.h"
 #include "render.h"
@@ -56,14 +56,14 @@ int run_glfw() {
 
 
 
-void RunPhysics(Physics& physx) {
+void run_physics(Physics& physx) {
 	while (true) {
 		physx.Update();
 		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 	}
 }
 
-void RunUI(UI& ui) {
+void run_ui(UI& ui) {
 	while (true) {
 		ui.Update();
 		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
@@ -78,26 +78,25 @@ int main(int argc, char* argv[])
 	std::cout << "Do you know what DK Stands for? Donkey Kong? Nah. Drift King." << std::endl;
 
 
-	// TODO - By Rendering Team Make this a call to the Render Project
+	// TODO: Make this a call to the Render Project
 	//run_glfw();
 
 	UI* ui = new UI();
 	Physics* physx = new Physics();
 	//Render render;
 
-	//ui->initialize();
-	//physx->initialize();
+	ui->initialize();
+	physx->initialize();
 	//render.initialize();
 
 
 	//std::thread render_thread(run_glfw);
-	std::thread physics_thread(RunPhysics, std::ref(*physx));
-	std::thread ui_thread(RunUI, std::ref(*ui));
+	std::thread physics_thread(run_physics, std::ref(physx));
+	std::thread ui_thread(run_ui, std::ref(ui));
 
 	//render_thread.join();
 	physics_thread.join();
 	ui_thread.join();
-
 
 	return 0;
 }

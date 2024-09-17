@@ -6,11 +6,15 @@ class Render {
 
 public:
 
+	Render() {
+
+	}
+
 	void initialize() {
 		std::cout << "Render init" << std::endl;
 	}
 
-	void render() {
+	void RunRender() {
 		std::cout << "Drawing UI" << std::endl;
 	}
 

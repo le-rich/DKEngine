@@ -4,11 +4,16 @@
 class UI {
 
 public:
+
+	UI() {
+
+	}
+
 	void initialize() {
 		std::cout << "Physics init" << std::endl;
 	}
 
-	void draw() {
+	void Draw() {
 		std::cout << "Drawing UI" << std::endl;
 	}
 
