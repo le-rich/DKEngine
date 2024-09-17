@@ -93,7 +93,7 @@ int main(int argc, char* argv[])
 
 
 	// TODO - By Rendering Team Make this a call to the Render Project
-	//run_glfw();
+	run_glfw();
 
 	UI* ui = new UI();
 	Physics* physx = new Physics();
