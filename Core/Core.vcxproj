@@ -72,6 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>..\External\glad\include;..\External\GLFW\include;..\Rendering\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\Sepeh\source\repos\DKEngine\Core\ECS;..\External\glad\include;..\External\GLFW\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\External\GLFW\x64\lib;$(LibraryPath)</LibraryPath>
     <PublicIncludeDirectories>..\External\GLFW\include;..\External\glad\include;..\Rendering\include;$(PublicIncludeDirectories)</PublicIncludeDirectories>
     <AllProjectIncludesArePublic>true</AllProjectIncludesArePublic>
@@ -118,6 +119,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>/include;$(SolutionDir)/Rendering/include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\UI\;$(SolutionDir)\Rendering\;$(SolutionDir)\Core\include\;$(SolutionDir)\Physics\;C:\Users\richa\Documents\DKEngine\External\GLFW\x64\include;C:\Users\richa\Documents\DKEngine\Core\include;C:\Users\richa\Documents\DKEngine\External\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
