@@ -4,6 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Core", "Core\Core.vcxproj", "{6830DF2E-2DA1-4BF7-B475-6C45523DED54}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2E825CB0-DE55-4F0B-A560-9548A33442A0} = {2E825CB0-DE55-4F0B-A560-9548A33442A0}
+		{A90F7323-C5BE-4E28-BBF0-2ED7C7223D82} = {A90F7323-C5BE-4E28-BBF0-2ED7C7223D82}
+		{FDF1F4CB-0084-47A9-8BAE-921D65A2BCF2} = {FDF1F4CB-0084-47A9-8BAE-921D65A2BCF2}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Rendering", "Rendering\Rendering.vcxproj", "{FDF1F4CB-0084-47A9-8BAE-921D65A2BCF2}"
 EndProject
@@ -52,6 +57,23 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{33BB77DC-3ED6-4640-A376-52F4F02303F2}"
 	ProjectSection(SolutionItems) = preProject
 		External\glad\lib\glad.lib = External\glad\lib\glad.lib
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "include", "include", "{DA9855ED-1E38-4611-8EFB-ADE7A765F16B}"
+	ProjectSection(SolutionItems) = preProject
+		Core\include\Component.h = Core\include\Component.h
+		Core\include\Entity.h = Core\include\Entity.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Managers", "Managers", "{97C3B76B-0FF7-450B-8B80-43F6DBBF50A5}"
+	ProjectSection(SolutionItems) = preProject
+		Core\include\Managers\ComponentManager.h = Core\include\Managers\ComponentManager.h
+		Core\include\Managers\EntityManager.h = Core\include\Managers\EntityManager.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utils", "Utils", "{E0177D2F-5F41-47C0-9E03-B95D12FD01E2}"
+	ProjectSection(SolutionItems) = preProject
+		Core\include\Utils\IDUtils.h = Core\include\Utils\IDUtils.h
 	EndProjectSection
 EndProject
 Global
@@ -110,6 +132,8 @@ Global
 		{0C09A3E5-D920-4612-9ACE-A29EBFC15AC7} = {189B5BC6-551C-4DA4-96A0-770F1AFD7178}
 		{0D8AE5B9-E68A-4E30-8B91-9E78891D4BBA} = {7AB1CA7A-8E41-4E03-929E-A1A5FFAE8E16}
 		{33BB77DC-3ED6-4640-A376-52F4F02303F2} = {A82E50DC-0C10-42C5-9F66-FE24647683E9}
+		{97C3B76B-0FF7-450B-8B80-43F6DBBF50A5} = {DA9855ED-1E38-4611-8EFB-ADE7A765F16B}
+		{E0177D2F-5F41-47C0-9E03-B95D12FD01E2} = {DA9855ED-1E38-4611-8EFB-ADE7A765F16B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B539A217-C268-4BB2-B1E8-624C71DE29E3}
