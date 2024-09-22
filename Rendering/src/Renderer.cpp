@@ -1,3 +1,7 @@
+/*
+@TODO: [COM-18] Refactor Renderer attributes & operations to design on Figjam board.
+*/
+
 #include <glad/glad.h>
 
 #include <iostream>
@@ -8,37 +12,17 @@
 #include "Primitives.h"
 #include "Renderer.h"
 
-// Static member initialization
-const std::string Renderer::VERTEX_SHADER =
-"#version 330 core\n"
-"layout(location = 0) in vec4 position;\n"
-"void main()\n"
-"{\n"
-"    gl_Position = position;\n"
-"}\n";
-
-const std::string Renderer::FRAGMENT_SHADER =
-"#version 330 core\n"
-"layout(location = 0) out vec4 color;\n"
-"void main()\n"
-"{\n"
-"    color = vec4(1.0, 0.0, 0.0, 1.0);\n"
-"}\n";
-
-// Constructor
+// Constructor.
 Renderer::Renderer() {
     Init();
 }
 
-// Destructor
-Renderer::~Renderer() {
-    GLCall(glDeleteProgram(shaderProgram));
-}
+// Destructor.
+Renderer::~Renderer() {}
 
-void Renderer::Init() {
-    shaderProgram = CreateShader(VERTEX_SHADER, FRAGMENT_SHADER);
-}
+void Renderer::Init() {}
 
+// Draws the given shape on the window.
 void Renderer::Draw(const Shape& shape) {
     // Create and bind a Vertex Array Object (VAO)
     GLuint vao;
@@ -57,8 +41,11 @@ void Renderer::Draw(const Shape& shape) {
     GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
     GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, shape.indices.size() * sizeof(float), shape.indices.data(), GL_STATIC_DRAW));
 
+    ShaderProgramSource source = ParseShader("../Rendering/Shaders/default.glsl");
+    GLuint shader = CreateShader(source.VertexSource, source.FragmentSource);
+
     // Use the shader program
-    GLCall(glUseProgram(shaderProgram));
+    GLCall(glUseProgram(shader));
 
     // Layout of buffer
     GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (void*)0));
@@ -75,24 +62,25 @@ void Renderer::Draw(const Shape& shape) {
     // Cleanup
     GLCall(glDeleteBuffers(1, &vbo));
     GLCall(glDeleteVertexArrays(1, &vao));
-    GLCall(glDeleteProgram(shaderProgram));
+    GLCall(glDeleteProgram(shader));
 }
 
+// Returns a ID of the compiled shader program on the GPU.
 unsigned int Renderer::CompileShader(unsigned int type, const std::string& source) {
     unsigned int id = glCreateShader(type);
-    const char* src = source.c_str();
+    const char* src = source.c_str(); // ptr to beginning of data of string
 
     GLCall(glShaderSource(id, 1, &src, nullptr));
     GLCall(glCompileShader(id));
 
     int result;
     GLCall(glGetShaderiv(id, GL_COMPILE_STATUS, &result));
-    if (result == GL_FALSE) {
+    if (result == GL_FALSE) { // did not compile successfully
         int length;
         GLCall(glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length));
         char* message = (char*)alloca(length * sizeof(char));
         GLCall(glGetShaderInfoLog(id, length, &length, message));
-        std::cout << "Failed to compile" <<
+        std::cout << "Failed to compile " <<
             (type == GL_VERTEX_SHADER ? "vertex" : "fragment") << " shader!" << std::endl;
         std::cout << message << std::endl;
         GLCall(glDeleteShader(id));
@@ -102,6 +90,7 @@ unsigned int Renderer::CompileShader(unsigned int type, const std::string& sourc
     return id;
 }
 
+// Returns a shader program.
 unsigned int Renderer::CreateShader(const std::string& vertexShader, const std::string& fragmentShader) {
     unsigned int program = glCreateProgram();
     // Create shaders
@@ -119,10 +108,38 @@ unsigned int Renderer::CreateShader(const std::string& vertexShader, const std::
     return program;
 }
 
+// Returns vertex and fragment shader programs from a given path to a file.
+Renderer::ShaderProgramSource Renderer::ParseShader(const std::string& filepath) {
+    std::ifstream stream(filepath);
+    std::string line;
+    std::stringstream ss[2]; // stores both vertex and fragment shader
+    ShaderType type = ShaderType::NONE;
+
+    while (getline(stream, line))
+    {
+        // finds type of shader from custom # tags
+        if (line.find("#shader") != std::string::npos) // if not invalid string pos since .find returns position of string (size_t)
+        {
+            if (line.find("vertex") != std::string::npos)
+                type = ShaderType::VERTEX;
+            else if (line.find("fragment") != std::string::npos)
+                type = ShaderType::FRAGMENT;
+        }
+        else
+        {
+            ss[(int)type] << line << '\n'; // dump the contents of the shader program
+        }
+    }
+
+    return { ss[0].str(), ss[1].str() };
+}
+
+// Iterates through OpenGL error flags until there are no more.
 void GLClearError() {
     while (glGetError() != GL_NO_ERROR);
 }
 
+// Prints to console any openGL error flags with a corresponding function, file, and line number.
 bool GLLogCall(const char* function, const char* file, int line) {
     while (GLenum error = glGetError()) {
         std::cout << "[OpenGL Error] (" << error << "): " << function << " " << file << ":" << line << std::endl;

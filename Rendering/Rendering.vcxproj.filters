@@ -99,4 +99,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\default.glsl" />
+  </ItemGroup>
 </Project>
