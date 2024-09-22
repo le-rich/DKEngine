@@ -8,36 +8,15 @@
 #include "Primitives.h"
 #include "Renderer.h"
 
-// Static member initialization
-const std::string Renderer::VERTEX_SHADER =
-"#version 330 core\n"
-"layout(location = 0) in vec4 position;\n"
-"void main()\n"
-"{\n"
-"    gl_Position = position;\n"
-"}\n";
-
-const std::string Renderer::FRAGMENT_SHADER =
-"#version 330 core\n"
-"layout(location = 0) out vec4 color;\n"
-"void main()\n"
-"{\n"
-"    color = vec4(1.0, 0.0, 0.0, 1.0);\n"
-"}\n";
-
 // Constructor
 Renderer::Renderer() {
     Init();
 }
 
 // Destructor
-Renderer::~Renderer() {
-    GLCall(glDeleteProgram(shaderProgram));
-}
+Renderer::~Renderer() {}
 
-void Renderer::Init() {
-    shaderProgram = CreateShader(VERTEX_SHADER, FRAGMENT_SHADER);
-}
+void Renderer::Init() {}
 
 void Renderer::Draw(const Shape& shape) {
     // Create and bind a Vertex Array Object (VAO)
@@ -57,8 +36,11 @@ void Renderer::Draw(const Shape& shape) {
     GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
     GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, shape.indices.size() * sizeof(float), shape.indices.data(), GL_STATIC_DRAW));
 
+    ShaderProgramSource source = ParseShader("../Rendering/Shaders/default.glsl");
+    GLuint shader = CreateShader(source.VertexSource, source.FragmentSource);
+
     // Use the shader program
-    GLCall(glUseProgram(shaderProgram));
+    GLCall(glUseProgram(shader));
 
     // Layout of buffer
     GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (void*)0));
@@ -75,7 +57,7 @@ void Renderer::Draw(const Shape& shape) {
     // Cleanup
     GLCall(glDeleteBuffers(1, &vbo));
     GLCall(glDeleteVertexArrays(1, &vao));
-    GLCall(glDeleteProgram(shaderProgram));
+    GLCall(glDeleteProgram(shader));
 }
 
 unsigned int Renderer::CompileShader(unsigned int type, const std::string& source) {
@@ -117,6 +99,31 @@ unsigned int Renderer::CreateShader(const std::string& vertexShader, const std::
     GLCall(glDeleteShader(fs));
 
     return program;
+}
+
+Renderer::ShaderProgramSource Renderer::ParseShader(const std::string& filepath) {
+    std::ifstream stream(filepath);
+    std::string line;
+    std::stringstream ss[2]; // stores both vertex and fragment shader
+    ShaderType type = ShaderType::NONE;
+
+    while (getline(stream, line))
+    {
+        // finds the type of the shader
+        if (line.find("#shader") != std::string::npos) // if not invalid string pos since .find returns position of string (size_t)
+        {
+            if (line.find("vertex") != std::string::npos)
+                type = ShaderType::VERTEX;
+            else if (line.find("fragment") != std::string::npos)
+                type = ShaderType::FRAGMENT;
+        }
+        else
+        {
+            ss[(int)type] << line << '\n'; // dump the contents of the shader program
+        }
+    }
+
+    return { ss[0].str(), ss[1].str() };
 }
 
 void GLClearError() {

@@ -172,6 +172,9 @@
     <ClCompile Include="src\Resources\Texture.cpp" />
     <ClCompile Include="src\Buffers\VertexArray.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\default.glsl" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
