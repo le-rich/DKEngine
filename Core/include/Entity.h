@@ -7,20 +7,39 @@ template<typename T>
 class Entity {
 
     // unique id for entity
-    static const ObjectID ENTITY_ID;
+    ObjectID ENTITY_ID;
+
+    // changeable display id for entity
+    std::string EntityDisplayID;
+
+    // attached component manager
+    ComponentManager* compMngr;
+
 
     // retrieve id of entity
-    static ObjectID GetEntityId()
-    {
+    ObjectID GetEntityId() {
         return ENTITY_ID;
     }
 
+    // retrieve display id of entity
+    std::string GetDisplayID()
+    {
+        return EntityDisplayID;
+    }
+
+    // set display id of entity
+    void SetDisplayID(std::string newID)
+    {
+        EntityDisplayID = newID;
+    }
+
     // default constructor
-    Entity(const ObjectID signature, ComponentManager* compMngr)
+    Entity(ObjectID signature, ComponentManager* compMngr)
     {
         // init code
     }
 
+    // default destructor
     ~Entity(){
         // destructor code        
     }
