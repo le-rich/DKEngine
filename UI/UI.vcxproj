@@ -157,6 +157,8 @@
     <ClInclude Include="..\External\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\External\imgui\imstb_textedit.h" />
     <ClInclude Include="..\External\imgui\imstb_truetype.h" />
+    <ClInclude Include="MenuBar.h" />
+    <ClInclude Include="Windows.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

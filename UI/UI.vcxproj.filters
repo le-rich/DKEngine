@@ -74,9 +74,10 @@
     <ClInclude Include="..\External\imgui\imstb_textedit.h">
       <Filter>Header Files\imgui</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="ui.h">
+    <ClInclude Include="MenuBar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Windows.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
