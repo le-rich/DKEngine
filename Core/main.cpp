@@ -24,8 +24,9 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 
 
-int run_glfw() {
-	 
+int run_glfw()
+{
+	// Window setup, Can extract to separate window class
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -38,6 +39,8 @@ int run_glfw() {
 		glfwTerminate();
 		return -1;
 	}
+
+	// Apparently the window can only be with one context at a time????
 	glfwMakeContextCurrent(window);
 
 	// Load GLAD
@@ -51,20 +54,35 @@ int run_glfw() {
 
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    // primitive shapes
-    Triangle triangle;
-    Square square;
+	// primitive shapes
+	// Rendering will move these
+	Triangle triangle;
+	Square square;
 
 	Renderer renderer = Renderer();
 
+	// We want some check like this visible to the other threads
+	// That way those threads will stop once the window closes.
 	while (!glfwWindowShouldClose(window))
 	{
+		// Rendering related call, we can move this to the loop of the rendering thread
 		glClear(GL_COLOR_BUFFER_BIT);
+		// Rendering related call, we can move this to the loop of the rendering thread
 		renderer.Draw(triangle); // draw tri or square
+
+		// The window has two buffers, front and back.
+		// This allows us to display the front buffer while writing to the back buffer.
+		// Once rendering is done/finished writing to the back buffer, we call this function to swap the front and back buffers
+		// This allows us to draw onto the screen without drawing on top of the previous frame.
+		// Rendering and UI needs access to this function or a way to tell Core that drawing is done and it's safe to swap.
 		glfwSwapBuffers(window);
+
+		// This function processes all events in the event queue, including window and input events.
+		// Should be called in the main thread.
 		glfwPollEvents();
 	}
 
+	// Destroys library, may cause race condition if it gets destroyed while other threads are using it.
 	glfwTerminate();
 }
 
