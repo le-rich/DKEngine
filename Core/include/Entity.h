@@ -3,11 +3,12 @@
 #include "Utils/IDUtils.h"
 #include "Managers/ComponentManager.h"
 
-template<typename T>
+//template<typename T>
 class Entity {
 
+protected:
     // unique id for entity
-    ObjectID ENTITY_ID;
+    UUIDv4::UUID ENTITY_ID;
 
     // changeable display id for entity
     std::string EntityDisplayID;
@@ -16,9 +17,14 @@ class Entity {
     ComponentManager* compMngr;
 
 
+public:
     // retrieve id of entity
-    ObjectID GetEntityId() {
+    UUIDv4::UUID GetEntityID() {
         return ENTITY_ID;
+    }
+
+    void SetEntityID(const UUIDv4::UUID& newid) {
+        this->ENTITY_ID = newid;
     }
 
     // retrieve display id of entity
@@ -34,7 +40,13 @@ class Entity {
     }
 
     // default constructor
-    Entity(ObjectID signature, ComponentManager* compMngr)
+    Entity()
+    {
+        // init code
+    }
+
+    // overloaded constructor
+    Entity(ComponentManager* compMngr)
     {
         // init code
     }

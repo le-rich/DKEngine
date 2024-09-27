@@ -2,6 +2,7 @@
 
 #include "include/Component.h"
 #include "include/Entity.h"
+#include "Managers/EntityManager.h"
 #include "ui.h"
 #include "physics.h"
 #include "render.h"
@@ -90,7 +91,23 @@ int main(int argc, char* argv[])
 {
 
 	std::cout << "Do you know what DK Stands for? Donkey Kong? Nah. Drift King." << std::endl;
+	
+	/* UUIDgen testing code
+	UUIDv4::UUIDGenerator<std::mt19937_64> uuidGen;
+	Entity* e1 = new Entity();
+	UUIDv4::UUID uuid = uuidGen.getUUID();
+	UUIDv4::UUID uuid2 = uuidGen.getUUID();
 
+	std::cout << "random uuid 1:" << std::endl;
+	std::cout << uuid << std::endl;
+	std::cout << "random uuid 2:" << std::endl;
+	std::cout << uuid2 << std::endl;
+;
+
+	e1->SetEntityID(uuid);
+	std::cout << "entiy 1 with uuid 1" << std::endl;
+	std::cout << e1->GetEntityID() << std::endl;
+	*/
 
 	// TODO - By Rendering Team Make this a call to the Render Project
 	run_glfw();

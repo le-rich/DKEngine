@@ -1,6 +1,10 @@
 #pragma once
 
+#include "../include/Component.h"
 #include "../include/Entity.h"
+#include "../include/Utils/IDUtils.h"
+
+#include <map>
 
 class ComponentManager{
 

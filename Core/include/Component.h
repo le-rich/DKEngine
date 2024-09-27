@@ -1,3 +1,6 @@
+#ifndef COMPONENT_H
+#define COMPONENT_H
+
 #include "Utils/IDUtils.h"
 
 #include <string>
@@ -6,13 +9,13 @@ template<typename T>
 class Component {
 
     // unique id for component
-    ObjectID COMPONENT_ID;
+    std::string COMPONENT_ID;
 
     // changeable display id for component
     std::string ComponentDisplayID;
 
     // retrieve id for component
-    ObjectID GetComponentID(){
+    std::string GetComponentID(){
         return COMPONENT_ID;
     }
 
@@ -38,3 +41,5 @@ class Component {
         // removal code
     }
 };
+
+#endif 
