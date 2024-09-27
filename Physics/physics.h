@@ -1,7 +1,8 @@
 #include <iostream>
+#include "System.h"
+#include "Managers\EntityManager.h"
 
-
-class Physics {
+class Physics : System {
 
 public:
 
@@ -9,18 +10,20 @@ public:
 
 	}
 
-	void initialize() {
-		std::cout << "Physics init" << std::endl;
-	}
+    void Update(float deltaTime) override {
+        std::cout << "Updating Physics" << std::endl;
+    }
 
+    void FixedUpdate(float fixedDeltaTime) override {
+        std::cout << "Running Fixed Update for Physics" << std::endl;
+    }
 
-	void Simulate() {
-		std::cout << "Running Simulation" << std::endl;
-	}
+    void AddEntity(int entityId) override {
+        std::cout << "Added entity " << entityId << " to Physics System." << std::endl;
+    }
 
-
-	void Update() {
-		std::cout << "Updating Physics" << std::endl;
-	}
+    void RemoveEntity(int entityId) override {
+        std::cout << "Removed entity " << entityId << " from Physics System." << std::endl;
+    }
 
 };

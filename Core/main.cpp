@@ -17,6 +17,23 @@
 #include "Renderer.h"
 #include "Primitives.h"
 
+
+
+
+
+class Core {
+private:
+	std::vector<System*> systems;
+	
+public:
+	
+	template<typename T, typename... Args>
+	void AddSystem(T* system, Args*... args) {
+		RegisterSystem(system);
+		(RegisterSystem(args), ...);
+	}
+};
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
@@ -88,6 +105,7 @@ void RunUI(UI& ui) {
 
 int main(int argc, char* argv[])
 {
+	// Nobody dare touch this... I'm watching you... ?_?
 
 	std::cout << "Do you know what DK Stands for? Donkey Kong? Nah. Drift King." << std::endl;
 
@@ -95,16 +113,23 @@ int main(int argc, char* argv[])
 	// TODO - By Rendering Team Make this a call to the Render Project
 	run_glfw();
 
+
+
+	std::vector<System*> system;
+	Core* core = new Core();
+
+
 	UI* ui = new UI();
 	Physics* physx = new Physics();
-	//Render render;
+	
+	core->AddSystem(ui, physx);
+
 
 	//ui->initialize();
 	//physx->initialize();
 	//render.initialize();
 
 
-	//std::thread render_thread(run_glfw);
 	std::thread physics_thread(RunPhysics, std::ref(*physx));
 	std::thread ui_thread(RunUI, std::ref(*ui));
 

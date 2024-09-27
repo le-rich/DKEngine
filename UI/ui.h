@@ -1,24 +1,28 @@
 #include <iostream>
+#include "System.h"
 
-
-class UI {
+class UI : System {
 
 public:
 
-	UI() {
+    UI() {
 
-	}
+    }
 
-	void initialize() {
-		std::cout << "Physics init" << std::endl;
-	}
+    void Update(float deltaTime) override {
+        std::cout << "Updating UI" << std::endl;
+    }
 
-	void Draw() {
-		std::cout << "Drawing UI" << std::endl;
-	}
+    void FixedUpdate(float fixedDeltaTime) override {
+        std::cout << "Running Fixed Update for UI" << std::endl;
+    }
 
-	void Update() {
-		std::cout << "UI update" << std::endl;
-	}
+    void AddEntity(int entityId) override {
+        std::cout << "Added entity " << entityId << " to UI System." << std::endl;
+    }
+
+    void RemoveEntity(int entityId) override {
+        std::cout << "Removed entity " << entityId << " from UI System." << std::endl;
+    }
 
 };
