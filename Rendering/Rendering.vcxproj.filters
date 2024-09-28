@@ -57,6 +57,9 @@
     <ClInclude Include="include\Primitives.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Buffers\ShaderStorageBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Buffers\FrameBufferr.cpp">
@@ -98,6 +101,9 @@
     <ClInclude Include="render.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClCompile Include="src\Buffers\ShaderStorageBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\default.glsl" />
