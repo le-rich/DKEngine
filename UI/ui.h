@@ -1,24 +1,21 @@
 #include <iostream>
 #include "System.h"
 
-class UI : System {
+class UI : public System {
 
 public:
 
     UI() {
 
     }
-
-    void Update(float deltaTime) override {
-        std::cout << "Updating UI" << std::endl;
-    }
-
-    void FixedUpdate(float fixedDeltaTime) override {
-        std::cout << "Running Fixed Update for UI" << std::endl;
-    }
+    
 
     void AddEntity(int entityId) override {
         std::cout << "Added entity " << entityId << " to UI System." << std::endl;
+    }
+
+    const char* GetName() const override {
+        return "UI";
     }
 
     void RemoveEntity(int entityId) override {

@@ -16,7 +16,7 @@
 
 #include "Renderer.h"
 #include "Primitives.h"
-
+#include "System.h"
 
 
 
@@ -26,11 +26,8 @@ private:
 	std::vector<System*> systems;
 	
 public:
-	
-	template<typename T, typename... Args>
-	void AddSystem(T* system, Args*... args) {
-		RegisterSystem(system);
-		(RegisterSystem(args), ...);
+	void AddSystem(System* system) {
+		systems.push_back(system);
 	}
 };
 
@@ -107,23 +104,6 @@ int run_glfw() {
 }
 
 
-
-void RunPhysics(Physics& physx) {
-	while (true) {
-		physx.Update();
-		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-	}
-}
-
-void RunUI(UI& ui) {
-	while (true) {
-		ui.Update();
-		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-	}
-}
-
-
-
 int main(int argc, char* argv[])
 {
 	// Nobody dare touch this... I'm watching you... ?_?
@@ -132,7 +112,7 @@ int main(int argc, char* argv[])
 
 
 	// TODO - By Rendering Team Make this a call to the Render Project
-	run_glfw();
+	//run_glfw();
 
 
 
@@ -143,21 +123,15 @@ int main(int argc, char* argv[])
 	UI* ui = new UI();
 	Physics* physx = new Physics();
 	
-	core->AddSystem(ui, physx);
+	core->AddSystem(ui);
+	core->AddSystem(physx);
 
+	ui->Initialize(1000.0);
+	physx->Initialize(10.0);
 
-	//ui->initialize();
-	//physx->initialize();
-	//render.initialize();
-
-
-	std::thread physics_thread(RunPhysics, std::ref(*physx));
-	std::thread ui_thread(RunUI, std::ref(*ui));
-
-	//render_thread.join();
-	physics_thread.join();
-	ui_thread.join();
-
+	while (ui->IsActive() || physx->IsActive()) {
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	}
 
 	return 0;
 }
