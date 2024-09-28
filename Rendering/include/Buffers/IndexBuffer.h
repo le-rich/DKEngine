@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glad/glad.h>
+
 
 class IndexBuffer
 {
@@ -13,7 +15,7 @@ public:
 	inline unsigned int GetCount() const { return m_Count; }
 
 private:
-	unsigned int m_RendererID;
+	GLuint m_RendererID;
 	unsigned int m_Count;
 };
 

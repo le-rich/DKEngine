@@ -1,5 +1,4 @@
-#ifndef SHAPE_H
-#define SHAPE_H
+#pragma once
 
 #include <vector>
 #include <glad/glad.h> 
@@ -43,4 +42,3 @@ struct Square : public Shape
     }, GL_TRIANGLES) {}
 };
 
-#endif

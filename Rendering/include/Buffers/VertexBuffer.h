@@ -1,5 +1,8 @@
 #pragma once
 
+#include <glad/glad.h>
+
+
 class VertexBuffer
 {
 public:
@@ -9,5 +12,5 @@ public:
 	void Bind() const;
 	void Unbind() const;
 private:
-	unsigned int m_RendererID;
+	GLuint m_RendererID;
 };

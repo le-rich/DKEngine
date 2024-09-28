@@ -1,5 +1,4 @@
-#ifndef RENDERER_H
-#define RENDERER_H
+#pragma once
 
 #include <glad/glad.h>
 #include <string>
@@ -13,6 +12,12 @@
 #define GLCall(x) GLClearError();\
     x;\
     ASSERT(GLLogCall(#x, __FILE__, __LINE__))
+
+// Error handling functions
+
+void GLClearError();
+bool GLLogCall(const char* function, const char* file, int line);
+
 
 class Renderer
 {
@@ -41,10 +46,3 @@ private:
     static unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
     static ShaderProgramSource ParseShader(const std::string& filePath);
 };
-
-// Error handling functions
-
-void GLClearError();
-bool GLLogCall(const char* function, const char* file, int line);
-
-#endif
