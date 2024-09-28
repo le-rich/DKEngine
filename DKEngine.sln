@@ -74,7 +74,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Managers", "Managers", "{97
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utils", "Utils", "{E0177D2F-5F41-47C0-9E03-B95D12FD01E2}"
 	ProjectSection(SolutionItems) = preProject
+		endianness.h = endianness.h
 		Core\include\Utils\IDUtils.h = Core\include\Utils\IDUtils.h
+		uuid_v4.h = uuid_v4.h
 	EndProjectSection
 EndProject
 Global

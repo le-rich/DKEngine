@@ -1,2 +1,2 @@
-using ObjectID = size_t;
-using TypeID = size_t;
+#include "Utils/uuid_v4.h"
+#include "Utils/endianness.h"
