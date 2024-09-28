@@ -42,6 +42,7 @@ public:
     // default constructor
     Entity()
     {
+        this->ENTITY_ID = uuidGen.getUUID();
         // init code
     }
 
