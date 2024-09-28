@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\Buffers\FrameBuffer.h" />
+    <ClInclude Include="include\Data\VertexBufferLayout.h" />
     <ClInclude Include="include\Objects\Camera.h" />
     <ClInclude Include="include\Buffers\IndexBuffer.h" />
     <ClInclude Include="include\Buffers\UniformBuffer.h" />
