@@ -7,6 +7,7 @@
 #include "Primitives.h"
 #include "Renderer.h"
 
+
 // Macro definitions for error handling
 #define ASSERT(x) if (!(x)) __debugbreak();
 #define GLCall(x) GLClearError();\
@@ -16,9 +17,6 @@
 class Renderer
 {
 public:
-    static const std::string VERTEX_SHADER;
-    static const std::string FRAGMENT_SHADER;
-
     GLuint shaderProgram;
 
     Renderer();
@@ -45,7 +43,8 @@ private:
 };
 
 // Error handling functions
-static void GLClearError();
-static bool GLLogCall(const char* function, const char* file, int line);
+
+void GLClearError();
+bool GLLogCall(const char* function, const char* file, int line);
 
 #endif
