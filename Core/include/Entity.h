@@ -14,7 +14,7 @@ protected:
     std::string EntityDisplayID;
 
     // attached component manager
-    ComponentManager* compMngr;
+    ComponentManager* componentManager;
 
 
 public:

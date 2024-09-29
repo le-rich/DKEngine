@@ -9,19 +9,19 @@ template<typename T>
 class Component {
 
     // unique id for component
-    UUIDv4::UUID COMPONENT_ID;
+    UUIDv4::UUID componentID;
 
     // changeable display id for component
     std::string ComponentDisplayID;
 
     // retrieve id for component
     UUIDv4::UUID GetComponentID(){
-        return COMPONENT_ID;
+        return componentID;
     }
 
     // changes the uuid for component
     void SetComponentID(UUIDv4::UUID& newID) {
-        this->COMPONENT_ID = newID;
+        this->componentID = newID;
     }
 
     // retrieve display id of component
@@ -38,7 +38,7 @@ class Component {
 
     // default constructor
     Component(){
-        this->COMPONENT_ID = uuidGen.getUUID();
+        this->componentID = uuidGen.getUUID();
     }
 
     // destructor
