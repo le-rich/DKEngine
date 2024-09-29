@@ -17,7 +17,7 @@ enum LightType
     PointLight,
     DirectionalLight,
     SpotLight,
-    AreaLight // Needs additional information that does not currently fit in generated matrix (merge attenuation values into single value?)
+    AreaLight // Needs additional information that does not currently fit in generated matrix (reuse cutoff variables?)
 };
 
 class Light
