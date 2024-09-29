@@ -12,7 +12,7 @@ class Component {
     UUIDv4::UUID componentID;
 
     // changeable display id for component
-    std::string ComponentDisplayID;
+    std::string displayName;
 
     // retrieve id for component
     UUIDv4::UUID GetComponentID(){
@@ -27,13 +27,13 @@ class Component {
     // retrieve display id of component
     std::string GetDisplayID()
     {
-        return ComponentDisplayID;
+        return displayName;
     }
 
     // set display id of component
     void SetDisplayID(std::string newID)
     {
-        ComponentDisplayID = newID;
+        displayName = newID;
     }
 
     // default constructor
