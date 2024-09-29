@@ -152,7 +152,6 @@ int main(int argc, char* argv[])
 	run_glfw();
 
 	// Store reference
-
 	while (ui->IsActive() || physx->IsActive()) {	// *** This will be the gameloop.
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	}

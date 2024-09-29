@@ -44,10 +44,6 @@ public:
         }
     }
 
-    virtual void AddEntity(int entityId) = 0;
-
-    virtual void RemoveEntity(int entityId) = 0;
-
     virtual const char* GetName() const = 0;
 
     bool IsActive() const {

@@ -39,16 +39,8 @@ public:
     void Init();
     void Draw(const Shape& shape);
 
-    void AddEntity(int entityId) override {
-        std::cout << "Added entity " << entityId << " to Renderer System." << std::endl;
-    }
-
     const char* GetName() const override {
         return "Renderer";
-    }
-
-    void RemoveEntity(int entityId) override {
-        std::cout << "Removed entity " << entityId << " from Renderer System." << std::endl;
     }
 
 
