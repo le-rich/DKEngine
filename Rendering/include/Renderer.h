@@ -45,7 +45,7 @@ private:
 };
 
 // Error handling functions
-static void GLClearError();
-static bool GLLogCall(const char* function, const char* file, int line);
+void GLClearError();
+bool GLLogCall(const char* function, const char* file, int line);
 
 #endif

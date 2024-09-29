@@ -19,9 +19,9 @@ struct Shape
 struct Triangle : public Shape
 {
     Triangle() : Shape({
-        -0.5f, -0.5f, // 0
-         0.0f,  0.5f, // 1
-         0.5f, -0.5f  // 2
+        -0.5f, -0.5f, 0.0f, 0.0f, // 0
+         0.0f,  0.5f, 0.5f, 1.0f, // 1
+         0.5f, -0.5f, 1.0f, 0.0f  // 2
         },
     {
         0, 1, 2

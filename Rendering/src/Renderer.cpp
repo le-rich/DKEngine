@@ -11,8 +11,9 @@
 
 #include "Primitives.h"
 #include "Renderer.h"
+#include "Resources/Texture.h"
 
-// Constructor.
+// Constructor
 Renderer::Renderer() {
     Init();
 }
@@ -47,9 +48,15 @@ void Renderer::Draw(const Shape& shape) {
     // Use the shader program
     GLCall(glUseProgram(shader));
 
+    // Load texture
+    Texture texture("C:\\classes\\comp8552\\DKEngine\\Rendering\\Gold_Star.png");
+    texture.Bind();
+
     // Layout of buffer
-    GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (void*)0));
+    GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (void*)0));
+    GLCall(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (void*)(sizeof(float) * 2)));
     GLCall(glEnableVertexAttribArray(0));
+    GLCall(glEnableVertexAttribArray(1));
 
     // Unbind the VAO to avoid unintended modifications
     glBindVertexArray(0);
