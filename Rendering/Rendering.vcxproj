@@ -71,11 +71,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>..\External\glad\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\External\glad\include;..\External\glm;$(IncludePath)</IncludePath>
     <PublicIncludeDirectories>..\External\glad\include</PublicIncludeDirectories>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>..\External\glad\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\External\glad\include;..\External\glm;$(IncludePath)</IncludePath>
     <PublicIncludeDirectories>..\External\glad\include</PublicIncludeDirectories>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
