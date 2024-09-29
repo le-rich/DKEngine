@@ -19,18 +19,18 @@ public:
         Kill();
     }
 
-    virtual void Initialize(double deltaTime) {
+    virtual void Initialize(double deltaTimeSecond) {
         std::lock_guard<std::mutex> lock(mutex);
         if (!isActive) {
             isActive = true;
-            updateThread = std::thread(&System::Update, this, deltaTime);
+            updateThread = std::thread(&System::Update, this, deltaTimeSecond);
         }
     }
 
-    void Update(double deltaTime) {
+    void Update(double deltaTimeSecond) {
         while (IsActive()) {
             std::cout << "Running " << this->GetName() << std::endl;
-            std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int>(deltaTime * 1000)));
+            std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int>(deltaTimeSecond * 1000)));
         }
     }
 

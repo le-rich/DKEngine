@@ -114,7 +114,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)/Externals/glad/include/glad</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Core\include\;$(ProjectDir)include\;$(SolutionDir)/Externals/glad/include/glad</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

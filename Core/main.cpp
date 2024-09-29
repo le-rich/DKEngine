@@ -30,6 +30,10 @@ public:
 	void AddSystem(System* system) {
 		systems.push_back(system);
 	}
+
+	std::vector<System*> GetSystems() {
+		return this->systems;
+	}
 };
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -78,10 +82,10 @@ int run_glfw() {
     Triangle triangle;
     Square square;
 
-	Renderer renderer = Renderer();
+	Renderer renderer;
 
 	// We want some check like this visible to the other threads
-	// That way those threads will stop once the window closes.
+	// That way those threads will stop once the window closes. ### Has to be conditional for main thread ###
 	while (!glfwWindowShouldClose(window))
 	{
 		// Rendering related calls, we can move these to the loop of the rendering thread
@@ -98,6 +102,13 @@ int run_glfw() {
 		// This function processes all events in the event queue, including window and input events.
 		// Should be called in the main thread.
 		glfwPollEvents();
+		// Callbacks on all the keys that sets key-codes Or prsssdown to true or false.
+		// Potential Mouse inputs; May have to figure out how it can work when extracting
+		// Scrollwheels
+
+		// TODO: Create extractions/enums for key presses on whether they would be pressed-down or not,
+		// Have them be updated by GLFW callback. This works because glfwpollevents() is a synchronous method that runs all callbacks
+		// As long as all components are called after glfwpollevents, behavior should be fine.
 	}
 
 	// Destroys library, may cause race condition if it gets destroyed while other threads are using it.
@@ -105,6 +116,7 @@ int run_glfw() {
 }
 
 
+// TODO: Make core class static or singleton
 int main(int argc, char* argv[])
 {
 	// Nobody dare touch this... I'm watching you... ?_?
@@ -122,9 +134,6 @@ int main(int argc, char* argv[])
 	*/
 
 	// TODO - By Rendering Team Make this a call to the Render Project
-	//run_glfw();
-
-
 
 	std::vector<System*> system;
 	Core* core = new Core();
@@ -136,11 +145,21 @@ int main(int argc, char* argv[])
 	core->AddSystem(ui);
 	core->AddSystem(physx);
 
-	ui->Initialize(1000.0);
-	physx->Initialize(10.0);
+	ui->Initialize(1.0);
+	physx->Initialize(1.0);
 
-	while (ui->IsActive() || physx->IsActive()) {
+	// Currently has its own while loop blocking main
+	run_glfw();
+
+	// Store reference
+
+	while (ui->IsActive() || physx->IsActive()) {	// *** This will be the gameloop.
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	}
+
+
+	for (auto sys : core->GetSystems()) {
+		sys->Kill();
 	}
 
 	return 0;

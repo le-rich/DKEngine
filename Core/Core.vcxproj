@@ -160,6 +160,16 @@
       <Project>{fdf1f4cb-0084-47a9-8bae-921d65a2bcf2}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Component.h" />
+    <ClInclude Include="include\Entity.h" />
+    <ClInclude Include="include\Managers\ComponentManager.h" />
+    <ClInclude Include="include\Managers\EntityManager.h" />
+    <ClInclude Include="include\System.h" />
+    <ClInclude Include="include\Utils\endianness.h" />
+    <ClInclude Include="include\Utils\IDUtils.h" />
+    <ClInclude Include="include\Utils\uuid_v4.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
