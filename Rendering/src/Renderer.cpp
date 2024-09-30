@@ -18,6 +18,10 @@ Renderer::~Renderer() {}
 void Renderer::Update()
 {
     // Clear color and depth buffers (can be moved to pre update
+
+    // Get example primitive
+    Cube cube;
+    Primitive primitive(cube.vertices, cube.indices);
      
     /*Get lights
       For each light
@@ -25,33 +29,18 @@ void Renderer::Update()
         Add lighting matrix to list
       bind lighting list to Shader Buffer*/
 
-    /*For each Material
-    if texture --> bind texture
-    if shader  --> bind shader
-    Apply Uniforms (lighting, view matrices, etc...)
-    For each Primitive
-        Bind Vertex Array
-        Bind Index Buffer
-        DrawCall*/
-
-    // Get example va & layout
-    VertexArray va;
-    VertexBufferLayout layout;
-    layout.Push<float>(3); // 3: x, y, z pos coords
-
-    // Load, create, and set shader program
+    //For each Material
+    //if texture --> bind texture
+    //if shader  --> bind shader
     ShaderProgramSource source = ParseShader("../Rendering/Shaders/default.glsl");
     GLuint shader = CreateShader(source.VertexSource, source.FragmentSource);
     GLCall(glUseProgram(shader));
-
-    // Get example primitive
-    Cube cube;
-    Primitive primitive(cube.vertices, cube.indices);
-    
-    va.AddBuffer(primitive.GetVertexBuffer(), layout);
-    primitive.GetIndexBuffer().Bind();
-
-    GLCall(glDrawElements(GL_TRIANGLES, primitive.GetIndexBuffer().GetCount(), GL_UNSIGNED_INT, nullptr));
+    //Apply Uniforms (lighting, view matrices, etc...)
+    /*For each Primitive
+        Bind Vertex Array
+        Bind Index Buffer
+        DrawCall*/
+    primitive.Draw();
 
     /*Perform Post Processing
       Draw Frame Buffer*/

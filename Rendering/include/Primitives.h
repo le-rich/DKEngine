@@ -17,12 +17,15 @@ public:
     Primitive(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices);
     ~Primitive();
 
+    void Draw();
     inline VertexBuffer& GetVertexBuffer() { return mVertexBuffer; }
     inline IndexBuffer& GetIndexBuffer() { return mIndexBuffer; }
 
-protected:
+private:
     VertexBuffer mVertexBuffer;
     IndexBuffer mIndexBuffer;
+    VertexArray mVertexArray;
+    VertexBufferLayout mVertexBufferLayout;
     std::vector<Vertex> mLoadedVertices;
     std::vector<GLuint> mLoadedIndices;
     GLuint mMaterialID;
