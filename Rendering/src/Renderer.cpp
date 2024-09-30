@@ -1,68 +1,67 @@
 /*
-@TODO: [COM-18] Refactor Renderer attributes & operations to design on Figjam board.
+@TODO: Add pre and post update methods.
 */
 
 #include <glad/glad.h>
 
+#include <glm.hpp>
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <vector>
 
 #include "Primitives.h"
 #include "Renderer.h"
 
 // Constructor.
-Renderer::Renderer() {
-    Init();
-}
+Renderer::Renderer() {}
 
 // Destructor.
 Renderer::~Renderer() {}
 
-void Renderer::Init() {}
+void Renderer::Update()
+{
+    // Clear color and depth buffers (can be moved to pre update
+     
+    /*Get lights
+      For each light
+        Get lighting matrix
+        Add lighting matrix to list
+      bind lighting list to Shader Buffer*/
 
-// Draws the given shape on the window.
-void Renderer::Draw(const Shape& shape) {
-    // Create and bind a Vertex Array Object (VAO)
-    GLuint vao;
-    GLCall(glGenVertexArrays(1, &vao));
-    GLCall(glBindVertexArray(vao));
+    /*For each Material
+    if texture --> bind texture
+    if shader  --> bind shader
+    Apply Uniforms (lighting, view matrices, etc...)
+    For each Primitive
+        Bind Vertex Array
+        Bind Index Buffer
+        DrawCall*/
 
-    // Send vertex buffer to GPU
-    GLuint vbo;
-    GLCall(glGenBuffers(1, &vbo));
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, vbo));
-    GLCall(glBufferData(GL_ARRAY_BUFFER, shape.vertices.size() * sizeof(float), shape.vertices.data(), GL_STATIC_DRAW));
+    // Get example va & layout
+    VertexArray va;
+    VertexBufferLayout layout;
+    layout.Push<float>(3); // 3: x, y, z pos coords
 
-    // Send index buffer to GPU
-    GLuint ibo; // stands for index buffer object
-    GLCall(glGenBuffers(1, &ibo));
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
-    GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, shape.indices.size() * sizeof(float), shape.indices.data(), GL_STATIC_DRAW));
-
+    // Load, create, and set shader program
     ShaderProgramSource source = ParseShader("../Rendering/Shaders/default.glsl");
     GLuint shader = CreateShader(source.VertexSource, source.FragmentSource);
-
-    // Use the shader program
     GLCall(glUseProgram(shader));
 
-    // Layout of buffer
-    GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (void*)0));
-    GLCall(glEnableVertexAttribArray(0));
+    // Get example primitive
+    Cube cube;
+    Primitive primitive(cube.vertices, cube.indices);
+    
+    va.AddBuffer(primitive.GetVertexBuffer(), layout);
+    primitive.GetIndexBuffer().Bind();
 
-    // Unbind the VAO to avoid unintended modifications
-    glBindVertexArray(0);
+    GLCall(glDrawElements(GL_TRIANGLES, primitive.GetIndexBuffer().GetCount(), GL_UNSIGNED_INT, nullptr));
 
-    // Drawing
-    GLCall(glBindVertexArray(vao));
-    GLCall(glDrawElements(shape.drawMode, shape.indices.size(), GL_UNSIGNED_INT, nullptr));
-    GLCall(glBindVertexArray(vao));
+    /*Perform Post Processing
+      Draw Frame Buffer*/
 
-    // Cleanup
-    GLCall(glDeleteBuffers(1, &vbo));
-    GLCall(glDeleteVertexArrays(1, &vao));
-    GLCall(glDeleteProgram(shader));
+    // Swap window buffers // can be moved to post update
 }
 
 // Returns a ID of the compiled shader program on the GPU.

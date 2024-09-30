@@ -22,8 +22,6 @@ bool GLLogCall(const char* function, const char* file, int line);
 class Renderer
 {
 public:
-    GLuint shaderProgram;
-
     Renderer();
     ~Renderer();
 
@@ -38,8 +36,7 @@ public:
         std::string FragmentSource;
     };
 
-    void Init();
-    void Draw(const Shape& shape);
+    void Update();
 
 private:
     static unsigned int CompileShader(unsigned int type, const std::string& source);
