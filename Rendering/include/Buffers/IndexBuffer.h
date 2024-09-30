@@ -13,10 +13,10 @@ public:
 	void Bind() const;
 	void Unbind() const;
 
-	inline unsigned int GetCount() const { return m_Count; }
+	inline unsigned int GetCount() const { return mCount; }
 
 private:
-	GLuint m_RendererID;
-	unsigned int m_Count;
+	GLuint mRendererID;
+	unsigned int mCount;
 };
 

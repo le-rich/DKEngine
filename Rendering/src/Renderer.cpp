@@ -1,9 +1,4 @@
-/*
-@TODO: Add pre and post update methods.
-*/
-
 #include <glad/glad.h>
-
 #include <glm.hpp>
 #include <iostream>
 #include <fstream>
@@ -61,7 +56,7 @@ void Renderer::Update()
     /*Perform Post Processing
       Draw Frame Buffer*/
 
-    // Swap window buffers // can be moved to post update
+    // Swap window buffers. can be moved to post update
 }
 
 // Returns a ID of the compiled shader program on the GPU.

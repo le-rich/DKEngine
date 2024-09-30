@@ -2,7 +2,6 @@
 #include <glm.hpp>
 #include "Renderer.h"
 
-
 UniformBuffer::UniformBuffer()
 {
 	// size of data in buffer object

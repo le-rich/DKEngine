@@ -5,10 +5,11 @@
 
 class VertexBufferLayout;
 
+
 class VertexArray
 {
 private:
-	GLuint m_RendererID;
+	GLuint mRendererID;
 public:
 	VertexArray();
 	~VertexArray();

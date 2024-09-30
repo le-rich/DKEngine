@@ -1,4 +1,6 @@
 #pragma once
+/* @TODO: Extrapolate shader functionality, error handling, and
+implement pre and post methods.*/
 
 #include <glad/glad.h>
 #include <string>

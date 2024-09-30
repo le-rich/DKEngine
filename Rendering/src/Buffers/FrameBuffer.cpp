@@ -1,7 +1,6 @@
 #include "Buffers/FrameBuffer.h"
 #include "Renderer.h"
 
-
 FrameBuffer::FrameBuffer(unsigned int width, unsigned int height)
 {
 	Init(width, height);
