@@ -8,10 +8,10 @@ class Entity {
 
 protected:
     // unique id for entity
-    UUIDv4::UUID ENTITY_ID;
+    UUIDv4::UUID entityID;
 
     // changeable display id for entity
-    std::string EntityDisplayID;
+    std::string entityDisplayName;
 
     // attached component manager
     ComponentManager* compMngr;
@@ -20,29 +20,34 @@ protected:
 public:
     // retrieve id of entity
     UUIDv4::UUID GetEntityID() {
-        return ENTITY_ID;
+        return entityID;
     }
 
     void SetEntityID(const UUIDv4::UUID& newid) {
-        this->ENTITY_ID = newid;
+        this->entityID = newid;
     }
 
     // retrieve display id of entity
-    std::string GetDisplayID()
+    std::string GetDisplayName()
     {
-        return EntityDisplayID;
+        return entityDisplayName;
     }
 
     // set display id of entity
-    void SetDisplayID(std::string newID)
+    void SetDisplayName(std::string newID)
     {
-        EntityDisplayID = newID;
+        entityDisplayName = newID;
+    }
+
+    void update()
+    {
+        // TODO:: call the component manager's update
     }
 
     // default constructor
     Entity()
     {
-        this->ENTITY_ID = uuidGen.getUUID();
+        this->entityID = uuidGen.getUUID();
         // init code
     }
 

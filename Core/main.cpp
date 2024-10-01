@@ -111,16 +111,6 @@ int main(int argc, char* argv[])
 
 	std::cout << "Do you know what DK Stands for? Donkey Kong? Nah. Drift King." << std::endl;
 
-	/* UUID gen testing code
-	Entity* e1 = new Entity();
-	std::cout << "entiy 1's uuid" << std::endl;
-	std::cout << e1->GetEntityID() << std::endl;
-
-	Entity* e2 = new Entity();
-	std::cout << "entiy 2's uuid" << std::endl;
-	std::cout << e2->GetEntityID() << std::endl;
-	*/
-
 	// TODO - By Rendering Team Make this a call to the Render Project
 	//run_glfw();
 
