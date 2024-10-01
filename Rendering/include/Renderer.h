@@ -43,6 +43,16 @@ public:
         return "Renderer";
     }
 
+    void Update() override {
+        // Update Loop logic here
+
+    }
+
+    void FixedUpdate() override {
+        // Update Loop logic here
+
+    }
+
 
 private:
     static unsigned int CompileShader(unsigned int type, const std::string& source);

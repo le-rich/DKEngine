@@ -13,5 +13,16 @@ public:
         return "UI";
     }
 
+    void Update() override {
+        // Update Loop logic here
+        std::cout << "UI Update" << std::endl;
+
+    }
+
+    void FixedUpdate() override {
+        // Update Loop logic here
+
+    }
+
 
 };

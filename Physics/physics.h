@@ -14,5 +14,15 @@ public:
         return "Physics";
     }
 
+    void Update() override {
+        // Update Loop logic here
+
+    }
+
+    void FixedUpdate() override {
+        // Update Loop logic here
+
+    }
+
 
 };

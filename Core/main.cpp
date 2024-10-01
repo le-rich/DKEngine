@@ -13,12 +13,12 @@
 #include <thread>
 
 
+
 #include <iostream>
 
 #include "Renderer.h"
 #include "Primitives.h"
 #include "System.h"
-
 
 
 
@@ -34,7 +34,14 @@ public:
 	std::vector<System*> GetSystems() {
 		return this->systems;
 	}
+
+	void Synchronize() {
+
+	}
+
+
 };
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -82,15 +89,39 @@ int run_glfw() {
     Triangle triangle;
     Square square;
 
-	Renderer renderer;
+
+	std::vector<System*> systems;
+	Core* core = new Core();
+
+	UI* ui = new UI();
+	Physics* physx = new Physics();
+	Renderer* renderer = new Renderer();
+
+	core->AddSystem(ui);
+	core->AddSystem(physx);
+	core->AddSystem(renderer);
+
+	ui->Initialize();
+	physx->Initialize();
+	renderer->Initialize();
+
+	// Timing
+	double fixedUpdateBuffer = 0.0;
+	double FIXED_UPDATE_INTERVAL = 0.016;
+	auto previousTime = std::chrono::high_resolution_clock::now();
 
 	// We want some check like this visible to the other threads
 	// That way those threads will stop once the window closes. ### Has to be conditional for main thread ###
 	while (!glfwWindowShouldClose(window))
 	{
+		auto currentTime = std::chrono::high_resolution_clock::now();
+
+		std::chrono::duration<double> elapsedTime = currentTime - previousTime;
+
+
 		// Rendering related calls, we can move these to the loop of the rendering thread
 		glClear(GL_COLOR_BUFFER_BIT);
-		renderer.Draw(triangle); // draw tri or square
+		renderer->Draw(triangle); // draw tri or square
 
 		// The window has two buffers, front and back.
 		// This allows us to display the front buffer while writing to the back buffer.
@@ -109,10 +140,27 @@ int run_glfw() {
 		// TODO: Create extractions/enums for key presses on whether they would be pressed-down or not,
 		// Have them be updated by GLFW callback. This works because glfwpollevents() is a synchronous method that runs all callbacks
 		// As long as all components are called after glfwpollevents, behavior should be fine.
+		
+		while (fixedUpdateBuffer >= FIXED_UPDATE_INTERVAL) {
+			for (auto system : systems) {
+				system->FixedUpdate();
+			}
+		}
+
+		for (auto system : systems) {
+			system->Update();
+		}
+	
 	}
 
 	// Destroys library, may cause race condition if it gets destroyed while other threads are using it.
 	glfwTerminate();
+
+	// Destroy all systems upon closing window
+	for (auto sys : systems) {
+		sys->Kill();
+	}
+
 }
 
 
@@ -125,31 +173,10 @@ int main(int argc, char* argv[])
 
 	// TODO - By Rendering Team Make this a call to the Render Project
 
-	std::vector<System*> system;
-	Core* core = new Core();
-
-
-	UI* ui = new UI();
-	Physics* physx = new Physics();
-	
-	core->AddSystem(ui);
-	core->AddSystem(physx);
-
-	ui->Initialize(1.0);
-	physx->Initialize(1.0);
-
 	// Currently has its own while loop blocking main
 	run_glfw();
 
-	// Store reference
-	while (ui->IsActive() || physx->IsActive()) {	// *** This will be the gameloop.
-		//std::this_thread::sleep_for(std::chrono::milliseconds(100));
-	}
-
-
-	for (auto sys : core->GetSystems()) {
-		sys->Kill();
-	}
+	
 
 	return 0;
 }
