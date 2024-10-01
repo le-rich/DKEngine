@@ -1,5 +1,5 @@
 #include "core.h"
-#include "PointMass.h"
+#include "../include/pointmass.h"
 #include <vector>
 namespace AE86
 {
@@ -12,6 +12,18 @@ namespace AE86
 		*/
 		virtual void updateForce(PointMass* PointMass, real duration) = 0;
 	};
+
+	class PointMassGravity : public PointMassForceGenerator
+	{
+		/** Holds the acceleration due to gravity. */
+		Vector3 gravity;
+	public:
+		/** Creates the generator with the given acceleration. */
+		PointMassGravity(const Vector3& gravity);
+		/** Applies the gravitational force to the given particle. */
+		virtual void updateForce(PointMass* pointMass, real duration);
+	};
+
 	class PointMassForceRegistry
 	{
 	protected:

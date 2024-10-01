@@ -20,6 +20,11 @@ void PointMass::getVelocity(Vector3* velocity) const
 	*velocity = Particle::velocity;
 }
 
+real PointMass::getInverseMass()
+{
+	return inverseMass;
+}
+
 void PointMass::integrate(real duration) {
 
 	// don't integrate if the particle has infinite mass
