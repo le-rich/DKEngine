@@ -63,20 +63,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "include", "include", "{DA98
 	ProjectSection(SolutionItems) = preProject
 		Core\include\Component.h = Core\include\Component.h
 		Core\include\Entity.h = Core\include\Entity.h
-		System.h = System.h
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Managers", "Managers", "{97C3B76B-0FF7-450B-8B80-43F6DBBF50A5}"
 	ProjectSection(SolutionItems) = preProject
-		Core\include\Managers\ComponentManager.h = Core\include\Managers\ComponentManager.h
 		Core\include\Managers\EntityManager.h = Core\include\Managers\EntityManager.h
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utils", "Utils", "{E0177D2F-5F41-47C0-9E03-B95D12FD01E2}"
 	ProjectSection(SolutionItems) = preProject
-		endianness.h = endianness.h
 		Core\include\Utils\IDUtils.h = Core\include\Utils\IDUtils.h
-		uuid_v4.h = uuid_v4.h
 	EndProjectSection
 EndProject
 Global

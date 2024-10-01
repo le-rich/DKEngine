@@ -1,7 +1,10 @@
 #pragma once
 
 #include "Utils/IDUtils.h"
-#include "Managers/ComponentManager.h"
+#include "Component.h"
+
+#include <vector>
+#include <algorithm>
 
 //template<typename T>
 class Entity {
@@ -13,8 +16,8 @@ protected:
     // changeable display id for entity
     std::string entityDisplayName;
 
-    // attached component manager
-    ComponentManager* compMngr;
+    // array of components
+    std::vector<Component> components;
 
 
 public:
@@ -23,6 +26,7 @@ public:
         return entityID;
     }
 
+    // set the entity uuid
     void SetEntityID(const UUIDv4::UUID& newid) {
         this->entityID = newid;
     }
@@ -39,22 +43,45 @@ public:
         entityDisplayName = newID;
     }
 
+    // update components
     void update()
     {
         // TODO:: call the component manager's update
+    }
+
+    // add component to the entity
+    void addComponent(Component& c)
+    {
+        components.push_back(c);
+    }
+
+    // remove component from the entity
+    void removeComponent(Component& c)
+    {
+        components.erase(
+            std::remove_if(components.begin(), components.end(),
+                [&c](const Component& comp) { return comp == c; }),
+            components.end());
+    }
+
+    // find a component
+    Component getComponent(Component& c)
+    {
+        auto it = std::find_if(components.begin(), components.end(),
+            [&c](const Component& comp) { return comp == c; });
+
+        if (it != components.end()) {
+            return *it;
+        }
+        else {
+            std::cout << "Component not found" << std::endl;
+        }
     }
 
     // default constructor
     Entity()
     {
         this->entityID = uuidGen.getUUID();
-        // init code
-    }
-
-    // overloaded constructor
-    Entity(ComponentManager* compMngr)
-    {
-        // init code
     }
 
     // default destructor
@@ -62,9 +89,6 @@ public:
         // destructor code        
     }
 
-    // TODO: method to retrieve individual component
-    // TODO: method to add component
-    // TODO: method to destroy component
     // TODO: enable/disable
     
 };

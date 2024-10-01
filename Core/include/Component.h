@@ -5,9 +5,10 @@
 
 #include <string>
 
-template<typename T>
+//template<typename T>
 class Component {
 
+public: 
     // unique id for component
     UUIDv4::UUID componentID;
 
@@ -44,6 +45,11 @@ class Component {
     // destructor
     ~Component(){
         // removal code
+    }
+
+    // overloaded equality operator based on UUID
+    bool operator==(const Component& other) const {
+        return componentID == other.componentID; 
     }
 };
 
