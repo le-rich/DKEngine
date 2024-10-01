@@ -15,6 +15,10 @@ real PointMass::getKineticEnergy() {
 	return 0.5 * (1.0f / inverseMass) * velocity.magnitude();
 }
 
+void PointMass::getVelocity(Vector3* velocity) const
+{
+	*velocity = Particle::velocity;
+}
 
 void PointMass::integrate(real duration) {
 
@@ -44,7 +48,7 @@ void PointMass::clearAccumulator() {
 	forceAccum.clear();
 }
 
-void Particle::addForce(const Vector3& force)
+void PointMass::addForce(const Vector3& force)
 {
 	forceAccum += force;
 }

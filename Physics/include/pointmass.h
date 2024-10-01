@@ -15,6 +15,7 @@ namespace AE86 {
 		real getKineticEnergy();
 		void clearAccumulator();
 		void addForce(const Vector3& force);
+		void getVelocity(Vector3* velocity) const;
 
 	protected:
 		/**
