@@ -24,6 +24,19 @@ namespace AE86
 		virtual void updateForce(PointMass* pointMass, real duration);
 	};
 
+    class PointMassDrag : public PointMassForceGenerator
+	{
+		/** Holds the velocity drag coefficient. */
+		real k1;
+		/** Holds the velocity squared drag coefficient. */
+		real k2;
+	public:
+		/** Creates the generator with the given coefficients. */
+		PointMassDrag(real k1, real k2);
+		/** Applies the drag force to the given particle. */
+		virtual void updateForce(PointMass* pointMass, real duration);
+	};
+
 	class PointMassForceRegistry
 	{
 	protected:

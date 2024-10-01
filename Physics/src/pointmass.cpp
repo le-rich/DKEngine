@@ -17,7 +17,7 @@ real PointMass::getKineticEnergy() {
 
 void PointMass::getVelocity(Vector3* velocity) const
 {
-	*velocity = Particle::velocity;
+	*velocity = PointMass::velocity;
 }
 
 real PointMass::getInverseMass()

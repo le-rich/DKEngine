@@ -18,3 +18,19 @@ void PointMassGravity::updateForce(PointMass* pointMass, real duration)
 	// particle->addForce(gravity * particle->getMass());
 	pointMass->addForce(gravity * (1 / pointMass->getInverseMass()));
 }
+
+void PointMassDrag::updateForce(PointMass* pointMass, real duration)
+{
+	Vector3 force;
+	// Points force to the value of the velocity of
+	// the particle
+	pointMass->getVelocity(&force);
+	// Calculate the total drag coefficient.
+	real dragCoeff = force.magnitude();
+	dragCoeff = k1 * dragCoeff + k2 * real_pow(dragCoeff, 2);
+	// Calculate the final force and apply it.
+	force.normalize();
+	force *= -dragCoeff;
+	pointMass->addForce(force);
+}
+
