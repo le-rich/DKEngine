@@ -1,15 +1,8 @@
 #pragma once
 
 #include <stdint.h>
-
-// Temporary definitions until glm library or similar is included
-namespace glm
-{
-    typedef mat4;
-    typedef vec3;
-    typedef vec4;
-    typedef quat;
-};
+#include <glm.hpp>
+#include <gtc/quaternion.hpp>
 
 enum LightType
 {
@@ -45,7 +38,7 @@ public:
 
     inline void SetWorldPos(glm::vec3 pWorldPos) { mWorldPos = pWorldPos; }
     inline void SetWorldRotation(glm::quat pWorldRotation) { mWorldRotation = pWorldRotation; }
-    inline void SetColor(glm::vec3 pColor) { mColor = pColor; }
+    inline void SetColor(glm::vec4 pColor) { mColor = pColor; }
     inline void SetIntensity(float pIntensity) { mIntensity = pIntensity; }
     inline void SetConstant(float pConstant) { mConstant = pConstant; }
     inline void SetLinear(float pLinear) { mLinear = pLinear; }
@@ -58,7 +51,7 @@ public:
 private:
     // location in world
     glm::vec3 mWorldPos = glm::vec3(0.f, 0.f, 0.f);
-    // direction camera is facing, calculated with Azimuth and Elevation
+    // 
     glm::quat mWorldRotation = glm::quat(0.f, 0.f, 0.f, 0.f);
 
     glm::vec4 mColor = { 1.0f, 1.0f, 1.0f, 1.0f };

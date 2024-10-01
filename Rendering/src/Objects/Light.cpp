@@ -1,4 +1,6 @@
 #include "Objects/Light.h"
+#include <gtc/matrix_transform.hpp>
+#include <gtc/quaternion.hpp>
 
 Light::Light(glm::vec3 pWorldPos, glm::vec3 pWorldRotationEuler, LightType pType) : mWorldPos(pWorldPos), mType(pType)
 {
@@ -50,14 +52,14 @@ void Light::SetWorldRotationFromEuler(glm::vec3 pWorldRoationEuler)
 {
     glm::mat4 rotationMatrix{ 1.0f };
     glm::mat4 rotationX{ 1.0f };
-    //rotationX = glm::rotate(rotationX, glm::radians(pWorldRotoationEuler.x), glm::vec3(1.0f, 0.0f, 0.0f));
+    rotationX = glm::rotate(rotationX, glm::radians(pWorldRoationEuler.x), glm::vec3(1.0f, 0.0f, 0.0f));
 
     glm::mat4 rotationY{ 1.0f };
-    //rotationY = glm::rotate(rotationY, glm::radians(pWorldRotoationEuler.y), glm::vec3(0.0f, 1.0f, 0.0f));
+    rotationY = glm::rotate(rotationY, glm::radians(pWorldRoationEuler.y), glm::vec3(0.0f, 1.0f, 0.0f));
 
     glm::mat4 rotationZ{ 1.0f };
-    //rotationZ = glm::rotate(rotationZ, glm::radians(pWorldRotoationEuler.z), glm::vec3(0.0f, 0.0f, 1.0f));
+    rotationZ = glm::rotate(rotationZ, glm::radians(pWorldRoationEuler.z), glm::vec3(0.0f, 0.0f, 1.0f));
 
     rotationMatrix = rotationZ * rotationY * rotationX;
-    //mWorldRotation = glm::quat_cast(rotationMatrix);
+    mWorldRotation = glm::quat_cast(rotationMatrix);
 }

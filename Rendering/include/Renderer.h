@@ -5,6 +5,7 @@ implement pre and post methods.*/
 #include <glad/glad.h>
 #include <string>
 
+#include "Buffers/ShaderStorageBuffer.h"
 #include "Primitives.h"
 #include "Renderer.h"
 
@@ -41,6 +42,8 @@ public:
     void Update();
 
 private:
+    ShaderStorageBuffer shaderStorageBufferObject;
+
     static unsigned int CompileShader(unsigned int type, const std::string& source);
     static unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
     static ShaderProgramSource ParseShader(const std::string& filePath);

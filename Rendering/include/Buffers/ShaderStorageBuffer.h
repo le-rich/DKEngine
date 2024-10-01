@@ -7,7 +7,7 @@ class ShaderStorageBuffer
 public:
     // pUsage is a hint to the GL implementation as to how a buffer object's data store will be accessed. 
     // Reference glBufferData for more information.
-    ShaderStorageBuffer(GLenum pUsage);
+    ShaderStorageBuffer(GLenum pUsage = GL_STATIC_DRAW);
     ~ShaderStorageBuffer();
 
     // Bind shader storage buffer to specified point

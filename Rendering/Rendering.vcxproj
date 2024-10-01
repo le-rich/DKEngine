@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\Buffers\FrameBuffer.h" />
+    <ClInclude Include="include\Buffers\ShaderStorageBuffer.h" />
     <ClInclude Include="include\Data\VertexBufferLayout.h" />
     <ClInclude Include="include\Objects\Camera.h" />
     <ClInclude Include="include\Buffers\IndexBuffer.h" />
@@ -160,6 +161,7 @@
     <ClInclude Include="include\Buffers\VertexArray.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Buffers\ShaderStorageBuffer.cpp" />
     <ClCompile Include="src\Primitives.cpp" />
     <ClCompile Include="src\Buffers\FrameBuffer.cpp" />
     <ClCompile Include="src\Objects\Camera.cpp" />

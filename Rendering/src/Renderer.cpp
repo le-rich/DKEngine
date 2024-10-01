@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "Primitives.h"
+#include "Objects/Light.h"
 #include "Renderer.h"
 
 // Constructor.
@@ -28,7 +29,12 @@ void Renderer::Update()
         Get lighting matrix
         Add lighting matrix to list
       bind lighting list to Shader Buffer*/
+    Light light(glm::vec3(0.f, 5.f, 0.f), glm::vec3(120.0f, -40.0f, 0.0f), LightType::DirectionalLight);
+    std::vector<glm::mat4> lightMatricies;
+    lightMatricies.push_back(light.GenerateMatrix());
+    shaderStorageBufferObject.SendBlocks(lightMatricies.data(), lightMatricies.size() * sizeof(glm::mat4));
 
+    shaderStorageBufferObject.Bind(0);
     //For each Material
     //if texture --> bind texture
     //if shader  --> bind shader
@@ -42,6 +48,7 @@ void Renderer::Update()
         DrawCall*/
     primitive.Draw();
 
+    shaderStorageBufferObject.Unbind();
     /*Perform Post Processing
       Draw Frame Buffer*/
 
