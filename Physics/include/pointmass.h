@@ -13,6 +13,9 @@ namespace AE86 {
 		void setMass(real mass);
 		void integrate(real duration);
 		real getKineticEnergy();
+		void clearAccumulator();
+		void addForce(const Vector3& force);
+
 	protected:
 		/**
 		 * Holds the linear positino of the particle
@@ -56,5 +59,12 @@ namespace AE86 {
 		 * (completely unstable in numerical simulation).
 		 */
 		real inverseMass;
+
+		/**
+		* Holds the accumulated force to be applied at the next
+		* simulation iteration only. This value is zeroed at each
+		* integration step.
+		*/
+		Vector3 forceAccum;
 	};
 }

@@ -35,4 +35,16 @@ void PointMass::integrate(real duration) {
 
 	// impose drag/damping
 	velocity *= real_pow(damping, duration);
+
+	// Clear the forces.
+	clearAccumulator();
+}
+
+void PointMass::clearAccumulator() {
+	forceAccum.clear();
+}
+
+void Particle::addForce(const Vector3& force)
+{
+	forceAccum += force;
 }

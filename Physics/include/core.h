@@ -143,6 +143,11 @@ namespace AE86 {
 				x * vector.y - y * vector.x);
 		}
 
+		/** Zeroes the components of this vector. */
+		void clear() {
+			x, y, z = 0, 0, 0;
+		}
+
 	private:
 		/** Padding to ensure four word alignment. On many machines, four floating-point values
 		 *  sit cleaner in memory (memory is optimized for four sets of words). The speed ups from
