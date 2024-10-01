@@ -145,7 +145,13 @@
     <ClCompile Include="..\External\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="..\External\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\External\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Browser.cpp" />
+    <ClCompile Include="Console.cpp" />
+    <ClCompile Include="Hierarchy.cpp" />
+    <ClCompile Include="Inspector.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Viewport.cpp" />
+    <ClCompile Include="Windows.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\External\imgui\imconfig.h" />
@@ -157,7 +163,12 @@
     <ClInclude Include="..\External\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\External\imgui\imstb_textedit.h" />
     <ClInclude Include="..\External\imgui\imstb_truetype.h" />
+    <ClInclude Include="Browser.h" />
+    <ClInclude Include="Console.h" />
+    <ClInclude Include="Hierarchy.h" />
+    <ClInclude Include="Inspector.h" />
     <ClInclude Include="MenuBar.h" />
+    <ClInclude Include="Viewport.h" />
     <ClInclude Include="Windows.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
