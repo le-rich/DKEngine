@@ -51,16 +51,12 @@ int run_glfw() {
 
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    // primitive shapes
-    Triangle triangle;
-    Square square;
-
 	Renderer renderer = Renderer();
 
 	while (!glfwWindowShouldClose(window))
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
-		renderer.Draw(triangle); // draw tri or square
+		renderer.Update();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
