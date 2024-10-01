@@ -61,4 +61,35 @@ public:
         }
     }
 
+    // queries the entity map to return an array of entities with the component
+    std::vector<UUIDv4::UUID> findEntitiesByComponent(const Component& component) {
+        std::vector<UUIDv4::UUID> result;
+
+        for (auto it = entityMap.begin(); it != entityMap.end(); ++it) {
+            const UUIDv4::UUID& uuid = it->first;
+            const Entity& entity = it->second;
+
+            if (std::find(entity.getComponents().begin(), entity.getComponents().end(), component) != entity.getComponents().end()) {
+                result.push_back(uuid);
+            }
+        }
+
+        return result;
+    }
+
+    // retrieve by display name
+    UUIDv4::UUID findFirstEntityByDisplayName(const std::string& displayName) {
+        for (auto it = entityMap.begin(); it != entityMap.end(); ++it) {
+            UUIDv4::UUID uuid = it->first;
+            Entity entity = it->second;
+
+            if (entity.GetDisplayName() == displayName) {
+                return uuid;
+            }
+            else {
+                std::cout << "Entity not found." << std::endl;
+            }
+        }
+
+    }
 };

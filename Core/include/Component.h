@@ -26,7 +26,7 @@ public:
     }
 
     // retrieve display id of component
-    std::string GetDisplayName()
+    const std::string& GetDisplayName()
     {
         return componentDisplayName;
     }

@@ -3,8 +3,8 @@
 #include "Utils/IDUtils.h"
 #include "Component.h"
 
-#include <vector>
 #include <algorithm>
+#include <vector>
 
 //template<typename T>
 class Entity {
@@ -41,6 +41,11 @@ public:
     void SetDisplayName(std::string newID)
     {
         entityDisplayName = newID;
+    }
+
+    // get array of components
+    const std::vector<Component>& getComponents() const {
+        return components;
     }
 
     // update components
