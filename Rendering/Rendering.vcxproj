@@ -71,12 +71,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>..\External\glad\include;$(IncludePath)</IncludePath>
-    <PublicIncludeDirectories>..\External\glad\include</PublicIncludeDirectories>
+    <IncludePath>..\External\glad\include;..\External\glm;$(IncludePath)</IncludePath>
+    <PublicIncludeDirectories>..\External\glad\include;..\External\glm</PublicIncludeDirectories>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>..\External\glad\include;$(IncludePath)</IncludePath>
-    <PublicIncludeDirectories>..\External\glad\include</PublicIncludeDirectories>
+    <IncludePath>..\External\glad\include;..\External\glm;$(IncludePath)</IncludePath>
+    <PublicIncludeDirectories>..\External\glad\include;..\External\glm</PublicIncludeDirectories>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -114,7 +114,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)/include/;$(SolutionDir)/Externals/glad/include/glad</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/include/;$(SolutionDir)/Externals/glad/include/glad;$(SolutionDir)/Externals/glm</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,7 +131,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)/include/;$(SolutionDir)/Externals/glad/include/glad</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/include/;$(SolutionDir)/Externals/glad/include/glad;$(SolutionDir)/Externals/glm</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -143,9 +143,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\Buffers\ShaderStorageBuffer.h" />
+    <ClInclude Include="include\Buffers\FrameBuffer.h" />
+    <ClInclude Include="include\Data\VertexBufferLayout.h" />
     <ClInclude Include="include\Objects\Camera.h" />
-    <ClInclude Include="include\Buffers\FrameBufferr.h" />
     <ClInclude Include="include\Buffers\IndexBuffer.h" />
     <ClInclude Include="include\Buffers\UniformBuffer.h" />
     <ClInclude Include="include\Buffers\VertexBuffer.h" />
@@ -160,14 +160,14 @@
     <ClInclude Include="include\Buffers\VertexArray.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Buffers\ShaderStorageBuffer.cpp" />
+    <ClCompile Include="src\Primitives.cpp" />
+    <ClCompile Include="src\Buffers\FrameBuffer.cpp" />
     <ClCompile Include="src\Objects\Camera.cpp" />
     <ClCompile Include="src\Objects\Light.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\Resources\Material.cpp" />
     <ClCompile Include="src\Resources\Mesh.cpp" />
     <ClCompile Include="src\Resources\Shader.cpp" />
-    <ClCompile Include="src\Buffers\FrameBufferr.cpp" />
     <ClCompile Include="src\Buffers\IndexBuffer.cpp" />
     <ClCompile Include="src\Buffers\UniformBuffer.cpp" />
     <ClCompile Include="src\Buffers\VertexBuffer.cpp" />
@@ -177,7 +177,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\default.glsl" />
-    <None Include="Shaders\Lighting.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
