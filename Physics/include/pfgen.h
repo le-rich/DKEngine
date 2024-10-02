@@ -41,6 +41,22 @@ namespace AE86
 		virtual void updateForce(PointMass* pointMass, real duration);
 	};
 
+	class PointMassSpring : public PointMassForceGenerator
+	{
+
+		PointMass* other;
+
+		real springConstant;
+
+		real restLength;
+
+	public:
+
+		PointMassSpring(PointMass* other, real springConstant, real restLength);
+
+		virtual void updateForce(PointMass* pointMass, real duration);
+	};
+
 	class PointMassForceRegistry
 	{
 	protected:
@@ -68,12 +84,16 @@ namespace AE86
 		* Removes the given registered pair from teh registry.
 		* If the pair is not registered, this method will have
 		* no effect.
+		* 
+		* NOT DEFINED
 		*/
 		void remove(PointMass* pointMass, PointMassForceGenerator* fg);
 		/**
 		* Clears all registrations from the registry. This will
 		* not delete the PointMasss or the force generators
 		* themselves, just the records of their connection.
+		* 
+		* NOT DEFINED
 		*/
 		void clear();
 		/**

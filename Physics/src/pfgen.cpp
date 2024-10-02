@@ -51,3 +51,23 @@ void PointMassDrag::updateForce(PointMass* pointMass, real duration)
 	pointMass->addForce(force);
 }
 
+PointMassSpring::PointMassSpring(PointMass* other, real sc, real rl) : other(other), springConstant(sc), restLength(rl)
+{
+}
+
+void PointMassSpring::updateForce(PointMass* pointMass, real duration)
+{
+	Vector3 force;
+	pointMass->getPosition(&force);
+	force -= other->getPosition();
+
+	// Force magnitude calculation
+	real magnitude = force.magnitude();
+	magnitude = real_abs(magnitude - restLength);
+	magnitude *= springConstant;
+
+	// Calculate final force then apply
+	force.normalize();
+	force *= -magnitude;
+	pointMass->addForce(force);
+}
