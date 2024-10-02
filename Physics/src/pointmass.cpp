@@ -132,7 +132,7 @@ void PointMass::setAcceleration(const real x, const real y, const real z)
 	PointMass::acceleration.z = z;
 }
 
-
+// ------------ Forces ------------
 
 void PointMass::clearAccumulator() {
 	forceAccum.clear();
