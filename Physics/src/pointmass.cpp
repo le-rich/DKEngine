@@ -15,6 +15,15 @@ real PointMass::getKineticEnergy() {
 	return 0.5 * (1.0f / inverseMass) * velocity.magnitude();
 }
 
+void PointMass::getVelocity(Vector3* velocity) const
+{
+	*velocity = PointMass::velocity;
+}
+
+real PointMass::getInverseMass()
+{
+	return inverseMass;
+}
 
 void PointMass::integrate(real duration) {
 
@@ -35,4 +44,16 @@ void PointMass::integrate(real duration) {
 
 	// impose drag/damping
 	velocity *= real_pow(damping, duration);
+
+	// Clear the forces.
+	clearAccumulator();
+}
+
+void PointMass::clearAccumulator() {
+	forceAccum.clear();
+}
+
+void PointMass::addForce(const Vector3& force)
+{
+	forceAccum += force;
 }
