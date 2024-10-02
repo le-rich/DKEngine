@@ -63,9 +63,9 @@ void PointMass::setInverseMass(real invMass) {
 
 // ------------ Position ------------
 
-void PointMass::getPosition(Vector3* position) const
+void PointMass::getPosition(Vector3* outPosition) const
 {
-	*position = PointMass::position;
+	*outPosition = PointMass::position;
 }
 
 Vector3 PointMass::getPosition() const
@@ -87,9 +87,9 @@ void PointMass::setPosition(const real x, const real y, const real z)
 
 // ------------ Velocity ------------
 
-void PointMass::getVelocity(Vector3* velocity) const
+void PointMass::getVelocity(Vector3* outVelocity) const
 {
-	*velocity = PointMass::velocity;
+	*outVelocity = PointMass::velocity;
 }
 
 Vector3 PointMass::getVelocity() const
@@ -111,9 +111,9 @@ void PointMass::setVelocity(const real x, const real y, const real z)
 
 // ------------ Acceleration ------------
 
-void PointMass::getAcceleration(Vector3* acceleration) const
+void PointMass::getAcceleration(Vector3* outAcceleration) const
 {
-	*acceleration = PointMass::acceleration;
+	*outAcceleration = PointMass::acceleration;
 }
 
 Vector3 PointMass::getAcceleration() const
