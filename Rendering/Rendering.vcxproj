@@ -131,7 +131,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)/include/;$(SolutionDir)/Externals/glad/include/glad;$(SolutionDir)/Externals/glm</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Core\include\;$(ProjectDir)/include/;$(SolutionDir)/Externals/glad/include/glad;$(SolutionDir)/Externals/glm</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

@@ -1,7 +1,8 @@
 #include <iostream>
+#include "System.h"
+#include "Managers\EntityManager.h"
 
-
-class Physics {
+class Physics : public System {
 
 public:
 
@@ -9,18 +10,19 @@ public:
 
 	}
 
-	void initialize() {
-		std::cout << "Physics init" << std::endl;
-	}
+    const char* GetName() const override {
+        return "Physics";
+    }
 
+    void Update() override {
+        // Update Loop logic here
 
-	void Simulate() {
-		std::cout << "Running Simulation" << std::endl;
-	}
+    }
 
+    void FixedUpdate() override {
+        // Update Loop logic here
 
-	void Update() {
-		std::cout << "Updating Physics" << std::endl;
-	}
+    }
+
 
 };

@@ -1,24 +1,28 @@
 #include <iostream>
+#include "System.h"
 
-
-class UI {
+class UI : public System {
 
 public:
 
-	UI() {
+    UI() {
 
-	}
+    }
+    
+    const char* GetName() const override {
+        return "UI";
+    }
 
-	void initialize() {
-		std::cout << "Physics init" << std::endl;
-	}
+    void Update() override {
+        // Update Loop logic here
+        std::cout << "UI Update" << std::endl;
 
-	void Draw() {
-		std::cout << "Drawing UI" << std::endl;
-	}
+    }
 
-	void Update() {
-		std::cout << "UI update" << std::endl;
-	}
+    void FixedUpdate() override {
+        // Update Loop logic here
+
+    }
+
 
 };

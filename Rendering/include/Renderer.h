@@ -7,9 +7,9 @@ implement pre and post methods.*/
 
 #include "Primitives.h"
 #include "Renderer.h"
+#include "../../Core/include/System.h"
 
-
-// Macro definitions for error handling
+// Macro definitions for error handlingb
 #define ASSERT(x) if (!(x)) __debugbreak();
 #define GLCall(x) GLClearError();\
     x;\
@@ -21,7 +21,7 @@ void GLClearError();
 bool GLLogCall(const char* function, const char* file, int line);
 
 
-class Renderer
+class Renderer : public System
 {
 public:
     Renderer();
@@ -38,7 +38,18 @@ public:
         std::string FragmentSource;
     };
 
-    void Update();
+    void Update() override;
+
+    const char* GetName() const override {
+        return "Renderer";
+    }
+
+
+    void FixedUpdate() override {
+        // Update Loop logic here
+
+    }
+
 
 private:
     static unsigned int CompileShader(unsigned int type, const std::string& source);

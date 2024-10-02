@@ -1,6 +1,7 @@
 #include <assert.h>
 #include "../include/pointmass.h"
 
+
 using namespace AE86;
 
 void PointMass::setInverseMass(real invMass) {
