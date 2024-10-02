@@ -104,6 +104,21 @@ namespace AE86
 		virtual void updateForce(PointMass* pointMass, real duration);
 	};
 
+	class PointMassFakeSpring : public PointMassForceGenerator
+	{
+		Vector3* anchor;
+
+		real springConstant;
+
+		real damping;
+
+	public:
+
+		PointMassFakeSpring(Vector3* anchor, real springConstant, real damping);
+
+		virtual void updateForce(PointMass* pointMass, real duration);
+	};
+
 	class PointMassForceRegistry
 	{
 	protected:

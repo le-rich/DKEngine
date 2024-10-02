@@ -138,3 +138,29 @@ void PointMassBuoyancy::updateForce(PointMass* pointMass, real duration)
 	force.y = liquidDensity * volume * (depth - maxDepth - waterHeight) / 2 * maxDepth;
 	pointMass->addForce(force);
 }
+
+PointMassFakeSpring::PointMassFakeSpring(Vector3* anchor, real sc, real d) : anchor(anchor), springConstant(sc), damping(d)
+{
+}
+
+void PointMassFakeSpring::updateForce(PointMass* pointMass, real duration)
+{
+	if (pointMass->getInverseMass() <= 0.0) return;
+
+	Vector3 position;
+	pointMass->getPosition(&position);
+	position -= *anchor;
+
+	// Calculate constants and check bounds
+	real gamma = 0.5f * real_sqrt(4 * springConstant - damping * damping);
+	if (gamma == 0.0f) return;
+	Vector3 c = position * (damping / (2.0f * gamma)) + pointMass->getVelocity() * (1.0f * gamma);
+
+	// calculate target positon
+	Vector3 target = position * real_cos(gamma * duration) + c * real_sin(gamma * duration);
+	target *= real_exp(-0.5f * duration * damping);
+
+	// calculate final force and apply
+	Vector3 accel = (target - position) * (1.0f / duration * duration) - pointMass->getVelocity() * duration;
+	pointMass->addForce(accel * (1 / pointMass->getInverseMass()));
+}
