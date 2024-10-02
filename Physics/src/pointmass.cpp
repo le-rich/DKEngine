@@ -3,27 +3,7 @@
 
 using namespace AE86;
 
-void PointMass::setInverseMass(real invMass) {
-	inverseMass = invMass;
-}
-
-void PointMass::setMass(real mass) {
-	inverseMass = (real)1.0 / mass;
-}
-
-real PointMass::getKineticEnergy() {
-	return 0.5 * (1.0f / inverseMass) * velocity.magnitude();
-}
-
-void PointMass::getVelocity(Vector3* velocity) const
-{
-	*velocity = PointMass::velocity;
-}
-
-real PointMass::getInverseMass() const
-{
-	return inverseMass;
-}
+// ------------ Misc ------------
 
 void PointMass::integrate(real duration) {
 
@@ -48,6 +28,43 @@ void PointMass::integrate(real duration) {
 	// Clear the forces.
 	clearAccumulator();
 }
+
+real PointMass::getKineticEnergy() {
+	return 0.5 * (1.0f / inverseMass) * velocity.magnitude();
+}
+
+// ------------ Mass ------------
+
+real PointMass::getMass() const
+{
+	if (PointMass::inverseMass <= 0.0)
+	{
+		return REAL_MAX;
+	}
+	else
+	{
+		return ((real)1.0) / inverseMass;
+	}
+}
+
+void PointMass::setMass(real mass) {
+	inverseMass = (real)1.0 / mass;
+}
+
+real PointMass::getInverseMass() const
+{
+	return inverseMass;
+}
+
+void PointMass::setInverseMass(real invMass) {
+	inverseMass = invMass;
+}
+
+void PointMass::getVelocity(Vector3* velocity) const
+{
+	*velocity = PointMass::velocity;
+}
+
 
 void PointMass::clearAccumulator() {
 	forceAccum.clear();
