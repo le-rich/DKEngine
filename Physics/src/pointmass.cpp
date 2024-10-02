@@ -9,7 +9,7 @@ void PointMass::integrate(real duration)
 {
 
 	// don't integrate if the pointMass has infinite mass
-	if (inverseMass <= (real) 0.0) return;
+	if (inverseMass <= ((real) 0.0)) return;
 
 	assert(duration > 0.0);
 
