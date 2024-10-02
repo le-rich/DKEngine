@@ -75,3 +75,36 @@ void PointMassContact::resolveInterpenetration(real duration)
 		pointMass[1]->setPosition(pointMass[1]->getPosition() + movePerIMass * pointMass[1]->getInverseMass());
 	}
 }
+
+PointMassContactResolver::PointMassContactResolver(unsigned iterations) : iterations(iterations)
+{
+}
+
+void PointMassContactResolver::setIterations(unsigned iterations)
+{
+	PointMassContactResolver::iterations = iterations;
+}
+
+void PointMassContactResolver::resolveContacts(PointMassContact* contactArray, unsigned numContacts, real duration)
+{
+	iterationsUsed = 0;
+
+	while (iterationsUsed < iterations)
+	{
+		real max = 0;
+		unsigned maxIndex = numContacts;
+
+		for (unsigned i = 0; i < numContacts; i++)
+		{
+			real sepVel = contactArray[i].calculateSeparatingVelocity();
+			if (sepVel < max)
+			{
+				max = sepVel;
+				maxIndex = i;
+			}
+		}
+
+		contactArray[maxIndex].resolve(duration);
+		iterationsUsed++;
+	}
+}
