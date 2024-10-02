@@ -108,6 +108,30 @@ void PointMass::setVelocity(const real x, const real y, const real z)
 	PointMass::velocity.z = z;
 }
 
+// ------------ Acceleration ------------
+
+void PointMass::getAcceleration(Vector3* acceleration) const
+{
+	*acceleration = PointMass::acceleration;
+}
+
+Vector3 PointMass::getAcceleration() const
+{
+	return PointMass::acceleration;
+}
+
+void PointMass::setAcceleration(const Vector3& acceleration)
+{
+	PointMass::acceleration = acceleration;
+}
+
+void PointMass::setAcceleration(const real x, const real y, const real z)
+{
+	PointMass::acceleration.x = x;
+	PointMass::acceleration.y = y;
+	PointMass::acceleration.z = z;
+}
+
 
 
 void PointMass::clearAccumulator() {
