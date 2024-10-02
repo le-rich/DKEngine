@@ -60,6 +60,32 @@ void PointMass::setInverseMass(real invMass) {
 	inverseMass = invMass;
 }
 
+// ------------ Position ------------
+
+void PointMass::getPosition(Vector3* position) const
+{
+	*position = PointMass::position;
+}
+
+Vector3 PointMass::getPosition() const
+{
+	return PointMass::position;
+}
+
+void PointMass::setPosition(const Vector3& position)
+{
+	PointMass::position = position;
+}
+
+void PointMass::setPosition(const real x, const real y, const real z)
+{
+	PointMass::position.x = x;
+	PointMass::position.y = y;
+	PointMass::position.z = z;
+}
+
+
+
 void PointMass::getVelocity(Vector3* velocity) const
 {
 	*velocity = PointMass::velocity;
