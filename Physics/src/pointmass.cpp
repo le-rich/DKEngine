@@ -20,7 +20,7 @@ void PointMass::getVelocity(Vector3* velocity) const
 	*velocity = PointMass::velocity;
 }
 
-real PointMass::getInverseMass()
+real PointMass::getInverseMass() const
 {
 	return inverseMass;
 }
