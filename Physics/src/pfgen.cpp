@@ -1,5 +1,7 @@
 #include "../include/pfgen.h"
+
 using namespace AE86;
+
 void PointMassForceRegistry::updateForces(real duration)
 {
 	Registry::iterator i = registrations.begin();
@@ -9,13 +11,20 @@ void PointMassForceRegistry::updateForces(real duration)
 	}
 }
 
+void PointMassForceRegistry::add(PointMass* pointMass, PointMassForceGenerator* fg)
+{
+	PointMassForceRegistry::PointMassForceRegistration registration;
+	registration.pointMass = pointMass;
+	registration.fg = fg;
+	registrations.push_back(registration);
+}
+
 void PointMassGravity::updateForce(PointMass* pointMass, real duration)
 {
 	// Check that we do not have infinite mass.
-	// if (!particle->hasFiniteMass()) return;
+	// if (!pointMass->hasFiniteMass()) return;
 	if (pointMass->getInverseMass() <= 0.0) return;
-	// Apply the mass-scaled force to the particle.
-	// particle->addForce(gravity * particle->getMass());
+	// Apply the mass-scaled force to the pointMass.
 	pointMass->addForce(gravity * pointMass->getMass());
 }
 
@@ -23,7 +32,7 @@ void PointMassDrag::updateForce(PointMass* pointMass, real duration)
 {
 	Vector3 force;
 	// Points force to the value of the velocity of
-	// the particle
+	// the pointMass
 	pointMass->getVelocity(&force);
 	// Calculate the total drag coefficient.
 	real dragCoeff = force.magnitude();

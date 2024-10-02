@@ -7,7 +7,7 @@ using namespace AE86;
 
 void PointMass::integrate(real duration) {
 
-	// don't integrate if the particle has infinite mass
+	// don't integrate if the pointMass has infinite mass
 	if (inverseMass <= 0.0f) return;
 
 	assert(duration > 0.0);
@@ -16,8 +16,9 @@ void PointMass::integrate(real duration) {
 	position.addScaledVector(velocity, duration);
 
 	// work out the acceleration from the force.
-	// (more will be added here when we generate forces)
 	Vector3 resultingAcc = acceleration;
+
+	resultingAcc.addScaledVector(forceAccum, inverseMass);
 
 	// update linear velocity from acceleration
 	velocity.addScaledVector(resultingAcc, duration);

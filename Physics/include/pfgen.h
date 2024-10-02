@@ -24,7 +24,7 @@ namespace AE86
 	public:
 		/** Creates the generator with the given acceleration. */
 		PointMassGravity(const Vector3& gravity);
-		/** Applies the gravitational force to the given particle. */
+		/** Applies the gravitational force to the given pointMass. */
 		virtual void updateForce(PointMass* pointMass, real duration);
 	};
 
@@ -37,7 +37,7 @@ namespace AE86
 	public:
 		/** Creates the generator with the given coefficients. */
 		PointMassDrag(real k1, real k2);
-		/** Applies the drag force to the given particle. */
+		/** Applies the drag force to the given pointMass. */
 		virtual void updateForce(PointMass* pointMass, real duration);
 	};
 

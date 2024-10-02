@@ -43,19 +43,19 @@ namespace AE86 {
 
 	protected:
 		/**
-		 * Holds the linear positino of the particle
+		 * Holds the linear positino of the pointMass
 		 * in world space.
 		 */
 		Vector3 position;
 
 		/**
-		 * Holds the linear velocity of the particle in
+		 * Holds the linear velocity of the pointMass in
 		 * world space.
 		 */
 		Vector3 velocity;
 
 		/**
-		 * Holds the acceleration of the particle. This value
+		 * Holds the acceleration of the pointMass. This value
 		 * can be used to set acceleration due to gravity (its primary
 		 * use), or any other ocnstant acceleration.
 		 */
@@ -76,7 +76,7 @@ namespace AE86 {
 		real damping;
 
 		/**
-		 * Holds the inverse of the mass of the particle. It
+		 * Holds the inverse of the mass of the pointMass. It
 		 * is more useful to hold the inverse mass because
 		 * integration is simpler, and because in real-time
 		 * simulation it is more useful to have objects with
