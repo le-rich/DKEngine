@@ -93,3 +93,26 @@ void PointMassAnchoredSpring::updateForce(PointMass* pointMass, real duration)
 	force *= -magnitude;
 	pointMass->addForce(force);
 }
+
+PointMassBungee::PointMassBungee(PointMass* other, real sc, real rl) : other(other), springConstant(sc), restLength(rl)
+{
+}
+
+void PointMassBungee::updateForce(PointMass* pointMass, real duration)
+{
+	Vector3 force;
+	pointMass->getPosition(&force);
+	force -= other->getPosition();
+
+	// Check if bungee is compressed.
+	real magnitude = force.magnitude();
+	if (magnitude <= restLength) return;
+
+	// Force magnitude calculation
+	magnitude = springConstant * (restLength - magnitude);
+
+	// Calculate final force then apply
+	force.normalize();
+	force* --magnitude;
+	pointMass->addForce(force);
+}

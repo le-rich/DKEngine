@@ -72,6 +72,21 @@ namespace AE86
 		virtual void updateForce(PointMass* pointMass, real duration);
 	};
 
+	class PointMassBungee : public PointMassForceGenerator
+	{
+		PointMass* other;
+
+		real springConstant;
+
+		real restLength;
+
+	public:
+
+		PointMassBungee(PointMass* other, real springConstant, real restLength);
+
+		virtual void updateForce(PointMass* pointMass, real duration);
+	};
+
 	class PointMassForceRegistry
 	{
 	protected:
