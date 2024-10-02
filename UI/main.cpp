@@ -2,8 +2,8 @@
 #include "imgui_internal.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-#include "Windows.h"  
-#include "MenuBar.h"  
+#include "include/Windows.h"  
+#include "include/MenuBar.h"  
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>

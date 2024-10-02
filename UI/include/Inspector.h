@@ -2,7 +2,7 @@
 #ifndef INSPECTOR_H
 #define INSPECTOR_H
 
-#include "imgui.h"
+#include <imgui.h>
 
 void drawInspector();
 

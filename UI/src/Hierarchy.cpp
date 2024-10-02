@@ -1,5 +1,5 @@
-#include "Hierarchy.h"
-#include "Console.h"
+#include "../include/Hierarchy.h"
+#include "../include/Console.h"
 
 std::string selectedNode = "";
 
@@ -31,4 +31,8 @@ void drawHierarchy() {
    ImGui::Begin("Hierarchy");
    hierarchyLine("a");//Replace with rootnode
    ImGui::End();
+}
+
+std::string getSelectedNode() {
+   return selectedNode;
 }
