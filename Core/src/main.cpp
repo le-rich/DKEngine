@@ -121,7 +121,7 @@ int run_glfw() {
 
 		// Rendering related calls, we can move these to the loop of the rendering thread
 		glClear(GL_COLOR_BUFFER_BIT);
-		renderer->Draw(triangle); // draw tri or square
+		renderer->Update(); // draw tri or square
 
 		// The window has two buffers, front and back.
 		// This allows us to display the front buffer while writing to the back buffer.

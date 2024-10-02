@@ -1,3 +1,7 @@
+#ifndef PRECISION_HEADER
+
+#define PRECISION_HEADER
+
 #include <math.h>
 
 namespace AE86 {
@@ -12,3 +16,5 @@ namespace AE86 {
 	#define real_sqrt sqrtf
 	#define real_pow powf
 }
+
+#endif
