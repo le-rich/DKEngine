@@ -1,5 +1,9 @@
+#ifndef PFGEN_HEADER
+
+#define PFGEN_HEADER
+
 #include "core.h"
-#include "../include/pointmass.h"
+#include "pointmass.h"
 #include <vector>
 namespace AE86
 {
@@ -79,3 +83,5 @@ namespace AE86
 		void updateForces(real duration);
 	};
 }
+
+#endif

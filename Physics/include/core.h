@@ -1,3 +1,7 @@
+#ifndef CORE_HEADER
+
+#define CORE_HEADER
+
 #include "precision.h"
 
 namespace AE86 {
@@ -172,3 +176,5 @@ namespace AE86 {
 		}
 	};
 }
+
+#endif

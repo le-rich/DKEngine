@@ -1,3 +1,7 @@
+#ifndef PM_HEADER
+
+#define PM_HEADER
+
 #include "core.h"
 
 namespace AE86 {
@@ -70,3 +74,5 @@ namespace AE86 {
 		Vector3 forceAccum;
 	};
 }
+
+#endif
