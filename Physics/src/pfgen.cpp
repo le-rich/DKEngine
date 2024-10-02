@@ -116,3 +116,25 @@ void PointMassBungee::updateForce(PointMass* pointMass, real duration)
 	force* --magnitude;
 	pointMass->addForce(force);
 }
+
+PointMassBuoyancy::PointMassBuoyancy(real maxDepth, real volume, real waterHeight, real liquidDensity) : maxDepth(maxDepth), volume(volume), waterHeight(waterHeight), liquidDensity(liquidDensity)
+{
+}
+
+void PointMassBuoyancy::updateForce(PointMass* pointMass, real duration)
+{
+	real depth = pointMass->getPosition().y;
+
+	if (depth >= waterHeight + maxDepth) return;
+	Vector3 force(0, 0, 0);
+
+	if (depth <= waterHeight - maxDepth)
+	{
+		force.y = liquidDensity * volume;
+		pointMass->addForce(force);
+		return;
+	}
+
+	force.y = liquidDensity * volume * (depth - maxDepth - waterHeight) / 2 * maxDepth;
+	pointMass->addForce(force);
+}

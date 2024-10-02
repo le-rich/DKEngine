@@ -87,6 +87,23 @@ namespace AE86
 		virtual void updateForce(PointMass* pointMass, real duration);
 	};
 
+	class PointMassBuoyancy : public PointMassForceGenerator
+	{
+		real maxDepth;
+
+		real volume;
+
+		real waterHeight;
+
+		real liquidDensity;
+
+	public:
+
+		PointMassBuoyancy(real maxDepth, real volume, real waterHeight, real liquidDensity = 1000.0f);
+
+		virtual void updateForce(PointMass* pointMass, real duration);
+	};
+
 	class PointMassForceRegistry
 	{
 	protected:
