@@ -133,6 +133,7 @@
     <ClInclude Include="include\pointmass.h" />
     <ClInclude Include="include\precision.h" />
     <ClInclude Include="include\pfgen.h" />
+    <ClInclude Include="include\pworld.h" />
     <ClInclude Include="physics.h" />
   </ItemGroup>
   <ItemGroup>
@@ -140,6 +141,7 @@
     <ClCompile Include="src\plinks.cpp" />
     <ClCompile Include="src\pointmass.cpp" />
     <ClCompile Include="src\pfgen.cpp" />
+    <ClCompile Include="src\pworld.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
