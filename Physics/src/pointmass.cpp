@@ -5,10 +5,11 @@ using namespace AE86;
 
 // ------------ Misc ------------
 
-void PointMass::integrate(real duration) {
+void PointMass::integrate(real duration)
+{
 
 	// don't integrate if the pointMass has infinite mass
-	if (inverseMass <= 0.0f) return;
+	if (inverseMass <= (real) 0.0) return;
 
 	assert(duration > 0.0);
 
@@ -30,8 +31,9 @@ void PointMass::integrate(real duration) {
 	clearAccumulator();
 }
 
-real PointMass::getKineticEnergy() {
-	return 0.5 * (1.0f / inverseMass) * velocity.magnitude();
+real PointMass::getKineticEnergy()
+{
+	return 0.5 * ((real)1.0 / inverseMass) * velocity.magnitude();
 }
 
 // ------------ Mass ------------
@@ -48,8 +50,9 @@ real PointMass::getMass() const
 	}
 }
 
-void PointMass::setMass(real mass) {
-	inverseMass = (real)1.0 / mass;
+void PointMass::setMass(real mass)
+{
+	inverseMass = ((real)1.0) / mass;
 }
 
 real PointMass::getInverseMass() const
@@ -57,7 +60,8 @@ real PointMass::getInverseMass() const
 	return inverseMass;
 }
 
-void PointMass::setInverseMass(real invMass) {
+void PointMass::setInverseMass(real invMass)
+{
 	inverseMass = invMass;
 }
 
