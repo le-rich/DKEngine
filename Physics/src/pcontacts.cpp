@@ -56,3 +56,22 @@ void PointMassContact::resolveVelocity(real duration)
 		pointMass[1]->setVelocity(pointMass[1]->getVelocity() + impulsePerIMass * pointMass[1]->getInverseMass());
 	}
 }
+
+void PointMassContact::resolveInterpenetration(real duration)
+{
+	if (penetration <= 0) return;
+
+	real totalInverseMass = pointMass[0]->getInverseMass();  // helper function? [getTotalIM()]
+	if (pointMass[1]) totalInverseMass += pointMass[1]->getInverseMass();  // helper function? [getTotalIM()]
+
+	if (totalInverseMass <= 0) return;  // helper function? [getTotalIM()]
+
+	Vector3 movePerIMass = contactNormal * (-penetration / totalInverseMass);
+
+	pointMass[0]->setPosition(pointMass[0]->getPosition() + movePerIMass * pointMass[0]->getInverseMass());
+
+	if (pointMass[1])
+	{
+		pointMass[1]->setPosition(pointMass[1]->getPosition() + movePerIMass * pointMass[1]->getInverseMass());
+	}
+}
