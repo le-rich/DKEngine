@@ -2,7 +2,7 @@
 
 #include "include/Component.h"
 #include "include/Entity.h"
-#include "ui.h"
+#include "include/ui.h"
 #include "physics.h"
 #include "render.h"
 
