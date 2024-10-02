@@ -84,12 +84,30 @@ void PointMass::setPosition(const real x, const real y, const real z)
 	PointMass::position.z = z;
 }
 
-
+// ------------ Velocity ------------
 
 void PointMass::getVelocity(Vector3* velocity) const
 {
 	*velocity = PointMass::velocity;
 }
+
+Vector3 PointMass::getVelocity() const
+{
+	return PointMass::velocity;
+}
+
+void PointMass::setVelocity(const Vector3& velocity)
+{
+	PointMass::velocity = velocity;
+}
+
+void PointMass::setVelocity(const real x, const real y, const real z)
+{
+	PointMass::velocity.x = x;
+	PointMass::velocity.y = y;
+	PointMass::velocity.z = z;
+}
+
 
 
 void PointMass::clearAccumulator() {
