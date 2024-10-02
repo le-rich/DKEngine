@@ -71,3 +71,25 @@ void PointMassSpring::updateForce(PointMass* pointMass, real duration)
 	force *= -magnitude;
 	pointMass->addForce(force);
 }
+
+PointMassAnchoredSpring::PointMassAnchoredSpring(Vector3* anchor,
+	real sc, real rl) : anchor(anchor), springConstant(sc), restLength(rl)
+{
+}
+
+void PointMassAnchoredSpring::updateForce(PointMass* pointMass, real duration)
+{
+	Vector3 force;
+	pointMass->getPosition(&force);
+	force -= *anchor;
+
+	// Force magnitude calculation
+	real magnitude = force.magnitude();
+	magnitude = real_abs(magnitude - restLength);
+	magnitude *= springConstant;
+
+	// Calculate final force then apply
+	force.normalize();
+	force *= -magnitude;
+	pointMass->addForce(force);
+}
