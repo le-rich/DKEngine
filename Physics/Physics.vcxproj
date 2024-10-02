@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\core.h" />
+    <ClInclude Include="include\pcontacts.h" />
     <ClInclude Include="include\plinks.h" />
     <ClInclude Include="include\pointmass.h" />
     <ClInclude Include="include\precision.h" />
@@ -135,6 +136,7 @@
     <ClInclude Include="physics.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\pcontacts.cpp" />
     <ClCompile Include="src\plinks.cpp" />
     <ClCompile Include="src\pointmass.cpp" />
     <ClCompile Include="src\pfgen.cpp" />
