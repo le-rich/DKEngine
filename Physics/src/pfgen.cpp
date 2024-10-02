@@ -162,5 +162,5 @@ void PointMassFakeSpring::updateForce(PointMass* pointMass, real duration)
 
 	// calculate final force and apply
 	Vector3 accel = (target - position) * (1.0f / duration * duration) - pointMass->getVelocity() * duration;
-	pointMass->addForce(accel * (1 / pointMass->getInverseMass()));
+	pointMass->addForce(accel * pointMass->getMass());
 }
