@@ -5,6 +5,7 @@
 #include "core.h"
 #include "pointmass.h"
 #include <vector>
+
 namespace AE86
 {
 	class PointMassForceGenerator
