@@ -13,14 +13,33 @@ namespace AE86 {
 	*/
 	class PointMass {
 	public:
-		void setInverseMass(real invMass);
-		void setMass(real mass);
+
 		void integrate(real duration);
+
 		real getKineticEnergy();
+
+		real getMass() const;
+		void setMass(real mass);
+		real getInverseMass() const;
+		void setInverseMass(const real invMass);
+		
+		void getPosition(Vector3* position) const;
+		Vector3 getPosition() const;
+		void setPosition(const Vector3& position);
+		void setPosition(const real x, const real y, const real z);
+
+		void getVelocity(Vector3* velocity) const;
+		Vector3 getVelocity() const;
+		void setVelocity(const Vector3& velocity);
+		void setVelocity(const real x, const real y, const real z);
+
+		void getAcceleration(Vector3* acceleration) const;
+		Vector3 getAcceleration() const;
+		void setAcceleration(const Vector3& acceleration);
+		void setAcceleration(const real x, const real y, const real z);
+
 		void clearAccumulator();
 		void addForce(const Vector3& force);
-		void getVelocity(Vector3* velocity) const;
-		real getInverseMass();
 
 	protected:
 		/**
