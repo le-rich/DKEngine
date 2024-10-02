@@ -9,7 +9,7 @@ namespace AE86 {
 	 * A particle is the simplest object that can be simulated in the
 	 * physics system. In reality, it is a point mass as per Newton's
 	 * Laws of motion.
-	 * Author: Jas Singh
+	 * Authors: Jas Singh, Joseph Harris, Jugraj Chouhan
 	*/
 	class PointMass {
 	public:

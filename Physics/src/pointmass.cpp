@@ -33,7 +33,7 @@ void PointMass::integrate(real duration)
 
 real PointMass::getKineticEnergy()
 {
-	return 0.5 * ((real)1.0 / inverseMass) * velocity.magnitude();
+	return ((real)0.5) * ((real)1.0 / inverseMass) * velocity.magnitude();
 }
 
 // ------------ Mass ------------
