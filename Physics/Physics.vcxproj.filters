@@ -27,9 +27,15 @@
     <ClInclude Include="physics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\pfgen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\pointmass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pfgen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
