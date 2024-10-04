@@ -137,7 +137,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\UI\;$(SolutionDir)\Rendering\;$(SolutionDir)\Core\include\;$(SolutionDir)\Physics\;C:\Users\richa\Documents\DKEngine\External\GLFW\x64\include;C:\Users\richa\Documents\DKEngine\Core\include;C:\Users\richa\Documents\DKEngine\External\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\External\uuid\;$(SolutionDir)\UI\;$(SolutionDir)\Rendering\;$(SolutionDir)\Core\include\;$(SolutionDir)\Physics\;C:\Users\richa\Documents\DKEngine\External\GLFW\x64\include;C:\Users\richa\Documents\DKEngine\Core\include;C:\Users\richa\Documents\DKEngine\External\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -150,7 +150,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Physics\Physics.vcxproj">
@@ -159,6 +159,16 @@
     <ProjectReference Include="..\Rendering\Rendering.vcxproj">
       <Project>{fdf1f4cb-0084-47a9-8bae-921d65a2bcf2}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Component.h" />
+    <ClInclude Include="include\Entity.h" />
+    <ClInclude Include="include\Managers\ComponentManager.h" />
+    <ClInclude Include="include\Managers\EntityManager.h" />
+    <ClInclude Include="include\System.h" />
+    <ClInclude Include="include\Utils\endianness.h" />
+    <ClInclude Include="include\Utils\IDUtils.h" />
+    <ClInclude Include="include\Utils\uuid_v4.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

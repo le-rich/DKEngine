@@ -19,7 +19,6 @@ protected:
     // array of components
     std::vector<Component> components;
 
-
 public:
     // retrieve id of entity
     UUIDv4::UUID GetEntityID() {
@@ -87,6 +86,7 @@ public:
     Entity()
     {
         this->entityID = uuidGen.getUUID();
+        // init code
     }
 
     // default destructor
