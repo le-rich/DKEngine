@@ -5,14 +5,15 @@
 
 #include <string>
 
-template<typename T>
+//template<typename T>
 class Component {
 
+public: 
     // unique id for component
     UUIDv4::UUID componentID;
 
     // changeable display id for component
-    std::string displayName;
+    std::string componentDisplayName;
 
     // retrieve id for component
     UUIDv4::UUID GetComponentID(){
@@ -25,15 +26,15 @@ class Component {
     }
 
     // retrieve display id of component
-    std::string GetDisplayID()
+    const std::string& GetDisplayName()
     {
-        return displayName;
+        return componentDisplayName;
     }
 
     // set display id of component
-    void SetDisplayID(std::string newID)
+    void SetDisplayName(std::string newID)
     {
-        displayName = newID;
+        componentDisplayName = newID;
     }
 
     // default constructor
@@ -44,6 +45,11 @@ class Component {
     // destructor
     ~Component(){
         // removal code
+    }
+
+    // overloaded equality operator based on UUID
+    bool operator==(const Component& other) const {
+        return componentID == other.componentID; 
     }
 };
 

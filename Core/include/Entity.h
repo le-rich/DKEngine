@@ -1,7 +1,10 @@
 #pragma once
 
 #include "Utils/IDUtils.h"
-#include "Managers/ComponentManager.h"
+#include "Component.h"
+
+#include <algorithm>
+#include <vector>
 
 //template<typename T>
 class Entity {
@@ -11,11 +14,10 @@ protected:
     UUIDv4::UUID entityID;
 
     // changeable display id for entity
-    std::string EntityDisplayID;
+    std::string entityDisplayName;
 
-    // attached component manager
-    ComponentManager* componentManager;
-
+    // array of components
+    std::vector<Component> components;
 
 public:
     // retrieve id of entity
@@ -23,20 +25,61 @@ public:
         return entityID;
     }
 
+    // set the entity uuid
     void SetEntityID(const UUIDv4::UUID& newid) {
         this->entityID = newid;
     }
 
     // retrieve display id of entity
-    std::string GetDisplayID()
+    std::string GetDisplayName()
     {
-        return EntityDisplayID;
+        return entityDisplayName;
     }
 
     // set display id of entity
-    void SetDisplayID(std::string newID)
+    void SetDisplayName(std::string newID)
     {
-        EntityDisplayID = newID;
+        entityDisplayName = newID;
+    }
+
+    // get array of components
+    const std::vector<Component>& getComponents() const {
+        return components;
+    }
+
+    // update components
+    void update()
+    {
+        // TODO:: call the component manager's update
+    }
+
+    // add component to the entity
+    void addComponent(Component& c)
+    {
+        components.push_back(c);
+    }
+
+    // remove component from the entity
+    void removeComponent(Component& c)
+    {
+        components.erase(
+            std::remove_if(components.begin(), components.end(),
+                [&c](const Component& comp) { return comp == c; }),
+            components.end());
+    }
+
+    // find a component
+    Component getComponent(Component& c)
+    {
+        auto it = std::find_if(components.begin(), components.end(),
+            [&c](const Component& comp) { return comp == c; });
+
+        if (it != components.end()) {
+            return *it;
+        }
+        else {
+            std::cout << "Component not found" << std::endl;
+        }
     }
 
     // default constructor
@@ -46,20 +89,11 @@ public:
         // init code
     }
 
-    // overloaded constructor
-    Entity(ComponentManager* compMngr)
-    {
-        // init code
-    }
-
     // default destructor
     ~Entity(){
         // destructor code        
     }
 
-    // TODO: method to retrieve individual component
-    // TODO: method to add component
-    // TODO: method to destroy component
     // TODO: enable/disable
     
 };
