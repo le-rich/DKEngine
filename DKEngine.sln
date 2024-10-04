@@ -63,10 +63,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "include", "include", "{DA98
 	ProjectSection(SolutionItems) = preProject
 		Core\include\Component.h = Core\include\Component.h
 		Core\include\Entity.h = Core\include\Entity.h
-<<<<<<< HEAD
-=======
 		Core\include\System.h = Core\include\System.h
->>>>>>> e8723b90f795cac6f8d58232c91f5e2ee09e557c
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Managers", "Managers", "{97C3B76B-0FF7-450B-8B80-43F6DBBF50A5}"
