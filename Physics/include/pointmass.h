@@ -1,3 +1,7 @@
+#ifndef PM_HEADER
+
+#define PM_HEADER
+
 #include "core.h"
 
 namespace AE86 {
@@ -5,29 +9,53 @@ namespace AE86 {
 	 * A particle is the simplest object that can be simulated in the
 	 * physics system. In reality, it is a point mass as per Newton's
 	 * Laws of motion.
-	 * Author: Jas Singh
+	 * Authors: Jas Singh, Joseph Harris, Jugraj Chouhan
 	*/
 	class PointMass {
 	public:
-		void setInverseMass(real invMass);
-		void setMass(real mass);
+
 		void integrate(real duration);
+
 		real getKineticEnergy();
+
+		real getMass() const;
+		void setMass(real mass);
+		real getInverseMass() const;
+		void setInverseMass(const real invMass);
+		
+		void getPosition(Vector3* position) const;
+		Vector3 getPosition() const;
+		void setPosition(const Vector3& position);
+		void setPosition(const real x, const real y, const real z);
+
+		void getVelocity(Vector3* velocity) const;
+		Vector3 getVelocity() const;
+		void setVelocity(const Vector3& velocity);
+		void setVelocity(const real x, const real y, const real z);
+
+		void getAcceleration(Vector3* acceleration) const;
+		Vector3 getAcceleration() const;
+		void setAcceleration(const Vector3& acceleration);
+		void setAcceleration(const real x, const real y, const real z);
+
+		void clearAccumulator();
+		void addForce(const Vector3& force);
+
 	protected:
 		/**
-		 * Holds the linear positino of the particle
+		 * Holds the linear positino of the pointMass
 		 * in world space.
 		 */
 		Vector3 position;
 
 		/**
-		 * Holds the linear velocity of the particle in
+		 * Holds the linear velocity of the pointMass in
 		 * world space.
 		 */
 		Vector3 velocity;
 
 		/**
-		 * Holds the acceleration of the particle. This value
+		 * Holds the acceleration of the pointMass. This value
 		 * can be used to set acceleration due to gravity (its primary
 		 * use), or any other ocnstant acceleration.
 		 */
@@ -48,7 +76,7 @@ namespace AE86 {
 		real damping;
 
 		/**
-		 * Holds the inverse of the mass of the particle. It
+		 * Holds the inverse of the mass of the pointMass. It
 		 * is more useful to hold the inverse mass because
 		 * integration is simpler, and because in real-time
 		 * simulation it is more useful to have objects with
@@ -56,5 +84,14 @@ namespace AE86 {
 		 * (completely unstable in numerical simulation).
 		 */
 		real inverseMass;
+
+		/**
+		* Holds the accumulated force to be applied at the next
+		* simulation iteration only. This value is zeroed at each
+		* integration step.
+		*/
+		Vector3 forceAccum;
 	};
 }
+
+#endif
