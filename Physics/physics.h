@@ -10,16 +10,19 @@ public:
 
 	}
 
-    void AddEntity(int entityId) override {
-        std::cout << "Added entity " << entityId << " to Physics System." << std::endl;
-    }
-
     const char* GetName() const override {
         return "Physics";
     }
 
-    void RemoveEntity(int entityId) override {
-        std::cout << "Removed entity " << entityId << " from Physics System." << std::endl;
+    void Update() override {
+        // Update Loop logic here
+
     }
+
+    void FixedUpdate() override {
+        // Update Loop logic here
+
+    }
+
 
 };
