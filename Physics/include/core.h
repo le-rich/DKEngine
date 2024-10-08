@@ -329,6 +329,28 @@ namespace AE86 {
 		}
 
 		/**
+		 * Sets the matrix to be the transpose of the given matrix.
+		 */
+		void setTranspose(const Matrix3& m) {
+			data[0] = m.data[0];
+			data[1] = m.data[3];
+			data[2] = m.data[6];
+			data[3] = m.data[1];
+			data[4] = m.data[4];
+			data[5] = m.data[7];
+			data[6] = m.data[2];
+			data[7] = m.data[5];
+			data[8] = m.data[8];
+		}
+
+		/** Returns a new matrix containing the transpose of the matrix. */
+		Matrix3 transpose() const {
+			Matrix3 result;
+			result.setTranspose(*this);
+			return result;
+		}
+
+		/**
 		 * Transform the given vector by this matrix.
 		 */
 		Vector3 transform(const Vector3& vector) const {
