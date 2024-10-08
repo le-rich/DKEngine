@@ -399,6 +399,33 @@ namespace AE86 {
 			result.data[11] = (o.data[3] * data[8]) + (o.data[7] * data[9]) + (o.data[11] * data[10]) + data[11];
 			return result;
 		}
+
+		/**
+		 * Returns the determinant of the matrix.
+		 */
+		real getDeterminant() const;
+
+		/**
+		 * Sets the matrix to be the inverse of the given matrix.
+		 */
+		void setInverse(const Matrix4& m);
+
+		/**
+		 * Returns a new matrix containing the inverse of this matrix.
+		 */
+		Matrix4 inverse() const {
+			Matrix4 result;
+			result.setInverse(*this);
+			return result;
+		}
+
+		/**
+		 * Inverts the matrix.
+		 */
+		void invert() {
+			setInverse(*this);
+		}
+
 	};
 }
 
