@@ -188,11 +188,13 @@ namespace AE86 {
 		 * Holds the tensor matrix data in array form.
 		 */
 		real data[9];
+
 		/**
 		 * Creates a new matrix.
 		 */
 		Matrix3() : data{} {
 		}
+
 		/**
 		 * Creates a new matrix with the given three vectors making
 		 * up its columns.
@@ -202,6 +204,7 @@ namespace AE86 {
 		{
 			setComponents(compOne, compTwo, compThree);
 		}
+
 		/**
 		 * Creates a new matrix with explicit coefficients.
 		 */
@@ -212,6 +215,7 @@ namespace AE86 {
 			data[3] = c3; data[4] = c4; data[5] = c5;
 			data[6] = c6; data[7] = c7; data[8] = c8;
 		}
+
 		/**
 		 * Sets the matrix values from the given three vector components.
 		 * These are arranged as the three columns of the vector.
@@ -232,6 +236,7 @@ namespace AE86 {
 			data[7] = compTwo.z;
 			data[8] = compThree.z;
 		}
+
 		/**
 		 * Transform the given vector by this matrix.
 		 */
@@ -304,6 +309,7 @@ namespace AE86 {
 		 * Holds the transform matrix data in array form.
 		 */
 		real data[12];
+
 		/**
 		 * Creates an identity matrix.
 		 */
@@ -313,6 +319,7 @@ namespace AE86 {
 				data[7] = data[8] = data[9] = data[11] = 0;
 			data[0] = data[5] = data[10] = 1;
 		}
+
 		/**
 		 * Transform the given vector by this matrix.
 		 */
@@ -329,9 +336,11 @@ namespace AE86 {
 				vector.z * data[10] + data[11]
 			);
 		}
+
 		Vector3 transform(const Vector3& vector) const {
 			return (*this) * vector;
 		}
+
 		/**
 		 * Returns a matrix, which is this one multiplied by the other given
 		 * matrix.
