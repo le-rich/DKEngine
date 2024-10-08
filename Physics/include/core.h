@@ -523,8 +523,68 @@ namespace AE86 {
 			);
 		}
 
+		/**
+		 * Transform the given vector by this matrix.
+		 */
 		Vector3 transform(const Vector3& vector) const {
 			return (*this) * vector;
+		}
+
+		/**
+		 * Transform the given vector by the transformational inverse
+		 * of this matrix.
+		 */
+		Vector3 transformInverse(const Vector3& vector) const {
+			Vector3 tmp = vector;
+			tmp.x -= data[3];
+			tmp.y -= data[7];
+			tmp.z -= data[11];
+			return Vector3(
+				tmp.x * data[0] +
+				tmp.y * data[4] +
+				tmp.z * data[8],
+				tmp.x * data[1] +
+				tmp.y * data[5] +
+				tmp.z * data[9],
+				tmp.x * data[2] +
+				tmp.y * data[6] +
+				tmp.z * data[10]
+			);
+		}
+
+		/**
+		 * Transform the given direction vector by this matrix.
+		 */
+		Vector3 transformDirection(const Vector3& vector) const {
+			return Vector3(
+				vector.x * data[0] +
+				vector.y * data[1] +
+				vector.z * data[2],
+				vector.x * data[4] +
+				vector.y * data[5] +
+				vector.z * data[6],
+				vector.x * data[8] +
+				vector.y * data[9] +
+				vector.z * data[10]
+			);
+		}
+
+		/**
+		 * Transform the given direction vector by the
+		 * transformational inverse of this matrix.
+		 */
+		Vector3 transformInverseDirection(const Vector3& vector) const {
+			return Vector3(
+				vector.x * data[0] +
+				vector.y * data[4] +
+				vector.z * data[8],
+				vector.x * data[1] +
+				vector.y * data[5] +
+				vector.z * data[9],
+				vector.x * data[2] +
+				vector.y * data[6] +
+				vector.z * data[10]
+			);
 		}
 
 		/**
