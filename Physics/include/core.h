@@ -177,6 +177,116 @@ namespace AE86 {
 	};
 
 	/**
+	 * Holds a three-degrees-of-freedom orientation. This is done
+	 * using the mathematical concept of a Quaternion. It is the
+	 * extension of imaginary numbers, with four items of data to
+	 * hold three degrees of freedom. These items are coefficients
+	 * of a complex number with three imaginary units. This class
+	 * is a normalized quaternion (length of 1) as that is a
+	 * requirement for a quaternion to be a valid rotation.
+	 */
+	class Quaternion {
+	public:
+		union {
+			struct {
+				/**
+				 * Holds the real component of the quaternion.
+				 */
+				real r;
+				/**
+				 * Holds the first complex component of the
+				 * quaternion.
+				 */
+				real i;
+				/**
+				 * Holds the second complex component of the
+				 * quaternion.
+				 */
+				real j;
+				/**
+				 * Holds the third complex component of the
+				 * quaternion.
+				 */
+				real k;
+			};
+			/**
+			 * Holds the quaternion data in array form.
+			 */
+			real data[4];
+		};
+
+		/**
+		 * The default constructor creates a quaternion representing
+		 * a zero rotation.
+		 */
+		Quaternion() : r(1), i(0), j(0), k(0) {}
+
+		/**
+		 * The explicit constructor creates a quaternion with the given
+		 * components.
+		 */
+		Quaternion(const real r, const real i, const real j, const real k)
+			: r(r), i(i), j(j), k(k)
+		{
+		}
+
+		/**
+		 * Normalizes the quaternion, ensuring unit length and that
+		 * it is a valid quaternion rotation.
+		 */
+		void normalize() {
+			real d = r * r + i * i + j * j + k * k;
+			// Check for zero-length quaternion.
+			// If so, set r = 1, which means no-rotation.
+			if (d == 0) {
+				r = 1;
+				return;
+			}
+			d = ((real)1.0) / real_sqrt(d);
+			r *= d;
+			i *= d;
+			j *= d;
+			k *= d;
+		}
+
+		/**
+		 * Multiplies the quaternion by the given quaternion.
+		 */
+		void operator *=(const Quaternion& multiplier) {
+			Quaternion q = *this;
+			r = q.r * multiplier.r - q.i * multiplier.i -
+				q.j * multiplier.j - q.k * multiplier.k;
+			i = q.r * multiplier.i + q.i * multiplier.r +
+				q.j * multiplier.k - q.k * multiplier.j;
+			j = q.r * multiplier.j + q.j * multiplier.r +
+				q.k * multiplier.i - q.i * multiplier.k;
+			k = q.r * multiplier.k + q.k * multiplier.r +
+				q.i * multiplier.j - q.j * multiplier.i;
+		}
+		void rotateByVector(const Vector3& vector) {
+			Quaternion q(0, vector.x, vector.y, vector.z);
+			(*this) *= q;
+		}
+
+		/**
+		 * Adds the given vector this, scaled by a given amount.
+		 * Required for orientation updates by angular velocity.
+		 */
+		void addScaledVector(const Vector3& vector, real scale)
+		{
+			Quaternion q(0,
+				vector.x * scale,
+				vector.y * scale,
+				vector.z * scale);
+			q *= *this;
+			r += q.r * ((real)0.5);
+			i += q.i * ((real)0.5);
+			j += q.j * ((real)0.5);
+			k += q.k * ((real)0.5);
+		}
+	};
+
+	/**
 	 * Holds a 3 x 3 row major matrix representing a transformation in
 	 * 3D space that does not include a translational component. This
 	 * matrix is not padded to produce an aligned structure.
@@ -356,6 +466,22 @@ namespace AE86 {
 		Vector3 transform(const Vector3& vector) const {
 			return (*this) * vector;
 		}
+
+		/**
+		 * Sets this matrix to be the rotation matrix corresponding to
+		 * the given quaternion.
+		 */
+		void setOrientation(const Quaternion& q) {
+			data[0] = 1 - (2 * q.j * q.j + 2 * q.k * q.k);
+			data[1] = 2 * q.i * q.j + 2 * q.k * q.r;
+			data[2] = 2 * q.i * q.k - 2 * q.j * q.r;
+			data[3] = 2 * q.i * q.j - 2 * q.k * q.r;
+			data[4] = 1 - (2 * q.i * q.i + 2 * q.k * q.k);
+			data[5] = 2 * q.j * q.k + 2 * q.i * q.r;
+			data[6] = 2 * q.i * q.k + 2 * q.j * q.r;
+			data[7] = 2 * q.j * q.k - 2 * q.i * q.r;
+			data[8] = 1 - (2 * q.i * q.i + 2 * q.j * q.j);
+		}
 	};
 
 	/**
@@ -420,6 +546,25 @@ namespace AE86 {
 			result.data[7] = (o.data[3] * data[4]) + (o.data[7] * data[5]) + (o.data[11] * data[6]) + data[7];
 			result.data[11] = (o.data[3] * data[8]) + (o.data[7] * data[9]) + (o.data[11] * data[10]) + data[11];
 			return result;
+		}
+
+		/**
+		 * Sets this matrix to be the rotatino matrix corresponding to
+		 * the given quaternion.
+		 */
+		void setOrientationAndPos(const Quaternion& q, const Vector3& pos) {
+			data[0] = 1 - (2 * q.j * q.j + 2 * q.k * q.k);
+			data[1] = 2 * q.i * q.j + 2 * q.k * q.r;
+			data[2] = 2 * q.i * q.k - 2 * q.j * q.r;
+			data[3] = pos.x;
+			data[4] = 2 * q.i * q.j - 2 * q.k * q.r;
+			data[5] = 1 - (2 * q.i * q.i + 2 * q.k * q.k);
+			data[6] = 2 * q.j * q.k + 2 * q.i * q.r;
+			data[7] = pos.y;
+			data[8] = 2 * q.i * q.k + 2 * q.j * q.r;
+			data[9] = 2 * q.j * q.k - 2 * q.i * q.r;
+			data[10] = 1 - (2 * q.i * q.i + 2 * q.j * q.j);
+			data[11] = pos.z;
 		}
 
 		/**
