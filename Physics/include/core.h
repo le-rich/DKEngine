@@ -238,6 +238,41 @@ namespace AE86 {
 		}
 
 		/**
+		* Sets the matrix to be the inverse of the given matrix.
+		*/
+		void setInverse(const Matrix3& m)
+		{
+			real t1 = m.data[0] * m.data[4];
+			real t2 = m.data[0] * m.data[5];
+			real t3 = m.data[1] * m.data[3];
+			real t4 = m.data[2] * m.data[3];
+			real t5 = m.data[1] * m.data[6];
+			real t6 = m.data[2] * m.data[6];
+			// Calculate the determinant.
+			real det = (t1 * m.data[8] - t2 * m.data[7] - t3 * m.data[8] +
+				t4 * m.data[7] + t5 * m.data[5] - t6 * m.data[4]);
+			// Make sure the determinant is non-zero.
+			if (det == (real)0.0f) return;
+			real invd = (real)1.0f / det;
+			data[0] = (m.data[4] * m.data[8] - m.data[5] * m.data[7]) * invd;
+			data[1] = -(m.data[1] * m.data[8] - m.data[2] * m.data[7]) * invd;
+			data[2] = (m.data[1] * m.data[5] - m.data[2] * m.data[4]) * invd;
+			data[3] = -(m.data[3] * m.data[8] - m.data[5] * m.data[6]) * invd;
+			data[4] = (m.data[0] * m.data[8] - t6) * invd;
+			data[5] = -(t2 - t4) * invd;
+			data[6] = (m.data[3] * m.data[7] - m.data[4] * m.data[6]) * invd;
+			data[7] = -(m.data[0] * m.data[7] - t5) * invd;
+			data[8] = (t1 - t3) * invd;
+		}
+
+		/** Returns a new matrix containing the inverse of the matrix. */
+		Matrix3 inverse() const {
+			Matrix3 result;
+			result.setInverse(*this);
+			return result;
+		}
+
+		/**
 		 * Transform the given vector by this matrix.
 		 */
 		Vector3 operator*(const Vector3& vector) const {
@@ -247,6 +282,7 @@ namespace AE86 {
 				vector.x * data[6] + vector.y * data[7] + vector.z * data[8]
 			);
 		}
+
 		/**
 		 * Returns a matrix, which is this one multiplied by the other given
 		 * matrix.
@@ -264,6 +300,7 @@ namespace AE86 {
 				data[6] * o.data[2] + data[7] * o.data[5] + data[8] * o.data[8]
 			);
 		}
+
 		/**
 		 * Multiplies this matrix in place by the other given matrix.
 		 */
@@ -290,6 +327,7 @@ namespace AE86 {
 			data[7] = t2;
 			data[8] = t3;
 		}
+
 		/**
 		 * Transform the given vector by this matrix.
 		 */
