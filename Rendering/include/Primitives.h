@@ -83,14 +83,15 @@ struct Cube : public Shape
     Cube()
     {
         vertices.resize(8);
-        vertices[0].mPosition = glm::vec3(-0.5f, -0.5f, 0.5f);
-        vertices[1].mPosition = glm::vec3(0.5f, -0.5f, 0.5f);
-        vertices[2].mPosition = glm::vec3(0.5f, 0.5f, 0.5f);
-        vertices[3].mPosition = glm::vec3(-0.5f, 0.5f, 0.5f);
-        vertices[4].mPosition = glm::vec3(-0.5f, -0.5f, -0.5f);
-        vertices[5].mPosition = glm::vec3(0.5f, -0.5f, -0.5f);
-        vertices[6].mPosition = glm::vec3(0.5f, 0.5f, -0.5f);
-        vertices[7].mPosition = glm::vec3(-0.5f, 0.5f, -0.5f);
+        // Facing from front
+        vertices[0].mPosition = glm::vec3(-0.5f, -0.5f, 0.5f);  // Front Bot Left
+        vertices[1].mPosition = glm::vec3(0.5f, -0.5f, 0.5f);   // Front Bot Right
+        vertices[2].mPosition = glm::vec3(0.5f, 0.5f, 0.5f);    // Front Top Right
+        vertices[3].mPosition = glm::vec3(-0.5f, 0.5f, 0.5f);   // Front Top Left
+        vertices[4].mPosition = glm::vec3(-0.5f, -0.5f, -0.5f); // Back Bot Left
+        vertices[5].mPosition = glm::vec3(0.5f, -0.5f, -0.5f);  // Back Bot Right
+        vertices[6].mPosition = glm::vec3(0.5f, 0.5f, -0.5f);   // Back Top Right
+        vertices[7].mPosition = glm::vec3(-0.5f, 0.5f, -0.5f);  // Back Top Left
 
         vertices[0].mNormal = glm::vec3(1.0f, 0.5f, 0.5f);
         vertices[1].mNormal = glm::vec3(1.0f, 0.5f, 0.5f);
@@ -109,58 +110,6 @@ struct Cube : public Shape
         vertices[5].mUVCoord = glm::vec2(0.0, 1.0);
         vertices[6].mUVCoord = glm::vec2(1.0, 1.0);
         vertices[7].mUVCoord = glm::vec2(0.0, 0.0);
-
-        
-        //vertices =
-        //{
-        //    // front
-        //    Vertex(glm::vec3(-0.5f, -0.5f, 0.5f)),
-        //    Vertex(glm::vec3(0.5f, 0.5f, 0.5f)),
-        //    Vertex(glm::vec3(-0.5f, 0.5f, 0.5f)),
-        //    Vertex(glm::vec3(-0.5f, -0.5f, 0.5f)),
-        //    Vertex(glm::vec3(0.5f, -0.5f, 0.5f)),
-        //    Vertex(glm::vec3(0.5f, 0.5f, 0.5f)),
-        //
-        //    // back
-        //    Vertex(glm::vec3(-0.5f, -0.5f, -0.5f)),
-        //    Vertex(glm::vec3(-0.5f, 0.5f, -0.5f)),
-        //    Vertex(glm::vec3(0.5f, 0.5f, -0.5f)),
-        //    Vertex(glm::vec3(-0.5f, -0.5f, -0.5f)),
-        //    Vertex(glm::vec3(0.5f, 0.5f, -0.5f)),
-        //    Vertex(glm::vec3(0.5f, -0.5f, -0.5f)),
-        //
-        //    // left
-        //    Vertex(glm::vec3(-0.5f, -0.5f, 0.5f)),
-        //    Vertex(glm::vec3(-0.5f, 0.5f, 0.5f)),
-        //    Vertex(glm::vec3(-0.5f, 0.5f, -0.5f)),
-        //    Vertex(glm::vec3(-0.5f, -0.5f, 0.5f)),
-        //    Vertex(glm::vec3(-0.5f, 0.5f, -0.5f)),
-        //    Vertex(glm::vec3(-0.5f, -0.5f, -0.5f)),
-        //
-        //    // right
-        //    Vertex(glm::vec3(0.5f, -0.5f, 0.5f)),
-        //    Vertex(glm::vec3(0.5f, 0.5f, -0.5f)),
-        //    Vertex(glm::vec3(0.5f, 0.5f, 0.5f)),
-        //    Vertex(glm::vec3(0.5f, -0.5f, 0.5f)),
-        //    Vertex(glm::vec3(0.5f, -0.5f, -0.5f)),
-        //    Vertex(glm::vec3(0.5f, 0.5f, -0.5f)),
-        //
-        //    // top
-        //    Vertex(glm::vec3(0.5f, 0.5f, 0.5f)),
-        //    Vertex(glm::vec3(-0.5f, 0.5f, -0.5f)),
-        //    Vertex(glm::vec3(-0.5f, 0.5f, 0.5f)),
-        //    Vertex(glm::vec3(0.5f, 0.5f, 0.5f)),
-        //    Vertex(glm::vec3(0.5f, 0.5f, -0.5f)),
-        //    Vertex(glm::vec3(-0.5f, 0.5f, -0.5f)),
-        //
-        //    // bottom
-        //    Vertex(glm::vec3(0.5f, -0.5f, 0.5f)),
-        //    Vertex(glm::vec3(-0.5f, -0.5f, 0.5f)),
-        //    Vertex(glm::vec3(-0.5f, -0.5f, -0.5f)),
-        //    Vertex(glm::vec3(0.5f, -0.5f, 0.5f)),
-        //    Vertex(glm::vec3(-0.5f, -0.5f, -0.5f)),
-        //    Vertex(glm::vec3(0.5f, -0.5f, -0.5f))
-        //};
 
         indices =
         {
