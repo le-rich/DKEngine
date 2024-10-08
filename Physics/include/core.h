@@ -175,6 +175,186 @@ namespace AE86 {
 			z = -z;
 		}
 	};
+
+	/**
+	 * Holds a 3 x 3 row major matrix representing a transformation in
+	 * 3D space that does not include a translational component. This
+	 * matrix is not padded to produce an aligned structure.
+	 */
+	class Matrix3 {
+	public:
+		/**
+		 *
+		 * Holds the tensor matrix data in array form.
+		 */
+		real data[9];
+		/**
+		 * Creates a new matrix.
+		 */
+		Matrix3() : data{} {
+		}
+		/**
+		 * Creates a new matrix with the given three vectors making
+		 * up its columns.
+		 */
+		Matrix3(const Vector3& compOne, const Vector3& compTwo,
+			const Vector3& compThree) : data{}
+		{
+			setComponents(compOne, compTwo, compThree);
+		}
+		/**
+		 * Creates a new matrix with explicit coefficients.
+		 */
+		Matrix3(real c0, real c1, real c2, real c3, real c4, real c5,
+			real c6, real c7, real c8) : data{}
+		{
+			data[0] = c0; data[1] = c1; data[2] = c2;
+			data[3] = c3; data[4] = c4; data[5] = c5;
+			data[6] = c6; data[7] = c7; data[8] = c8;
+		}
+		/**
+		 * Sets the matrix values from the given three vector components.
+		 * These are arranged as the three columns of the vector.
+		 */
+		void setComponents(const Vector3& compOne, const Vector3& compTwo,
+			const Vector3& compThree)
+		{
+			// first row
+			data[0] = compOne.x;
+			data[1] = compTwo.x;
+			data[2] = compThree.x;
+			// second row
+			data[3] = compOne.y;
+			data[4] = compTwo.y;
+			data[5] = compThree.y;
+			// third row
+			data[6] = compOne.z;
+			data[7] = compTwo.z;
+			data[8] = compThree.z;
+		}
+		/**
+		 * Transform the given vector by this matrix.
+		 */
+		Vector3 operator*(const Vector3& vector) const {
+			return Vector3(
+				vector.x * data[0] + vector.y * data[1] + vector.z * data[2],
+				vector.x * data[3] + vector.y * data[4] + vector.z * data[5],
+				vector.x * data[6] + vector.y * data[7] + vector.z * data[8]
+			);
+		}
+		/**
+		 * Returns a matrix, which is this one multiplied by the other given
+		 * matrix.
+		 */
+		Matrix3 operator*(const Matrix3& o) const {
+			return Matrix3(
+				data[0] * o.data[0] + data[1] * o.data[3] + data[2] * o.data[6],
+				data[0] * o.data[1] + data[1] * o.data[4] + data[2] * o.data[7],
+				data[0] * o.data[2] + data[1] * o.data[5] + data[2] * o.data[8],
+				data[3] * o.data[0] + data[4] * o.data[3] + data[5] * o.data[6],
+				data[3] * o.data[1] + data[4] * o.data[4] + data[5] * o.data[7],
+				data[3] * o.data[2] + data[4] * o.data[5] + data[5] * o.data[8],
+				data[6] * o.data[0] + data[7] * o.data[3] + data[8] * o.data[6],
+				data[6] * o.data[1] + data[7] * o.data[4] + data[8] * o.data[7],
+				data[6] * o.data[2] + data[7] * o.data[5] + data[8] * o.data[8]
+			);
+		}
+		/**
+		 * Multiplies this matrix in place by the other given matrix.
+		 */
+		void operator*=(const Matrix3& o) {
+			real t1;
+			real t2;
+			real t3;
+			t1 = data[0] * o.data[0] + data[1] * o.data[3] + data[2] * o.data[6];
+			t2 = data[0] * o.data[1] + data[1] * o.data[4] + data[2] * o.data[7];
+			t3 = data[0] * o.data[2] + data[1] * o.data[5] + data[2] * o.data[8];
+			data[0] = t1;
+			data[1] = t2;
+			data[2] = t3;
+			t1 = data[3] * o.data[0] + data[4] * o.data[3] + data[5] * o.data[6];
+			t2 = data[3] * o.data[1] + data[4] * o.data[4] + data[5] * o.data[7];
+			t3 = data[3] * o.data[2] + data[4] * o.data[5] + data[5] * o.data[8];
+			data[3] = t1;
+			data[4] = t2;
+			data[5] = t3;
+			t1 = data[6] * o.data[0] + data[7] * o.data[3] + data[8] * o.data[6];
+			t2 = data[6] * o.data[1] + data[7] * o.data[4] + data[8] * o.data[7];
+			t3 = data[6] * o.data[2] + data[7] * o.data[5] + data[8] * o.data[8];
+			data[6] = t1;
+			data[7] = t2;
+			data[8] = t3;
+		}
+		/**
+		 * Transform the given vector by this matrix.
+		 */
+		Vector3 transform(const Vector3& vector) const {
+			return (*this) * vector;
+		}
+	};
+
+	/**
+	 * Holds a transform matrix, consisting of a rotatino matrix and
+	 * a position. The matrix has 12 elements, and it is assumed that the
+	 * remaining four are (0, 0, 0, 1), producing a homogeneous matrix.
+	 */
+	class Matrix4 {
+	public:
+		/**
+		 * Holds the transform matrix data in array form.
+		 */
+		real data[12];
+		/**
+		 * Creates an identity matrix.
+		 */
+		Matrix4()
+		{
+			data[1] = data[2] = data[3] = data[4] = data[6] =
+				data[7] = data[8] = data[9] = data[11] = 0;
+			data[0] = data[5] = data[10] = 1;
+		}
+		/**
+		 * Transform the given vector by this matrix.
+		 */
+		Vector3 operator*(const Vector3& vector) const {
+			return Vector3(
+				vector.x * data[0] +
+				vector.y * data[1] +
+				vector.z * data[2] + data[3],
+				vector.x * data[4] +
+				vector.y * data[5] +
+				vector.z * data[6] + data[7],
+				vector.x * data[8] +
+				vector.y * data[9] +
+				vector.z * data[10] + data[11]
+			);
+		}
+		Vector3 transform(const Vector3& vector) const {
+			return (*this) * vector;
+		}
+		/**
+		 * Returns a matrix, which is this one multiplied by the other given
+		 * matrix.
+		 */
+		Matrix4 operator*(const Matrix4& o) const {
+			Matrix4 result = Matrix4();
+			result.data[0] = (o.data[0] * data[0]) + (o.data[4] * data[1]) + (o.data[8] * data[2]);
+			result.data[4] = (o.data[0] * data[4]) + (o.data[4] * data[5]) + (o.data[8] * data[6]);
+			result.data[8] = (o.data[0] * data[8]) + (o.data[4] * data[9]) + (o.data[8] * data[10]);
+			result.data[1] = (o.data[1] * data[0]) + (o.data[5] * data[1]) + (o.data[9] * data[2]);
+			result.data[5] = (o.data[1] * data[4]) + (o.data[5] * data[5]) + (o.data[9] * data[6]);
+			result.data[9] = (o.data[1] * data[8]) + (o.data[5] * data[9]) + (o.data[9] * data[10]);
+			result.data[2] = (o.data[2] * data[0]) + (o.data[6] * data[1]) + (o.data[10] * data[2]);
+			result.data[6] = (o.data[2] * data[4]) + (o.data[6] * data[5]) + (o.data[10] * data[6]);
+			result.data[10] = (o.data[2] * data[8]) + (o.data[6] * data[9]) + (o.data[10] * data[10]);
+			result.data[3] = (o.data[3] * data[0]) + (o.data[7] * data[1]) + (o.data[11] * data[2]) + data[3];
+			result.data[7] = (o.data[3] * data[4]) + (o.data[7] * data[5]) + (o.data[11] * data[6]) + data[7];
+			result.data[11] = (o.data[3] * data[8]) + (o.data[7] * data[9]) + (o.data[11] * data[10]) + data[11];
+			return result;
+		}
+	};
 }
+
+
 
 #endif
