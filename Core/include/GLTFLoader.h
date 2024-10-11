@@ -6,18 +6,18 @@ namespace GLTFLoader
 {
     /* Loads GLTF model from file. Returns tinygltf::Model object
     * .gltf files are effectively stored as json
-    * 
+    *
     * https://github.com/KhronosGroup/glTF-Tutorials/blob/main/gltfTutorial/gltfTutorial_004_ScenesNodes.md
     * GLTF format contains the following key items:
     *   - Scenes
     *   - Nodes
     *       - Transforms
     *   - Meshes
-    * 
+    *
     * Scenes are structured in a tree with a single root node and any amount of children per node.
     * Each node has its own transform that needs to be taken into consideration.
     */
-    static tinygltf::Model LoadStaticModelFromFile(std::string const& pFilePath, bool pIsBinary)
+    static tinygltf::Model LoadFromFile(std::string const& pFilePath)
     {
         tinygltf::Model gltfModel;
         tinygltf::TinyGLTF parser;
@@ -25,8 +25,8 @@ namespace GLTFLoader
         std::string loaderWarnings;
         bool result = false;
 
-
-        result = pIsBinary ? parser.LoadBinaryFromFile(&gltfModel, &loaderErrors, &loaderWarnings, pFilePath) : parser.LoadASCIIFromFile(&gltfModel, &loaderErrors, &loaderWarnings, pFilePath);
+        result = isFileBinary(pFilePath) ? parser.LoadBinaryFromFile(&gltfModel, &loaderErrors, &loaderWarnings, pFilePath)
+            : parser.LoadASCIIFromFile(&gltfModel, &loaderErrors, &loaderWarnings, pFilePath);
 
         if (!loaderWarnings.empty())
         {
@@ -51,5 +51,10 @@ namespace GLTFLoader
         }
         // return the processed model
         return gltfModel;
+    }
+
+    static bool isFileBinary(std::string const& pFilePath)
+    {
+        return (pFilePath.substr(pFilePath.find_last_of(".") + 1) == "bin");
     }
 }

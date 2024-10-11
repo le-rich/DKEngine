@@ -5,8 +5,8 @@ implement pre and post methods.*/
 #include <glad/glad.h>
 #include <string>
 
-#include "Primitives.h"
 #include "Renderer.h"
+#include "Resources/Primitives.h"
 #include "../../Core/include/System.h"
 
 // Macro definitions for error handlingb

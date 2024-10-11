@@ -17,7 +17,6 @@
 #include <iostream>
 
 #include "Renderer.h"
-#include "Primitives.h"
 #include "System.h"
 
 
@@ -84,11 +83,6 @@ int run_glfw() {
 	// Call back for changing the viewport size of the OpenGL context.
 	// Context needs to be syncronized to caller thread.
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-    // primitive shapes
-    Triangle triangle;
-    Square square;
-
 
 	std::vector<System*> systems;
 	Core* core = new Core();

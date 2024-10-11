@@ -51,7 +51,7 @@
     <ClInclude Include="include\Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Primitives.h">
+    <ClInclude Include="include\Resources\Primitives.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Buffers\FrameBuffer.h">
@@ -101,7 +101,7 @@
     <ClCompile Include="src\Buffers\FrameBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Primitives.cpp">
+    <ClCompile Include="src\Resources\Primitives.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,4 +1,4 @@
-#include "Primitives.h"
+#include "Resources/Primitives.h"
 
 Primitive::Primitive(const std::vector<Vertex>& vertices, 
 	const std::vector<GLuint>& indices) :

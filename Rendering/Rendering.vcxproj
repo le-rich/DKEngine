@@ -149,7 +149,7 @@
     <ClInclude Include="include\Buffers\IndexBuffer.h" />
     <ClInclude Include="include\Buffers\UniformBuffer.h" />
     <ClInclude Include="include\Buffers\VertexBuffer.h" />
-    <ClInclude Include="include\Primitives.h" />
+    <ClInclude Include="include\Resources\Primitives.h" />
     <ClInclude Include="include\Renderer.h" />
     <ClInclude Include="include\Resources\Material.h" />
     <ClInclude Include="include\Resources\Mesh.h" />
@@ -160,7 +160,7 @@
     <ClInclude Include="include\Buffers\VertexArray.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Primitives.cpp" />
+    <ClCompile Include="src\Resources\Primitives.cpp" />
     <ClCompile Include="src\Buffers\FrameBuffer.cpp" />
     <ClCompile Include="src\Objects\Camera.cpp" />
     <ClCompile Include="src\Objects\Light.cpp" />
