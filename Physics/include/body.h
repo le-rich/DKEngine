@@ -36,7 +36,7 @@ namespace AE86 {
 		// Linear velocity of the rigid body in world space.
 		Vector3 velocity;
 
-		// Holds angular velocit of the rigid body in world space.
+		// Holds angular velocity of the rigid body in world space.
 		Vector3 rotation;
 
 		/**
@@ -44,6 +44,20 @@ namespace AE86 {
 		 * world space and vice versa. 
 		 */
 		Matrix4 transformMatrix;
+
+		/** 
+		 * The rigid body has internal data that is updated based on
+		 * the values of its state. Whenever state changes, such as 
+		 * angular orientation or position, things such as the 
+		 * transformMatrix need to be recalculated. 
+		 *
+		 * 
+		 * FUTURE NOTE: when we have the transform component, and its 
+		 * location/orientation data is changed through game logic, 
+		 * we must ensure that this method explicitly called to ensure 
+		 * that the rigid body simulation remains congruent to it.
+		 */
+		void calculateDerivedData();
 	};
 	
 }
