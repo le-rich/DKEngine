@@ -6,7 +6,6 @@
 #include <sstream>
 #include <vector>
 
-#include "Primitives.h"
 #include "Renderer.h"
 
 // Constructor.
@@ -20,8 +19,8 @@ void Renderer::Update()
     // Clear color and depth buffers (can be moved to pre update
 
     // Get example primitive
-    Cube cube;
-    Primitive primitive(cube.vertices, cube.indices);
+    //Cube cube;
+    ////Primitive primitive(cube.vertices, cube.indices);
      
     /*Get lights
       For each light
@@ -40,7 +39,8 @@ void Renderer::Update()
         Bind Vertex Array
         Bind Index Buffer
         DrawCall*/
-    primitive.Draw();
+    //primitive.Draw();
+    testMesh.Draw();
 
     /*Perform Post Processing
       Draw Frame Buffer*/

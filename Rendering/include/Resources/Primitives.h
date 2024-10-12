@@ -14,7 +14,7 @@
 class Primitive
 {
 public:
-    Primitive(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices);
+    Primitive(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const GLuint pMaterialID = 0);
     ~Primitive();
 
     void Draw();
@@ -27,7 +27,7 @@ private:
     VertexArray mVertexArray;
     VertexBufferLayout mVertexBufferLayout;
     std::vector<Vertex> mLoadedVertices;
-    std::vector<GLuint> mLoadedIndices;
+    std::vector<uint32_t> mLoadedIndices;
     GLuint mMaterialID;
 };
 
@@ -35,7 +35,7 @@ private:
 struct Shape
 {
     std::vector<Vertex> vertices;
-    std::vector<GLuint> indices;
+    std::vector<uint32_t> indices;
 };
 
 // Derived struct for Triangle

@@ -15,9 +15,9 @@
 
 
 #include <iostream>
-
-#include "Renderer.h"
 #include "System.h"
+#include "Renderer.h"
+#include "GLTFLoader.h"
 
 
 
@@ -103,6 +103,11 @@ int run_glfw() {
 	double fixedUpdateBuffer = 0.0;
 	double FIXED_UPDATE_INTERVAL = 0.016;
 	auto previousTime = std::chrono::high_resolution_clock::now();
+
+	tinygltf::Model gltfModel = GLTFLoader::LoadFromFile("Assets/ae86.gltf");
+	Mesh testMesh = GLTFLoader::LoadMesh(gltfModel, gltfModel.meshes[0]);
+
+	renderer->testMesh = testMesh;
 
 	// We want some check like this visible to the other threads
 	// That way those threads will stop once the window closes. ### Has to be conditional for main thread ###

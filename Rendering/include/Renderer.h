@@ -5,9 +5,10 @@ implement pre and post methods.*/
 #include <glad/glad.h>
 #include <string>
 
-#include "Renderer.h"
-#include "Resources/Primitives.h"
-#include "../../Core/include/System.h"
+//#include "Renderer.h"
+#include "System.h"
+// @TODO: Remove TESTING INCLUDE
+#include "Resources/Mesh.h"
 
 // Macro definitions for error handlingb
 #define ASSERT(x) if (!(x)) __debugbreak();
@@ -50,7 +51,7 @@ public:
 
     }
 
-
+    Mesh testMesh;
 private:
     static unsigned int CompileShader(unsigned int type, const std::string& source);
     static unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
