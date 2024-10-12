@@ -1,6 +1,7 @@
 #pragma once
 
-#include <tinygltf/tiny_gltf.cc>
+
+#include <tiny_gltf.cc>
 
 #include "Resources/Mesh.h"
 
@@ -75,7 +76,7 @@ namespace GLTFLoader
             auto start = buffer.data.begin() + bufferView.byteOffset + (element * bufferView.byteStride);
             auto end = buffer.data.begin() + bufferView.byteOffset + (element * bufferView.byteStride) + (componentSize * typeCount);
 
-            std::copy(start, end, OutBufferData.begin() + (componentSize * typeCount * element));
+            std::copy(start, end, std::back_inserter(OutBufferData));
         }
         return true;
     }
@@ -85,14 +86,14 @@ namespace GLTFLoader
     {
         std::vector<Vertex> vertices;
         int numOfElements = GetMaxElementCount(pGltfModel, pPrimitive);
-        vertices.reserve(sizeof(Vertex) * numOfElements);
+        vertices.resize(numOfElements);
         for (const auto& attribute : pPrimitive.attributes)
         {
             const std::string attribType = attribute.first;
             const int accessorNum = attribute.second;
 
             std::vector<unsigned char> bufferData;
-            if (!GetAttributeVector(pGltfModel, accessorNum, bufferData, vertices.size()))
+            if (!GetAttributeVector(pGltfModel, accessorNum, bufferData, numOfElements))
             {
                 std::printf("Failed to get attribute data");
                 continue;
@@ -139,7 +140,7 @@ namespace GLTFLoader
 
         std::vector<uint32_t> indices;
         indices.reserve(bufferDataSizeBytes);
-        std::memcpy(&indices, bufferData.data(), bufferDataSizeBytes);
+        std::copy(bufferData.begin(), bufferData.end(), std::back_inserter(indices));
 
         Primitive primitive(vertices, indices);
         return primitive;
@@ -204,6 +205,7 @@ namespace GLTFLoader
             return {};
         }
         // return the processed model
+        printf("Loaded '%s'\n", pFilePath.c_str());
         return gltfModel;
     }
 }
