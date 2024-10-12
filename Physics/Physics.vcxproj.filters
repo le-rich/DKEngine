@@ -39,6 +39,9 @@
     <ClInclude Include="include\pworld.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\core.cpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\pointmass.cpp">

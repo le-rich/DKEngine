@@ -136,6 +136,7 @@
     <ClInclude Include="include\pfgen.h" />
     <ClInclude Include="include\pworld.h" />
     <ClInclude Include="physics.h" />
+    <ClInclude Include="src\core.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\pcontacts.cpp" />
