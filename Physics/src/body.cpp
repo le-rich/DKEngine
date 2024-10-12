@@ -41,4 +41,8 @@ namespace AE86 {
         // Calculate the transform matrix for the body.
         _calculateTransformMatrix(transformMatrix, position, orientation);
     }
+
+    void RigidBody::setInertiaTensor(const Matrix3& inertiaTensor) {
+        inverseInertiaTensor.setInverse(inertiaTensor);
+    }
 }

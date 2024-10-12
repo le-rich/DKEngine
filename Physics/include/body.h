@@ -45,6 +45,15 @@ namespace AE86 {
 		 */
 		Matrix4 transformMatrix;
 
+		/**
+		 * The inverse of the body's inertia tensor. 
+		 * it cannot be a singular matrix. It is defined
+		 * in body space.
+		 */
+		Matrix3 inverseInertiaTensor;
+
+
+	public: 
 		/** 
 		 * The rigid body has internal data that is updated based on
 		 * the values of its state. Whenever state changes, such as 
@@ -54,10 +63,17 @@ namespace AE86 {
 		 * 
 		 * FUTURE NOTE: when we have the transform component, and its 
 		 * location/orientation data is changed through game logic, 
-		 * we must ensure that this method explicitly called to ensure 
+		 * we must ensure that this method is explicitly called to ensure 
 		 * that the rigid body simulation remains congruent to it.
 		 */
 		void calculateDerivedData();
+
+		/**
+		 * Sets the intertia tensor for the rigid body.
+		 * This must be a full rank matrix and must be
+		 * invertible.
+		 */
+		void setInertiaTensor(const Matrix3& inertiaTensor);
 	};
 	
 }
