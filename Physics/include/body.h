@@ -52,6 +52,11 @@ namespace AE86 {
 		 */
 		Matrix3 inverseInertiaTensor;
 
+		/**
+		 * The inverse inertia tensor of the body in world
+		 * space.
+s		 */
+		Matrix3 inverseInertiaTensorWorld;
 
 	public: 
 		/** 
