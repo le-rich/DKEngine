@@ -1,6 +1,6 @@
 #pragma once
 
-#include <tiny_gltf.h>
+#include <tinygltf/tiny_gltf.cc>
 
 #include "Resources/Mesh.h"
 
