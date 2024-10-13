@@ -72,6 +72,8 @@ s		 */
 		// Accumulated torque applied at next integration step.
 		Vector3 torqueAccum;
 
+		// Capability for sleeping a body, so physics won't apply.
+		bool isAwake;
 
 	public: 
 		/** 
@@ -146,6 +148,12 @@ s		 */
 		 * currently-applied forces/torques.
 		 */
 		void integrate(real duration);
+
+		/**
+		 * Awakens the rigid body to resume simulation
+		 * or sleeps it and zeroes velocity/orientation.
+		 */
+		void setAwake(const bool awake = true);
 	};
 	
 }

@@ -103,6 +103,19 @@ namespace AE86 {
             t62 * rotmat.data[10];
     }
 
+    void RigidBody::setAwake(const bool awake) {
+        if (awake) {
+            isAwake = true;
+
+            // TODO: add delay so sleep feels more graceful
+        }
+        else {
+            isAwake = false;
+            velocity.clear();
+            rotation.clear();
+        }
+    }
+
     void RigidBody::calculateDerivedData() {
         orientation.normalize();
 
@@ -130,6 +143,7 @@ namespace AE86 {
 
     void RigidBody::addForce(const Vector3& force) {
         forceAccum += force;
+        isAwake = true;
     }
 
     void RigidBody::addForceAtBodyPoint(const Vector3& force,
@@ -151,6 +165,8 @@ namespace AE86 {
         // d'alembert's principle on force and torque
         forceAccum += force;
         torqueAccum += pt % force; // overloaded cross prod.
+
+        isAwake = true;
     }
 
     void RigidBody::clearAccumulators() {
