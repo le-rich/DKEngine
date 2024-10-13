@@ -17,6 +17,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UI", "UI\UI.vcxproj", "{2E825CB0-DE55-4F0B-A560-9548A33442A0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{686626F8-3F9F-495E-A323-8787ED7222C6}"
+	ProjectSection(SolutionItems) = preProject
+		External\stb_image.h = External\stb_image.h
+		External\stb_image_write.h = External\stb_image_write.h
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "glad", "glad", "{A82E50DC-0C10-42C5-9F66-FE24647683E9}"
 EndProject

@@ -104,10 +104,11 @@ int run_glfw() {
 	double FIXED_UPDATE_INTERVAL = 0.016;
 	auto previousTime = std::chrono::high_resolution_clock::now();
 
-	tinygltf::Model gltfModel = GLTFLoader::LoadFromFile("Assets/ae86.gltf");
+	// TODO: Refactor to some kind of Asset Manager and/or Scene Hierarchy for renderer to access
+	tinygltf::Model gltfModel = GLTFLoader::LoadFromFile("Assets/AE86/ae86.gltf"); // TODO: Figure out location of assets/non code files within solution
 	Mesh testMesh = GLTFLoader::LoadMesh(gltfModel, gltfModel.meshes[0]);
-
 	renderer->testMesh = testMesh;
+	// end TODO
 
 	// We want some check like this visible to the other threads
 	// That way those threads will stop once the window closes. ### Has to be conditional for main thread ###

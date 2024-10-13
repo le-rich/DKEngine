@@ -17,10 +17,6 @@ Renderer::~Renderer() {}
 void Renderer::Update()
 {
     // Clear color and depth buffers (can be moved to pre update
-
-    // Get example primitive
-    //Cube cube;
-    //Primitive primitive(cube.vertices, cube.indices);
      
     /*Get lights
       For each light
@@ -39,7 +35,8 @@ void Renderer::Update()
         Bind Vertex Array
         Bind Index Buffer
         DrawCall*/
-    //primitive.Draw();
+
+    // GARBAGE METHODOLOGY
     testMesh.Draw();
 
     /*Perform Post Processing

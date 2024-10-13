@@ -4,10 +4,14 @@
 #include <tiny_gltf.cc>
 
 #include "Resources/Mesh.h"
+#include "Resources/Material.h"
+#include "Resources/Texture.h"
 
 namespace GLTFLoader
 {
-
+    /*
+    * Return the count of the attribute with the highest count
+    */
     static const int GetMaxElementCount(tinygltf::Model pGltfModel, tinygltf::Primitive pPrimitive)
     {
         int maxCount = 0;
@@ -24,6 +28,9 @@ namespace GLTFLoader
         return maxCount;
     }
 
+    /*
+    * Return amount of components in the given GLTF data type
+    */
     int GetNumberOfComponentsInType(size_t pDataType)
     {
         switch (pDataType)
@@ -40,6 +47,9 @@ namespace GLTFLoader
         }
     }
 
+    /*
+    * Return the number of bytes in the given GLTF component type
+    */
     static int GetComponentsSize(size_t pComponentType)
     {
         switch (pComponentType)
@@ -59,10 +69,19 @@ namespace GLTFLoader
         }
     }
 
-
-    static bool GetAttributeVector(tinygltf::Model const& pGltfModel, uint32_t const accessorNum, std::vector<unsigned char>& OutBufferData, int numberOfElements)
+    /*
+    * Fills OutBufferData with the data from the Buffer view specified at the specified accessor
+    * 
+    * @param
+    * pGltfModel: GLTF model data
+    * 
+    * pAccessorNum: Index of the specefied accessor
+    * 
+    * OutBufferData: Target buffer to fill
+    */
+    static bool GetAttributeVector(tinygltf::Model const& pGltfModel, uint32_t const pAccessorNum, std::vector<unsigned char>& OutBufferData)
     {
-        const tinygltf::Accessor& accessor = pGltfModel.accessors[accessorNum];
+        const tinygltf::Accessor& accessor = pGltfModel.accessors[pAccessorNum];
         const tinygltf::BufferView& bufferView = pGltfModel.bufferViews[accessor.bufferView];
         const tinygltf::Buffer& buffer = pGltfModel.buffers[bufferView.buffer];
 
@@ -71,6 +90,7 @@ namespace GLTFLoader
         size_t componentType = accessor.componentType;
         size_t componentSize = GetComponentsSize(componentType);
 
+        int numberOfElements = accessor.count;
         for (int element = 0; element < numberOfElements; ++element)
         {
             auto startShift = bufferView.byteOffset + (element * bufferView.byteStride) + (element * componentSize * typeCount);
@@ -84,7 +104,9 @@ namespace GLTFLoader
         return true;
     }
 
-
+    /*
+    * Returns primitive object
+    */
     static Primitive ProcessPrimitive(tinygltf::Model pGltfModel, tinygltf::Primitive pPrimitive)
     {
         std::vector<Vertex> vertices;
@@ -96,14 +118,18 @@ namespace GLTFLoader
             const int accessorNum = attribute.second;
 
             std::vector<unsigned char> bufferData;
-            if (!GetAttributeVector(pGltfModel, accessorNum, bufferData, numOfElements))
+            if (!GetAttributeVector(pGltfModel, accessorNum, bufferData))
             {
                 std::printf("Failed to get attribute data");
                 continue;
             }
 
+            // gltf format dictates Little Endian format
             std::vector<float> floatVector(bufferData.size());
             std::memcpy(floatVector.data(), bufferData.data(), bufferData.size());
+
+            // Get number of elements that make up component
+            const int typeCount = GetNumberOfComponentsInType(pGltfModel.accessors[accessorNum].type);
 
             // TODO: Modify to support multi texturing
             switch (GetVertexAttributeFromString(attribType))
@@ -111,19 +137,22 @@ namespace GLTFLoader
             case VertexAttributeKeys::POSITION:
                 for (int index = 0; index < vertices.size(); ++index)
                 {
-                    vertices[index].mPosition = glm::vec3(floatVector[index], floatVector[index + 1], floatVector[index + 2]);
+                    const int floatIndex = index * typeCount; // Offset
+                    vertices[index].mPosition = glm::vec3(floatVector[floatIndex], floatVector[floatIndex + 1], floatVector[floatIndex + 2]);
                 }
                 break;
             case VertexAttributeKeys::NORMAL:
                 for (int index = 0; index < vertices.size(); ++index)
                 {
-                    vertices[index].mNormal = glm::vec3(floatVector[index], floatVector[index + 1], floatVector[index + 2]);
+                    int floatIndex = index * typeCount; // Offset
+                    vertices[index].mNormal = glm::vec3(floatVector[floatIndex], floatVector[floatIndex + 1], floatVector[floatIndex + 2]);
                 }
                 break;
             case VertexAttributeKeys::TEXCOORD_0:
                 for (int index = 0; index < vertices.size(); ++index)
                 {
-                    vertices[index].mUVCoord = glm::vec2(floatVector[index], floatVector[index + 2]);
+                    int floatIndex = index * typeCount; // Offset
+                    vertices[index].mUVCoord = glm::vec2(floatVector[floatIndex], floatVector[floatIndex + 2]);
                 }
                 break;
             default:
@@ -134,32 +163,49 @@ namespace GLTFLoader
         }
 
 
-        std::vector<unsigned char> bufferData;
-        if (!GetAttributeVector(pGltfModel, pPrimitive.indices, bufferData, pGltfModel.accessors[pPrimitive.indices].count))
-        {
-            std::printf("Failed to get attribute data");
-        }
-        const auto bufferDataSizeBytes = sizeof(unsigned char) * bufferData.size();
-
         std::vector<uint32_t> indices;
-        //indices.reserve(bufferDataSizeBytes);
-        //std::copy(bufferData.begin(), bufferData.end(), std::back_inserter(indices));
-        //std::memcpy(indices.data(), bufferData.data(), bufferDataSizeBytes);
-        for (int index = 0; index < bufferData.size(); index += 2)
         {
-            indices.push_back(((uint32_t)bufferData[index] << 8 | (uint32_t)bufferData[index + 1]));
+            std::vector<unsigned char> bufferData;
+            if (!GetAttributeVector(pGltfModel, pPrimitive.indices, bufferData))
+            {
+                std::printf("Failed to get attribute data");
+            }
+            const auto bufferDataSizeBytes = sizeof(unsigned char) * bufferData.size();
+
+            // Convert 2 byte data to uint32_t little-endian
+            for (int bufferIndex = 0; bufferIndex < bufferData.size(); bufferIndex += 2)
+            {
+                uint32_t index = ((uint32_t)bufferData[bufferIndex + 1] << 8 | (uint32_t)bufferData[bufferIndex]);
+                indices.push_back(index);
+            }
         }
 
+        // TODO: Add material index
         Primitive primitive(vertices, indices);
         return primitive;
     }
 
+    /*
+    * Returns mesh
+    */
     static Mesh LoadMesh(tinygltf::Model pGltfModel, tinygltf::Mesh pMesh)
     {
         Mesh mesh;
         for (tinygltf::Primitive const& primitive : pMesh.primitives)
             mesh.AddPrimitive(ProcessPrimitive(pGltfModel, primitive));
         return mesh;
+    }
+
+    // TODO
+    static Material LoadMaterial()
+    {
+        return Material();
+    }
+
+    // TODO
+    static Texture LoadTexture()
+    {
+        return Texture();
     }
 
     static bool isFileBinary(std::string const& pFilePath)
