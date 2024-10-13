@@ -114,7 +114,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)/include/;$(SolutionDir)Core\include\;$(SolutionDir)External\;$(SolutionDir)/Externals/glad/include/glad;$(SolutionDir)/Externals/glm;$(SolutionDir)External\tinygltf</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)Core\include\;$(SolutionDir)External\;$(SolutionDir)Externals\glad\include\glad;$(SolutionDir)Externals\glm;$(SolutionDir)External\tinygltf</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,7 +131,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)/include/;$(SolutionDir)Core\include\;$(SolutionDir)External\;$(SolutionDir)/Externals/glad/include/glad;$(SolutionDir)/Externals/glm;$(SolutionDir)External\tinygltf</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)Core\include\;$(SolutionDir)External\;$(SolutionDir)Externals\glad\include\glad;$(SolutionDir)Externals\glm;$(SolutionDir)External\tinygltf</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

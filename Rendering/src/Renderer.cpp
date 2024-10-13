@@ -32,12 +32,14 @@ void Renderer::Update()
     GLuint shader = CreateShader(source.VertexSource, source.FragmentSource);
     GLCall(glUseProgram(shader));
 
-    Texture texture("C:\\classes\\comp8552\\DKEngine\\x64\\Debug\\Resources\\Gold_Star.png");
+    Texture texture("../Core/Assets/AE86/textures/fmesh_Material_001_BasssseColor_001df.png");
     texture.Bind();
     //Apply Uniforms (lighting, view matrices, etc...)
-    std::string name = "u_Texture";
-    GLCall(int location = glGetUniformLocation(1, name.c_str()));
-    GLCall(glUniform1i(location, 0));
+    // 
+    //std::string name = "u_Texture";
+    //GLCall(int location = glGetUniformLocation(1, name.c_str()));
+    //GLCall(glUniform1i(location, 0));
+    
     /*For each Primitive
         Bind Vertex Array
         Bind Index Buffer
@@ -49,6 +51,7 @@ void Renderer::Update()
     /*Perform Post Processing
       Draw Frame Buffer*/
 
+    texture.Unbind();
     // Swap window buffers. can be moved to post update
     GLCall(glDeleteProgram(shader));
 }

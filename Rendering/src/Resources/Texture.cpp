@@ -1,10 +1,11 @@
 #include "Resources/Texture.h"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include <iostream>
+//#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
 #include "Renderer.h"
 
-#include <iostream>
 
 Texture::Texture(const std::string& path)
 	: mTexturerID(0), mType(GL_TEXTURE_2D), mFilePath(path),
