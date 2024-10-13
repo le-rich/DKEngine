@@ -76,6 +76,30 @@ s		 */
 		bool isAwake;
 
 	public: 
+		/************************************/
+		/** MASS SETTERS AND GETTERS BELOW **/
+		/************************************/
+
+		real getInverseMass() const;
+
+		void setInverseMass(const real inverseMass);
+
+		void setMass(const real mass);
+
+		/**
+		 * Returns the mass of the body.
+		 */
+		real getMass() const;
+
+		/**
+		 * Returns true if the mass of the body is not-infinite.
+		 */
+		bool hasFiniteMass() const;
+
+		/************************/
+		/** MASS SETTERS DONE **/
+		/***********************/
+
 		/** 
 		 * The rigid body has internal data that is updated based on
 		 * the values of its state. Whenever state changes, such as 

@@ -1,4 +1,5 @@
 #include "../include/body.h"
+#include <cassert>
 
 namespace AE86 {
 	
@@ -179,4 +180,35 @@ namespace AE86 {
         // clear forces applied
         clearAccumulators();
     }
+
+    real RigidBody::getMass() const
+    {
+        if (inverseMass == 0) {
+            return REAL_MAX;
+        }
+        else {
+            return ((real)1.0) / inverseMass;
+        }
+    }
+
+    bool RigidBody::hasFiniteMass() const {
+        return inverseMass >= 0.0f;
+    }
+
+    void RigidBody::setMass(const real mass)
+    {
+        assert(mass != 0); // can't divide by zero.
+        RigidBody::inverseMass = ((real)1.0) / mass;
+    }
+
+    void RigidBody::setInverseMass(const real inverseMass)
+    {
+        RigidBody::inverseMass = inverseMass;
+    }
+
+    real RigidBody::getInverseMass() const
+    {
+        return inverseMass;
+    }
+
 }
