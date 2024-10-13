@@ -10,14 +10,14 @@
  */
 class Transform : public Component {
 private:
-	// world space coords for position.
-	glm::vec4 position;
+	// parent space coords for position.
+	glm::vec4 localPosition;
 
-	// world space angular orientation
-	glm::quat orientation;
+	// parent space angular orientation
+	glm::quat localOrientation;
 
-	// scale
-	float scale;
+	// parent-relative scale
+	float localScale;
 
 	// lock to guarantee mutual exclusion
 	std::mutex mtx;
@@ -42,6 +42,9 @@ public:
 	 * transform.
 	 */
 	void updateTransformMatrix();
+
+
+	void update
 
 	/********************************************/
 	/* SETTERS AND GETTERS FOR POS/ORIENT/SCALE */
