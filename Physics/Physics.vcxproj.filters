@@ -42,6 +42,12 @@
     <ClInclude Include="src\core.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\body.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fgen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\pointmass.cpp">
@@ -57,6 +63,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\pworld.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\body.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fgen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
