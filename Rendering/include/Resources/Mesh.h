@@ -5,7 +5,7 @@
 class Mesh
 {
 public:
-    inline void AddPrimitive(Primitive pPrimitive) { mPrimitives.push_back(pPrimitive); }
+    inline void AddPrimitive(Primitive &&pPrimitive) { mPrimitives.emplace_back(std::move(pPrimitive)); }
     void Draw();
 private:
     std::vector<Primitive> mPrimitives;

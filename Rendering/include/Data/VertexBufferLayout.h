@@ -12,9 +12,9 @@ enum VertexAttributeKeys
 
 inline VertexAttributeKeys GetVertexAttributeFromString(std::string pVertexAttribute)
 {
-    if (pVertexAttribute.compare("POSITION") != 0) return VertexAttributeKeys::POSITION;
-    if (pVertexAttribute.compare("NORMAL") != 0) return VertexAttributeKeys::NORMAL;
-    if (pVertexAttribute.compare("TEXCOORD_0") != 0) return VertexAttributeKeys::TEXCOORD_0;
+    if (pVertexAttribute.compare("POSITION") == 0) return VertexAttributeKeys::POSITION;
+    if (pVertexAttribute.compare("NORMAL") == 0) return VertexAttributeKeys::NORMAL;
+    if (pVertexAttribute.compare("TEXCOORD_0") == 0) return VertexAttributeKeys::TEXCOORD_0;
 }
 
 

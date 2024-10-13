@@ -73,10 +73,13 @@ namespace GLTFLoader
 
         for (int element = 0; element < numberOfElements; ++element)
         {
-            auto start = buffer.data.begin() + bufferView.byteOffset + (element * bufferView.byteStride);
-            auto end = buffer.data.begin() + bufferView.byteOffset + (element * bufferView.byteStride) + (componentSize * typeCount);
+            auto startShift = bufferView.byteOffset + (element * bufferView.byteStride) + (element * componentSize * typeCount);
+            auto start = buffer.data.begin() + startShift;
+            auto endShift = startShift + (componentSize * typeCount);
+            auto end = buffer.data.begin() + endShift;
 
-            std::copy(start, end, std::back_inserter(OutBufferData));
+            //std::copy(start, end, std::back_inserter(OutBufferData));
+            OutBufferData.insert(OutBufferData.end(), start, end);
         }
         return true;
     }
@@ -106,19 +109,19 @@ namespace GLTFLoader
             switch (GetVertexAttributeFromString(attribType))
             {
             case VertexAttributeKeys::POSITION:
-                for (int index = 0; index < vertices.size(); index += 3)
+                for (int index = 0; index < vertices.size(); ++index)
                 {
                     vertices[index].mPosition = glm::vec3(floatVector[index], floatVector[index + 1], floatVector[index + 2]);
                 }
                 break;
             case VertexAttributeKeys::NORMAL:
-                for (int index = 0; index < vertices.size(); index += 3)
+                for (int index = 0; index < vertices.size(); ++index)
                 {
                     vertices[index].mNormal = glm::vec3(floatVector[index], floatVector[index + 1], floatVector[index + 2]);
                 }
                 break;
             case VertexAttributeKeys::TEXCOORD_0:
-                for (int index = 0; index < vertices.size(); index += 2)
+                for (int index = 0; index < vertices.size(); ++index)
                 {
                     vertices[index].mUVCoord = glm::vec2(floatVector[index], floatVector[index + 2]);
                 }
@@ -139,8 +142,13 @@ namespace GLTFLoader
         const auto bufferDataSizeBytes = sizeof(unsigned char) * bufferData.size();
 
         std::vector<uint32_t> indices;
-        indices.reserve(bufferDataSizeBytes);
-        std::copy(bufferData.begin(), bufferData.end(), std::back_inserter(indices));
+        //indices.reserve(bufferDataSizeBytes);
+        //std::copy(bufferData.begin(), bufferData.end(), std::back_inserter(indices));
+        //std::memcpy(indices.data(), bufferData.data(), bufferDataSizeBytes);
+        for (int index = 0; index < bufferData.size(); index += 2)
+        {
+            indices.push_back(((uint32_t)bufferData[index] << 8 | (uint32_t)bufferData[index + 1]));
+        }
 
         Primitive primitive(vertices, indices);
         return primitive;

@@ -1,8 +1,9 @@
 #pragma once
 
 #include <glad/glad.h>
-#include <vector>
 #include <glm.hpp>
+#include <vector>
+#include <memory>
 
 #include "Buffers/VertexBuffer.h"
 #include "Buffers/IndexBuffer.h"
@@ -18,13 +19,13 @@ public:
     ~Primitive();
 
     void Draw();
-    inline VertexBuffer& GetVertexBuffer() { return mVertexBuffer; }
-    inline IndexBuffer& GetIndexBuffer() { return mIndexBuffer; }
+    //inline VertexBuffer& GetVertexBuffer() { return mVertexBuffer; }
+    //inline IndexBuffer& GetIndexBuffer() { return mIndexBuffer; }
 
 private:
-    VertexBuffer mVertexBuffer;
-    IndexBuffer mIndexBuffer;
-    VertexArray mVertexArray;
+    std::shared_ptr<VertexBuffer> mVertexBuffer;
+    std::shared_ptr<IndexBuffer> mIndexBuffer;
+    std::shared_ptr<VertexArray> mVertexArray;
     VertexBufferLayout mVertexBufferLayout;
     std::vector<Vertex> mLoadedVertices;
     std::vector<uint32_t> mLoadedIndices;

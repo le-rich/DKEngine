@@ -20,7 +20,7 @@ void Renderer::Update()
 
     // Get example primitive
     //Cube cube;
-    ////Primitive primitive(cube.vertices, cube.indices);
+    //Primitive primitive(cube.vertices, cube.indices);
      
     /*Get lights
       For each light
@@ -46,6 +46,7 @@ void Renderer::Update()
       Draw Frame Buffer*/
 
     // Swap window buffers. can be moved to post update
+    GLCall(glDeleteProgram(shader));
 }
 
 // Returns a ID of the compiled shader program on the GPU.

@@ -104,7 +104,7 @@ int run_glfw() {
 	double FIXED_UPDATE_INTERVAL = 0.016;
 	auto previousTime = std::chrono::high_resolution_clock::now();
 
-	tinygltf::Model gltfModel = GLTFLoader::LoadFromFile("C:/Users/Admin/Documents/GitHub/DKEngine/Assets/ae86.gltf");
+	tinygltf::Model gltfModel = GLTFLoader::LoadFromFile("Assets/ae86.gltf");
 	Mesh testMesh = GLTFLoader::LoadMesh(gltfModel, gltfModel.meshes[0]);
 
 	renderer->testMesh = testMesh;
