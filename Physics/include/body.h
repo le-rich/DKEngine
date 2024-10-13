@@ -27,6 +27,11 @@ namespace AE86 {
 		 */
 		real linearDamping;
 
+		/** 
+		 * Damping on angular motion, simple simulation of drag.
+		 */
+		real angularDamping;
+
 		// World space coords for the rigid body.
 		Vector3 position;
 
@@ -75,6 +80,18 @@ s		 */
 		// Capability for sleeping a body, so physics won't apply.
 		bool isAwake;
 
+		/**
+		 * Acceleration of the rigid body.  This value
+		 * can be used to set acceleration due to gravity (its primary
+		 * use), or any other constant acceleration.
+		 */
+		Vector3 acceleration;
+
+		/**
+		 * Linear acceleration for the previous integration step.
+		 */
+		Vector3 lastFrameAcceleration;
+
 	public: 
 		/************************************/
 		/** MASS SETTERS AND GETTERS BELOW **/
@@ -96,9 +113,40 @@ s		 */
 		 */
 		bool hasFiniteMass() const;
 
-		/************************/
-		/** MASS SETTERS DONE **/
-		/***********************/
+		/***************************************/
+		/** DAMPING SETTERS AND GETTERS BELOW **/
+		/***************************************/
+		
+		void setLinearDamping(real damping);
+
+		real getLinearDamping() const;
+
+		void setAngularDamping(real damping);
+
+		real getAngularDamping() const;
+
+		/***************************************/
+
+		// Setters and getters for position
+		void setPosition(const Vector3& position);
+		Vector3 getPosition() const;
+		void getPosition(Vector3* out) const;
+
+		// Setters and getters for orientation
+		void setOrientation(const Quaternion& orientation);
+		Quaternion getOrientation() const;
+		void getOrientation(Quaternion* out) const;
+
+		// Setters and getters for velocity
+		void setVelocity(const Vector3& velocity);
+		Vector3 getVelocity() const;
+
+		// Setters and getters for rotation
+		void setRotation(const Vector3& rotation);
+		Vector3 getRotation() const;
+
+		/*************************************/
+
 
 		/** 
 		 * The rigid body has internal data that is updated based on

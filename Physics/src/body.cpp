@@ -176,6 +176,33 @@ namespace AE86 {
     }
 
     void RigidBody::integrate(real duration) {
+        // linear acceleration
+        lastFrameAcceleration = acceleration;
+        lastFrameAcceleration.addScaledVector(forceAccum, inverseMass);
+
+        // angular acceleration
+        Vector3 angularAcceleration =
+            inverseInertiaTensorWorld.transform(torqueAccum);
+
+        // velocity update
+        velocity.addScaledVector(lastFrameAcceleration, duration);
+
+        // update angular velocity
+        rotation.addScaledVector(angularAcceleration, duration);
+
+
+        // drag
+        velocity *= real_pow(linearDamping, duration);
+        rotation *= real_pow(angularDamping, duration);
+
+        // update linear position
+        position.addScaledVector(velocity, duration);
+
+        // update angular position
+        orientation.addScaledVector(rotation, duration);
+
+        // update data with new state
+        calculateDerivedData();
 
         // clear forces applied
         clearAccumulators();
@@ -211,4 +238,70 @@ namespace AE86 {
         return inverseMass;
     }
 
+    void RigidBody::setLinearDamping(real damping) {
+        linearDamping = damping;
+    }
+
+    real RigidBody::getLinearDamping() const {
+        return linearDamping;
+    }
+
+    void RigidBody::setAngularDamping(real damping) {
+        angularDamping = damping;
+    }
+
+    real RigidBody::getAngularDamping() const {
+        return angularDamping;
+    }
+
+    void RigidBody::setPosition(const Vector3& position)
+    {
+        RigidBody::position = position;
+    }
+
+    void RigidBody::getPosition(Vector3* out) const
+    {
+        *out = RigidBody::position;
+    }
+
+    Vector3 RigidBody::getPosition() const
+    {
+        return position;
+    }
+
+    void RigidBody::setOrientation(const Quaternion& orientation)
+    {
+        RigidBody::orientation = orientation;
+        RigidBody::orientation.normalize();
+    }
+
+    void RigidBody::getOrientation(Quaternion* out) const
+    {
+        *out = RigidBody::orientation;
+    }
+
+    Quaternion RigidBody::getOrientation() const
+    {
+        return orientation;
+    }
+
+    void RigidBody::setVelocity(const Vector3& velocity)
+    {
+        RigidBody::velocity = velocity;
+    }
+
+    Vector3 RigidBody::getVelocity() const
+    {
+        return velocity;
+    }
+
+    void RigidBody::setRotation(const Vector3& rotation)
+    {
+        RigidBody::rotation = rotation;
+    }
+
+    Vector3 RigidBody::getRotation() const
+    {
+        return rotation;
+    }
 }
