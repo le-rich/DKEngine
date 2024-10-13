@@ -8,6 +8,7 @@
 
 #include "Primitives.h"
 #include "Renderer.h"
+#include "Resources/Texture.h"
 
 // Constructor.
 Renderer::Renderer() {}
@@ -35,7 +36,13 @@ void Renderer::Update()
     ShaderProgramSource source = ParseShader("../Rendering/Shaders/default.glsl");
     GLuint shader = CreateShader(source.VertexSource, source.FragmentSource);
     GLCall(glUseProgram(shader));
+
+    Texture texture("C:\\classes\\comp8552\\DKEngine\\x64\\Debug\\Resources\\Gold_Star.png");
+    texture.Bind();
     //Apply Uniforms (lighting, view matrices, etc...)
+    std::string name = "u_Texture";
+    GLCall(int location = glGetUniformLocation(1, name.c_str()));
+    GLCall(glUniform1i(location, 0));
     /*For each Primitive
         Bind Vertex Array
         Bind Index Buffer

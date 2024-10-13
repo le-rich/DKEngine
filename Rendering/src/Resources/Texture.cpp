@@ -10,6 +10,7 @@ Texture::Texture(const std::string& path)
 	: mTexturerID(0), mType(GL_TEXTURE_2D), mFilePath(path),
 	mBuffer(nullptr), mWidth(0), mHeight(0), mBPP(0)
 {
+
 	stbi_set_flip_vertically_on_load(1);
 	mBuffer = stbi_load(path.c_str(), &mWidth, &mHeight, &mBPP, 4);
 
@@ -20,6 +21,7 @@ Texture::Texture(const std::string& path)
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
+	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE))
 
 	if (mBuffer)
 	{
@@ -42,7 +44,7 @@ Texture::~Texture()
 
 void Texture::Bind() const
 {
-	GLCall(glActiveTexture(GL_TEXTURE8));
+	GLCall(glActiveTexture(GL_TEXTURE0));
 	GLCall(glBindTexture(mType, mTexturerID));
 }
 

@@ -82,56 +82,92 @@ struct Cube : public Shape
 {
     Cube()
     {
-        vertices.resize(36);
+        vertices.resize(72);
         vertices =
         {
             // front
             Vertex(glm::vec3(-0.5f, -0.5f, 0.5f)),
+            Vertex(glm::vec3(0.0f, 0.0f, 1.0f)),
             Vertex(glm::vec3(0.5f, 0.5f, 0.5f)),
+            Vertex(glm::vec3(1.0f, 1.0f, 1.0f)),
             Vertex(glm::vec3(-0.5f, 0.5f, 0.5f)),
+            Vertex(glm::vec3(0.0f, 1.0f, 1.0f)),
             Vertex(glm::vec3(-0.5f, -0.5f, 0.5f)),
+            Vertex(glm::vec3(0.0f, 0.0f, 1.0f)),
             Vertex(glm::vec3(0.5f, -0.5f, 0.5f)),
+            Vertex(glm::vec3(1.0f, 0.0f, 1.0f)),
             Vertex(glm::vec3(0.5f, 0.5f, 0.5f)),
+            Vertex(glm::vec3(1.0f, 1.0f, 1.0f)),
 
             // back
             Vertex(glm::vec3(-0.5f, -0.5f, -0.5f)),
+            Vertex(glm::vec3(0.0f, 0.0f, 0.0f)),
             Vertex(glm::vec3(-0.5f, 0.5f, -0.5f)),
+            Vertex(glm::vec3(0.0f, 1.0f, 0.0f)),
             Vertex(glm::vec3(0.5f, 0.5f, -0.5f)),
+            Vertex(glm::vec3(1.0f, 1.0f, 0.0f)),
             Vertex(glm::vec3(-0.5f, -0.5f, -0.5f)),
+            Vertex(glm::vec3(0.0f, 0.0f, 0.0f)),
             Vertex(glm::vec3(0.5f, 0.5f, -0.5f)),
+            Vertex(glm::vec3(1.0f, 1.0f, 0.0f)),
             Vertex(glm::vec3(0.5f, -0.5f, -0.5f)),
+            Vertex(glm::vec3(1.0f, 0.0f, 0.0f)),
 
             // left
             Vertex(glm::vec3(-0.5f, -0.5f, 0.5f)),
+            Vertex(glm::vec3(0.0f, 0.0f, 1.0f)),
             Vertex(glm::vec3(-0.5f, 0.5f, 0.5f)),
+            Vertex(glm::vec3(0.0f, 1.0f, 1.0f)),
             Vertex(glm::vec3(-0.5f, 0.5f, -0.5f)),
+            Vertex(glm::vec3(0.0f, 1.0f, 0.0f)),
             Vertex(glm::vec3(-0.5f, -0.5f, 0.5f)),
+            Vertex(glm::vec3(0.0f, 0.0f, 1.0f)),
             Vertex(glm::vec3(-0.5f, 0.5f, -0.5f)),
+            Vertex(glm::vec3(0.0f, 1.0f, 0.0f)),
             Vertex(glm::vec3(-0.5f, -0.5f, -0.5f)),
+            Vertex(glm::vec3(0.0f, 0.0f, 0.0f)),
 
             // right
             Vertex(glm::vec3(0.5f, -0.5f, 0.5f)),
+            Vertex(glm::vec3(1.0f, 0.0f, 1.0f)),
             Vertex(glm::vec3(0.5f, 0.5f, -0.5f)),
+            Vertex(glm::vec3(1.0f, 1.0f, 0.0f)),
             Vertex(glm::vec3(0.5f, 0.5f, 0.5f)),
+            Vertex(glm::vec3(1.0f, 1.0f, 1.0f)),
             Vertex(glm::vec3(0.5f, -0.5f, 0.5f)),
+            Vertex(glm::vec3(1.0f, 0.0f, 1.0f)),
             Vertex(glm::vec3(0.5f, -0.5f, -0.5f)),
+            Vertex(glm::vec3(1.0f, 0.0f, 0.0f)),
             Vertex(glm::vec3(0.5f, 0.5f, -0.5f)),
+            Vertex(glm::vec3(1.0f, 1.0f, 0.0f)),
 
             // top
             Vertex(glm::vec3(0.5f, 0.5f, 0.5f)),
+            Vertex(glm::vec3(1.0f, 1.0f, 1.0f)),
             Vertex(glm::vec3(-0.5f, 0.5f, -0.5f)),
+            Vertex(glm::vec3(0.0f, 1.0f, 0.0f)),
             Vertex(glm::vec3(-0.5f, 0.5f, 0.5f)),
+            Vertex(glm::vec3(0.0f, 1.0f, 1.0f)),
             Vertex(glm::vec3(0.5f, 0.5f, 0.5f)),
+            Vertex(glm::vec3(1.0f, 1.0f, 1.0f)),
             Vertex(glm::vec3(0.5f, 0.5f, -0.5f)),
+            Vertex(glm::vec3(1.0f, 1.0f, 0.0f)),
             Vertex(glm::vec3(-0.5f, 0.5f, -0.5f)),
+            Vertex(glm::vec3(0.0f, 1.0f, 0.0f)),
 
             // bottom
             Vertex(glm::vec3(0.5f, -0.5f, 0.5f)),
+            Vertex(glm::vec3(1.0f, 0.0f, 1.0f)),
             Vertex(glm::vec3(-0.5f, -0.5f, 0.5f)),
+            Vertex(glm::vec3(0.0f, 0.0f, 1.0f)),
             Vertex(glm::vec3(-0.5f, -0.5f, -0.5f)),
+            Vertex(glm::vec3(0.0f, 0.0f, 0.0f)),
             Vertex(glm::vec3(0.5f, -0.5f, 0.5f)),
+            Vertex(glm::vec3(1.0f, 0.0f, 1.0f)),
             Vertex(glm::vec3(-0.5f, -0.5f, -0.5f)),
-            Vertex(glm::vec3(0.5f, -0.5f, -0.5f))
+            Vertex(glm::vec3(0.0f, 0.0f, 0.0f)),
+            Vertex(glm::vec3(0.5f, -0.5f, -0.5f)),
+            Vertex(glm::vec3(1.0f, 0.0f, 0.0f))
         };
         indices =
         {
