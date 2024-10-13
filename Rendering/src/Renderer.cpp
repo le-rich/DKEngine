@@ -6,7 +6,6 @@
 #include <sstream>
 #include <vector>
 
-#include "Primitives.h"
 #include "Renderer.h"
 
 // Constructor.
@@ -18,10 +17,6 @@ Renderer::~Renderer() {}
 void Renderer::Update()
 {
     // Clear color and depth buffers (can be moved to pre update
-
-    // Get example primitive
-    Cube cube;
-    Primitive primitive(cube.vertices, cube.indices);
      
     /*Get lights
       For each light
@@ -40,12 +35,15 @@ void Renderer::Update()
         Bind Vertex Array
         Bind Index Buffer
         DrawCall*/
-    primitive.Draw();
+
+    // GARBAGE METHODOLOGY
+    testMesh.Draw();
 
     /*Perform Post Processing
       Draw Frame Buffer*/
 
     // Swap window buffers. can be moved to post update
+    GLCall(glDeleteProgram(shader));
 }
 
 // Returns a ID of the compiled shader program on the GPU.

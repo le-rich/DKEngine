@@ -44,5 +44,8 @@
     <ClInclude Include="include\Utils\uuid_v4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\GLTFLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

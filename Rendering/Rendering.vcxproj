@@ -114,7 +114,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)/include/;$(SolutionDir)/Externals/glad/include/glad;$(SolutionDir)/Externals/glm</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/include/;$(SolutionDir)Core\include\;$(SolutionDir)External\;$(SolutionDir)/Externals/glad/include/glad;$(SolutionDir)/Externals/glm;$(SolutionDir)External\tinygltf</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,7 +131,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Core\include\;$(ProjectDir)/include/;$(SolutionDir)/Externals/glad/include/glad;$(SolutionDir)/Externals/glm</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/include/;$(SolutionDir)Core\include\;$(SolutionDir)External\;$(SolutionDir)/Externals/glad/include/glad;$(SolutionDir)/Externals/glm;$(SolutionDir)External\tinygltf</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -149,7 +149,7 @@
     <ClInclude Include="include\Buffers\IndexBuffer.h" />
     <ClInclude Include="include\Buffers\UniformBuffer.h" />
     <ClInclude Include="include\Buffers\VertexBuffer.h" />
-    <ClInclude Include="include\Primitives.h" />
+    <ClInclude Include="include\Resources\Primitives.h" />
     <ClInclude Include="include\Renderer.h" />
     <ClInclude Include="include\Resources\Material.h" />
     <ClInclude Include="include\Resources\Mesh.h" />
@@ -160,7 +160,7 @@
     <ClInclude Include="include\Buffers\VertexArray.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Primitives.cpp" />
+    <ClCompile Include="src\Resources\Primitives.cpp" />
     <ClCompile Include="src\Buffers\FrameBuffer.cpp" />
     <ClCompile Include="src\Objects\Camera.cpp" />
     <ClCompile Include="src\Objects\Light.cpp" />

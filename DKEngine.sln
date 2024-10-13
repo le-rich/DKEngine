@@ -17,6 +17,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UI", "UI\UI.vcxproj", "{2E825CB0-DE55-4F0B-A560-9548A33442A0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{686626F8-3F9F-495E-A323-8787ED7222C6}"
+	ProjectSection(SolutionItems) = preProject
+		External\stb_image.h = External\stb_image.h
+		External\stb_image_write.h = External\stb_image_write.h
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "glad", "glad", "{A82E50DC-0C10-42C5-9F66-FE24647683E9}"
 EndProject
@@ -63,6 +67,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "uuid", "uuid", "{6F2C11AE-3
 	ProjectSection(SolutionItems) = preProject
 		External\uuid\endianness.h = External\uuid\endianness.h
 		External\uuid\uuid_v4.h = External\uuid\uuid_v4.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tinygltf", "tinygltf", "{C0F87CA2-C060-4D1A-BF57-A89159981FE3}"
+	ProjectSection(SolutionItems) = preProject
+		External\tinygltf\json.hpp = External\tinygltf\json.hpp
+		External\tinygltf\tiny_gltf.cc = External\tinygltf\tiny_gltf.cc
+		External\tinygltf\tiny_gltf.h = External\tinygltf\tiny_gltf.h
 	EndProjectSection
 EndProject
 Global
@@ -122,6 +133,7 @@ Global
 		{0D8AE5B9-E68A-4E30-8B91-9E78891D4BBA} = {7AB1CA7A-8E41-4E03-929E-A1A5FFAE8E16}
 		{33BB77DC-3ED6-4640-A376-52F4F02303F2} = {A82E50DC-0C10-42C5-9F66-FE24647683E9}
 		{6F2C11AE-3F8E-459F-A931-CAD609BF898E} = {686626F8-3F9F-495E-A323-8787ED7222C6}
+		{C0F87CA2-C060-4D1A-BF57-A89159981FE3} = {686626F8-3F9F-495E-A323-8787ED7222C6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B539A217-C268-4BB2-B1E8-624C71DE29E3}
