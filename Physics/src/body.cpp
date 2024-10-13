@@ -119,4 +119,48 @@ namespace AE86 {
     void RigidBody::setInertiaTensor(const Matrix3& inertiaTensor) {
         inverseInertiaTensor.setInverse(inertiaTensor);
     }
+    
+    Vector3 RigidBody::getPointInLocalSpace(const Vector3& point) const {
+        return transformMatrix.transformInverse(point);
+    }
+
+    Vector3 RigidBody::getPointInWorldSpace(const Vector3& point) const {
+        return transformMatrix.transform(point);
+    }
+
+    void RigidBody::addForce(const Vector3& force) {
+        forceAccum += force;
+    }
+
+    void RigidBody::addForceAtBodyPoint(const Vector3& force,
+        const Vector3& point) {
+
+        // transform to world coords
+        Vector3 pt = getPointInWorldSpace(point);
+
+        // apply world coordinate force
+        addForceAtPoint(force, pt);
+    }
+
+    void RigidBody::addForceAtPoint(const Vector3& force,
+        const Vector3& point) {
+        
+        // vector from force-applied coord to centre of mass
+        Vector3 pt = point - position;
+
+        // d'alembert's principle on force and torque
+        forceAccum += force;
+        torqueAccum += pt % force; // overloaded cross prod.
+    }
+
+    void RigidBody::clearAccumulators() {
+        forceAccum.clear();
+        torqueAccum.clear();
+    }
+
+    void RigidBody::integrate(real duration) {
+
+        // clear forces applied
+        clearAccumulators();
+    }
 }

@@ -58,6 +58,21 @@ namespace AE86 {
 s		 */
 		Matrix3 inverseInertiaTensorWorld;
 
+		/********************************************************
+		 * The below two accumulators store the force and torque,
+		 * respectively, to be applied on the rigid body during 
+		 * the next integration step. It is an accumulation of all
+		 * forces applied to it since the last integration step. 
+		 * This is essentially D'Alembert's principle.
+		 ********************************************************/
+
+		// Accumulated force applied at next integration step.
+		Vector3 forceAccum;
+
+		// Accumulated torque applied at next integration step.
+		Vector3 torqueAccum;
+
+
 	public: 
 		/** 
 		 * The rigid body has internal data that is updated based on
@@ -79,6 +94,58 @@ s		 */
 		 * invertible.
 		 */
 		void setInertiaTensor(const Matrix3& inertiaTensor);
+
+		// Converts given world space point into body space point
+		Vector3 getPointInLocalSpace(const Vector3& point) const;
+
+		// Converts given body space point into world space point
+		Vector3 getPointInWorldSpace(const Vector3& point) const;
+
+		/**
+		 * Applies the given force on the center of mass of
+		 * the rigid body. Force is in world coordinates.
+		 */
+		void addForce(const Vector3& force);
+
+		/**
+		 * Applies a force at a point on the rigid body.
+		 * Both force and point are in world space coords.
+		 * NOTE: this can result in angular acceleration as
+		 * torque is calculated in this function call.
+		 * 
+		 * See generic addForce method to apply a force at the
+		 * centre of mass and therefore incur no angular
+		 * acceleration.
+		 */
+		void addForceAtPoint(const Vector3& force,
+			const Vector3& point);
+
+		/** 
+		 * Applies a force at a point on the rigid body.
+		 * Both force and point are in local space coords.
+		 * 
+		 * NOTE: this can result in angular acceleration as
+		 * torque is calculated in this function call.
+		 * 
+		 * See generic addForce method to apply a force at the 
+		 * centre of mass and therefore incur no angular 
+		 * acceleration.
+		 */
+		void addForceAtBodyPoint(const Vector3& force,
+			const Vector3& point);
+
+		/** 
+		 * Clears the forces and torques in the accumulators.
+		 * Automatically applied at the end of each integration
+		 * step.
+		 */
+		void clearAccumulators();
+
+		/** 
+		 * Integrates linear and angular position from
+		 * currently-applied forces/torques.
+		 */
+		void integrate(real duration);
 	};
 	
 }
