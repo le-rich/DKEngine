@@ -108,4 +108,12 @@
   <ItemGroup>
     <None Include="Shaders\default.glsl" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="src\Resources\Gold_Star.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="x64\Debug\Resources\Gold_Star.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
 </Project>
