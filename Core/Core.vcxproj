@@ -164,6 +164,7 @@
     <ClInclude Include="include\Component.h" />
     <ClInclude Include="include\Entity.h" />
     <ClInclude Include="include\GLTFLoader.h" />
+    <ClInclude Include="include\Input.h" />
     <ClInclude Include="include\Managers\ComponentManager.h" />
     <ClInclude Include="include\Managers\EntityManager.h" />
     <ClInclude Include="include\System.h" />
