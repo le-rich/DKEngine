@@ -4,6 +4,7 @@
 #include "Component.h"
 
 #include <algorithm>
+#include <memory>
 #include <vector>
 
 //template<typename T>
@@ -18,6 +19,12 @@ protected:
 
     // array of components
     std::vector<Component> components;
+
+    // pointer to its parent Entity
+    Entity* parent = nullptr;
+
+    // list of child entities
+    std::vector<Entity*> children;
 
 public:
     // retrieve id of entity
@@ -92,6 +99,44 @@ public:
     // default destructor
     ~Entity(){
         // destructor code        
+    }
+
+    // parent code
+
+    // set parent entity
+    void setParent(Entity* parentEntity) {
+        if (this->parent != nullptr) {
+            this->parent->removeChild(this);
+        }
+        this->parent = parentEntity;
+
+        if (parentEntity != nullptr) {
+            parentEntity->addChild(this);
+        }
+    }
+
+    // retrieve parent entity
+    Entity* getParent() const {
+        return parent;
+    }
+
+    // add a child entity
+    void addChild(Entity* child) {
+        children.push_back(child);
+        child->parent = this;
+    }
+
+    // remove a child entity
+    void removeChild(Entity* child) {
+        children.erase(
+            std::remove_if(children.begin(), children.end(),
+                [child](Entity* c) { return c == child; }),
+            children.end());
+    }
+
+    // retrieve all children entities
+    const std::vector<Entity*>& getChildren() const {
+        return children;
     }
 
     // TODO: enable/disable
