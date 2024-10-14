@@ -152,7 +152,7 @@ namespace GLTFLoader
                 for (int index = 0; index < vertices.size(); ++index)
                 {
                     int floatIndex = index * typeCount; // Offset
-                    vertices[index].mUVCoord = glm::vec2(floatVector[floatIndex], floatVector[floatIndex + 2]);
+                    vertices[index].mUVCoord = glm::vec2(floatVector[floatIndex], floatVector[floatIndex + 1]);
                 }
                 break;
             default:

@@ -32,7 +32,7 @@ void Renderer::Update()
     GLuint shader = CreateShader(source.VertexSource, source.FragmentSource);
     GLCall(glUseProgram(shader));
 
-    Texture texture("../Core/Assets/AE86/textures/fmesh_Material_001_BasssseColor_001df.png");
+    Texture texture("../Core/Assets/TestAE/textures/fmesh_Material_001_BasssseColor_001df.png");
     texture.Bind();
     //Apply Uniforms (lighting, view matrices, etc...)
     // 

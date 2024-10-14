@@ -107,7 +107,7 @@ int run_glfw() {
 	auto previousTime = std::chrono::high_resolution_clock::now();
 
 	// TODO: Refactor to some kind of Asset Manager and/or Scene Hierarchy for renderer to access
-	tinygltf::Model gltfModel = GLTFLoader::LoadFromFile("Assets/AE86/ae86.gltf"); // TODO: Figure out location of assets/non code files within solution
+	tinygltf::Model gltfModel = GLTFLoader::LoadFromFile("Assets/TestAE/ae86.gltf"); // TODO: Figure out location of assets/non code files within solution
 	Mesh testMesh = GLTFLoader::LoadMesh(gltfModel, gltfModel.meshes[0]);
 	renderer->testMesh = testMesh;
 	// end TODO
@@ -122,7 +122,7 @@ int run_glfw() {
 
 		Input::RunInputListener();
 		// Rendering related calls, we can move these to the loop of the rendering thread
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		renderer->Update(); // draw tri or square
 
 		// The window has two buffers, front and back.
