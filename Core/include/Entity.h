@@ -74,18 +74,16 @@ public:
                 [&c](const Component& comp) { return comp == c; }),
             components.end());
     }
-
-    // find a component
-    Component getComponent(Component& c)
-    {
+    
+    Component* getComponent(const Component& c) {
         auto it = std::find_if(components.begin(), components.end(),
             [&c](const Component& comp) { return comp == c; });
 
         if (it != components.end()) {
-            return *it;
+            return &(*it);
         }
         else {
-            std::cout << "Component not found" << std::endl;
+            return nullptr;
         }
     }
 
@@ -137,6 +135,18 @@ public:
     // retrieve all children entities
     const std::vector<Entity*>& getChildren() const {
         return children;
+    }
+
+    // retrieve a specific component from a parent
+    Component* getComponentFromParent(const Component& c) {
+        Component* comp = getComponent(c);
+        if (comp != nullptr) {
+            return comp;
+        }
+        if (parent != nullptr) {
+            return parent->getComponentFromParent(c);
+        }
+        return nullptr;
     }
 
     // TODO: enable/disable
