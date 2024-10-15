@@ -2,11 +2,11 @@
 
 #include "Component.h"
 #include "Entity.h"
-#include "Managers/EntityManager.h"
 #include "include/ui.h"
+#include "Input.h"
+#include "Managers/EntityManager.h"
 #include "physics.h"
 #include "render.h"
-#include "Input.h"
 
 
 #include <glad/glad.h>
@@ -14,10 +14,10 @@
 #include <mutex>
 #include <thread>
 
-#include <iostream>
-#include "System.h"
-#include "Renderer.h"
 #include "GLTFLoader.h"
+#include "Renderer.h"
+#include "System.h"
+#include <iostream>
 
 
 

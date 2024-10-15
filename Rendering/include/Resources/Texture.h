@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 #include <string>
 
+
 class Texture
 {
 private:
