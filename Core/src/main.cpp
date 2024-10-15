@@ -17,6 +17,7 @@
 #include <mutex>
 #include <thread>
 
+#include "Components/Transform.h"
 #include "GLTFLoader.h"
 #include "Renderer.h"
 #include "System.h"
@@ -71,8 +72,11 @@ int run_glfw() {
 	Core::getInstance().SetScene(defaultScene);
 	defaultScene->SpawnSceneDefinition();
 
+	Transform* CAR_TRANSFORM = new Transform();
+
+
 	UI* ui = new UI();
-	Physics* physx = new Physics();
+	Physics* physx = new Physics(CAR_TRANSFORM);
 	Renderer* renderer = new Renderer();
 
 	Core::getInstance().AddSystem(ui);
@@ -85,7 +89,7 @@ int run_glfw() {
 
 	// Timing
 	double fixedUpdateBuffer = 0.0;
-	double FIXED_UPDATE_INTERVAL = 0.016;
+	double FIXED_UPDATE_INTERVAL = 16; // in milliseconds
 	auto previousTime = std::chrono::high_resolution_clock::now();
 
 	// TODO: Refactor to some kind of Asset Manager and/or Scene Hierarchy for renderer to access
@@ -98,9 +102,17 @@ int run_glfw() {
 	// That way those threads will stop once the window closes. ### Has to be conditional for main thread ###
 	while (!glfwWindowShouldClose(window))
 	{
+		if (Input::keys[GLFW_KEY_W])
+			physx->body->addForce(AE86::Vector3(1.0, 0.0, 0.0));
+
 		auto currentTime = std::chrono::high_resolution_clock::now();
 
-		std::chrono::duration<double> elapsedTime = currentTime - previousTime;
+		auto elapsedTime = currentTime - previousTime;
+
+		previousTime = currentTime;
+
+		fixedUpdateBuffer += std::chrono::duration_cast<std::chrono::milliseconds>(elapsedTime).count();
+		std::cout << "COUNT: " << fixedUpdateBuffer << "\n";
 
 		Input::RunInputListener();
 		// Rendering related calls, we can move these to the loop of the rendering thread
@@ -126,13 +138,21 @@ int run_glfw() {
 		// As long as all components are called after glfwpollevents, behavior should be fine.
 		
 		while (fixedUpdateBuffer >= FIXED_UPDATE_INTERVAL) {
+			physx->FixedUpdate();
 			for (auto system : systems) {
 				system->FixedUpdate();
 			}
+
+			fixedUpdateBuffer -= FIXED_UPDATE_INTERVAL;
+			CAR_TRANSFORM->mtx.lock();
+			glm::vec4 carPos = CAR_TRANSFORM->getLocalPosition();
+			std::cout << "MAIN LOOP - CAR TRANSFORM POSITION: " << carPos.x << ", " << carPos.y << ", " << carPos.z << "\n";
+			CAR_TRANSFORM->mtx.unlock();
 		}
 
 		for (auto system : systems) {
 			system->Update();
+
 		}
 	
 	}

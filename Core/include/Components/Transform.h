@@ -23,9 +23,6 @@ private:
 	// parent-relative scale
 	glm::vec3 localScale;
 
-	// lock to guarantee mutual exclusion
-	std::mutex mtx;
-
 	/* 
 	 * Holds a transform matrix for converting local space
 	 * to world space, and world scale.
@@ -37,6 +34,12 @@ public:
 	// the constructor, takes global position, orientation, scale, parent, child
 	Transform(Entity* mEntity, glm::vec4 position, glm::quat orientation, float scale);
 	~Transform();
+
+	Transform() : localPosition(glm::vec4(0.0f)), localOrientation(glm::quat(glm::vec3(0.0f, 0.0f, 0.0f))), localScale(1.0f), parent(nullptr), child(nullptr), transformMatrix(glm::mat4(1.0f)) {}
+
+	// lock to guarantee mutual exclusion
+	std::mutex mtx;
+
 
 	/** the parent might move or scale, the transform matrix needs 
 	 * to then be updated. This method does that.

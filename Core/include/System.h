@@ -14,6 +14,7 @@ private:
     std::mutex mutex;
 
 public:
+
     System() : isActive(false) {} // Initialize isActive to false
     ~System() {
         Kill();
