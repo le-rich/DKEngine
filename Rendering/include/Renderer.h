@@ -7,7 +7,10 @@ implement pre and post methods.*/
 //#include "Renderer.h"
 #include "System.h"
 // @TODO: Remove TESTING INCLUDE
+#include "Buffers/UniformBuffer.h"
 #include "Resources/Mesh.h"
+#include "Resources/Texture.h"
+#include "Components/Transform.h"
 
 
 
@@ -31,6 +34,9 @@ public:
     }
 
     Mesh testMesh;
+    Transform* testTransform;
+    Texture* texture;
 private:
+    UniformBuffer mUniformBuffer;
 
 };

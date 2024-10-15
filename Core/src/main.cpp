@@ -96,6 +96,7 @@ int run_glfw() {
 	tinygltf::Model gltfModel = GLTFLoader::LoadFromFile("Assets/TestAE/ae86.gltf"); // TODO: Figure out location of assets/non code files within solution
 	Mesh testMesh = GLTFLoader::LoadMesh(gltfModel, gltfModel.meshes[0]);
 	renderer->testMesh = testMesh;
+	renderer->testTransform = CAR_TRANSFORM;
 	// end TODO
 
 	// We want some check like this visible to the other threads
@@ -103,6 +104,8 @@ int run_glfw() {
 	while (!glfwWindowShouldClose(window))
 	{
 		if (Input::keys[GLFW_KEY_W])
+			physx->body->addForce(AE86::Vector3(-1.0, 0.0, 0.0));
+		if (Input::keys[GLFW_KEY_S])
 			physx->body->addForce(AE86::Vector3(1.0, 0.0, 0.0));
 
 		auto currentTime = std::chrono::high_resolution_clock::now();
@@ -139,15 +142,15 @@ int run_glfw() {
 		
 		while (fixedUpdateBuffer >= FIXED_UPDATE_INTERVAL) {
 			physx->FixedUpdate();
-			for (auto system : systems) {
+		/*	for (auto system : systems) {
 				system->FixedUpdate();
-			}
+			}*/
 
 			fixedUpdateBuffer -= FIXED_UPDATE_INTERVAL;
-			CAR_TRANSFORM->mtx.lock();
-			glm::vec4 carPos = CAR_TRANSFORM->getLocalPosition();
-			std::cout << "MAIN LOOP - CAR TRANSFORM POSITION: " << carPos.x << ", " << carPos.y << ", " << carPos.z << "\n";
-			CAR_TRANSFORM->mtx.unlock();
+			//CAR_TRANSFORM->mtx.lock();
+			//glm::vec3 carPos = CAR_TRANSFORM->getLocalPosition();
+			//std::cout << "MAIN LOOP - CAR TRANSFORM POSITION: " << carPos.x << ", " << carPos.y << ", " << carPos.z << "\n";
+			//CAR_TRANSFORM->mtx.unlock();
 		}
 
 		for (auto system : systems) {

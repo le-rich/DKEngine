@@ -58,8 +58,9 @@ void Transform::lookAt(Transform* target)
 }
 
 
-glm::vec4 Transform::getWorldPosition() {
-	return transformMatrix * localPosition;
+glm::vec3 Transform::getWorldPosition() {
+	//auto worldMat = transformMatrix * glm::vec4(localPosition, 1.0);
+	return glm::vec3(localPosition.xyz());
 }
 
 glm::quat Transform::getWorldOrientation() {
@@ -67,7 +68,7 @@ glm::quat Transform::getWorldOrientation() {
 	return localOrientation;
 }
 
-glm::vec4 Transform::getLocalPosition() {
+glm::vec3 Transform::getLocalPosition() {
 	return localPosition;
 }
 
@@ -75,7 +76,7 @@ glm::quat Transform::getLocalOrientation() {
 	return localOrientation;
 }
 
-void Transform::setLocalPosition(glm::vec4 position) {
+void Transform::setLocalPosition(glm::vec3 position) {
 	localPosition.x = position.x;
 	localPosition.y = position.y;
 	localPosition.z = position.z;

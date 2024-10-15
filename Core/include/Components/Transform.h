@@ -15,7 +15,7 @@ class Entity;
 class Transform : public Component {
 private:
 	// parent space coords for Transform's origin's position.
-	glm::vec4 localPosition;
+	glm::vec3 localPosition;
 
 	// parent space angular orientation
 	glm::quat localOrientation;
@@ -35,7 +35,7 @@ public:
 	Transform(Entity* mEntity, glm::vec4 position, glm::quat orientation, float scale);
 	~Transform();
 
-	Transform() : localPosition(glm::vec4(0.0f)), localOrientation(glm::quat(glm::vec3(0.0f, 0.0f, 0.0f))), localScale(1.0f), parent(nullptr), child(nullptr), transformMatrix(glm::mat4(1.0f)) {}
+	//Transform() : localPosition(glm::vec3(0.0f)), localOrientation(glm::quat(glm::vec3(0.0f, 0.0f, 0.0f))), localScale(1.0f), parent(nullptr), child(nullptr), transformMatrix(glm::mat4(1.0f)) {}
 
 	// lock to guarantee mutual exclusion
 	std::mutex mtx;
@@ -51,13 +51,15 @@ public:
 	/********************************************/
 	/* SETTERS AND GETTERS FOR POS/ORIENT/SCALE */
 	/********************************************/
-	glm::vec4 getWorldPosition();
+	inline const glm::mat4 getTransformMatrix() { return transformMatrix; }
+
+	glm::vec3 getWorldPosition();
 	glm::quat getWorldOrientation();
 
-	glm::vec4 getLocalPosition();
+	glm::vec3 getLocalPosition();
 	glm::quat getLocalOrientation();
 
-	void setLocalPosition(glm::vec4 position);
+	void setLocalPosition(glm::vec3 position);
 	void setLocalOrientation(glm::quat orientation);
 
 	void setWorldSpacePosition(glm::vec4 position);
