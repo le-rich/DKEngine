@@ -23,7 +23,14 @@ namespace AE86 {
 
 	void World::runPhysics(real duration) {
 		// TODO: add force registry code here.
-
 		integrate(duration);
+	}
+
+	World::RigidBodies World::getRigidBodies() {
+		return bodies;
+	}
+
+	void World::addRigidBody(RigidBody* rigidBody) {
+		bodies.emplace_back(rigidBody);
 	}
 }

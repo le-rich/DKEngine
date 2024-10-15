@@ -15,9 +15,13 @@ namespace AE86 {
 	public:
 		typedef std::vector<RigidBody*> RigidBodies;
 
-	protected:
-		// holds the rigid bodies being simulated
-		RigidBodies bodies;
+		World() {
+			bodies = std::vector<RigidBody*>();
+		}
+		
+		void addRigidBody(RigidBody* rigidBody);
+
+		RigidBodies getRigidBodies();
 
 		/**
 		 * Initializes the world for a simulation frame. This clears
@@ -27,10 +31,18 @@ namespace AE86 {
 		 */
 		void startFrame();
 
-		void integrate(real duration);
-
 		// processes physics for the world
 		void runPhysics(real duration);
+
+	protected:
+		// holds the rigid bodies being simulated
+		RigidBodies bodies;
+
+
+
+		void integrate(real duration);
+
+
 	};
 }
 
