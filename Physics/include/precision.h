@@ -13,7 +13,7 @@ namespace AE86 {
 	 * namespace.
 	*/
 
-#if 1  // 1 = FLOATING POINT PRECISION, 0 = DOUBLE PRECISION
+#if 0  // 1 = FLOATING POINT PRECISION, 0 = DOUBLE PRECISION
 	typedef float real;
 
 #define REAL_MAX FLT_MAX
