@@ -12,10 +12,20 @@ protected:
     // TODO: map of entities
     std::map<UUIDv4::UUID, Entity> entityMap;
 
-public:
-    // default constructor
+    // Private constructor as this should be a singleton.
     EntityManager(){
         std::cout << "Entity Manager created" << std::endl;
+    }
+
+public:
+    // Delete copy constructor and copy assignment operator
+    EntityManager(const EntityManager&) = delete;
+    EntityManager& operator=(const EntityManager&) = delete;
+
+    // default constructor
+    static EntityManager& getInstance() {
+        static EntityManager instance;
+        return instance;
     }
 
     // iterates over all entities in the map and calls the entity's update function
@@ -58,6 +68,7 @@ public:
         }
         else {
             // TODO : handle if the entity isn't in the map?
+            return nullptr;
         }
     }
 
@@ -88,8 +99,8 @@ public:
             }
             else {
                 std::cout << "Entity not found." << std::endl;
+                // TODO: This should return a path. It will lead to unexpected behaviour if it doesn't.
             }
         }
-
     }
 };

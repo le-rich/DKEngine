@@ -16,9 +16,6 @@
     <Filter Include="Source Files\Components">
       <UniqueIdentifier>{ff52a99b-0e73-4db2-8d0f-e118b23d472b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Components">
-      <UniqueIdentifier>{18da5b9e-4660-435c-a50b-ce258ddf9dec}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -63,7 +60,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Components\Transform.h">
-      <Filter>Header Files\Components</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

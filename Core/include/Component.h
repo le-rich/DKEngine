@@ -7,6 +7,7 @@ class Component {
 public:
 	Component(Entity* mEntity);
 	~Component();
+
 	Entity* entity;
 
 private:

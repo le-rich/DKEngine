@@ -1,7 +1,7 @@
-#ifndef TRANSFORM_H
-#define TRANSFORM_H
-
+#pragma once
 #define GLM_FORCE_SWIZZLE
+#include "Component.h"
+
 #include <glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <mutex>
@@ -72,5 +72,3 @@ public:
 
 	Transform& operator=(const Transform& other);
 };
-
-#endif 

@@ -37,8 +37,6 @@ public:
 	void Synchronize() {
 
 	}
-
-
 };
 
 
