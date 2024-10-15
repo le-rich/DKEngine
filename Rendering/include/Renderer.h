@@ -57,6 +57,7 @@ public:
     Mesh testMesh;
     Transform* testTransform;
     Texture* texture;
+    GLuint testShader;
 private:
     UniformBuffer mUniformBuffer;
 
