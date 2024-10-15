@@ -6,13 +6,13 @@
 #include "include/ui.h"
 #include "physics.h"
 #include "render.h"
+#include "Input.h"
+
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <mutex>
 #include <thread>
-
-
 
 #include <iostream>
 #include "System.h"
@@ -70,6 +70,8 @@ int run_glfw() {
 	// That is, only one thread can be associated with one window at a time.
 	// This'll likely be the cause of a lot of issues with rendering and ui.
 	glfwMakeContextCurrent(window);
+	glfwSetKeyCallback(window, Input::KeyCallback);
+	glfwSetMouseButtonCallback(window, Input::MouseButtonCallback);
 
 	// Load GLAD
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -118,7 +120,7 @@ int run_glfw() {
 
 		std::chrono::duration<double> elapsedTime = currentTime - previousTime;
 
-
+		Input::RunInputListener();
 		// Rendering related calls, we can move these to the loop of the rendering thread
 		glClear(GL_COLOR_BUFFER_BIT);
 		renderer->Update(); // draw tri or square

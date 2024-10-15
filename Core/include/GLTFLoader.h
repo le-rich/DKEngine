@@ -203,10 +203,10 @@ namespace GLTFLoader
     }
 
     // TODO
-    static Texture LoadTexture()
-    {
-        return Texture();
-    }
+    //static Texture LoadTexture()
+    //{
+    //    return Texture();
+    //}
 
     static bool isFileBinary(std::string const& pFilePath)
     {
