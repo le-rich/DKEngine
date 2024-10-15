@@ -9,7 +9,7 @@
 /**
  * 
  */
-class Transform {
+class Transform : Component {
 private:
 	// parent space coords for Transform's origin's position.
 	glm::vec4 localPosition;
@@ -28,21 +28,24 @@ private:
 	 * to world space, and world scale.
 	 */
 	glm::mat4 transformMatrix;
-
-	// place-holder for calculations, likely there will 
-	// be a better way to receive the parent transform 
-	// (through the entity itself or whatever).
-	Transform* parent;
-	Transform* child;
+	
+	Entity* entity;
 
 public:
+	Transform(Entity* mEntity) : Component(mEntity), localPosition(0.0f, 0.0f, 0.0f, 1.0f),
+		localOrientation(1.0f, 0.0f, 0.0f, 0.0f),
+		localScale(1.0f, 1.0f, 1.0f),
+		transformMatrix(1.0f) {};
+
 	// the constructor, takes global position, orientation, scale, parent, child
-	Transform(glm::vec4 position, glm::quat orientation, float scale, Transform* parent, Transform* child);
+	Transform(Entity* mEntity, glm::vec4 position, glm::quat orientation, float scale, Transform* parent, Transform* child);
+	~Transform();
 
 	/** the parent might move or scale, the transform matrix needs 
 	 * to then be updated. This method does that.
 	 */
 	void updateTransformMatrix();
+	void lookAt(Transform target);
 
 
 	/********************************************/
@@ -65,6 +68,8 @@ public:
 
 	glm::vec3 getLocalScale();
 	void setLocalScale(glm::vec3 scale);
+
+	Transform& operator=(const Transform& other);
 };
 
 #endif 

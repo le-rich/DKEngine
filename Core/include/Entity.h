@@ -2,6 +2,7 @@
 
 #include "Utils/IDUtils.h"
 #include "Component.h"
+#include "Components/Transform.h"
 
 #include <algorithm>
 #include <memory>
@@ -27,6 +28,8 @@ protected:
     std::vector<Entity*> children;
 
 public:
+    Transform* transform;
+
     // retrieve id of entity
     UUIDv4::UUID GetEntityID() {
         return entityID;
@@ -71,13 +74,13 @@ public:
     {
         components.erase(
             std::remove_if(components.begin(), components.end(),
-                [&c](const Component& comp) { return comp == c; }),
+                [&c](const Component& comp) { return &comp == &c; }),
             components.end());
     }
     
     Component* getComponent(const Component& c) {
         auto it = std::find_if(components.begin(), components.end(),
-            [&c](const Component& comp) { return comp == c; });
+            [&c](const Component& comp) { return &comp == &c; });
 
         if (it != components.end()) {
             return &(*it);
@@ -147,6 +150,10 @@ public:
             return parent->getComponentFromParent(c);
         }
         return nullptr;
+    }
+
+    bool operator==(const Entity& other) const {
+        return (other.entityID == this->entityID);
     }
 
     // TODO: enable/disable
