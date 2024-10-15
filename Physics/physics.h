@@ -31,7 +31,7 @@ public:
         body->setAngularDamping(0.50f);
 
         glm::quat initOrientation = CAR_TRANSFORM->getLocalOrientation();
-        glm::vec4 initPosition = CAR_TRANSFORM->getLocalPosition();
+        glm::vec3 initPosition = CAR_TRANSFORM->getLocalPosition();
 
         body->setOrientation(AE86::Quaternion(initOrientation.w, initOrientation.x, initOrientation.y, initOrientation.z));
         body->setPosition(AE86::Vector3(initPosition.x, initPosition.y, initPosition.z));
@@ -72,9 +72,9 @@ public:
         std::cout << "PHYSICS - RB POSITION: " << updatedPosition.x << ", " << updatedPosition.y << ", " << updatedPosition.z << "\n";
 
 
-        CAR_TRANSFORM->setLocalPosition(glm::vec4(updatedPosition.x, updatedPosition.y, updatedPosition.z, 1.0));
+        CAR_TRANSFORM->setLocalPosition(glm::vec3(updatedPosition.x, updatedPosition.y, updatedPosition.z));
         CAR_TRANSFORM->setLocalOrientation(glm::quat(updatedOrientation.r, updatedOrientation.i, updatedOrientation.j, updatedOrientation.k));
-
+        CAR_TRANSFORM->updateTransformMatrix();
         std::cout << "PHYSICS - WE HAVE UPDATED THE TRANSFORM AND RELEASING LOCK\n";
     }
 

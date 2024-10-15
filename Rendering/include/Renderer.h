@@ -8,7 +8,10 @@ implement pre and post methods.*/
 //#include "Renderer.h"
 #include "System.h"
 // @TODO: Remove TESTING INCLUDE
+#include "Buffers/UniformBuffer.h"
 #include "Resources/Mesh.h"
+#include "Resources/Texture.h"
+#include "Components/Transform.h"
 
 // Macro definitions for error handlingb
 #define ASSERT(x) if (!(x)) __debugbreak();
@@ -52,7 +55,11 @@ public:
     }
 
     Mesh testMesh;
+    Transform* testTransform;
+    Texture* texture;
 private:
+    UniformBuffer mUniformBuffer;
+
     static unsigned int CompileShader(unsigned int type, const std::string& source);
     static unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
     static ShaderProgramSource ParseShader(const std::string& filePath);
