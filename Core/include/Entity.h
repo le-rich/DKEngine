@@ -28,6 +28,7 @@ protected:
     std::vector<Entity*> children;
 
 public:
+    // Every entity should by default have a transform.
     Transform* transform;
 
     // retrieve id of entity
@@ -94,6 +95,7 @@ public:
     Entity()
     {
         this->entityID = uuidGen.getUUID();
+        this->transform = new Transform(this);
         // init code
     }
 

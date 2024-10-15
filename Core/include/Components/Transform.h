@@ -29,6 +29,7 @@ private:
 	 */
 	glm::mat4 transformMatrix;
 	
+	// The linked entity.
 	Entity* entity;
 
 public:
@@ -38,7 +39,7 @@ public:
 		transformMatrix(1.0f) {};
 
 	// the constructor, takes global position, orientation, scale, parent, child
-	Transform(Entity* mEntity, glm::vec4 position, glm::quat orientation, float scale, Transform* parent, Transform* child);
+	Transform(Entity* mEntity, glm::vec4 position, glm::quat orientation, float scale);
 	~Transform();
 
 	/** the parent might move or scale, the transform matrix needs 

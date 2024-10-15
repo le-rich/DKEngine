@@ -5,11 +5,12 @@
 #include<glm/gtc/quaternion.hpp>
 
 
-Transform::Transform(Entity* mEntity, glm::vec4 position, glm::quat orientation, float scale, Transform* parent, Transform* child)
-	: Component(mEntity), localPosition(position), localOrientation(orientation), localScale(scale), parent(parent), child(child) 
+Transform::Transform(Entity* mEntity, glm::vec4 position, glm::quat orientation, float scale)
+	: Component(mEntity), localPosition(position), localOrientation(orientation), localScale(scale)
 {
-	mEntity->transform = this;
 	updateTransformMatrix();
+	
+	// DO NOT REVERSE LINK mEntity->transform = this. This should be handled in Entity's initialization.
 }
 
 Transform::~Transform()
