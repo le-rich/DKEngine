@@ -18,6 +18,7 @@
 #include "System.h"
 #include "Renderer.h"
 #include "GLTFLoader.h"
+#include "Window/Window.h"
 
 
 
@@ -42,10 +43,10 @@ public:
 };
 
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-	glViewport(0, 0, width, height);
-}
+//void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+//{
+//	glViewport(0, 0, width, height);
+//}
 
 
 // TODO: Refactor Window setup to enable concurrent access to the window object for the render thread.
@@ -53,25 +54,31 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 // That can wait for the time being.
 int run_glfw() {
 	 
-	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	//glfwInit();
+	//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(800, 600, "DKEngine", NULL, NULL);
-	if (window == NULL)
-	{
-		std::cout << "Failed to create GLFW window" << std::endl;
-		glfwTerminate();
-		return -1;
-	}
+	Window::InitWindow();
+
+	Window window;
+	//GLFWwindow* window = glfwCreateWindow(800, 600, "DKEngine", NULL, NULL);
+	//if (window == NULL)
+	//{
+	//	std::cout << "Failed to create GLFW window" << std::endl;
+	//	glfwTerminate();
+	//	return -1;
+	//}
 
 	// This function makes the OpenGL or OpenGL ES context of the specified window current on the calling thread.
 	// That is, only one thread can be associated with one window at a time.
 	// This'll likely be the cause of a lot of issues with rendering and ui.
-	glfwMakeContextCurrent(window);
-	glfwSetKeyCallback(window, Input::KeyCallback);
-	glfwSetMouseButtonCallback(window, Input::MouseButtonCallback);
+	//glfwMakeContextCurrent(window);
+	//glfwSetKeyCallback(window, Input::KeyCallback);
+	//glfwSetMouseButtonCallback(window, Input::MouseButtonCallback);
+	window.SetWindowToCurrentThread();
+	window.SetKeyCallback(Input::KeyCallback);
+	window.SetMouseButtonCallback(Input::MouseButtonCallback);
 
 	// Load GLAD
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -84,7 +91,8 @@ int run_glfw() {
 
 	// Call back for changing the viewport size of the OpenGL context.
 	// Context needs to be syncronized to caller thread.
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	//glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	window.SetFramebufferSizeCallback();
 
 	std::vector<System*> systems;
 	Core* core = new Core();
@@ -114,7 +122,7 @@ int run_glfw() {
 
 	// We want some check like this visible to the other threads
 	// That way those threads will stop once the window closes. ### Has to be conditional for main thread ###
-	while (!glfwWindowShouldClose(window))
+	while (!glfwWindowShouldClose(window.GetWindow()))
 	{
 		auto currentTime = std::chrono::high_resolution_clock::now();
 
@@ -130,14 +138,16 @@ int run_glfw() {
 		// Once rendering is done/finished writing to the back buffer, we call this function to swap the front and back buffers
 		// This allows us to draw onto the screen without drawing on top of the previous frame.
 		// This may or may not need to be thread safe. There's conflicting information about it.
-		glfwSwapBuffers(window);
+		//glfwSwapBuffers(window);
+		window.SwapWindowBuffers();
+
 
 		// This function processes all events in the event queue, including window and input events.
 		// Should be called in the main thread.
-		glfwPollEvents();
 		// Callbacks on all the keys that sets key-codes Or prsssdown to true or false.
 		// Potential Mouse inputs; May have to figure out how it can work when extracting
-		// Scrollwheels
+		//glfwPollEvents();
+		window.PollEvents();
 
 		// TODO: Create extractions/enums for key presses on whether they would be pressed-down or not,
 		// Have them be updated by GLFW callback. This works because glfwpollevents() is a synchronous method that runs all callbacks
@@ -177,6 +187,9 @@ int main(int argc, char* argv[])
 
 	// Currently has its own while loop blocking main
 	run_glfw();
+
+	// Create Window
+	// Run Window
 
 	
 
