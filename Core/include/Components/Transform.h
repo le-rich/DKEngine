@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../include/Component.h";
+#define GLM_SWIZZLE
 #include <glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <mutex>
@@ -10,60 +11,58 @@
  */
 class Transform : public Component {
 private:
-	// parent space coords for position.
+	// parent space coords for Transform's origin's position.
 	glm::vec4 localPosition;
 
 	// parent space angular orientation
 	glm::quat localOrientation;
 
 	// parent-relative scale
-	float localScale;
+	glm::vec3 localScale;
 
 	// lock to guarantee mutual exclusion
 	std::mutex mtx;
 
 	/* 
-	 * Holds a transform matrix for converting parent space
-	 * to world space and vice-versa.
+	 * Holds a transform matrix for converting local space
+	 * to world space, and world scale.
 	 */
 	glm::mat4 transformMatrix;
 
 	// place-holder for calculations, likely there will 
 	// be a better way to receive the parent transform 
 	// (through the entity itself or whatever).
-	Transform& parent;
+	Transform* parent;
+	Transform* child;
 
 public:
-	// the constructor, takes global position, orientation, scale
-	Transform(glm::vec3 pos, glm::quat orient, float scale);
+	// the constructor, takes global position, orientation, scale, parent, child
+	Transform(glm::vec4 position, glm::quat orientation, float scale, Transform* parent = nullptr, Transform* child = nullptr);
 
-	/** the parent might move, the transform matrix needs to then be
-     * updated, alongside the position, orientation, and scale of this
-	 * transform.
+	/** the parent might move or scale, the transform matrix needs 
+	 * to then be updated. This method does that.
 	 */
 	void updateTransformMatrix();
 
 
-	void update
-
 	/********************************************/
 	/* SETTERS AND GETTERS FOR POS/ORIENT/SCALE */
 	/********************************************/
-	glm::vec4 getWorldSpacePosition();
-	glm::quat getWorldSpaceOrientation();
+	glm::vec4 getWorldPosition();
+	glm::quat getWorldOrientation();
 
-	glm::vec4 getParentSpacePosition();
-	glm::vec4 getParentSpaceOrientation();
+	glm::vec4 getLocalPosition();
+	glm::quat getLocalOrientation();
 
-	void setParentSpacePosition(glm::vec4 position);
-	void setParentSpaceOrientation(glm::quat orientation);
+	void setLocalPosition(glm::vec4 position);
+	void setLocalOrientation(glm::quat orientation);
 
 	void setWorldSpacePosition(glm::vec4 position);
 	void setWorldSpaceOrientation(glm::quat orientation);
 
-	float getWorldScale();
-	float setWorldScale(float scale);
+	glm::vec3 getWorldScale();
+	void setWorldScale(glm::vec3 scale);
 
-	float getLocalScale();
-	float setLocalScale(float scale);
+	glm::vec3 getLocalScale();
+	void setLocalScale(glm::vec3 scale);
 };
