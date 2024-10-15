@@ -12,7 +12,10 @@ Texture::Texture(const std::string& path)
 	mBuffer(nullptr), mWidth(0), mHeight(0), mBPP(0)
 {
 
-	stbi_set_flip_vertically_on_load(1);
+	// OpenGL and STBI use different coordinate systems
+	// That being said some textures work flipped and unflipped
+	// Documentation recommends flipping all textures
+	stbi_set_flip_vertically_on_load(true);
 	mBuffer = stbi_load(path.c_str(), &mWidth, &mHeight, &mBPP, 4);
 
 	GLCall(glGenTextures(1, &mTexturerID));
