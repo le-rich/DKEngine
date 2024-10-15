@@ -1,7 +1,7 @@
-#pragma once
+#ifndef TRANSFORM_H
+#define TRANSFORM_H
 
-#include "../include/Component.h";
-#define GLM_SWIZZLE
+#define GLM_FORCE_SWIZZLE
 #include <glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <mutex>
@@ -9,7 +9,7 @@
 /**
  * 
  */
-class Transform : public Component {
+class Transform {
 private:
 	// parent space coords for Transform's origin's position.
 	glm::vec4 localPosition;
@@ -37,7 +37,7 @@ private:
 
 public:
 	// the constructor, takes global position, orientation, scale, parent, child
-	Transform(glm::vec4 position, glm::quat orientation, float scale, Transform* parent = nullptr, Transform* child = nullptr);
+	Transform(glm::vec4 position, glm::quat orientation, float scale, Transform* parent, Transform* child);
 
 	/** the parent might move or scale, the transform matrix needs 
 	 * to then be updated. This method does that.
@@ -66,3 +66,5 @@ public:
 	glm::vec3 getLocalScale();
 	void setLocalScale(glm::vec3 scale);
 };
+
+#endif 

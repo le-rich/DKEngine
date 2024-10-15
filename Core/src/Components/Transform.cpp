@@ -2,7 +2,7 @@
 #include<glm/gtc/quaternion.hpp>
 
 
-Transform::Transform(glm::vec4 position, glm::quat orientation, float scale, Transform* parent = nullptr, Transform* child = nullptr)
+Transform::Transform(glm::vec4 position, glm::quat orientation, float scale, Transform* parent, Transform* child)
 	: localPosition(position), localOrientation(orientation), localScale(scale), parent(parent), child(child) 
 {
 	updateTransformMatrix();
