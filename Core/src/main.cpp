@@ -107,9 +107,13 @@ int run_glfw() {
 	auto previousTime = std::chrono::high_resolution_clock::now();
 
 	// TODO: Refactor to some kind of Asset Manager and/or Scene Hierarchy for renderer to access
-	tinygltf::Model gltfModel = GLTFLoader::LoadFromFile("Assets/AE86/ae86.gltf"); // TODO: Figure out location of assets/non code files within solution
+	std::string SOURCE_FOLDER = "Assets/AE86/"; // TODO: JSONparser for list of assets, each asset has a PATH and FILE string.
+	tinygltf::Model gltfModel = GLTFLoader::LoadFromFile(SOURCE_FOLDER + "ae86.gltf"); // TODO: Figure out location of assets/non code files within solution
+	std::vector<std::shared_ptr<Texture>> textures = GLTFLoader::LoadTextures(gltfModel, SOURCE_FOLDER);
+
 	Mesh testMesh = GLTFLoader::LoadMesh(gltfModel, gltfModel.meshes[0]);
 	renderer->testMesh = testMesh;
+	renderer->testTextures = textures;
 	// end TODO
 
 	// We want some check like this visible to the other threads

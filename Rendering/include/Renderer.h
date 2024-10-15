@@ -9,6 +9,7 @@ implement pre and post methods.*/
 #include "System.h"
 // @TODO: Remove TESTING INCLUDE
 #include "Resources/Mesh.h"
+#include "Resources/Texture.h"
 
 // Macro definitions for error handlingb
 #define ASSERT(x) if (!(x)) __debugbreak();
@@ -51,7 +52,11 @@ public:
 
     }
 
+    // GARBAGE BLOCK HATE IT
+    // TODO: Decouple from member to scene reference
     Mesh testMesh;
+    // TODO: Decouple from member to AssetManager reference
+    std::vector<std::shared_ptr<Texture>> testTextures;
 private:
     static unsigned int CompileShader(unsigned int type, const std::string& source);
     static unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader);

@@ -202,11 +202,21 @@ namespace GLTFLoader
         return Material();
     }
 
+
     // TODO
-    //static Texture LoadTexture()
-    //{
-    //    return Texture();
-    //}
+    // Load Textures into asset manager and return list of id's for this set of textures
+    static std::vector<std::shared_ptr<Texture>> LoadTextures(tinygltf::Model const &pGltfModel, std::string const pSourceFolder)
+    {
+        std::vector<std::shared_ptr<Texture>> textures;
+
+        tinygltf::Texture texture = pGltfModel.textures[0];
+        int imageIndex = texture.source;
+        tinygltf::Image image = pGltfModel.images[imageIndex];
+        textures.push_back( std::make_shared<Texture>(pSourceFolder + image.uri) );
+
+        return textures;
+
+    }
 
     static bool isFileBinary(std::string const& pFilePath)
     {

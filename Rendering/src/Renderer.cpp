@@ -32,13 +32,10 @@ void Renderer::Update()
     GLuint shader = CreateShader(source.VertexSource, source.FragmentSource);
     GLCall(glUseProgram(shader));
 
-    Texture texture("../Core/Assets/AE86/textures/fmesh_Material_001_BasssseColor_001df.png");
-    texture.Bind();
+    //Texture texture("../Core/Assets/AE86/textures/fmesh_Material_001_BasssseColor_001df.png");
+    //texture.Bind();
     //Apply Uniforms (lighting, view matrices, etc...)
-    // 
-    //std::string name = "u_Texture";
-    //GLCall(int location = glGetUniformLocation(1, name.c_str()));
-    //GLCall(glUniform1i(location, 0));
+
     
     /*For each Primitive
         Bind Vertex Array
@@ -46,12 +43,13 @@ void Renderer::Update()
         DrawCall*/
 
     // GARBAGE METHODOLOGY
+    testTextures[0]->Bind();
     testMesh.Draw();
+    testTextures[0]->Unbind();
 
     /*Perform Post Processing
       Draw Frame Buffer*/
 
-    texture.Unbind();
     // Swap window buffers. can be moved to post update
     GLCall(glDeleteProgram(shader));
 }
