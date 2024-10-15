@@ -45,7 +45,7 @@
     <ClInclude Include="include\Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Primitives.h">
+    <ClInclude Include="include\Resources\Primitives.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Buffers\FrameBuffer.h">
@@ -95,7 +95,7 @@
     <ClCompile Include="src\Buffers\FrameBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Primitives.cpp">
+    <ClCompile Include="src\Resources\Primitives.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Entities\Camera.cpp">
@@ -107,5 +107,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\default.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="src\Resources\Gold_Star.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="x64\Debug\Resources\Gold_Star.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

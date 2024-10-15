@@ -59,6 +59,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{33BB77DC-3ED
 		External\glad\lib\glad.lib = External\glad\lib\glad.lib
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "include", "include", "{DA9855ED-1E38-4611-8EFB-ADE7A765F16B}"
+	ProjectSection(SolutionItems) = preProject
+		Core\include\Component.h = Core\include\Component.h
+		Core\include\Entity.h = Core\include\Entity.h
+		Core\include\System.h = Core\include\System.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Managers", "Managers", "{97C3B76B-0FF7-450B-8B80-43F6DBBF50A5}"
+	ProjectSection(SolutionItems) = preProject
+		Core\include\Managers\EntityManager.h = Core\include\Managers\EntityManager.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utils", "Utils", "{E0177D2F-5F41-47C0-9E03-B95D12FD01E2}"
+	ProjectSection(SolutionItems) = preProject
+		Core\include\Utils\IDUtils.h = Core\include\Utils\IDUtils.h
+	EndProjectSection
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "uuid", "uuid", "{6F2C11AE-3F8E-459F-A931-CAD609BF898E}"
 	ProjectSection(SolutionItems) = preProject
 		External\uuid\endianness.h = External\uuid\endianness.h
@@ -121,6 +138,8 @@ Global
 		{0C09A3E5-D920-4612-9ACE-A29EBFC15AC7} = {189B5BC6-551C-4DA4-96A0-770F1AFD7178}
 		{0D8AE5B9-E68A-4E30-8B91-9E78891D4BBA} = {7AB1CA7A-8E41-4E03-929E-A1A5FFAE8E16}
 		{33BB77DC-3ED6-4640-A376-52F4F02303F2} = {A82E50DC-0C10-42C5-9F66-FE24647683E9}
+		{97C3B76B-0FF7-450B-8B80-43F6DBBF50A5} = {DA9855ED-1E38-4611-8EFB-ADE7A765F16B}
+		{E0177D2F-5F41-47C0-9E03-B95D12FD01E2} = {DA9855ED-1E38-4611-8EFB-ADE7A765F16B}
 		{6F2C11AE-3F8E-459F-A931-CAD609BF898E} = {686626F8-3F9F-495E-A323-8787ED7222C6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution

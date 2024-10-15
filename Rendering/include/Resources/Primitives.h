@@ -1,8 +1,9 @@
 #pragma once
 
 #include <glad/glad.h>
-#include <vector>
 #include <glm.hpp>
+#include <vector>
+#include <memory>
 
 #include "Buffers/VertexBuffer.h"
 #include "Buffers/IndexBuffer.h"
@@ -14,20 +15,20 @@
 class Primitive
 {
 public:
-    Primitive(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices);
+    Primitive(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const GLuint pMaterialID = 0);
     ~Primitive();
 
     void Draw();
-    inline VertexBuffer& GetVertexBuffer() { return mVertexBuffer; }
-    inline IndexBuffer& GetIndexBuffer() { return mIndexBuffer; }
+    //inline VertexBuffer& GetVertexBuffer() { return mVertexBuffer; }
+    //inline IndexBuffer& GetIndexBuffer() { return mIndexBuffer; }
 
 private:
-    VertexBuffer mVertexBuffer;
-    IndexBuffer mIndexBuffer;
-    VertexArray mVertexArray;
+    std::shared_ptr<VertexBuffer> mVertexBuffer;
+    std::shared_ptr<IndexBuffer> mIndexBuffer;
+    std::shared_ptr<VertexArray> mVertexArray;
     VertexBufferLayout mVertexBufferLayout;
     std::vector<Vertex> mLoadedVertices;
-    std::vector<GLuint> mLoadedIndices;
+    std::vector<uint32_t> mLoadedIndices;
     GLuint mMaterialID;
 };
 
@@ -35,7 +36,7 @@ private:
 struct Shape
 {
     std::vector<Vertex> vertices;
-    std::vector<GLuint> indices;
+    std::vector<uint32_t> indices;
 };
 
 // Derived struct for Triangle

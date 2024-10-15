@@ -6,8 +6,8 @@
 #include <sstream>
 #include <vector>
 
-#include "Primitives.h"
 #include "Renderer.h"
+#include "Resources/Texture.h"
 
 // Constructor.
 Renderer::Renderer() {}
@@ -18,10 +18,6 @@ Renderer::~Renderer() {}
 void Renderer::Update()
 {
     // Clear color and depth buffers (can be moved to pre update
-
-    // Get example primitive
-    Cube cube;
-    Primitive primitive(cube.vertices, cube.indices);
      
     /*Get lights
       For each light
@@ -35,17 +31,29 @@ void Renderer::Update()
     ShaderProgramSource source = ParseShader("../Rendering/Shaders/default.glsl");
     GLuint shader = CreateShader(source.VertexSource, source.FragmentSource);
     GLCall(glUseProgram(shader));
+
+    Texture texture("../Core/Assets/TestAE/textures/fmesh_Material_001_BasssseColor_001df.png");
+    texture.Bind();
     //Apply Uniforms (lighting, view matrices, etc...)
+    // 
+    //std::string name = "u_Texture";
+    //GLCall(int location = glGetUniformLocation(1, name.c_str()));
+    //GLCall(glUniform1i(location, 0));
+    
     /*For each Primitive
         Bind Vertex Array
         Bind Index Buffer
         DrawCall*/
-    primitive.Draw();
+
+    // GARBAGE METHODOLOGY
+    testMesh.Draw();
 
     /*Perform Post Processing
       Draw Frame Buffer*/
 
+    texture.Unbind();
     // Swap window buffers. can be moved to post update
+    GLCall(glDeleteProgram(shader));
 }
 
 // Returns a ID of the compiled shader program on the GPU.

@@ -6,19 +6,18 @@
 #include "include/ui.h"
 #include "physics.h"
 #include "render.h"
+#include "Input.h"
+
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <mutex>
 #include <thread>
 
-
-
 #include <iostream>
-
-#include "Renderer.h"
-#include "Primitives.h"
 #include "System.h"
+#include "Renderer.h"
+#include "GLTFLoader.h"
 
 
 
@@ -71,6 +70,8 @@ int run_glfw() {
 	// That is, only one thread can be associated with one window at a time.
 	// This'll likely be the cause of a lot of issues with rendering and ui.
 	glfwMakeContextCurrent(window);
+	glfwSetKeyCallback(window, Input::KeyCallback);
+	glfwSetMouseButtonCallback(window, Input::MouseButtonCallback);
 
 	// Load GLAD
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -84,11 +85,6 @@ int run_glfw() {
 	// Call back for changing the viewport size of the OpenGL context.
 	// Context needs to be syncronized to caller thread.
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-    // primitive shapes
-    Triangle triangle;
-    Square square;
-
 
 	std::vector<System*> systems;
 	Core* core = new Core();
@@ -110,6 +106,12 @@ int run_glfw() {
 	double FIXED_UPDATE_INTERVAL = 0.016;
 	auto previousTime = std::chrono::high_resolution_clock::now();
 
+	// TODO: Refactor to some kind of Asset Manager and/or Scene Hierarchy for renderer to access
+	tinygltf::Model gltfModel = GLTFLoader::LoadFromFile("Assets/TestAE/ae86.gltf"); // TODO: Figure out location of assets/non code files within solution
+	Mesh testMesh = GLTFLoader::LoadMesh(gltfModel, gltfModel.meshes[0]);
+	renderer->testMesh = testMesh;
+	// end TODO
+
 	// We want some check like this visible to the other threads
 	// That way those threads will stop once the window closes. ### Has to be conditional for main thread ###
 	while (!glfwWindowShouldClose(window))
@@ -118,9 +120,9 @@ int run_glfw() {
 
 		std::chrono::duration<double> elapsedTime = currentTime - previousTime;
 
-
+		Input::RunInputListener();
 		// Rendering related calls, we can move these to the loop of the rendering thread
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		renderer->Update(); // draw tri or square
 
 		// The window has two buffers, front and back.
