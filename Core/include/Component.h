@@ -2,6 +2,9 @@
 #include "Entity.h"
 #include "Components/Transform.h"
 
+#include <Utils/IDUtils.h>
+#include <string>
+
 class Component {
 
 public:
@@ -10,6 +13,30 @@ public:
 
 	Entity* entity;
 
-private:
+	UUIDv4::UUID componentID;
+	std::string componentDisplayName;
 
+	UUIDv4::UUID GetComponentID() {
+		return componentID;
+	}
+
+	void SetComponentID(UUIDv4::UUID& newID) {
+		this->componentID = newID;
+	}
+
+	const std::string& GetDisplayName()
+	{
+		return componentDisplayName;
+	}
+
+	// set display id of component
+	void SetDisplayName(std::string newID)
+	{
+		componentDisplayName = newID;
+	}
+
+	bool operator==(const Component& other) const;
+
+private:
+	
 };

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core.h"
 #include "../include/Entity.h"
 #include "Utils/IDUtils.h"
 
@@ -10,7 +11,7 @@ class EntityManager{
 protected:
     static const int MAX_ENTITIES = 3000;
     // TODO: map of entities
-    std::map<UUIDv4::UUID, Entity> entityMap;
+    std::map<UUIDv4::UUID, Entity*> entityMap;
 
     // Private constructor as this should be a singleton.
     EntityManager(){
@@ -28,10 +29,11 @@ public:
         return instance;
     }
 
+    // TODO: Remove this function, should be done elsewhere
     // iterates over all entities in the map and calls the entity's update function
     void activate() {
         for (auto& pair : entityMap) {
-            pair.second.update();
+            pair.second->update();
         }
     }
 
@@ -44,8 +46,8 @@ public:
     }
 
     // add an entity to the map
-    void addEntity(Entity& e) {
-        auto result = entityMap.insert({ e.GetEntityID(), e });
+    void addEntityToMap(Entity& e) {
+        auto result = entityMap.insert({ e.GetEntityID(), &e });
 
         if (result.second) {
             std::cout << "Entity added" << std::endl;
@@ -55,7 +57,7 @@ public:
             // TODO at some point: add a guard to check if its just the exact same entity being added in, need some time to thonk on how
             UUIDv4::UUID newID = uuidGen.getUUID();
             e.SetEntityID(newID);
-            addEntity(e);
+            addEntityToMap(e);
         }
     }
 
@@ -64,7 +66,7 @@ public:
         auto it = entityMap.find(eID);
 
         if (it != entityMap.end()) {
-            return &it->second;
+            return it->second;
         }
         else {
             // TODO : handle if the entity isn't in the map?
@@ -78,7 +80,7 @@ public:
 
         for (auto it = entityMap.begin(); it != entityMap.end(); ++it) {
             const UUIDv4::UUID& uuid = it->first;
-            const Entity& entity = it->second;
+            const Entity& entity = *it->second;
 
             if (std::find(entity.getComponents().begin(), entity.getComponents().end(), component) != entity.getComponents().end()) {
                 result.push_back(uuid);
@@ -92,7 +94,7 @@ public:
     UUIDv4::UUID findFirstEntityByDisplayName(const std::string& displayName) {
         for (auto it = entityMap.begin(); it != entityMap.end(); ++it) {
             UUIDv4::UUID uuid = it->first;
-            Entity entity = it->second;
+            Entity entity = *it->second;
 
             if (entity.GetDisplayName() == displayName) {
                 return uuid;
@@ -102,5 +104,44 @@ public:
                 // TODO: This should return a path. It will lead to unexpected behaviour if it doesn't.
             }
         }
+    }
+
+    void Instantiate(Entity* entity) 
+    {
+        Core::getInstance().GetScene()->sceneRoot->addChild(entity);
+        entity->setParent(Core::getInstance().GetScene()->sceneRoot);
+
+        addEntityToMap(*entity);
+    }
+
+    void Instantiate(Entity* entity, Entity* parent)
+    {
+        Scene* scene = Core::getInstance().GetScene();
+        UUIDv4::UUID parentUUID = parent->GetEntityID();
+
+        getEntity(parentUUID)->addChild(entity);
+        entity->setParent(parent);
+    }
+
+    void Instantiate(Entity* entity, Transform* transform) {
+        Core::getInstance().GetScene()->sceneRoot->addChild(entity);
+        entity->setParent(Core::getInstance().GetScene()->sceneRoot);
+
+        entity->transform = transform;
+
+        addEntityToMap(*entity);
+    }
+
+    void Instantiate(Entity* entity, Transform* transform, Entity* parent)
+    {
+        Scene* scene = Core::getInstance().GetScene();
+        UUIDv4::UUID parentUUID = parent->GetEntityID();
+
+        getEntity(parentUUID)->addChild(entity);
+        entity->setParent(parent);
+
+        entity->transform = transform;
+
+        addEntityToMap(*entity);
     }
 };

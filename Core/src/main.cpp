@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "Core.h"
 #include "Component.h"
 #include "Entity.h"
 #include "Managers/EntityManager.h"
@@ -7,6 +8,7 @@
 #include "physics.h"
 #include "render.h"
 #include "Input.h"
+#include "Scene.h"
 
 
 #include <glad/glad.h>
@@ -18,26 +20,6 @@
 #include "System.h"
 #include "Renderer.h"
 #include "GLTFLoader.h"
-
-
-
-class Core {
-private:
-	std::vector<System*> systems;
-	
-public:
-	void AddSystem(System* system) {
-		systems.push_back(system);
-	}
-
-	std::vector<System*> GetSystems() {
-		return this->systems;
-	}
-
-	void Synchronize() {
-
-	}
-};
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -86,6 +68,9 @@ int run_glfw() {
 
 	std::vector<System*> systems;
 	Core* core = new Core();
+	Scene* defaultScene = new Scene();
+
+	core->getInstance().SetScene(defaultScene);
 
 	UI* ui = new UI();
 	Physics* physx = new Physics();

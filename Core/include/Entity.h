@@ -99,6 +99,10 @@ public:
         // init code
     }
 
+    Entity(std::string DisplayName) {
+        this->entityDisplayName = DisplayName;
+    }
+
     // default destructor
     ~Entity(){
         // destructor code        
