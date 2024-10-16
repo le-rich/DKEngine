@@ -2,8 +2,9 @@
 #include "../include/Core.h"
 #include "Component.h"
 #include "Entity.h"
-#include "Managers/EntityManager.h"
 #include "include/ui.h"
+#include "Input.h"
+#include "Managers/EntityManager.h"
 #include "physics.h"
 #include "render.h"
 #include "Input.h"
@@ -16,9 +17,9 @@
 #include <mutex>
 #include <thread>
 
-#include "System.h"
-#include "Renderer.h"
 #include "GLTFLoader.h"
+#include "Renderer.h"
+#include "System.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
