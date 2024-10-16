@@ -114,7 +114,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)Core\include\;$(SolutionDir)External\;$(SolutionDir)Externals\glad\include\glad;$(SolutionDir)Externals\glm;$(SolutionDir)External\tinygltf</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)Core\include\;$(SolutionDir)External\;$(SolutionDir)External\GLFW\x64\include;$(SolutionDir)Externals\glad\include\glad;$(SolutionDir)Externals\glm;$(SolutionDir)External\tinygltf</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -122,6 +122,14 @@
       <AdditionalDependencies>glad.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)/External/glad/lib;..\External\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <Lib>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Lib>
+    <Lib>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -131,7 +139,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)Core\include\;$(SolutionDir)External\;$(SolutionDir)Externals\glad\include\glad;$(SolutionDir)Externals\glm;$(SolutionDir)External\tinygltf</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)Core\include\;$(SolutionDir)External\;$(SolutionDir)External\GLFW\x64\include;$(SolutionDir)Externals\glad\include\glad;$(SolutionDir)Externals\glm;$(SolutionDir)External\tinygltf</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -141,6 +149,14 @@
       <AdditionalDependencies>glad.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)/External/glad/lib;..\External\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <Lib>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Lib>
+    <Lib>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\Buffers\FrameBuffer.h" />

@@ -97,6 +97,7 @@ int run_glfw() {
 	tinygltf::Model gltfModel = GLTFLoader::LoadFromFile("Assets/TestAE/ae86.gltf"); // TODO: Figure out location of assets/non code files within solution
 	Mesh testMesh = GLTFLoader::LoadMesh(gltfModel, gltfModel.meshes[0]);
 	renderer->testMesh = testMesh;
+	renderer->windowRef = &window;
 	// end TODO
 
 	// We want some check like this visible to the other threads
@@ -111,9 +112,9 @@ int run_glfw() {
 
 		// TODO: Move to render thread
 		// Rendering related calls, we can move these to the loop of the rendering thread
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		renderer->Update(); // draw tri or square
-		window.SwapWindowBuffers();
+		
+		//renderer->Update(); // draw tri or square
+		
 
 		auto currentTime = std::chrono::high_resolution_clock::now();
 		std::chrono::duration<double> elapsedTime = currentTime - previousTime;

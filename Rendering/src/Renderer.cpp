@@ -17,7 +17,12 @@ Renderer::~Renderer() {}
 void Renderer::Update()
 {
     // Clear color and depth buffers (can be moved to pre update
-     
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+   
+
     /*Get lights
       For each light
         Get lighting matrix
@@ -50,6 +55,7 @@ void Renderer::Update()
 
     texture.Unbind();
     // Swap window buffers. can be moved to post update
+    windowRef->SwapWindowBuffers();
 }
 
 

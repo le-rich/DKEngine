@@ -8,6 +8,8 @@ implement pre and post methods.*/
 #include "System.h"
 // @TODO: Remove TESTING INCLUDE
 #include "Resources/Mesh.h"
+#include "Window/Window.h"
+//#include "GLFW/include/GLFW/glfw3.h"
 
 class Renderer : public System
 {
@@ -28,6 +30,7 @@ public:
     }
 
     Mesh testMesh;
+    Window* windowRef;
 private:
 
 };
