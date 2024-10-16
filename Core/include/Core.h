@@ -1,7 +1,10 @@
-#pragma
+#pragma once
 
-#include "Scene.h"
-#include "System.h"
+#include <vector>
+#include <iostream>
+
+class Scene;
+class System;
 
 class Core {
 private:

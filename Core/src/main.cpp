@@ -1,6 +1,5 @@
-#include <iostream>
 
-#include "Core.h"
+#include "../include/Core.h"
 #include "Component.h"
 #include "Entity.h"
 #include "Managers/EntityManager.h"
@@ -8,19 +7,18 @@
 #include "physics.h"
 #include "render.h"
 #include "Input.h"
+#include "Utils/IDUtils.h"
 #include "Scene.h"
-
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <iostream>
 #include <mutex>
 #include <thread>
 
-#include <iostream>
 #include "System.h"
 #include "Renderer.h"
 #include "GLTFLoader.h"
-
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -157,7 +155,7 @@ int main(int argc, char* argv[])
 	std::cout << "Do you know what DK Stands for? Donkey Kong? Nah. Drift King." << std::endl;
 
 	// TODO - By Rendering Team Make this a call to the Render Project
-
+	
 	// Currently has its own while loop blocking main
 	run_glfw();
 

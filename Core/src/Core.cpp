@@ -1,5 +1,8 @@
 #include "Core.h"
 
+#include "Scene.h"
+#include "System.h"
+
 void Core::AddSystem(System* system) {
 	systems.push_back(system);
 }

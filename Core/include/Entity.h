@@ -8,6 +8,8 @@
 #include <memory>
 #include <vector>
 
+class Transform;
+
 //template<typename T>
 class Entity {
 
@@ -54,7 +56,7 @@ public:
     }
 
     // get array of components
-    const std::vector<Component>& getComponents() const {
+    const std::vector<Component*>& getComponents() const {
         return components;
     }
 
@@ -68,7 +70,7 @@ public:
     // add component to the entity
     void addComponent(Component& c)
     {
-        components.push_back(c);
+        components.push_back(&c);
     }
 
     // remove component from the entity
@@ -76,16 +78,16 @@ public:
     {
         components.erase(
             std::remove_if(components.begin(), components.end(),
-                [&c](const Component& comp) { return &comp == &c; }),
+                [&c](const Component* comp) { return comp == &c; }),
             components.end());
     }
     
     Component* getComponent(const Component& c) {
         auto it = std::find_if(components.begin(), components.end(),
-            [&c](const Component& comp) { return &comp == &c; });
+            [&c](const Component* comp) { return comp == &c; });
 
         if (it != components.end()) {
-            return &(*it);
+            return *it;
         }
         else {
             return nullptr;

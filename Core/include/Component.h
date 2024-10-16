@@ -1,9 +1,10 @@
 #pragma once
-#include "Entity.h"
-#include "Components/Transform.h"
 
 #include <Utils/IDUtils.h>
 #include <string>
+
+class Entity;
+class Transform;
 
 class Component {
 

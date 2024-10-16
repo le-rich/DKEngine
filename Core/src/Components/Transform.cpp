@@ -1,12 +1,16 @@
 #include "Components/Transform.h"
 
+#include "Component.h"
 #include "Entity.h"
 
+#include <../glm/glm.hpp>
 #include<glm/gtc/quaternion.hpp>
-Transform::Transform(Entity* mEntity) : Component(mEntity), localPosition(0.0f, 0.0f, 0.0f, 1.0f),
+
+Transform::Transform(Entity* mEntity) :Component(mEntity), localPosition(0.0f, 0.0f, 0.0f, 1.0f),
 	localOrientation(1.0f, 0.0f, 0.0f, 0.0f),
 	localScale(1.0f, 1.0f, 1.0f),
-	transformMatrix(1.0f) {
+	transformMatrix(1.0f) 
+{
 
 }
 
@@ -48,8 +52,9 @@ void Transform::updateTransformMatrix() {
 	}
 }
 
-void Transform::lookAt(Transform target)
+void Transform::lookAt(Transform* target)
 {
+
 }
 
 

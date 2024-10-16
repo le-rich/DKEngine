@@ -2,7 +2,9 @@
 
 #include "Core.h"
 #include "../include/Entity.h"
-#include "Utils/IDUtils.h"
+#include "Scene.h"
+
+#include <Utils/IDUtils.h>
 
 #include <map>
 
@@ -74,8 +76,10 @@ public:
         }
     }
 
+    // TODO: This actually needs to check some sort of typeof. 
+    // Simply checking a ref or pointer is not enough...
     // queries the entity map to return an array of entities with the component
-    std::vector<UUIDv4::UUID> findEntitiesByComponent(const Component& component) {
+    std::vector<UUIDv4::UUID> findEntitiesByComponent(const Component* component) {
         std::vector<UUIDv4::UUID> result;
 
         for (auto it = entityMap.begin(); it != entityMap.end(); ++it) {

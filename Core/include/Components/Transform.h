@@ -1,11 +1,13 @@
 #pragma once
 #define GLM_FORCE_SWIZZLE
 
-#include "../Component.h"
+#include "Component.h"
 
 #include <glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <mutex>
+
+class Entity;
 
 /**
  * 
@@ -40,7 +42,7 @@ public:
 	 * to then be updated. This method does that.
 	 */
 	void updateTransformMatrix();
-	void lookAt(Transform target);
+	void lookAt(Transform* target);
 
 
 	/********************************************/
