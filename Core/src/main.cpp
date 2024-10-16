@@ -25,7 +25,7 @@
 class Core {
 private:
 	std::vector<System*> systems;
-	
+
 public:
 	void AddSystem(System* system) {
 		systems.push_back(system);
@@ -43,39 +43,19 @@ public:
 };
 
 
-//void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-//{
-//	glViewport(0, 0, width, height);
-//}
-
-
 // TODO: Refactor Window setup to enable concurrent access to the window object for the render thread.
 // Theres some experimentation we'll need to do regarding updating objects on the main thread and rendering on the render thread.
 // That can wait for the time being.
 int run_glfw() {
-	 
-	//glfwInit();
-	//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	Window::InitWindow();
-
 	Window window;
-	//GLFWwindow* window = glfwCreateWindow(800, 600, "DKEngine", NULL, NULL);
-	//if (window == NULL)
-	//{
-	//	std::cout << "Failed to create GLFW window" << std::endl;
-	//	glfwTerminate();
-	//	return -1;
-	//}
+	if (window.GetWindow() == NULL)
+	{
+		printf("Failed to create GLFW window");
+		glfwTerminate();
+	}
 
-	// This function makes the OpenGL or OpenGL ES context of the specified window current on the calling thread.
-	// That is, only one thread can be associated with one window at a time.
-	// This'll likely be the cause of a lot of issues with rendering and ui.
-	//glfwMakeContextCurrent(window);
-	//glfwSetKeyCallback(window, Input::KeyCallback);
-	//glfwSetMouseButtonCallback(window, Input::MouseButtonCallback);
 	window.SetWindowToCurrentThread();
 	window.SetKeyCallback(Input::KeyCallback);
 	window.SetMouseButtonCallback(Input::MouseButtonCallback);
@@ -87,11 +67,10 @@ int run_glfw() {
 		return -1;
 	}
 
-	glViewport(0, 0, 800, 600);
+	// Set size of framebuffer
+	glViewport(0, 0, window.GetWidth(), window.GetHeight());
 
-	// Call back for changing the viewport size of the OpenGL context.
-	// Context needs to be syncronized to caller thread.
-	//glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
 	window.SetFramebufferSizeCallback();
 
 	std::vector<System*> systems;
@@ -124,35 +103,21 @@ int run_glfw() {
 	// That way those threads will stop once the window closes. ### Has to be conditional for main thread ###
 	while (!glfwWindowShouldClose(window.GetWindow()))
 	{
-		auto currentTime = std::chrono::high_resolution_clock::now();
-
-		std::chrono::duration<double> elapsedTime = currentTime - previousTime;
-
-		Input::RunInputListener();
-		// Rendering related calls, we can move these to the loop of the rendering thread
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		renderer->Update(); // draw tri or square
-
-		// The window has two buffers, front and back.
-		// This allows us to display the front buffer while writing to the back buffer.
-		// Once rendering is done/finished writing to the back buffer, we call this function to swap the front and back buffers
-		// This allows us to draw onto the screen without drawing on top of the previous frame.
-		// This may or may not need to be thread safe. There's conflicting information about it.
-		//glfwSwapBuffers(window);
-		window.SwapWindowBuffers();
-
-
-		// This function processes all events in the event queue, including window and input events.
-		// Should be called in the main thread.
-		// Callbacks on all the keys that sets key-codes Or prsssdown to true or false.
-		// Potential Mouse inputs; May have to figure out how it can work when extracting
-		//glfwPollEvents();
-		window.PollEvents();
-
 		// TODO: Create extractions/enums for key presses on whether they would be pressed-down or not,
 		// Have them be updated by GLFW callback. This works because glfwpollevents() is a synchronous method that runs all callbacks
 		// As long as all components are called after glfwpollevents, behavior should be fine.
-		
+		window.PollEvents();
+		Input::RunInputListener();
+
+		// TODO: Move to render thread
+		// Rendering related calls, we can move these to the loop of the rendering thread
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		renderer->Update(); // draw tri or square
+		window.SwapWindowBuffers();
+
+		auto currentTime = std::chrono::high_resolution_clock::now();
+		std::chrono::duration<double> elapsedTime = currentTime - previousTime;
+
 		while (fixedUpdateBuffer >= FIXED_UPDATE_INTERVAL) {
 			for (auto system : systems) {
 				system->FixedUpdate();
@@ -162,7 +127,7 @@ int run_glfw() {
 		for (auto system : systems) {
 			system->Update();
 		}
-	
+
 	}
 
 	// Destroys library, may cause race condition if it gets destroyed while other threads are using it.
@@ -191,7 +156,7 @@ int main(int argc, char* argv[])
 	// Create Window
 	// Run Window
 
-	
+
 
 	return 0;
 }
