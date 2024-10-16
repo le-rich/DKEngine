@@ -9,9 +9,6 @@ implement pre and post methods.*/
 // @TODO: Remove TESTING INCLUDE
 #include "Resources/Mesh.h"
 
-
-
-
 class Renderer : public System
 {
 public:

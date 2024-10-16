@@ -19,9 +19,6 @@
 #include "System.h"
 #include <iostream>
 #include "Window/Window.h"
-#include "System.h"
-#include "Renderer.h"
-#include "GLTFLoader.h"
 
 
 
