@@ -46,12 +46,12 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\DKEngine\Core\include;D:\DKEngine\External\stb;D:\DKEngine\External\glm\gtc;D:\DKEngine\External\glm;D:\DKEngine\External\glad\include;D:\DKEngine\Rendering\include\Utils;D:\DKEngine\Rendering\include\Resources;D:\DKEngine\Rendering\include\Entities;D:\DKEngine\Rendering\include\Data;D:\DKEngine\Rendering\include\Components;D:\DKEngine\Rendering\include\Buffers;D:\DKEngine\Rendering\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Core\include;$(SolutionDir)External\stb;$(SolutionDir)External\glm\gtc;$(SolutionDir)External\glm;$(SolutionDir)External\glad\include;$(SolutionDir)Rendering\include\Utils;$(SolutionDir)Rendering\include\Resources;$(SolutionDir)Rendering\include\Entities;$(SolutionDir)Rendering\include\Data;$(SolutionDir)Rendering\include\Components;$(SolutionDir)Rendering\include\Buffers;$(SolutionDir)Rendering\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\DKEngine\Core\include;D:\DKEngine\External\stb;D:\DKEngine\External\glm\gtc;D:\DKEngine\External\glm;D:\DKEngine\External\glad\include;D:\DKEngine\Rendering\include\Utils;D:\DKEngine\Rendering\include\Resources;D:\DKEngine\Rendering\include\Entities;D:\DKEngine\Rendering\include\Data;D:\DKEngine\Rendering\include\Components;D:\DKEngine\Rendering\include\Buffers;D:\DKEngine\Rendering\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Core\include;$(SolutionDir)External\stb;$(SolutionDir)External\glm\gtc;$(SolutionDir)External\glm;$(SolutionDir)External\glad\include;$(SolutionDir)Rendering\include\Utils;$(SolutionDir)Rendering\include\Resources;$(SolutionDir)Rendering\include\Entities;$(SolutionDir)Rendering\include\Data;$(SolutionDir)Rendering\include\Components;$(SolutionDir)Rendering\include\Buffers;$(SolutionDir)Rendering\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
