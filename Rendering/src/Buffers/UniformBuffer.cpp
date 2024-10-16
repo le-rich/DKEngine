@@ -1,6 +1,6 @@
 #include "Buffers/UniformBuffer.h"
 #include <glm.hpp>
-#include "Renderer.h"
+#include "Utils/Logger.h"
 
 UniformBuffer::UniformBuffer()
 {
