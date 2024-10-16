@@ -5,10 +5,10 @@
 #include <vector>
 #include <memory>
 
-#include "Buffers/VertexBuffer.h"
-#include "Buffers/IndexBuffer.h"
 #include "Buffers/VertexArray.h"
-#include "Data/VertexBufferLayout.h"
+//#include "Buffers/VertexBuffer.h"
+#include "Buffers/IndexBuffer.h"
+//#include "Data/VertexBufferLayout.h"
 #include "Data/Vertex.h"
 
 
