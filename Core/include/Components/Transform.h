@@ -1,15 +1,18 @@
-#ifndef TRANSFORM_H
-#define TRANSFORM_H
-
+#pragma once
 #define GLM_FORCE_SWIZZLE
+
+#include "Component.h"
+
 #include <glm.hpp>
-#include <glm/gtc/quaternion.hpp>
+#include <quaternion.hpp>
 #include <mutex>
+
+class Entity;
 
 /**
  * 
  */
-class Transform {
+class Transform : public Component {
 private:
 	// parent space coords for Transform's origin's position.
 	glm::vec4 localPosition;
@@ -29,20 +32,17 @@ private:
 	 */
 	glm::mat4 transformMatrix;
 
-	// place-holder for calculations, likely there will 
-	// be a better way to receive the parent transform 
-	// (through the entity itself or whatever).
-	Transform* parent;
-	Transform* child;
-
 public:
+	Transform(Entity* mEntity);
 	// the constructor, takes global position, orientation, scale, parent, child
-	Transform(glm::vec4 position, glm::quat orientation, float scale, Transform* parent, Transform* child);
+	Transform(Entity* mEntity, glm::vec4 position, glm::quat orientation, float scale);
+	~Transform();
 
 	/** the parent might move or scale, the transform matrix needs 
 	 * to then be updated. This method does that.
 	 */
 	void updateTransformMatrix();
+	void lookAt(Transform* target);
 
 
 	/********************************************/
@@ -65,6 +65,6 @@ public:
 
 	glm::vec3 getLocalScale();
 	void setLocalScale(glm::vec3 scale);
-};
 
-#endif 
+	Transform& operator=(const Transform& other);
+};
