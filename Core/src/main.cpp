@@ -67,18 +67,18 @@ int run_glfw() {
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	std::vector<System*> systems;
-	Core* core = new Core();
 	Scene* defaultScene = new Scene();
 
-	core->getInstance().SetScene(defaultScene);
+	Core::getInstance().SetScene(defaultScene);
+	defaultScene->SpawnSceneDefinition();
 
 	UI* ui = new UI();
 	Physics* physx = new Physics();
 	Renderer* renderer = new Renderer();
 
-	core->AddSystem(ui);
-	core->AddSystem(physx);
-	core->AddSystem(renderer);
+	Core::getInstance().AddSystem(ui);
+	Core::getInstance().AddSystem(physx);
+	Core::getInstance().AddSystem(renderer);
 
 	ui->Initialize();
 	physx->Initialize();

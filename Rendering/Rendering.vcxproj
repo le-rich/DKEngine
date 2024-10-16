@@ -144,11 +144,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\Buffers\FrameBuffer.h" />
+    <ClInclude Include="include\Components\CameraComponent.h" />
     <ClInclude Include="include\Data\VertexBufferLayout.h" />
     <ClInclude Include="include\Buffers\IndexBuffer.h" />
     <ClInclude Include="include\Buffers\UniformBuffer.h" />
     <ClInclude Include="include\Buffers\VertexBuffer.h" />
-    <ClInclude Include="include\Entities\Camera.h" />
+    <ClInclude Include="include\Entities\CameraEntity.h" />
     <ClInclude Include="include\Entities\Light.h" />
     <ClInclude Include="include\Resources\Primitives.h" />
     <ClInclude Include="include\Renderer.h" />
@@ -160,7 +161,8 @@
     <ClInclude Include="include\Buffers\VertexArray.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Entities\Camera.cpp" />
+    <ClCompile Include="src\Components\CameraComponent.cpp" />
+    <ClCompile Include="src\Entities\CameraEntity.cpp" />
     <ClCompile Include="src\Entities\Light.cpp" />
     <ClCompile Include="src\Resources\Primitives.cpp" />
     <ClCompile Include="src\Buffers\FrameBuffer.cpp" />

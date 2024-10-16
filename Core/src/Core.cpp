@@ -1,10 +1,5 @@
 #include "Core.h"
 
-static Core& Core::getInstance() {
-	static Core instance;
-	return instance;
-}
-
 void Core::AddSystem(System* system) {
 	systems.push_back(system);
 }

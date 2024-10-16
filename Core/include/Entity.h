@@ -19,7 +19,7 @@ protected:
     std::string entityDisplayName;
 
     // array of components
-    std::vector<Component> components;
+    std::vector<Component*> components;
 
     // pointer to its parent Entity
     Entity* parent = nullptr;
@@ -58,10 +58,11 @@ public:
         return components;
     }
 
+
     // update components
     void update()
     {
-        // TODO:: call the component manager's update
+        // TODO:: Entities themselves should not have updates, but their components should.
     }
 
     // add component to the entity

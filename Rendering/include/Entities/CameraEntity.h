@@ -4,11 +4,11 @@
 #include <../glm/glm.hpp>
 #include <../glm/gtc/matrix_transform.hpp>
 
-class Camera : Entity
+class CameraEntity : public Entity
 {
 public:
-	Camera();
-	~Camera();
+	CameraEntity();
+	~CameraEntity();
 
 private:
 

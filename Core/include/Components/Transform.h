@@ -1,6 +1,7 @@
 #pragma once
 #define GLM_FORCE_SWIZZLE
-#include "Component.h"
+
+#include "../Component.h"
 
 #include <glm.hpp>
 #include <glm/gtc/quaternion.hpp>
@@ -9,7 +10,7 @@
 /**
  * 
  */
-class Transform : Component {
+class Transform : public Component {
 private:
 	// parent space coords for Transform's origin's position.
 	glm::vec4 localPosition;
@@ -28,16 +29,9 @@ private:
 	 * to world space, and world scale.
 	 */
 	glm::mat4 transformMatrix;
-	
-	// The linked entity.
-	Entity* entity;
 
 public:
-	Transform(Entity* mEntity) : Component(mEntity), localPosition(0.0f, 0.0f, 0.0f, 1.0f),
-		localOrientation(1.0f, 0.0f, 0.0f, 0.0f),
-		localScale(1.0f, 1.0f, 1.0f),
-		transformMatrix(1.0f) {};
-
+	Transform(Entity* mEntity);
 	// the constructor, takes global position, orientation, scale, parent, child
 	Transform(Entity* mEntity, glm::vec4 position, glm::quat orientation, float scale);
 	~Transform();

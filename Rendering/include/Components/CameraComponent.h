@@ -1,17 +1,18 @@
 #pragma once
 #include "Component.h"
-#include "Transform.h"
 
-class CameraComponent : Component
+#include "Components/Transform.h"
+
+class CameraComponent : public Component
 {
 public:
-	private Transform* lookAtTarget;
+	Transform* lookAtTarget;
 
 	float fieldOfView = 90;
-	float farClipPlane = 1000f;
+	float farClipPlane = 1000.0f;
 	float nearClipPlane = 0.3f;
 
-	CameraComponent();
+	CameraComponent(Entity* mEntity);
 	~CameraComponent();
 private:
 	glm::mat4 m_viewMatrix;
