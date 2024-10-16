@@ -8,7 +8,7 @@ int GameObject::nextID = 1; // Initialize the static variable
 
 // Constructor
 GameObject::GameObject(const std::string& name)
-    : name(name), parent(nullptr), id(nextID++) {}
+    : name(name), parent(nullptr), id(nextID++), position({ 0.0f, 0.0f, 0.0f }), rotation({ 0.0f, 0.0f, 0.0f }), scale({ 1.0f, 1.0f, 1.0f }) {}
 
 GameObject::~GameObject() {
     for (auto* child : children) {
@@ -57,6 +57,31 @@ std::string GameObject::getName() const {
 
 void GameObject::setName(const std::string& name) {
     this->name = name; // Update the GameObject's name
+}
+
+// Get and set methods for Position, Rotation, and Scale
+std::array<float, 3>& GameObject::getPosition() {
+    return position;
+}
+
+void GameObject::setPosition(const std::array<float, 3>& newPosition) {
+    position = newPosition;
+}
+
+std::array<float, 3>& GameObject::getRotation() {
+    return rotation;
+}
+
+void GameObject::setRotation(const std::array<float, 3>& newRotation) {
+    rotation = newRotation;
+}
+
+std::array<float, 3>& GameObject::getScale() {
+    return scale;
+}
+
+void GameObject::setScale(const std::array<float, 3>& newScale) {
+    scale = newScale;
 }
 
 // Add a component to the game object
