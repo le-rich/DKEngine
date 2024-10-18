@@ -1,47 +1,25 @@
-#include <iostream>
 
+#include "../include/Core.h"
 #include "Component.h"
 #include "Entity.h"
-#include "Managers/EntityManager.h"
 #include "include/ui.h"
+#include "Input.h"
+#include "Managers/EntityManager.h"
 #include "physics.h"
 #include "render.h"
+#include "Input.h"
+#include "Utils/IDUtils.h"
+#include "Scene.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <iostream>
 #include <mutex>
 #include <thread>
 
-
-
-#include <iostream>
-
+#include "GLTFLoader.h"
 #include "Renderer.h"
-#include "Primitives.h"
 #include "System.h"
-
-
-
-class Core {
-private:
-	std::vector<System*> systems;
-	
-public:
-	void AddSystem(System* system) {
-		systems.push_back(system);
-	}
-
-	std::vector<System*> GetSystems() {
-		return this->systems;
-	}
-
-	void Synchronize() {
-
-	}
-
-
-};
-
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -71,6 +49,8 @@ int run_glfw() {
 	// That is, only one thread can be associated with one window at a time.
 	// This'll likely be the cause of a lot of issues with rendering and ui.
 	glfwMakeContextCurrent(window);
+	glfwSetKeyCallback(window, Input::KeyCallback);
+	glfwSetMouseButtonCallback(window, Input::MouseButtonCallback);
 
 	// Load GLAD
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -85,21 +65,19 @@ int run_glfw() {
 	// Context needs to be syncronized to caller thread.
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    // primitive shapes
-    Triangle triangle;
-    Square square;
-
-
 	std::vector<System*> systems;
-	Core* core = new Core();
+	Scene* defaultScene = new Scene();
+
+	Core::getInstance().SetScene(defaultScene);
+	defaultScene->SpawnSceneDefinition();
 
 	UI* ui = new UI();
 	Physics* physx = new Physics();
 	Renderer* renderer = new Renderer();
 
-	core->AddSystem(ui);
-	core->AddSystem(physx);
-	core->AddSystem(renderer);
+	Core::getInstance().AddSystem(ui);
+	Core::getInstance().AddSystem(physx);
+	Core::getInstance().AddSystem(renderer);
 
 	ui->Initialize();
 	physx->Initialize();
@@ -110,6 +88,12 @@ int run_glfw() {
 	double FIXED_UPDATE_INTERVAL = 0.016;
 	auto previousTime = std::chrono::high_resolution_clock::now();
 
+	// TODO: Refactor to some kind of Asset Manager and/or Scene Hierarchy for renderer to access
+	tinygltf::Model gltfModel = GLTFLoader::LoadFromFile("Assets/TestAE/ae86.gltf"); // TODO: Figure out location of assets/non code files within solution
+	Mesh testMesh = GLTFLoader::LoadMesh(gltfModel, gltfModel.meshes[0]);
+	renderer->testMesh = testMesh;
+	// end TODO
+
 	// We want some check like this visible to the other threads
 	// That way those threads will stop once the window closes. ### Has to be conditional for main thread ###
 	while (!glfwWindowShouldClose(window))
@@ -118,9 +102,9 @@ int run_glfw() {
 
 		std::chrono::duration<double> elapsedTime = currentTime - previousTime;
 
-
+		Input::RunInputListener();
 		// Rendering related calls, we can move these to the loop of the rendering thread
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		renderer->Update(); // draw tri or square
 
 		// The window has two buffers, front and back.
@@ -172,7 +156,7 @@ int main(int argc, char* argv[])
 	std::cout << "Do you know what DK Stands for? Donkey Kong? Nah. Drift King." << std::endl;
 
 	// TODO - By Rendering Team Make this a call to the Render Project
-
+	
 	// Currently has its own while loop blocking main
 	run_glfw();
 
