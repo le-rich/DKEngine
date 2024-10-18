@@ -104,6 +104,8 @@ public:
 
     Entity(std::string DisplayName) {
         this->entityDisplayName = DisplayName;
+        this->entityID = uuidGen.getUUID();
+        this->transform = new Transform(this);
     }
 
     // default destructor

@@ -12,8 +12,7 @@
 Renderer::Renderer() 
 {
 	texture = new Texture("../Core/Assets/TestAE/textures/fmesh_Material_001_BasssseColor_001df.png");
-	ShaderProgramSource source = ParseShader("../Rendering/Shaders/default.glsl");
-	testShader = CreateShader(source.VertexSource, source.FragmentSource);
+	testShader = new Shader("../Rendering/Shaders/default.glsl");
 }
 
 // Destructor.
@@ -33,10 +32,8 @@ void Renderer::Update()
 	  //if texture --> bind texture
 	  //if shader  --> bind shader
 	
-	GLCall(glUseProgram(testShader));
-
-
 	texture->Bind();
+	testShader->Use();
 	//Apply Uniforms (lighting, view matrices, etc...)
 	// 
 	//std::string name = "u_Texture";
@@ -65,7 +62,7 @@ void Renderer::Update()
 	/*Perform Post Processing
 	  Draw Frame Buffer*/
 
-    texture.Unbind();
+    texture->Unbind();
     // Swap window buffers. can be moved to post update
 }
 

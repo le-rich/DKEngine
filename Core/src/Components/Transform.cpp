@@ -6,7 +6,7 @@
 #include <../glm/glm.hpp>
 #include<glm/gtc/quaternion.hpp>
 
-Transform::Transform(Entity* mEntity) :Component(mEntity), localPosition(0.0f, 0.0f, 0.0f, 1.0f),
+Transform::Transform(Entity* mEntity) :Component(mEntity), localPosition(0.0f, 0.0f, 0.0f),
 	localOrientation(1.0f, 0.0f, 0.0f, 0.0f),
 	localScale(1.0f, 1.0f, 1.0f),
 	transformMatrix(1.0f) 
@@ -34,14 +34,16 @@ void Transform::updateTransformMatrix() {
 		transformMatrix = glm::mat4(1.0f); // identity matrix
 	}
 	else {
-		transformMatrix =
-			// grand parent transform matrix
-			entity->getParent()->transform->transformMatrix *
+		glm::mat4 parentTransformMatrix = entity->getParent()->transform->getTransformMatrix();
+		glm::vec3 parentLocationXYZ = entity->getParent()->transform->getLocalPosition().xyz;
+		glm::quat parentOrientation = entity->getParent()->transform->getLocalOrientation();
+
+		transformMatrix = parentTransformMatrix * 
 			// scale, rotate, translate matrix for parent: 
 			(
 				// creates a translation matrix
-				glm::translate(glm::mat4(1.0f), entity->getParent()->transform->localPosition.xyz()) *
-				glm::mat4_cast(entity->getParent()->transform->localOrientation) * // gets a rotation matrix from the quaternion
+				glm::translate(glm::mat4(1.0f), parentLocationXYZ) *
+				glm::mat4_cast(parentOrientation) * // gets a rotation matrix from the quaternion
 				glm::mat4( // creates a scale matrix 
 					glm::vec4(entity->getParent()->transform->localScale.x, 0.0f, 0.0f, 0.0f),
 					glm::vec4(0.0f, entity->getParent()->transform->localScale.y, 0.0f, 0.0f),

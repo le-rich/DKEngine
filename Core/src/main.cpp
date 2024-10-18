@@ -16,6 +16,7 @@
 #include <iostream>
 #include <mutex>
 #include <thread>
+#include <chrono>
 
 #include "Components/Transform.h"
 #include "GLTFLoader.h"
@@ -72,8 +73,9 @@ int run_glfw() {
 	Core::getInstance().SetScene(defaultScene);
 	defaultScene->SpawnSceneDefinition();
 
-	Transform* CAR_TRANSFORM = new Transform();
-
+	Entity testCar;
+	Transform* CAR_TRANSFORM = new Transform(&testCar);
+	EntityManager::getInstance().Instantiate(&testCar);
 
 	UI* ui = new UI();
 	Physics* physx = new Physics(CAR_TRANSFORM);
@@ -92,7 +94,7 @@ int run_glfw() {
 	double FIXED_UPDATE_INTERVAL = 16; // in milliseconds
 	auto previousTime = std::chrono::high_resolution_clock::now();
 
-	// TODO: Refactor to some kind of Asset Manager and/or Scene Hierarchy for renderer to access
+	// TODO: Refactor to a Car Entity
 	tinygltf::Model gltfModel = GLTFLoader::LoadFromFile("Assets/TestAE/ae86.gltf"); // TODO: Figure out location of assets/non code files within solution
 	Mesh testMesh = GLTFLoader::LoadMesh(gltfModel, gltfModel.meshes[0]);
 	renderer->testMesh = testMesh;

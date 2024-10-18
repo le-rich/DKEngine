@@ -2,7 +2,7 @@
 
 #include <glm.hpp>
 #include "Utils/Logger.h"
-#include <glm/gtc/type_ptr.hpp>
+#include <gtc/type_ptr.hpp>
 
 
 UniformBuffer::UniformBuffer()

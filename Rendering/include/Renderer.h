@@ -10,6 +10,7 @@ implement pre and post methods.*/
 #include "Buffers/UniformBuffer.h"
 #include "Resources/Mesh.h"
 #include "Resources/Texture.h"
+#include "Resources/Shader.h"
 #include "Components/Transform.h"
 
 
@@ -36,7 +37,7 @@ public:
     Mesh testMesh;
     Transform* testTransform;
     Texture* texture;
-    GLuint testShader;
+    Shader* testShader;
 private:
     UniformBuffer mUniformBuffer;
 
