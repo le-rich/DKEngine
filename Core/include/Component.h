@@ -1,56 +1,43 @@
-#ifndef COMPONENT_H
-#define COMPONENT_H
+#pragma once
 
-#include "Utils/IDUtils.h"
-
+#include <Utils/IDUtils.h>
 #include <string>
 
-//template<typename T>
+class Entity;
+class Transform;
+
 class Component {
 
-public: 
-    // unique id for component
-    UUIDv4::UUID componentID;
+public:
+	Component(Entity* mEntity);
+	~Component();
 
-    // changeable display id for component
-    std::string componentDisplayName;
+	Entity* entity;
 
-    // retrieve id for component
-    UUIDv4::UUID GetComponentID(){
-        return componentID;
-    }
+	UUIDv4::UUID componentID;
+	std::string componentDisplayName;
 
-    // changes the uuid for component
-    void SetComponentID(UUIDv4::UUID& newID) {
-        this->componentID = newID;
-    }
+	UUIDv4::UUID GetComponentID() {
+		return componentID;
+	}
 
-    // retrieve display id of component
-    const std::string& GetDisplayName()
-    {
-        return componentDisplayName;
-    }
+	void SetComponentID(UUIDv4::UUID& newID) {
+		this->componentID = newID;
+	}
 
-    // set display id of component
-    void SetDisplayName(std::string newID)
-    {
-        componentDisplayName = newID;
-    }
+	const std::string& GetDisplayName()
+	{
+		return componentDisplayName;
+	}
 
-    // default constructor
-    Component(){
-        this->componentID = uuidGen.getUUID();
-    }
+	// set display id of component
+	void SetDisplayName(std::string newID)
+	{
+		componentDisplayName = newID;
+	}
 
-    // destructor
-    ~Component(){
-        // removal code
-    }
+	bool operator==(const Component& other) const;
 
-    // overloaded equality operator based on UUID
-    bool operator==(const Component& other) const {
-        return componentID == other.componentID; 
-    }
+private:
+	
 };
-
-#endif 

@@ -11,7 +11,6 @@
 #include "Hierarchy.h"
 #include "Inspector.h"
 #include "Viewport.h"
-
 void createImGuiWindows();
 #endif // WINDOWS_H
 

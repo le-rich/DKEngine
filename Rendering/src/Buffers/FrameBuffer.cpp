@@ -1,5 +1,5 @@
 #include "Buffers/FrameBuffer.h"
-#include "Renderer.h"
+#include "Utils/Logger.h"
 
 FrameBuffer::FrameBuffer(unsigned int width, unsigned int height)
 {

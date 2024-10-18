@@ -1,6 +1,6 @@
 #include "Buffers/VertexArray.h"
-#include "Renderer.h"
 #include "Data/VertexBufferLayout.h"
+#include "Utils/Logger.h"
 
 VertexArray::VertexArray()
 {
@@ -27,7 +27,8 @@ void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& la
 			element.normalized, layout.GetStride(), (const void*)offset));
 		offset += element.count * VertexBufferElement::GetSizeOfType(element.type);
 	}
-
+	Unbind();
+	vb.Unbind();
 }
 
 void VertexArray::Bind() const

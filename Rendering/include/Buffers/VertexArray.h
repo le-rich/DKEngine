@@ -2,20 +2,18 @@
 
 #include <glad/glad.h>
 #include "VertexBuffer.h"
-
-class VertexBufferLayout;
-
+#include "Data/VertexBufferLayout.h"
 
 class VertexArray
 {
-private:
-	GLuint mRendererID;
 public:
-	VertexArray();
-	~VertexArray();
+    VertexArray();
+    ~VertexArray();
 
-	void AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout);
+    void AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout);
 
-	void Bind() const;
-	void Unbind() const;
+    void Bind() const;
+    void Unbind() const;
+private:
+    GLuint mRendererID;
 };

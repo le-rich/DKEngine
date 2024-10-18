@@ -4,11 +4,13 @@
 
 #include <imgui.h>
 #include <string>
+#include <vector>
+#include <memory>  // Use smart pointers for safe memory management
+#include "../GameObject.h"
 
-//std::string selectedNode;
-
-void hierarchyLine(std::string name);
+void drawHierarchyLine(GameObject* obj);
 void drawHierarchy();
-std::string getSelectedNode();
-
+GameObject* getSelectedGameObject();
+std::string getNextRootObjectName();
+extern std::vector<GameObject*> gameObjects;
 #endif

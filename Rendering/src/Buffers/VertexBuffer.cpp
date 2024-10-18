@@ -1,5 +1,5 @@
 #include "Buffers/VertexBuffer.h"
-#include "Renderer.h"
+#include "Utils/Logger.h"
 
 VertexBuffer::VertexBuffer() : mRendererID(0)
 {
