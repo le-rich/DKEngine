@@ -2,10 +2,13 @@
 
 #include "Utils/IDUtils.h"
 #include "Component.h"
+#include "Components/Transform.h"
 
 #include <algorithm>
 #include <memory>
 #include <vector>
+
+class Transform;
 
 //template<typename T>
 class Entity {
@@ -18,7 +21,7 @@ protected:
     std::string entityDisplayName;
 
     // array of components
-    std::vector<Component> components;
+    std::vector<Component*> components;
 
     // pointer to its parent Entity
     Entity* parent = nullptr;
@@ -27,6 +30,9 @@ protected:
     std::vector<Entity*> children;
 
 public:
+    // Every entity should by default have a transform.
+    Transform* transform;
+
     // retrieve id of entity
     UUIDv4::UUID GetEntityID() {
         return entityID;
@@ -50,20 +56,21 @@ public:
     }
 
     // get array of components
-    const std::vector<Component>& getComponents() const {
+    const std::vector<Component*>& getComponents() const {
         return components;
     }
+
 
     // update components
     void update()
     {
-        // TODO:: call the component manager's update
+        // TODO:: Entities themselves should not have updates, but their components should.
     }
 
     // add component to the entity
     void addComponent(Component& c)
     {
-        components.push_back(c);
+        components.push_back(&c);
     }
 
     // remove component from the entity
@@ -71,16 +78,16 @@ public:
     {
         components.erase(
             std::remove_if(components.begin(), components.end(),
-                [&c](const Component& comp) { return comp == c; }),
+                [&c](const Component* comp) { return comp == &c; }),
             components.end());
     }
     
     Component* getComponent(const Component& c) {
         auto it = std::find_if(components.begin(), components.end(),
-            [&c](const Component& comp) { return comp == c; });
+            [&c](const Component* comp) { return comp == &c; });
 
         if (it != components.end()) {
-            return &(*it);
+            return *it;
         }
         else {
             return nullptr;
@@ -91,7 +98,12 @@ public:
     Entity()
     {
         this->entityID = uuidGen.getUUID();
+        this->transform = new Transform(this);
         // init code
+    }
+
+    Entity(std::string DisplayName) {
+        this->entityDisplayName = DisplayName;
     }
 
     // default destructor
@@ -147,6 +159,10 @@ public:
             return parent->getComponentFromParent(c);
         }
         return nullptr;
+    }
+
+    bool operator==(const Entity& other) const {
+        return (other.entityID == this->entityID);
     }
 
     // TODO: enable/disable
