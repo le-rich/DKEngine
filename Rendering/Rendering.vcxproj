@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|Win32">
-      <Configuration>Debug</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|Win32">
-      <Configuration>Release</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
@@ -19,26 +11,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <VCProjectVersion>17.0</VCProjectVersion>
-    <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{fdf1f4cb-0084-47a9-8bae-921d65a2bcf2}</ProjectGuid>
+    <ProjectGuid>{FDF1F4CB-0084-47A9-8BAE-921D65A2BCF2}</ProjectGuid>
     <RootNamespace>Rendering</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
@@ -53,16 +30,8 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-  </ImportGroup>
-  <ImportGroup Label="Shared">
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -70,120 +39,56 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>..\External\glad\include;..\External\glm;$(IncludePath)</IncludePath>
-    <PublicIncludeDirectories>..\External\glad\include;..\External\glm</PublicIncludeDirectories>
+  <PropertyGroup>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>..\External\glad\include;..\External\glm;$(IncludePath)</IncludePath>
-    <PublicIncludeDirectories>..\External\glad\include;..\External\glm</PublicIncludeDirectories>
-  </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>include/</AdditionalIncludeDirectories>
-    </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>include/</AdditionalIncludeDirectories>
-    </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)Core\include\;$(SolutionDir)External\;$(SolutionDir)Externals\glad\include\glad;$(SolutionDir)Externals\glm;$(SolutionDir)External\tinygltf</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Core\include;$(SolutionDir)External\stb;$(SolutionDir)External\glm\gtc;$(SolutionDir)External\glm;$(SolutionDir)External\glad\include;$(SolutionDir)Rendering\include\Utils;$(SolutionDir)Rendering\include\Resources;$(SolutionDir)Rendering\include\Entities;$(SolutionDir)Rendering\include\Data;$(SolutionDir)Rendering\include\Components;$(SolutionDir)Rendering\include\Buffers;$(SolutionDir)Rendering\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glad.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)/External/glad/lib;..\External\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)Core\include\;$(SolutionDir)External\;$(SolutionDir)Externals\glad\include\glad;$(SolutionDir)Externals\glm;$(SolutionDir)External\tinygltf</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Core\include;$(SolutionDir)External\stb;$(SolutionDir)External\glm\gtc;$(SolutionDir)External\glm;$(SolutionDir)External\glad\include;$(SolutionDir)Rendering\include\Utils;$(SolutionDir)Rendering\include\Resources;$(SolutionDir)Rendering\include\Entities;$(SolutionDir)Rendering\include\Data;$(SolutionDir)Rendering\include\Components;$(SolutionDir)Rendering\include\Buffers;$(SolutionDir)Rendering\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glad.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)/External/glad/lib;..\External\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\Buffers\FrameBuffer.h" />
-    <ClInclude Include="include\Data\VertexBufferLayout.h" />
-    <ClInclude Include="include\Objects\Camera.h" />
     <ClInclude Include="include\Buffers\IndexBuffer.h" />
     <ClInclude Include="include\Buffers\UniformBuffer.h" />
     <ClInclude Include="include\Buffers\VertexBuffer.h" />
-    <ClInclude Include="include\Resources\Primitives.h" />
-    <ClInclude Include="include\Renderer.h" />
+    <ClInclude Include="include\Resources\Texture.h" />
+    <ClInclude Include="include\Resources\Shader.h" />
     <ClInclude Include="include\Resources\Material.h" />
     <ClInclude Include="include\Resources\Mesh.h" />
-    <ClInclude Include="include\Resources\Shader.h" />
-    <ClInclude Include="include\Resources\Texture.h" />
     <ClInclude Include="include\Data\Vertex.h" />
-    <ClInclude Include="include\Objects\Light.h" />
     <ClInclude Include="include\Buffers\VertexArray.h" />
+    <ClInclude Include="include\Renderer.h" />
+    <ClInclude Include="include\Resources\Primitives.h" />
+    <ClInclude Include="include\Buffers\FrameBuffer.h" />
+    <ClInclude Include="include\Data\VertexBufferLayout.h" />
+    <ClInclude Include="include\Entities\Light.h" />
+    <ClInclude Include="include\Entities\CameraEntity.h" />
+    <ClInclude Include="include\Components\CameraComponent.h" />
+    <ClInclude Include="include\Utils\Logger.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Resources\Primitives.cpp" />
-    <ClCompile Include="src\Buffers\FrameBuffer.cpp" />
-    <ClCompile Include="src\Objects\Camera.cpp" />
-    <ClCompile Include="src\Objects\Light.cpp" />
-    <ClCompile Include="src\Renderer.cpp" />
-    <ClCompile Include="src\Resources\Material.cpp" />
-    <ClCompile Include="src\Resources\Mesh.cpp" />
-    <ClCompile Include="src\Resources\Shader.cpp" />
     <ClCompile Include="src\Buffers\IndexBuffer.cpp" />
     <ClCompile Include="src\Buffers\UniformBuffer.cpp" />
     <ClCompile Include="src\Buffers\VertexBuffer.cpp" />
     <ClCompile Include="src\Resources\Texture.cpp" />
+    <ClCompile Include="src\Resources\Shader.cpp" />
+    <ClCompile Include="src\Resources\Material.cpp" />
+    <ClCompile Include="src\Resources\Mesh.cpp" />
     <ClCompile Include="src\Buffers\VertexArray.cpp" />
-    <ClInclude Include="include\Utils\Logger.h" />
-    <ClInclude Include="render.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Shaders\default.glsl" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="src\Resources\Gold_Star.png" />
-    <Image Include="x64\Debug\Resources\Gold_Star.png" />
+    <ClCompile Include="src\Renderer.cpp" />
+    <ClCompile Include="src\Entities\Light.cpp" />
+    <ClCompile Include="src\Entities\CameraEntity.cpp" />
+    <ClCompile Include="src\Components\CameraComponent.cpp" />
+    <ClCompile Include="src\Buffers\FrameBuffer.cpp" />
+    <ClCompile Include="src\Resources\Primitives.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets" />
 </Project>

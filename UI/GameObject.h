@@ -3,8 +3,8 @@
 
 #include <string>
 #include <vector>
+#include <array>
 #include "GameComponent.h"
-
 
 class GameObject{
 private:
@@ -15,6 +15,11 @@ private:
     int id;
 
     static int nextID;
+
+    // Transform properties using std::array
+    std::array<float, 3> position; // Position (x, y, z)
+    std::array<float, 3> rotation; // Rotation (x, y, z)
+    std::array<float, 3> scale;    // Scale (x, y, z)
 public:
     // Constructor
     GameObject(const std::string& name);
@@ -26,6 +31,13 @@ public:
     std::string getName() const;
     // Setter for the name
     void setName(const std::string& name); // Declaration of setName method
+
+    std::array<float, 3>& getPosition();
+    void setPosition(const std::array<float, 3>& newPosition);
+    std::array<float, 3>& getRotation();
+    void setRotation(const std::array<float, 3>& newRotation);
+    std::array<float, 3>& getScale();
+    void setScale(const std::array<float, 3>& newScale);
     
     // Get the unique ID of the game object
     int getID() const;

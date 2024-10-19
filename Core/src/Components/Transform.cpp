@@ -1,34 +1,60 @@
 #include "Components/Transform.h"
+
+#include "Component.h"
+#include "Entity.h"
+
+#include <../glm/glm.hpp>
 #include<glm/gtc/quaternion.hpp>
 
+Transform::Transform(Entity* mEntity) :Component(mEntity), localPosition(0.0f, 0.0f, 0.0f, 1.0f),
+	localOrientation(1.0f, 0.0f, 0.0f, 0.0f),
+	localScale(1.0f, 1.0f, 1.0f),
+	transformMatrix(1.0f) 
+{
 
-Transform::Transform(glm::vec4 position, glm::quat orientation, float scale, Transform* parent, Transform* child)
-	: localPosition(position), localOrientation(orientation), localScale(scale), parent(parent), child(child) 
+}
+
+
+
+Transform::Transform(Entity* mEntity, glm::vec4 position, glm::quat orientation, float scale)
+	: Component(mEntity), localPosition(position), localOrientation(orientation), localScale(scale)
 {
 	updateTransformMatrix();
+	
+	// DO NOT REVERSE LINK mEntity->transform = this. This should be handled in Entity's initialization.
+}
+
+Transform::~Transform()
+{
+
 }
 
 void Transform::updateTransformMatrix() {
-	if (parent == nullptr) {
+	if (entity->getParent() == nullptr) {
 		transformMatrix = glm::mat4(1.0f); // identity matrix
 	}
 	else {
 		transformMatrix =
 			// grand parent transform matrix
-			parent->transformMatrix *
+			entity->getParent()->transform->transformMatrix *
 			// scale, rotate, translate matrix for parent: 
 			(
 				// creates a translation matrix
-				glm::translate(glm::mat4(1.0f), parent->localPosition.xyz()) *
-				glm::mat4_cast(parent->localOrientation) * // gets a rotation matrix from the quaternion
+				glm::translate(glm::mat4(1.0f), entity->getParent()->transform->localPosition.xyz()) *
+				glm::mat4_cast(entity->getParent()->transform->localOrientation) * // gets a rotation matrix from the quaternion
 				glm::mat4( // creates a scale matrix 
-					glm::vec4(parent->localScale.x, 0.0f, 0.0f, 0.0f),
-					glm::vec4(0.0f, parent->localScale.y, 0.0f, 0.0f),
-					glm::vec4(0.0f, 0.0f, parent->localScale.z, 0.0f),
+					glm::vec4(entity->getParent()->transform->localScale.x, 0.0f, 0.0f, 0.0f),
+					glm::vec4(0.0f, entity->getParent()->transform->localScale.y, 0.0f, 0.0f),
+					glm::vec4(0.0f, 0.0f, entity->getParent()->transform->localScale.z, 0.0f),
 					glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)
 				)
 			);
 	}
+}
+
+void Transform::lookAt(Transform* target)
+{
+
 }
 
 
@@ -99,4 +125,20 @@ void Transform::setLocalScale(glm::vec3 scale) {
 	localOrientation.x = scale.x;
 	localOrientation.y = scale.y;
 	localOrientation.z = scale.z;
+}
+
+Transform& Transform::operator=(const Transform& other)
+{
+	if (this == &other) {
+		return *this;
+	}
+
+	this->localPosition = other.localPosition;
+	this->localOrientation = other.localOrientation;
+	this->localScale = other.localScale;
+
+	// DO NOT copy mutex.
+
+	this->transformMatrix = other.transformMatrix;
+	this->entity->GetEntityID() == other.entity->GetEntityID();
 }

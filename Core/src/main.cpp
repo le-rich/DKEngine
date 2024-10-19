@@ -1,5 +1,5 @@
-#include <iostream>
 
+#include "../include/Core.h"
 #include "Component.h"
 #include "Entity.h"
 #include "include/ui.h"
@@ -7,40 +7,19 @@
 #include "Managers/EntityManager.h"
 #include "physics.h"
 #include "render.h"
-
+#include "Input.h"
+#include "Utils/IDUtils.h"
+#include "Scene.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <iostream>
 #include <mutex>
 #include <thread>
 
 #include "GLTFLoader.h"
 #include "Renderer.h"
 #include "System.h"
-#include <iostream>
-
-
-
-class Core {
-private:
-	std::vector<System*> systems;
-	
-public:
-	void AddSystem(System* system) {
-		systems.push_back(system);
-	}
-
-	std::vector<System*> GetSystems() {
-		return this->systems;
-	}
-
-	void Synchronize() {
-
-	}
-
-
-};
-
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -87,15 +66,18 @@ int run_glfw() {
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	std::vector<System*> systems;
-	Core* core = new Core();
+	Scene* defaultScene = new Scene();
+
+	Core::getInstance().SetScene(defaultScene);
+	defaultScene->SpawnSceneDefinition();
 
 	UI* ui = new UI();
 	Physics* physx = new Physics();
 	Renderer* renderer = new Renderer();
 
-	core->AddSystem(ui);
-	core->AddSystem(physx);
-	core->AddSystem(renderer);
+	Core::getInstance().AddSystem(ui);
+	Core::getInstance().AddSystem(physx);
+	Core::getInstance().AddSystem(renderer);
 
 	ui->Initialize();
 	physx->Initialize();
@@ -176,7 +158,7 @@ int main(int argc, char* argv[])
 	std::cout << "Do you know what DK Stands for? Donkey Kong? Nah. Drift King." << std::endl;
 
 	// TODO - By Rendering Team Make this a call to the Render Project
-
+	
 	// Currently has its own while loop blocking main
 	run_glfw();
 
