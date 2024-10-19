@@ -12,7 +12,6 @@ class EntityManager{
 
 protected:
     static const int MAX_ENTITIES = 3000;
-    // TODO: map of entities
     std::map<UUIDv4::UUID, Entity*> entityMap;
 
     // Private constructor as this should be a singleton.
@@ -40,10 +39,23 @@ public:
     }
 
     // removes an entity from the map by UUID
-    void removeEntity(UUIDv4::UUID& eID) {
+    void removeEntityByUUID(UUIDv4::UUID& eID) {
         auto it = entityMap.find(eID);
         if (it != entityMap.end()) {
             entityMap.erase(it);
+        }
+    }
+
+    // removes an entity from the map by Entity reference
+    void removeEntity(Entity& e) {
+        UUIDv4::UUID eID = e.GetEntityID();
+        auto it = entityMap.find(eID);
+
+        if (it != entityMap.end()) {
+            entityMap.erase(it);
+        }
+        else {
+            std::cout << "Entity not found in the map." << std::endl;
         }
     }
 
@@ -55,11 +67,17 @@ public:
             std::cout << "Entity added" << std::endl;
         }
         else {
-            // regenerates UUID for the new entity
-            // TODO at some point: add a guard to check if its just the exact same entity being added in, need some time to thonk on how
-            UUIDv4::UUID newID = uuidGen.getUUID();
-            e.SetEntityID(newID);
-            addEntityToMap(e);
+            // check if the entity with the same UUID is actually the same entity
+            Entity* existingEntity = result.first->second;
+            if (*existingEntity == e) {
+                std::cout << "Entity already exists in the map." << std::endl;
+            }
+            else {
+                // regenerates UUID for the new entity
+                UUIDv4::UUID newID = uuidGen.getUUID();
+                e.SetEntityID(newID);
+                addEntityToMap(e);
+            }
         }
     }
 
@@ -71,7 +89,7 @@ public:
             return it->second;
         }
         else {
-            // TODO : handle if the entity isn't in the map?
+            std::cerr << "Error: Entity with UUID " << eID << " not found in the map." << std::endl;
             return nullptr;
         }
     }
@@ -104,10 +122,28 @@ public:
                 return uuid;
             }
             else {
-                std::cout << "Entity not found." << std::endl;
-                // TODO: This should return a path. It will lead to unexpected behaviour if it doesn't.
+                std::cerr << "Error: Entity with display name " << displayName << " not found in the map." << std::endl;
+                return nullptr;
             }
         }
+    }
+
+    // clean and remove entity from the tree
+    void cleanAndRemoveEntity(Entity* e) {
+        // if a parent exists, remove the reference of the entity from it
+        Entity* parent = e->getParent();
+        if (parent) {
+            parent->removeChild(e);
+        }
+
+        // recursively yeet children
+        for (auto& child : e->getChildren()) {
+            cleanAndRemoveEntity(child);
+        }
+        e->clearChildren();
+
+        // remove it from the map
+        removeEntity(*e);
     }
 
     void Instantiate(Entity* entity) 
