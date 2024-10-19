@@ -152,7 +152,9 @@ int run_glfw() {
 		for (auto system : systems) {
 			system->Update();
 		}
-	
+
+		//REMOVE THIS LATER. Above loops are never getting entered so UI update was never getting called. Remove this line below when fixed.
+		ui->Update();
 	}
 
 	// Destroys library, may cause race condition if it gets destroyed while other threads are using it.

@@ -76,6 +76,32 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tinygltf", "tinygltf", "{C0
 		External\tinygltf\tiny_gltf.h = External\tinygltf\tiny_gltf.h
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "imgui", "imgui", "{BCC979C5-87F1-46D3-95BC-2EE5455AE6D1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "include", "include", "{4FAF4680-B25E-4B5A-8B91-AD9B6438E8A7}"
+	ProjectSection(SolutionItems) = preProject
+		External\imgui\include\imconfig.h = External\imgui\include\imconfig.h
+		External\imgui\include\imgui.h = External\imgui\include\imgui.h
+		External\imgui\include\imgui_impl_glfw.h = External\imgui\include\imgui_impl_glfw.h
+		External\imgui\include\imgui_impl_opengl3.h = External\imgui\include\imgui_impl_opengl3.h
+		External\imgui\include\imgui_impl_opengl3_loader.h = External\imgui\include\imgui_impl_opengl3_loader.h
+		External\imgui\include\imgui_internal.h = External\imgui\include\imgui_internal.h
+		External\imgui\include\imstb_rectpack.h = External\imgui\include\imstb_rectpack.h
+		External\imgui\include\imstb_textedit.h = External\imgui\include\imstb_textedit.h
+		External\imgui\include\imstb_truetype.h = External\imgui\include\imstb_truetype.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FE1684B5-4D8D-4007-90F1-32C45B7D3286}"
+	ProjectSection(SolutionItems) = preProject
+		External\imgui\src\imgui.cpp = External\imgui\src\imgui.cpp
+		External\imgui\src\imgui_demo.cpp = External\imgui\src\imgui_demo.cpp
+		External\imgui\src\imgui_draw.cpp = External\imgui\src\imgui_draw.cpp
+		External\imgui\src\imgui_impl_glfw.cpp = External\imgui\src\imgui_impl_glfw.cpp
+		External\imgui\src\imgui_impl_opengl3.cpp = External\imgui\src\imgui_impl_opengl3.cpp
+		External\imgui\src\imgui_tables.cpp = External\imgui\src\imgui_tables.cpp
+		External\imgui\src\imgui_widgets.cpp = External\imgui\src\imgui_widgets.cpp
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -134,6 +160,9 @@ Global
 		{33BB77DC-3ED6-4640-A376-52F4F02303F2} = {A82E50DC-0C10-42C5-9F66-FE24647683E9}
 		{6F2C11AE-3F8E-459F-A931-CAD609BF898E} = {686626F8-3F9F-495E-A323-8787ED7222C6}
 		{C0F87CA2-C060-4D1A-BF57-A89159981FE3} = {686626F8-3F9F-495E-A323-8787ED7222C6}
+		{BCC979C5-87F1-46D3-95BC-2EE5455AE6D1} = {686626F8-3F9F-495E-A323-8787ED7222C6}
+		{4FAF4680-B25E-4B5A-8B91-AD9B6438E8A7} = {BCC979C5-87F1-46D3-95BC-2EE5455AE6D1}
+		{FE1684B5-4D8D-4007-90F1-32C45B7D3286} = {BCC979C5-87F1-46D3-95BC-2EE5455AE6D1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B539A217-C268-4BB2-B1E8-624C71DE29E3}
