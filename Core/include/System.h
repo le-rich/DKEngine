@@ -7,7 +7,8 @@
 #include <iostream>
 #include <atomic> // Include atomic for thread-safe boolean
 
-class System {
+class System
+{
 private:
     std::atomic<bool> isActive;
     std::thread updateThread;
@@ -16,28 +17,34 @@ private:
 public:
 
     System() : isActive(false) {} // Initialize isActive to false
-    ~System() {
+    ~System()
+    {
         Kill();
     }
 
-    virtual void Initialize() {
+    virtual void Initialize()
+    {
         std::lock_guard<std::mutex> lock(mutex);
-        if (!isActive) {
+        if (!isActive)
+        {
             isActive = true;
         }
     }
 
-    void Kill() {
+    void Kill()
+    {
         {
             std::lock_guard<std::mutex> lock(mutex);
             isActive = false;
         }
-        if (updateThread.joinable()) {
+        if (updateThread.joinable())
+        {
             updateThread.join(); // Wait for the thread to finish
         }
     }
 
-    bool IsActive() const {
+    bool IsActive() const
+    {
         return isActive.load();
     }
 

@@ -62,7 +62,7 @@ public:
         std::cout << "PHYSICS - WE ARE GRABBING LOCK FOR CAR\n";
         std::lock_guard<std::mutex> lck(CAR_TRANSFORM->mtx);
 
-        world.runPhysics(0.016);
+        world.runPhysics(0.02);
 
         std::cout << "PHYSICS - WE HAVE DONE A PHYSICS TIME-STEP\n";
 
