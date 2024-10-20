@@ -6,12 +6,14 @@
 
 #include <map>
 
-class ComponentManager{
+class ComponentManager
+{
 
     // TODO: map of components
 
     // default constructor
-    ComponentManager(){
+    ComponentManager()
+    {
         // iterate over map
     }
 

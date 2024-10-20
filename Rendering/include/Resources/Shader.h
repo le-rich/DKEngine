@@ -21,8 +21,8 @@ public:
     ~Shader();
 
     void Use();
-    
 
+    Shader& operator=(const Shader& other);
 
 private:
     GLuint mShaderID;

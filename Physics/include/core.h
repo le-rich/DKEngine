@@ -149,7 +149,9 @@ namespace AE86 {
 
 		/** Zeroes the components of this vector. */
 		void clear() {
-			x, y, z = 0, 0, 0;
+			x = 0;
+			y = 0;
+			z = 0;
 		}
 
 	private:

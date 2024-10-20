@@ -1,5 +1,6 @@
 
 #include "../include/world.h"
+#include <iostream>
 
 namespace AE86 {
 	void World::startFrame() {
@@ -23,6 +24,7 @@ namespace AE86 {
 
 	void World::runPhysics(real duration) {
 		// TODO: add force registry code here.
+		std::cout << "updating physics bodies\n";
 		integrate(duration);
 	}
 
