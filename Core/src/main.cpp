@@ -118,10 +118,11 @@ int run_glfw()
         fixedUpdateBuffer += std::chrono::duration_cast<std::chrono::milliseconds>(elapsedTime).count();
         std::cout << "COUNT: " << fixedUpdateBuffer << "\n"; // Commenting this line causes the Fixed update loop to stutter.
 
-        //Input::RunInputListener();
-        // Rendering related calls, we can move these to the loop of the rendering thread
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        renderer->Update(); // draw tri or square
+		Input::RunInputListener();
+		glfwMakeContextCurrent(window);
+		// Rendering related calls, we can move these to the loop of the rendering thread
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		renderer->Update(); // draw tri or square
 
         // The window has two buffers, front and back.
         // This allows us to display the front buffer while writing to the back buffer.
@@ -155,13 +156,13 @@ int run_glfw()
             //CAR_TRANSFORM->mtx.unlock();
         }
 
-        for (auto system : systems)
-        {
-            system->Update();
+		for (auto system : systems) {
+			system->Update();
+		}
 
-        }
-
-    }
+		//REMOVE THIS LATER. Above loops are never getting entered so UI update was never getting called. Remove this line below when fixed.
+		ui->Update();
+	}
 
     // Destroys library, may cause race condition if it gets destroyed while other threads are using it.
     glfwTerminate();

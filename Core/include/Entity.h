@@ -161,6 +161,11 @@ public:
             children.end());
     }
 
+    // remove all children entities
+    void clearChildren() {
+        children.clear();
+    }
+
     // retrieve all children entities
     const std::vector<Entity*>& getChildren() const
     {
@@ -182,9 +187,10 @@ public:
         return nullptr;
     }
 
-    bool operator==(const Entity& other) const
-    {
-        return (other.entityID == this->entityID);
+    bool operator==(const Entity& other) const {
+        return (other.entityID == this->entityID &&
+            other.entityDisplayName == this->entityDisplayName &&
+            other.getComponents() == this->getComponents());
     }
 
     // TODO: enable/disable
