@@ -103,6 +103,7 @@ int run_glfw() {
 		std::chrono::duration<double> elapsedTime = currentTime - previousTime;
 
 		Input::RunInputListener();
+		glfwMakeContextCurrent(window);
 		// Rendering related calls, we can move these to the loop of the rendering thread
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		renderer->Update(); // draw tri or square
@@ -134,7 +135,9 @@ int run_glfw() {
 		for (auto system : systems) {
 			system->Update();
 		}
-	
+
+		//REMOVE THIS LATER. Above loops are never getting entered so UI update was never getting called. Remove this line below when fixed.
+		ui->Update();
 	}
 
 	// Destroys library, may cause race condition if it gets destroyed while other threads are using it.
