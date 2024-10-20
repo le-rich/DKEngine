@@ -103,6 +103,7 @@ int run_glfw() {
 		std::chrono::duration<double> elapsedTime = currentTime - previousTime;
 
 		Input::RunInputListener();
+		glfwMakeContextCurrent(window);
 		// Rendering related calls, we can move these to the loop of the rendering thread
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		renderer->Update(); // draw tri or square

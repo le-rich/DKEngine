@@ -3,11 +3,11 @@
 UI::UI() {
    std::cout << "UI PROJECT" << std::endl;
 
-   // Initialize GLFW
-   glfwInit();
-   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+   // Initialize GLFW (Already initialized in main)
+   //glfwInit();
+   //glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+   //glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+   //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
    window = glfwCreateWindow(1280, 720, "DKEngine", NULL, NULL);
    if (window == NULL) {
@@ -15,15 +15,15 @@ UI::UI() {
       glfwTerminate();
       return;
    }
-   glfwMakeContextCurrent(window);
+   //glfwMakeContextCurrent(window);
 
-   // Load GLAD
-   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-      std::cout << "Failed to initialize GLAD" << std::endl;
-      return;
-   }
+   //// Load GLAD (Already loaded in main)
+   //if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+   //   std::cout << "Failed to initialize GLAD" << std::endl;
+   //   return;
+   //}
 
-   glViewport(0, 0, 1280, 720);
+   
    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback_UI);
 
    // Initialize ImGui
@@ -50,6 +50,7 @@ void UI::Update() {
    // Update Loop logic here
    std::cout << "UI Update" << std::endl;
    //while (!glfwWindowShouldClose(window)) {
+   glfwMakeContextCurrent(window);
       // Clear the buffer
    glClear(GL_COLOR_BUFFER_BIT);
 
