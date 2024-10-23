@@ -151,7 +151,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Component.cpp" />
-    <ClCompile Include="src\Components\Transform.cpp" />
+    <ClCompile Include="src\Components\TransformComponent.cpp" />
     <ClCompile Include="src\Core.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Scene.cpp" />
@@ -167,7 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Component.h" />
-    <ClInclude Include="include\Components\Transform.h" />
+    <ClInclude Include="include\Components\TransformComponent.h" />
     <ClInclude Include="include\Core.h" />
     <ClInclude Include="include\Entity.h" />
     <ClInclude Include="include\GLTFLoader.h" />

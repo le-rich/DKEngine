@@ -12,7 +12,7 @@ class Entity;
 /**
  * 
  */
-class Transform : public Component {
+class TransformComponent : public Component {
 private:
 	// parent space coords for Transform's origin's position.
 	glm::vec4 localPosition;
@@ -33,10 +33,10 @@ private:
 	glm::mat4 transformMatrix;
 
 public:
-	Transform(Entity* mEntity);
+	TransformComponent(Entity* mEntity);
 	// the constructor, takes global position, orientation, scale, parent, child
-	Transform(Entity* mEntity, glm::vec4 position, glm::quat orientation, float scale);
-	~Transform();
+	TransformComponent(Entity* mEntity, glm::vec4 position, glm::quat orientation, float scale);
+	~TransformComponent();
 
 	/** the parent might move or scale, the transform matrix needs 
 	 * to then be updated. This method does that.
@@ -48,11 +48,11 @@ public:
 	/********************************************/
 	/* SETTERS AND GETTERS FOR POS/ORIENT/SCALE */
 	/********************************************/
-	glm::vec4 getWorldPosition();
-	glm::quat getWorldOrientation();
+	glm::vec4 getWorldPosition() const;
+	glm::quat getWorldOrientation() const;
 
-	glm::vec4 getLocalPosition();
-	glm::quat getLocalOrientation();
+	glm::vec4 getLocalPosition() const;
+	glm::quat getLocalOrientation() const;
 
 	void setLocalPosition(glm::vec4 position);
 	void setLocalOrientation(glm::quat orientation);
@@ -60,11 +60,11 @@ public:
 	void setWorldSpacePosition(glm::vec4 position);
 	void setWorldSpaceOrientation(glm::quat orientation);
 
-	glm::vec3 getWorldScale();
+	glm::vec3 getWorldScale() const;
 	void setWorldScale(glm::vec3 scale);
 
-	glm::vec3 getLocalScale();
+	glm::vec3 getLocalScale() const;
 	void setLocalScale(glm::vec3 scale);
 
-	Transform& operator=(const Transform& other);
+	TransformComponent& operator=(const TransformComponent& other);
 };

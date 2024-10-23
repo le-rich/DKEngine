@@ -2,7 +2,7 @@
 
 #include "Utils/IDUtils.h"
 #include "Component.h"
-#include "Components/Transform.h"
+#include "Components/TransformComponent.h"
 
 #include <algorithm>
 #include <memory>
@@ -31,7 +31,7 @@ protected:
 
 public:
     // Every entity should by default have a transform.
-    Transform* transform;
+    TransformComponent* transform;
 
     // retrieve id of entity
     UUIDv4::UUID GetEntityID() {
@@ -98,7 +98,7 @@ public:
     Entity()
     {
         this->entityID = uuidGen.getUUID();
-        this->transform = new Transform(this);
+        this->transform = new TransformComponent(this);
         // init code
     }
 

@@ -1,12 +1,12 @@
 #pragma once
 #include "Component.h"
 
-#include "Components/Transform.h"
+#include "Components/TransformComponent.h"
 
 class CameraComponent : public Component
 {
 public:
-	Transform* lookAtTarget;
+	TransformComponent* lookAtTarget;
 
 	float fieldOfView = 90;
 	float farClipPlane = 1000.0f;

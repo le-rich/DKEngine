@@ -1,7 +1,7 @@
 #include "Component.h"
 
 #include "Entity.h"
-#include "Components/Transform.h"
+#include "Components/TransformComponent.h"
 
 #include <Utils/IDUtils.h>
 

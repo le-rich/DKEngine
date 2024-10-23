@@ -1,4 +1,4 @@
-#include "Components/Transform.h"
+#include "Components/TransformComponent.h"
 
 #include "Component.h"
 #include "Entity.h"
@@ -6,7 +6,7 @@
 #include <../glm/glm.hpp>
 #include<glm/gtc/quaternion.hpp>
 
-Transform::Transform(Entity* mEntity) :Component(mEntity), localPosition(0.0f, 0.0f, 0.0f, 1.0f),
+TransformComponent::TransformComponent(Entity* mEntity) :Component(mEntity), localPosition(0.0f, 0.0f, 0.0f, 1.0f),
 	localOrientation(1.0f, 0.0f, 0.0f, 0.0f),
 	localScale(1.0f, 1.0f, 1.0f),
 	transformMatrix(1.0f) 
@@ -16,7 +16,7 @@ Transform::Transform(Entity* mEntity) :Component(mEntity), localPosition(0.0f, 0
 
 
 
-Transform::Transform(Entity* mEntity, glm::vec4 position, glm::quat orientation, float scale)
+TransformComponent::TransformComponent(Entity* mEntity, glm::vec4 position, glm::quat orientation, float scale)
 	: Component(mEntity), localPosition(position), localOrientation(orientation), localScale(scale)
 {
 	updateTransformMatrix();
@@ -24,12 +24,12 @@ Transform::Transform(Entity* mEntity, glm::vec4 position, glm::quat orientation,
 	// DO NOT REVERSE LINK mEntity->transform = this. This should be handled in Entity's initialization.
 }
 
-Transform::~Transform()
+TransformComponent::~TransformComponent()
 {
 
 }
 
-void Transform::updateTransformMatrix() {
+void TransformComponent::updateTransformMatrix() {
 	if (entity->getParent() == nullptr) {
 		transformMatrix = glm::mat4(1.0f); // identity matrix
 	}
@@ -52,43 +52,43 @@ void Transform::updateTransformMatrix() {
 	}
 }
 
-void Transform::lookAt(Transform* target)
+void TransformComponent::lookAt(Transform* target)
 {
 
 }
 
 
-glm::vec4 Transform::getWorldPosition() {
+glm::vec4 TransformComponent::getWorldPosition() const {
 	return transformMatrix * localPosition;
 }
 
-glm::quat Transform::getWorldOrientation() {
+glm::quat TransformComponent::getWorldOrientation() const {
 	// TODO: flesh out later when making scene graph
 	return localOrientation;
 }
 
-glm::vec4 Transform::getLocalPosition() {
+glm::vec4 TransformComponent::getLocalPosition() const {
 	return localPosition;
 }
 
-glm::quat Transform::getLocalOrientation() {
+glm::quat TransformComponent::getLocalOrientation() const {
 	return localOrientation;
 }
 
-void Transform::setLocalPosition(glm::vec4 position) {
+void TransformComponent::setLocalPosition(glm::vec4 position) {
 	localPosition.x = position.x;
 	localPosition.y = position.y;
 	localPosition.z = position.z;
 }
 
-void Transform::setLocalOrientation(glm::quat orientation) {
+void TransformComponent::setLocalOrientation(glm::quat orientation) {
 	localOrientation.w = orientation.w;
 	localOrientation.x = orientation.x;
 	localOrientation.y = orientation.y;
 	localOrientation.z = orientation.z;
 }
 
-void Transform::setWorldSpacePosition(glm::vec4 position) {
+void TransformComponent::setWorldSpacePosition(glm::vec4 position) {
 	glm::vec4 localUpdate = transformMatrix * position;
 
 	localPosition.x = localUpdate.x;
@@ -97,7 +97,7 @@ void Transform::setWorldSpacePosition(glm::vec4 position) {
 
 }
 
-void Transform::setWorldSpaceOrientation(glm::quat orientation) {
+void TransformComponent::setWorldSpaceOrientation(glm::quat orientation) {
 	// TODO: flesh out later when making scene graph
 	localOrientation.w = orientation.w;
 	localOrientation.x = orientation.x;
@@ -105,29 +105,29 @@ void Transform::setWorldSpaceOrientation(glm::quat orientation) {
 	localOrientation.z = orientation.z;
 }
 
-glm::vec3 Transform::getWorldScale() {
+glm::vec3 TransformComponent::getWorldScale() const {
 	// TODO: flesh out later when making scene graph
 	return localScale;
 }
 
-void Transform::setWorldScale(glm::vec3 scale) {
+void TransformComponent::setWorldScale(glm::vec3 scale) {
 	// TODO: flesh out later when making scene graph
 	localOrientation.x = scale.x;
 	localOrientation.y = scale.y;
 	localOrientation.z = scale.z;
 }
 
-glm::vec3 Transform::getLocalScale() {
+glm::vec3 TransformComponent::getLocalScale() const {
 	return localScale;
 }
 
-void Transform::setLocalScale(glm::vec3 scale) {
+void TransformComponent::setLocalScale(glm::vec3 scale) {
 	localOrientation.x = scale.x;
 	localOrientation.y = scale.y;
 	localOrientation.z = scale.z;
 }
 
-Transform& Transform::operator=(const Transform& other)
+TransformComponent& TransformComponent::operator=(const TransformComponent& other)
 {
 	if (this == &other) {
 		return *this;
