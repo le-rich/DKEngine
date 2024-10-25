@@ -1,8 +1,8 @@
 #include "Entity.h"
 #include "RigidBodyComponent.h"
 
-RigidBodyComponent::RigidBodyComponent(Entity* mEntity, float mass) 
-	: Component(mEntity) {
+RigidBodyComponent::RigidBodyComponent(Entity* mEntity, AE86::RigidBody& rigidBody, float mass)
+	: Component(mEntity), rb(rigidBody) {
 	rb.setMass(mass);
 }
 

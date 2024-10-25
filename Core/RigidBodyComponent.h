@@ -9,11 +9,11 @@
 class RigidBodyComponent : public Component {
 
 protected:
-	AE86::RigidBody rb;
+	AE86::RigidBody& rb;
 
 public:
 	// init to a default mass like unity?
-	RigidBodyComponent(Entity* mEntity, float mass = 1.0f);
+	RigidBodyComponent(Entity* mEntity, AE86::RigidBody& rigidBody, float mass = 1.0f);
 	~RigidBodyComponent();
 
 	// getters and setters
