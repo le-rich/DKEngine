@@ -29,6 +29,22 @@ void RigidBodyComponent::setVelocity(const glm::vec3& v) {
 	rb.setVelocity(AE86::Vector3(v.x, v.y, v.z));
 }
 
+
+const glm::vec3 RigidBodyComponent::getForce() const {
+	AE86::Vector3 forceAccum = rb.getForceAccum();
+
+	return glm::vec3(forceAccum.x, forceAccum.y, forceAccum.z);
+}
+
+void RigidBodyComponent::applyForce(const glm::vec3& f) {
+	rb.addForce(AE86::Vector3(f.x, f.y, f.z));
+}
+
+void RigidBodyComponent::applyForceAtPoint(const glm::vec3& f, const glm::vec3& p) {
+	rb.addForceAtPoint(AE86::Vector3(f.x, f.y, f.z), AE86::Vector3(p.x, p.y, p.z));
+}
+
+
 // other funcs
 
 void RigidBodyComponent::update() {
