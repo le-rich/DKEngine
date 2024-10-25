@@ -7,6 +7,7 @@
 #include <vector>
 #include <memory>  // Use smart pointers for safe memory management
 #include "../GameObject.h"
+//#include "Entity.h"
 
 void drawHierarchyLine(GameObject* obj);
 void drawHierarchy();

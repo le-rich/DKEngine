@@ -1,31 +1,33 @@
-#ifndef COMPONENT_H
-#define COMPONENT_H
+#pragma once
 
-#include "Utils/IDUtils.h"
-
+#include <Utils/IDUtils.h>
 #include <string>
 
-//template<typename T>
-class Component {
+class Entity;
+class Transform;
 
-public: 
-    // unique id for component
+class Component
+{
+
+public:
+    Component(Entity* mEntity);
+    ~Component();
+
+    Entity* entity;
+
     UUIDv4::UUID componentID;
-
-    // changeable display id for component
     std::string componentDisplayName;
 
-    // retrieve id for component
-    UUIDv4::UUID GetComponentID(){
+    UUIDv4::UUID GetComponentID()
+    {
         return componentID;
     }
 
-    // changes the uuid for component
-    void SetComponentID(UUIDv4::UUID& newID) {
+    void SetComponentID(UUIDv4::UUID& newID)
+    {
         this->componentID = newID;
     }
 
-    // retrieve display id of component
     const std::string& GetDisplayName()
     {
         return componentDisplayName;
@@ -37,20 +39,8 @@ public:
         componentDisplayName = newID;
     }
 
-    // default constructor
-    Component(){
-        this->componentID = uuidGen.getUUID();
-    }
+    bool operator==(const Component& other) const;
 
-    // destructor
-    ~Component(){
-        // removal code
-    }
+private:
 
-    // overloaded equality operator based on UUID
-    bool operator==(const Component& other) const {
-        return componentID == other.componentID; 
-    }
 };
-
-#endif 
