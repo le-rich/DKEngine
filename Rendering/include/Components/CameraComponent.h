@@ -6,15 +6,15 @@
 class CameraComponent : public Component
 {
 public:
-	Transform* lookAtTarget;
+    Transform* lookAtTarget;
 
-	float fieldOfView = 90;
-	float farClipPlane = 1000.0f;
-	float nearClipPlane = 0.3f;
+    float fieldOfView = 90;
+    float farClipPlane = 1000.0f;
+    float nearClipPlane = 0.3f;
 
-	CameraComponent(Entity* mEntity);
-	~CameraComponent();
+    CameraComponent(Entity* mEntity);
+    ~CameraComponent();
 private:
-	glm::mat4 m_viewMatrix;
-	glm::mat4 m_projectionMatrix;
+    glm::mat4 m_viewMatrix;
+    glm::mat4 m_projectionMatrix;
 };

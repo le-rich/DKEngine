@@ -11,6 +11,7 @@ void Shader::Use() {
 	GLCall(glUseProgram(mShaderID));
 }
 
+
 Shader::Shader(std::string pFilePath)
 {
 	ShaderProgramSource source = ParseShader(pFilePath);
@@ -89,4 +90,16 @@ Shader::ShaderProgramSource Shader::ParseShader(const std::string& filepath) {
 	}
 
 	return { ss[0].str(), ss[1].str() };
+}
+
+Shader& Shader::operator=(const Shader& other)
+{
+	if (this == &other)
+	{
+		return *this;
+	}
+
+	this->mShaderID = other.mShaderID;
+
+	return *this;
 }
