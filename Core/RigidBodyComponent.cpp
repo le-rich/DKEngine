@@ -18,13 +18,15 @@ void RigidBodyComponent::setMass(float m) {
 	rb.setMass(m);
 }
 
-const glm::vec3& RigidBodyComponent::getVelocity() const {
+const glm::vec3 RigidBodyComponent::getVelocity() const {
 	AE86::Vector3 velocity = rb.getVelocity();
-	return *(glm::vec3*)&velocity;
+
+
+	return glm::vec3(velocity.x, velocity.y, velocity.z);
 }
 
 void RigidBodyComponent::setVelocity(const glm::vec3& v) {
-	rb.setVelocity(*(AE86::Vector3*)&v);
+	rb.setVelocity(AE86::Vector3(v.x, v.y, v.z));
 }
 
 // other funcs

@@ -20,10 +20,10 @@ public:
 	float getMass() const;
 	void setMass(float m);
 
-	const glm::vec3& getVelocity() const;
+	const glm::vec3 getVelocity() const;
 	void setVelocity(const glm::vec3& v);
 
-	const glm::vec3& getForce() const;
+	const glm::vec3 getForce() const;
 	void applyForce(const glm::vec3& f);
 
 	// other funcs
