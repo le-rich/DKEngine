@@ -25,8 +25,8 @@ const glm::vec3 RigidBodyComponent::getVelocity() const {
 	return glm::vec3(velocity.x, velocity.y, velocity.z);
 }
 
-void RigidBodyComponent::setVelocity(const glm::vec3& v) {
-	rb.setVelocity(AE86::Vector3(v.x, v.y, v.z));
+void RigidBodyComponent::setVelocity(const glm::vec3& velocity) {
+	rb.setVelocity(AE86::Vector3(velocity.x, velocity.y, velocity.z));
 }
 
 
@@ -36,12 +36,13 @@ const glm::vec3 RigidBodyComponent::getForce() const {
 	return glm::vec3(forceAccum.x, forceAccum.y, forceAccum.z);
 }
 
-void RigidBodyComponent::applyForce(const glm::vec3& f) {
-	rb.addForce(AE86::Vector3(f.x, f.y, f.z));
+void RigidBodyComponent::applyForce(const glm::vec3& force) {
+	rb.addForce(AE86::Vector3(force.x, force.y, force.z));
 }
 
-void RigidBodyComponent::applyForceAtPoint(const glm::vec3& f, const glm::vec3& p) {
-	rb.addForceAtPoint(AE86::Vector3(f.x, f.y, f.z), AE86::Vector3(p.x, p.y, p.z));
+void RigidBodyComponent::applyForceAtPoint(const glm::vec3& force, const glm::vec3& position) {
+	rb.addForceAtPoint(AE86::Vector3(force.x, force.y, force.z), 
+		AE86::Vector3(position.x, position.y, position.z));
 }
 
 

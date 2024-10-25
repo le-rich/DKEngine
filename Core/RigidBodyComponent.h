@@ -21,7 +21,7 @@ public:
 	void setMass(float m);
 
 	const glm::vec3 getVelocity() const;
-	void setVelocity(const glm::vec3& v);
+	void setVelocity(const glm::vec3& velocity);
 
 	/** 
 	 *  The current force applied to the object across the 3 cardinal
@@ -35,14 +35,14 @@ public:
 	 *  axes in Newtons, applied on the centre of mass of the RigidBody.
 	 *  This will result in no torque and therefore no angular acceleration.
 	 */
-	void applyForce(const glm::vec3& f);
+	void applyForce(const glm::vec3& force);
 
 	/**
 	 *  Apply a force, represented as a vector for each of the 3 cardinal
 	 *  axes in Newtons, applied on the world coordinates of the RigidBody.
 	 *  This may result in torque and therefore angular acceleration.
 	 */
-	void applyForceAtPoint(const glm::vec3& f, const glm::vec3& p);
+	void applyForceAtPoint(const glm::vec3& force, const glm::vec3& position);
 
 
 	// other funcs
