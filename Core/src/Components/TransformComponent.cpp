@@ -4,7 +4,7 @@
 #include "Entity.h"
 
 #include <../glm/glm.hpp>
-#include<glm/gtc/quaternion.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 TransformComponent::TransformComponent(Entity* mEntity) :Component(mEntity), localPosition(0.0f, 0.0f, 0.0f, 1.0f),
 	localOrientation(1.0f, 0.0f, 0.0f, 0.0f),

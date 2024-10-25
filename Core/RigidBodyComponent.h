@@ -1,16 +1,15 @@
 #pragma once
 
 #include "Component.h"
+#include "../Physics/include/body.h"
 
 #include <glm/glm.hpp>
 #include <string>
 
 class RigidBodyComponent : public Component {
 
-private:
-	float mass;
-	glm::vec3 velocity;
-	glm::vec3 force;
+protected:
+	AE86::RigidBody rb;
 
 public:
 	// init to a default mass like unity?
