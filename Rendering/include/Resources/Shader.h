@@ -2,9 +2,10 @@
 #include <string>
 #include <glad/glad.h>
 
-class Shader
-{
+#include "Resources/Asset.h"
 
+class Shader : Asset
+{
     enum ShaderType
     {
         NONE = -1, VERTEX = 0, FRAGMENT = 1

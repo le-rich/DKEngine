@@ -12,7 +12,7 @@ void Shader::Use() {
 }
 
 
-Shader::Shader(std::string pFilePath)
+Shader::Shader(std::string pFilePath) : Asset()
 {
 	ShaderProgramSource source = ParseShader(pFilePath);
 	mShaderID = CreateShader(source.VertexSource, source.FragmentSource);

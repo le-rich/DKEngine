@@ -20,6 +20,7 @@ public:
 	~Texture();
 
 	void Bind() const;
+	void BindToSlot(size_t pSlot) const;
 	void Unbind() const;
 };
 
