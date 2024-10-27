@@ -1,5 +1,15 @@
 #include "Managers/AssetManager.h"
 
+void AssetManager::AddMaterial(std::shared_ptr<Material> pMaterial)
+{
+    auto result = mMaterialMap.insert({ pMaterial->GetAssetID(), pMaterial });
+
+    if (result.second)
+    {
+        std::cout << "Material added" << std::endl;
+    }
+}
+
 void AssetManager::AddTexture(std::shared_ptr<Texture> pTexuture)
 {
     auto result = mTextureMap.insert({ pTexuture->GetAssetID(), pTexuture });
@@ -8,6 +18,19 @@ void AssetManager::AddTexture(std::shared_ptr<Texture> pTexuture)
     {
         std::cout << "Texture added" << std::endl;
     }
+}
+
+std::shared_ptr<Material> AssetManager::GetMaterialByID(UUIDv4::UUID& pID)
+{
+    auto result = mMaterialMap.find(pID);
+
+    if (result != mMaterialMap.end())
+    {
+        return result->second;
+    }
+
+    std::cerr << "Error: Material with UUID " << pID << " not found in the map." << std::endl;
+    return nullptr;
 }
 
 std::shared_ptr<Texture> AssetManager::GetTextureByID(const UUIDv4::UUID& pID)
@@ -19,7 +42,7 @@ std::shared_ptr<Texture> AssetManager::GetTextureByID(const UUIDv4::UUID& pID)
         return result->second;
     }
 
-    std::cerr << "Error: Entity with UUID " << pID << " not found in the map." << std::endl;
+    std::cerr << "Error: Texture with UUID " << pID << " not found in the map." << std::endl;
     return nullptr;
 }
 

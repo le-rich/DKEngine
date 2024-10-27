@@ -16,13 +16,12 @@ public:
         return instance;
     }
 
-    //void AddMaterial(Material& pMaterial);
+    void AddMaterial(std::shared_ptr<Material> pMaterial);
     //void AddShader();
     void AddTexture(std::shared_ptr<Texture> pTexture);
 
-    //Material GetMaterialByID(UUIDv4::UUID pID);
+    std::shared_ptr<Material> GetMaterialByID(UUIDv4::UUID& pID);
     //Shader GetShaderByID(UUIDv4::UUID pID);
-
     std::shared_ptr<Texture> GetTextureByID(const UUIDv4::UUID& pID);
 
     // removes an entity from the map by UUID

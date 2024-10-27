@@ -5,6 +5,7 @@
 #include <vector>
 #include <memory>
 
+#include "Utils/IDUtils.h"
 #include "Buffers/VertexArray.h"
 //#include "Buffers/VertexBuffer.h"
 #include "Buffers/IndexBuffer.h"
@@ -15,10 +16,11 @@
 class Primitive
 {
 public:
-    Primitive(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const GLuint pMaterialID = 0);
+    Primitive(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const UUIDv4::UUID& pMaterialID = 0);
     ~Primitive();
 
     void Draw();
+    void DrawWithOwnMaterial();
     //inline VertexBuffer& GetVertexBuffer() { return mVertexBuffer; }
     //inline IndexBuffer& GetIndexBuffer() { return mIndexBuffer; }
 
@@ -29,7 +31,7 @@ private:
     VertexBufferLayout mVertexBufferLayout;
     std::vector<Vertex> mLoadedVertices;
     std::vector<uint32_t> mLoadedIndices;
-    GLuint mMaterialID;
+    UUIDv4::UUID mMaterialID;
 };
 
 // Base struct for shapes
