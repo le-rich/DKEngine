@@ -4,6 +4,7 @@
 
 //#include <vector>
 
+#include "Managers/AssetManager.h"
 #include "Renderer.h"
 #include "Resources/Shader.h"
 #include "Resources/Texture.h"
@@ -32,7 +33,8 @@ void Renderer::Update()
       //if texture --> bind texture
       //if shader  --> bind shader
 
-    testTextures[1]->Bind();
+    AssetManager::GetInstance().GetTextureByID(testTextures[1]->GetAssetID())->Bind();
+    //testTextures[1]->Bind();
     testShader->Use();
     //Apply Uniforms (lighting, view matrices, etc...)
     // 

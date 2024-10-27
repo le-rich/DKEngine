@@ -3,6 +3,7 @@
 
 #include <tiny_gltf.cc>
 
+#include "Managers/AssetManager.h"
 #include "Resources/Mesh.h"
 #include "Resources/Material.h"
 #include "Resources/Texture.h"
@@ -214,7 +215,9 @@ namespace GLTFLoader
             tinygltf::Texture texture = pGltfModel.textures[i];
             int imageIndex = texture.source;
             tinygltf::Image image = pGltfModel.images[imageIndex];
-            textures[i] = std::make_shared<Texture>(pSourceFolder + image.uri);
+            std::shared_ptr<Texture> texturePointer = std::make_shared<Texture>(pSourceFolder + image.uri);
+            AssetManager::GetInstance().AddTexture(texturePointer);
+            textures[i] = texturePointer;
         }
 
         return textures;

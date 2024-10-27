@@ -6,7 +6,7 @@
 #include "Resources/Asset.h"
 
 
-class Texture : Asset
+class Texture : public Asset
 {
 private:
 	unsigned int mTexturerID;

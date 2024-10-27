@@ -1,7 +1,7 @@
 #pragma once
 #include "Resources/Asset.h"
 
-class Material : Asset
+class Material : public Asset
 {
 public:
     Material();
