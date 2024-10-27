@@ -8,7 +8,7 @@
 
 
 Texture::Texture(const std::string& path)
-	: mTexturerID(0), mType(GL_TEXTURE_2D), mFilePath(path),
+	: Asset(), mTexturerID(0), mType(GL_TEXTURE_2D), mFilePath(path),
 	mBuffer(nullptr), mWidth(0), mHeight(0), mBPP(0)
 {
 

@@ -3,8 +3,10 @@
 #include <glad/glad.h>
 #include <string>
 
+#include "Resources/Asset.h"
 
-class Texture
+
+class Texture : Asset
 {
 private:
 	unsigned int mTexturerID;

@@ -71,12 +71,12 @@ namespace GLTFLoader
 
     /*
     * Fills OutBufferData with the data from the Buffer view specified at the specified accessor
-    * 
+    *
     * @param
     * pGltfModel: GLTF model data
-    * 
+    *
     * pAccessorNum: Index of the specefied accessor
-    * 
+    *
     * OutBufferData: Target buffer to fill
     */
     static bool GetAttributeVector(tinygltf::Model const& pGltfModel, uint32_t const pAccessorNum, std::vector<unsigned char>& OutBufferData)
@@ -203,19 +203,21 @@ namespace GLTFLoader
     }
 
 
-    // TODO
     // Load Textures into asset manager and return list of id's for this set of textures
-    static std::vector<std::shared_ptr<Texture>> LoadTextures(tinygltf::Model const &pGltfModel, std::string const pSourceFolder)
+    static std::vector<std::shared_ptr<Texture>> LoadTextures(tinygltf::Model const& pGltfModel, std::string const pSourceFolder)
     {
-        std::vector<std::shared_ptr<Texture>> textures;
+        std::vector<std::shared_ptr<Texture>> textures(pGltfModel.textures.size());
 
-        tinygltf::Texture texture = pGltfModel.textures[0];
-        int imageIndex = texture.source;
-        tinygltf::Image image = pGltfModel.images[imageIndex];
-        textures.push_back( std::make_shared<Texture>(pSourceFolder + image.uri) );
+        for (size_t i = 0; i < textures.size(); ++i)
+        {
+            // TODO: Get and set image sampling properties and pass to Texture object
+            tinygltf::Texture texture = pGltfModel.textures[i];
+            int imageIndex = texture.source;
+            tinygltf::Image image = pGltfModel.images[imageIndex];
+            textures[i] = std::make_shared<Texture>(pSourceFolder + image.uri);
+        }
 
         return textures;
-
     }
 
     static bool isFileBinary(std::string const& pFilePath)

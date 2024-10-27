@@ -32,7 +32,7 @@ void Renderer::Update()
       //if texture --> bind texture
       //if shader  --> bind shader
 
-    testTextures[0]->Bind();
+    testTextures[1]->Bind();
     testShader->Use();
     //Apply Uniforms (lighting, view matrices, etc...)
     // 
@@ -58,7 +58,7 @@ void Renderer::Update()
 
         // GARBAGE METHODOLOGY
     testMesh.Draw();
-    testTextures[0]->Unbind();
+    testTextures[1]->Unbind();
 
     /*Perform Post Processing
       Draw Frame Buffer*/
