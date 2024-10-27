@@ -38,7 +38,7 @@ public:
     // TODO: Decouple from member to scene reference
     Mesh testMesh;
     Transform* testTransform;
-    Texture* texture;
+    std::vector<std::shared_ptr<Texture>> testTextures;
     Shader* testShader;
 private:
     UniformBuffer mUniformBuffer;

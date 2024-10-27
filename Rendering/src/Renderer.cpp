@@ -11,7 +11,7 @@
 // Constructor.
 Renderer::Renderer()
 {
-    texture = new Texture("../Core/Assets/TestAE/textures/fmesh_Material_001_BasssseColor_001df.png");
+    //texture = new Texture("../Core/Assets/TestAE/textures/fmesh_Material_001_BasssseColor_001df.png");
     testShader = new Shader("../Rendering/Shaders/default.glsl");
 }
 
@@ -32,7 +32,7 @@ void Renderer::Update()
       //if texture --> bind texture
       //if shader  --> bind shader
 
-    texture->Bind();
+    testTextures[0]->Bind();
     testShader->Use();
     //Apply Uniforms (lighting, view matrices, etc...)
     // 
@@ -63,7 +63,6 @@ void Renderer::Update()
     /*Perform Post Processing
       Draw Frame Buffer*/
 
-    texture->Unbind();
     // Swap window buffers. can be moved to post update
 }
 
