@@ -1,22 +1,12 @@
-#include <glad/glad.h>
+//#include <glad/glad.h>
 #include <glm.hpp>
-
-
-//#include <vector>
 
 #include "Managers/AssetManager.h"
 #include "Renderer.h"
 #include "Resources/Shader.h"
 #include "Resources/Texture.h"
 
-// Constructor.
-Renderer::Renderer()
-{
-    //texture = new Texture("../Core/Assets/TestAE/textures/fmesh_Material_001_BasssseColor_001df.png");
-    testShader = new Shader("../Rendering/Shaders/default.glsl");
-}
-
-// Destructor.
+Renderer::Renderer() {}
 Renderer::~Renderer() {}
 
 void Renderer::Update()
@@ -29,19 +19,7 @@ void Renderer::Update()
         Add lighting matrix to list
       bind lighting list to Shader Buffer*/
 
-      //For each Material
-      //if texture --> bind texture
-      //if shader  --> bind shader
-
-    //AssetManager::GetInstance().GetMaterialByID(testMaterials[0])->Bind();
-    //AssetManager::GetInstance().GetTextureByID(testTextures[1])->Bind();
-    //testTextures[1]->Bind();
-    testShader->Use();
-    //Apply Uniforms (lighting, view matrices, etc...)
-    // 
-    //std::string name = "u_Texture";
-    //GLCall(int location = glGetUniformLocation(1, name.c_str()));
-    //GLCall(glUniform1i(location, 0));
+    // TODO: Bug Physics/Core on way to get modelMatrix directly from transform
     glm::vec3 localScale = testTransform->getLocalScale();
     glm::mat4 modelMatrix =
         glm::translate(glm::mat4(1.0f), testTransform->getWorldPosition()) *
@@ -52,22 +30,31 @@ void Renderer::Update()
             glm::vec4(0.0f, 0.0f, localScale.z, 0.0f),
             glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)
         );
-    mUniformBuffer.SetSubData(modelMatrix, 0);
 
-    /*For each Primitive
-        Bind Vertex Array
-        Bind Index Buffer
-        DrawCall*/
+    mEngineUniformBuffer.SetSubData(modelMatrix, 0);
+    // TODO: Set camera uniform data
 
-        // GARBAGE METHODOLOGY
+    /*
+    Material Based:
+    For each Material
+        Bind Material
+        Apply Material specific Uniforms
+        For each Primitive in Material
+            Bind Vertex Array
+            Bind Index Buffer
+            DrawCall
+        Unbind Material
+     */
+
+     // Kinda okay methodology
+     //TODO: Replace with Scene based or Material based Draw
     testMesh.Draw();
-    //AssetManager::GetInstance().GetMaterialByID(testMaterials[0])->Unbind();
-    //AssetManager::GetInstance().GetTextureByID(testTextures[1])->Unbind();
+
 
     /*Perform Post Processing
       Draw Frame Buffer*/
 
-    // Swap window buffers. can be moved to post update
+      // Swap window buffers. can be moved to post update
 }
 
 

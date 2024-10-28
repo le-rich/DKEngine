@@ -23,8 +23,7 @@ Primitive::Primitive(const std::vector<Vertex>& vertices, const std::vector<GLui
 Primitive::~Primitive() {}
 
 // Renders primitive
-// Does not change bind material on draw.
-// TODO: Consider additional draw function that sets material before draw.
+// Does not change bound material on draw.
 void Primitive::Draw()
 {
     mVertexArray->Bind();

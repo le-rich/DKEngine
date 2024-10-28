@@ -70,8 +70,8 @@ int run_glfw()
     Core::getInstance().SetScene(defaultScene);
     defaultScene->SpawnSceneDefinition();
 
+
     // TODO: Refactor to a Single Car Entity with Mesh and Rigidbody components
-    // TODO: Refactor to some kind of Asset Manager and/or Scene Hierarchy for renderer to access
     std::string SOURCE_FOLDER = "Assets/TestAE/"; // TODO: JSONparser for list of assets, each asset has a PATH and FILE string.
     Entity testCar;
     tinygltf::Model gltfModel = GLTFLoader::LoadFromFile(SOURCE_FOLDER + "ae86.gltf"); // TODO: Figure out location of assets/non code files within solution
@@ -81,6 +81,7 @@ int run_glfw()
     Transform* CAR_TRANSFORM = new Transform(&testCar);
     // end TODO
     EntityManager::getInstance().Instantiate(&testCar);
+
 
     UI* ui = new UI();
     Physics* physx = new Physics(CAR_TRANSFORM);

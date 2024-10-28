@@ -5,6 +5,7 @@ class Material : public Asset
 {
 public:
     UUIDv4::UUID mBaseColorTextureID;
+    UUIDv4::UUID mShaderID;
 
     Material();
     ~Material();
@@ -12,6 +13,5 @@ public:
     void Unbind();
 private:
     std::vector<UUIDv4::UUID> texturesIDs;
-    UUIDv4::UUID Shader;
 };
 

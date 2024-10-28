@@ -7,9 +7,7 @@
 
 #include "Utils/IDUtils.h"
 #include "Buffers/VertexArray.h"
-//#include "Buffers/VertexBuffer.h"
 #include "Buffers/IndexBuffer.h"
-//#include "Data/VertexBufferLayout.h"
 #include "Data/Vertex.h"
 
 
@@ -21,8 +19,8 @@ public:
 
     void Draw();
     void DrawWithOwnMaterial();
-    //inline VertexBuffer& GetVertexBuffer() { return mVertexBuffer; }
-    //inline IndexBuffer& GetIndexBuffer() { return mIndexBuffer; }
+    inline void SetMaterial(UUIDv4::UUID& pMaterialID) { mMaterialID = pMaterialID; }
+    inline const UUIDv4::UUID GetMaterial() { return mMaterialID; }
 
 private:
     std::shared_ptr<VertexBuffer> mVertexBuffer;
@@ -39,45 +37,6 @@ struct Shape
 {
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
-};
-
-// Derived struct for Triangle
-struct Triangle : public Shape
-{
-    Triangle()
-    {
-        vertices.resize(3);
-        vertices.resize(3);
-        vertices =
-        {
-            Vertex(glm::vec3(-0.5f, -0.5f, 0.0f)),  // 0
-            Vertex(glm::vec3( 0.0f,  0.5f, 0.0f)),  // 1
-            Vertex(glm::vec3( 0.5f, -0.5f, 0.0f))   // 2
-        };
-        indices = { 0, 1, 2 };
-    }
-};
-
-// Derived struct for Square
-struct Square : public Shape
-{
-    Square()
-    {
-        vertices.resize(4);
-        vertices.resize(6);
-        vertices =
-        {
-            Vertex(glm::vec3(-0.5f, -0.5f, 0.0f)), // 0
-            Vertex(glm::vec3( 0.5f, -0.5f, 0.0f)), // 1
-            Vertex(glm::vec3( 0.5f,  0.5f, 0.0f)), // 2
-            Vertex(glm::vec3(-0.5f,  0.5f, 0.0f))  // 3
-        };
-        indices =
-        {
-            0, 1, 2,
-            2, 3, 0
-        };
-    }
 };
 
 // Derived struct for Cube

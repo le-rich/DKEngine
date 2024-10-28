@@ -7,6 +7,7 @@ Material::~Material() {}
 void Material::Bind()
 {
     AssetManager::GetInstance().GetTextureByID(mBaseColorTextureID)->Bind();
+    AssetManager::GetInstance().GetShaderByID(mShaderID)->Use();
     for (size_t i = 0; i < texturesIDs.size(); ++i)
     {
         // Get Texture UUID

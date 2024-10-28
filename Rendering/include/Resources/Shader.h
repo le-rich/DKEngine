@@ -1,10 +1,7 @@
 #pragma once
-#include <string>
-#include <glad/glad.h>
-
 #include "Resources/Asset.h"
 
-class Shader : Asset
+class Shader : public Asset
 {
     enum ShaderType
     {
@@ -19,14 +16,16 @@ class Shader : Asset
 
 public:
     Shader(std::string pFilePath);
+    Shader(std::string pFilePath, std::string pShaderName);
     ~Shader();
 
     void Use();
+    void CleanUp();
 
     Shader& operator=(const Shader& other);
 
 private:
-    GLuint mShaderID;
+    unsigned int mShaderID;
 
     ShaderProgramSource ParseShader(const std::string& filePath);
     unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader);

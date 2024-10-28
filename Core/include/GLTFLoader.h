@@ -99,7 +99,6 @@ namespace GLTFLoader
             auto endShift = startShift + (componentSize * typeCount);
             auto end = buffer.data.begin() + endShift;
 
-            //std::copy(start, end, std::back_inserter(OutBufferData));
             OutBufferData.insert(OutBufferData.end(), start, end);
         }
         return true;
@@ -180,8 +179,7 @@ namespace GLTFLoader
                 indices.push_back(index);
             }
         }
-        
-        // TODO: Add material index
+
         Primitive primitive(vertices, indices, materials[pPrimitive.material]);
         return primitive;
     }
@@ -197,18 +195,28 @@ namespace GLTFLoader
         return mesh;
     }
 
-    // TODO
+    // Load Material
+    static std::shared_ptr<Material> LoadMaterial(tinygltf::Material const& pMaterial, std::vector<UUIDv4::UUID> pTextures)
+    {
+        std::shared_ptr<Material> material = std::make_shared<Material>();
+
+        // Set material properties
+        material->mBaseColorTextureID = pTextures[pMaterial.pbrMetallicRoughness.baseColorTexture.index];
+        // Set to default shader
+        material->mShaderID = AssetManager::GetInstance().GetDefaultShader()->GetAssetID();
+
+        return material;
+    }
+
     // Load Materials into asset manager and return list of id's for this set of textures
-    static std::vector<UUIDv4::UUID> LoadMaterials(tinygltf::Model const& pGltfModel, std::vector<UUIDv4::UUID> textures)
+    static std::vector<UUIDv4::UUID> LoadMaterials(tinygltf::Model const& pGltfModel, std::vector<UUIDv4::UUID> pTextures)
     {
         std::vector<UUIDv4::UUID> materials(pGltfModel.materials.size());
 
         for (size_t i = 0; i < materials.size(); ++i)
         {
             tinygltf::Material material = pGltfModel.materials[i];
-            std::shared_ptr<Material> materialPointer = std::make_shared<Material>();
-
-            materialPointer->mBaseColorTextureID = textures[material.pbrMetallicRoughness.baseColorTexture.index];
+            std::shared_ptr<Material> materialPointer = LoadMaterial(material, pTextures);
             AssetManager::GetInstance().AddMaterial(materialPointer);
             materials[i] = materialPointer->GetAssetID();
         }
@@ -216,6 +224,15 @@ namespace GLTFLoader
         return materials;
     }
 
+    // TODO: Get and set image sampling properties and pass to Texture object
+    static std::shared_ptr<Texture> LoadTexture(tinygltf::Model const& pGltfModel, tinygltf::Texture const& pTexture, std::string const pSourceFolder)
+    {
+        int imageIndex = pTexture.source;
+        tinygltf::Image image = pGltfModel.images[imageIndex];
+        std::shared_ptr<Texture> texture = std::make_shared<Texture>(pSourceFolder + image.uri);
+        AssetManager::GetInstance().AddTexture(texture);
+        return texture;
+    }
 
     // Load Textures into asset manager and return list of id's for this set of textures
     static std::vector<UUIDv4::UUID> LoadTextures(tinygltf::Model const& pGltfModel, std::string const pSourceFolder)
@@ -224,12 +241,8 @@ namespace GLTFLoader
 
         for (size_t i = 0; i < textures.size(); ++i)
         {
-            // TODO: Get and set image sampling properties and pass to Texture object
             tinygltf::Texture texture = pGltfModel.textures[i];
-            int imageIndex = texture.source;
-            tinygltf::Image image = pGltfModel.images[imageIndex];
-            std::shared_ptr<Texture> texturePointer = std::make_shared<Texture>(pSourceFolder + image.uri);
-            AssetManager::GetInstance().AddTexture(texturePointer);
+            std::shared_ptr<Texture> texturePointer = LoadTexture(pGltfModel, texture, pSourceFolder);
             textures[i] = texturePointer->GetAssetID();
         }
 
