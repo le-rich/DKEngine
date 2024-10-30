@@ -2,8 +2,8 @@
 
 #define PWORLD_HEADER
 
-#include "pfgen.h"
-#include "plinks.h"
+#include "PFGen.h"
+#include "PLinks.h"
 
 namespace AE86
 {

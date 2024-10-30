@@ -3,7 +3,7 @@
 
 #define BODY_HEADER
 
-#include "core.h"
+#include "Core.h"
 
 namespace AE86 {
 	/** The basic simulation object in our engine. */

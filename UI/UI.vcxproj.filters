@@ -83,7 +83,7 @@
     <ClInclude Include="include\MenuBar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\ui.h">
+    <ClInclude Include="include\UI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Viewport.h">

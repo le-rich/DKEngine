@@ -1,5 +1,5 @@
 
-#include "../include/fgen.h"
+#include "../include/FGen.h"
 
 using namespace AE86;
 

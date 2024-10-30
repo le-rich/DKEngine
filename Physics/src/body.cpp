@@ -1,4 +1,4 @@
-#include "../include/body.h"
+#include "../include/Body.h"
 #include <cassert>
 
 namespace AE86 {

@@ -116,10 +116,10 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>/include;$(SolutionDir)/Rendering/include;</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\glm\gtc;$(SolutionDir)External\;$(SolutionDir)External\GLFW\x64\include;$(SolutionDir)External\glad\include;$(SolutionDir)External\tinygltf;$(SolutionDir)Core\include\;$(SolutionDir)UI\;$(SolutionDir)Rendering\;$(SolutionDir)Physics\;$(SolutionDir)External\glm;$(SolutionDir)External\stb;$(SolutionDir)External\imgui\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\glm\gtc;$(SolutionDir)External\;$(SolutionDir)External\GLFW\x64\include;$(SolutionDir)External\glad\include;$(SolutionDir)External\tinygltf\;$(SolutionDir)Core\include;$(SolutionDir)UI\include;$(SolutionDir)Rendering;$(SolutionDir)Physics\;$(SolutionDir)External\glm;$(SolutionDir)External\stb\;$(SolutionDir)External\imgui\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -135,9 +135,9 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\glm\gtc;$(SolutionDir)External\;$(SolutionDir)External\GLFW\x64\include;$(SolutionDir)External\glad\include;$(SolutionDir)External\tinygltf;$(SolutionDir)Core\include\;$(SolutionDir)UI\;$(SolutionDir)Rendering\;$(SolutionDir)Physics\;$(SolutionDir)External\glm;$(SolutionDir)External\stb;$(SolutionDir)External\imgui\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\glm\gtc;$(SolutionDir)External\;$(SolutionDir)External\GLFW\x64\include;$(SolutionDir)External\glad\include;$(SolutionDir)External\tinygltf\;$(SolutionDir)Core\include;$(SolutionDir)UI\include;$(SolutionDir)Rendering;$(SolutionDir)Physics\;$(SolutionDir)External\glm;$(SolutionDir)External\stb\;$(SolutionDir)External\imgui\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -176,7 +176,6 @@
     <ClInclude Include="include\Managers\EntityManager.h" />
     <ClInclude Include="include\Scene.h" />
     <ClInclude Include="include\System.h" />
-    <ClInclude Include="include\Utils\endianness.h" />
     <ClInclude Include="include\Utils\IDUtils.h" />
     <ClInclude Include="include\Utils\uuid_v4.h" />
   </ItemGroup>
