@@ -56,9 +56,6 @@
     <ClInclude Include="include\System.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Utils\endianness.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Utils\IDUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>

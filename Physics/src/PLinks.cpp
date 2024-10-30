@@ -1,4 +1,4 @@
-#include "../include/plinks.h"
+#include "../include/PLinks.h"
 
 using namespace AE86;
 

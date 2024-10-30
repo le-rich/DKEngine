@@ -1,4 +1,4 @@
-#include "../include/pworld.h"
+#include "../include/PWorld.h"
 
 using namespace AE86;
 

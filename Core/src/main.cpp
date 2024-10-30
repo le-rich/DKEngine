@@ -1,23 +1,23 @@
-#include <iostream>
-#include <mutex>
-#include <thread>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "Core.h"
+#include <iostream>
+#include <mutex>
+#include <thread>
+
 #include "Component.h"
+#include "Components/Transform.h"
+#include "Core.h"
 #include "Entity.h"
-#include "include/ui.h"
+#include "GLTFLoader.h"
 #include "Input.h"
 #include "Managers/EntityManager.h"
-#include "physics.h"
-#include "Scene.h"
-#include "Utils/IDUtils.h"
-
-#include "Components/Transform.h"
-#include "GLTFLoader.h"
+#include "Physics.h"
 #include "Renderer.h"
+#include "Scene.h"
 #include "System.h"
+#include "UI.h"
+#include "Utils/IDUtils.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
