@@ -1,6 +1,7 @@
 #include "Resources/Primitives.h"
+#include "Managers/AssetManager.h"
 
-Primitive::Primitive(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices, const GLuint pMaterialID) :
+Primitive::Primitive(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices, const UUIDv4::UUID& pMaterialID) :
     mLoadedVertices(vertices), mLoadedIndices(indices), mMaterialID(pMaterialID)
 {
     // vector size * 3 pos coords * float data type
@@ -22,8 +23,7 @@ Primitive::Primitive(const std::vector<Vertex>& vertices, const std::vector<GLui
 Primitive::~Primitive() {}
 
 // Renders primitive
-// Does not change bind material on draw.
-// TODO: Consider additional draw function that sets material before draw.
+// Does not change bound material on draw.
 void Primitive::Draw()
 {
     mVertexArray->Bind();
@@ -31,4 +31,15 @@ void Primitive::Draw()
     glDrawElements(GL_TRIANGLES, mIndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
     mIndexBuffer->Unbind();
     mVertexArray->Unbind();
+}
+
+void Primitive::DrawWithOwnMaterial()
+{
+    AssetManager::GetInstance().GetMaterialByID(mMaterialID)->Bind();
+    mVertexArray->Bind();
+    mIndexBuffer->Bind();
+    glDrawElements(GL_TRIANGLES, mIndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
+    mIndexBuffer->Unbind();
+    mVertexArray->Unbind();
+    AssetManager::GetInstance().GetMaterialByID(mMaterialID)->Unbind();
 }

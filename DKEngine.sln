@@ -519,24 +519,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "simd", "simd", "{283FF17B-2
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "imgui", "imgui", "{1A9BD20B-6AA5-4C93-AF6F-36205BDCC049}"
-	ProjectSection(SolutionItems) = preProject
-		External\imgui\imconfig.h = External\imgui\imconfig.h
-		External\imgui\imgui.cpp = External\imgui\imgui.cpp
-		External\imgui\imgui.h = External\imgui\imgui.h
-		External\imgui\imgui_demo.cpp = External\imgui\imgui_demo.cpp
-		External\imgui\imgui_draw.cpp = External\imgui\imgui_draw.cpp
-		External\imgui\imgui_impl_glfw.cpp = External\imgui\imgui_impl_glfw.cpp
-		External\imgui\imgui_impl_glfw.h = External\imgui\imgui_impl_glfw.h
-		External\imgui\imgui_impl_opengl3.cpp = External\imgui\imgui_impl_opengl3.cpp
-		External\imgui\imgui_impl_opengl3.h = External\imgui\imgui_impl_opengl3.h
-		External\imgui\imgui_impl_opengl3_loader.h = External\imgui\imgui_impl_opengl3_loader.h
-		External\imgui\imgui_internal.h = External\imgui\imgui_internal.h
-		External\imgui\imgui_tables.cpp = External\imgui\imgui_tables.cpp
-		External\imgui\imgui_widgets.cpp = External\imgui\imgui_widgets.cpp
-		External\imgui\imstb_rectpack.h = External\imgui\imstb_rectpack.h
-		External\imgui\imstb_textedit.h = External\imgui\imstb_textedit.h
-		External\imgui\imstb_truetype.h = External\imgui\imstb_truetype.h
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tinygltf", "tinygltf", "{22446EA0-F094-4737-99CA-F4429A2EB44F}"
 	ProjectSection(SolutionItems) = preProject
@@ -549,6 +531,30 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "stb", "stb", "{278C44F6-3DD
 	ProjectSection(SolutionItems) = preProject
 		External\stb\stb_image.h = External\stb\stb_image.h
 		External\stb\stb_image_write.h = External\stb\stb_image_write.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "include", "include", "{4AB2EA99-6B12-4E94-BEFA-B2DC29C0C98E}"
+	ProjectSection(SolutionItems) = preProject
+		External\imgui\include\imconfig.h = External\imgui\include\imconfig.h
+		External\imgui\include\imgui.h = External\imgui\include\imgui.h
+		External\imgui\include\imgui_impl_glfw.h = External\imgui\include\imgui_impl_glfw.h
+		External\imgui\include\imgui_impl_opengl3.h = External\imgui\include\imgui_impl_opengl3.h
+		External\imgui\include\imgui_impl_opengl3_loader.h = External\imgui\include\imgui_impl_opengl3_loader.h
+		External\imgui\include\imgui_internal.h = External\imgui\include\imgui_internal.h
+		External\imgui\include\imstb_rectpack.h = External\imgui\include\imstb_rectpack.h
+		External\imgui\include\imstb_textedit.h = External\imgui\include\imstb_textedit.h
+		External\imgui\include\imstb_truetype.h = External\imgui\include\imstb_truetype.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B50EAB63-4A30-4B26-97ED-43FAC77C08DB}"
+	ProjectSection(SolutionItems) = preProject
+		External\imgui\src\imgui.cpp = External\imgui\src\imgui.cpp
+		External\imgui\src\imgui_demo.cpp = External\imgui\src\imgui_demo.cpp
+		External\imgui\src\imgui_draw.cpp = External\imgui\src\imgui_draw.cpp
+		External\imgui\src\imgui_impl_glfw.cpp = External\imgui\src\imgui_impl_glfw.cpp
+		External\imgui\src\imgui_impl_opengl3.cpp = External\imgui\src\imgui_impl_opengl3.cpp
+		External\imgui\src\imgui_tables.cpp = External\imgui\src\imgui_tables.cpp
+		External\imgui\src\imgui_widgets.cpp = External\imgui\src\imgui_widgets.cpp
 	EndProjectSection
 EndProject
 Global
@@ -617,6 +623,8 @@ Global
 		{1A9BD20B-6AA5-4C93-AF6F-36205BDCC049} = {686626F8-3F9F-495E-A323-8787ED7222C6}
 		{22446EA0-F094-4737-99CA-F4429A2EB44F} = {686626F8-3F9F-495E-A323-8787ED7222C6}
 		{278C44F6-3DDF-4932-944E-BA0A3CB77278} = {686626F8-3F9F-495E-A323-8787ED7222C6}
+		{4AB2EA99-6B12-4E94-BEFA-B2DC29C0C98E} = {1A9BD20B-6AA5-4C93-AF6F-36205BDCC049}
+		{B50EAB63-4A30-4B26-97ED-43FAC77C08DB} = {1A9BD20B-6AA5-4C93-AF6F-36205BDCC049}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B539A217-C268-4BB2-B1E8-624C71DE29E3}
