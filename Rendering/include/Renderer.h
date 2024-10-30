@@ -1,20 +1,9 @@
 #pragma once
-/* @TODO: Extrapolate shader functionality, error handling, and
-implement pre and post methods.*/
-
-#include <glad/glad.h>
-
-//#include "Renderer.h"
 #include "System.h"
-// @TODO: Remove TESTING INCLUDE
 #include "Buffers/UniformBuffer.h"
+// @TODO: Remove TESTING INCLUDE
 #include "Resources/Mesh.h"
-#include "Resources/Texture.h"
-#include "Resources/Shader.h"
 #include "Components/Transform.h"
-
-
-
 
 class Renderer : public System
 {
@@ -34,11 +23,13 @@ public:
 
     }
 
+    // GARBAGE BLOCK HATE IT
+    // TODO: Decouple from member to scene reference
     Mesh testMesh;
     Transform* testTransform;
-    Texture* texture;
-    Shader* testShader;
+    std::vector<UUIDv4::UUID> testMaterials;
+
 private:
-    UniformBuffer mUniformBuffer;
+    UniformBuffer mEngineUniformBuffer;
 
 };

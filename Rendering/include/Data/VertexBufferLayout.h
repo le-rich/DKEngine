@@ -15,6 +15,7 @@ inline VertexAttributeKeys GetVertexAttributeFromString(std::string pVertexAttri
     if (pVertexAttribute.compare("POSITION") == 0) return VertexAttributeKeys::POSITION;
     if (pVertexAttribute.compare("NORMAL") == 0) return VertexAttributeKeys::NORMAL;
     if (pVertexAttribute.compare("TEXCOORD_0") == 0) return VertexAttributeKeys::TEXCOORD_0;
+    std::printf("Unsupported attribute %s in gltf model!", pVertexAttribute.c_str());
 }
 
 
@@ -35,6 +36,7 @@ struct VertexBufferElement
         case GL_FLOAT:			return 4;
         case GL_UNSIGNED_INT:	return 4;
         case GL_UNSIGNED_BYTE:	return 1;
+        default:                return 0;
         }
     }
 };
