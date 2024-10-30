@@ -36,7 +36,7 @@
     <ClCompile Include="src\Viewport.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Windows.cpp">
+    <ClCompile Include="src\DKWindows.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
@@ -89,7 +89,7 @@
     <ClInclude Include="include\Viewport.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Windows.h">
+    <ClInclude Include="include\DKWindows.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Browser.h">

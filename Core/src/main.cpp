@@ -1,5 +1,5 @@
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
 #include <iostream>
 #include <mutex>
@@ -12,12 +12,12 @@
 #include "GLTFLoader.h"
 #include "Input.h"
 #include "Managers/EntityManager.h"
+#include "Physics.h"
 #include "Renderer.h"
 #include "Scene.h"
 #include "System.h"
-#include "Utils/IDUtils.h"
 #include "UI.h"
-#include "Physics.h"
+#include "Utils/IDUtils.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
