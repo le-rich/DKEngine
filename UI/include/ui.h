@@ -10,8 +10,8 @@
 #include "imgui_impl_opengl3.h"
 #include "DKWindows.h"  
 #include "MenuBar.h"  
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+
+struct GLFWwindow;
 
 class UI : public System {
 
