@@ -1,12 +1,11 @@
 #pragma once
 #include "System.h"
 #include "Buffers/UniformBuffer.h"
+#include "Window/Window.h"
 // @TODO: Remove TESTING INCLUDE
 #include "Resources/Mesh.h"
 #include "Components/Transform.h"
 
-#include "Window/Window.h"
-//#include "GLFW/include/GLFW/glfw3.h"
 
 class Renderer : public System
 {
@@ -32,8 +31,8 @@ public:
     Transform* testTransform;
     //Texture* texture;
     //Shader* testShader;
-    Window* windowRef;
     std::vector<UUIDv4::UUID> testMaterials;
+    Window* windowRef;
 
 private:
     UniformBuffer mEngineUniformBuffer;

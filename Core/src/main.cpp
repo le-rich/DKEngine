@@ -95,7 +95,6 @@ int run_glfw() {
     // TODO: Refactor to getting Scene instance
     renderer->windowRef = &window;
     renderer->testMesh = testMesh;
-    //renderer->testTextures = textures;
     renderer->testMaterials = materials;
     renderer->testTransform = CAR_TRANSFORM;
 

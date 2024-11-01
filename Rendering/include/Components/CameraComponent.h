@@ -13,7 +13,9 @@ public:
     float nearClipPlane = 0.3f;
 
     CameraComponent(Entity* mEntity);
+    CameraComponent(CameraComponent const&);
     ~CameraComponent();
+    Component* clone() override;
 private:
     glm::mat4 m_viewMatrix;
     glm::mat4 m_projectionMatrix;

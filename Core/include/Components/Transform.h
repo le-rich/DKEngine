@@ -34,7 +34,10 @@ public:
     Transform(Entity* mEntity);
     // the constructor, takes global position, orientation, scale, parent, child
     Transform(Entity* mEntity, glm::vec4 position, glm::quat orientation, float scale);
+    Transform(Transform const&);
     ~Transform();
+
+    Component* clone() override;
 
     // lock to guarantee mutual exclusion
     std::mutex mtx;

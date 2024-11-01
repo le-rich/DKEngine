@@ -12,6 +12,8 @@ class Component
 public:
     Component(Entity* mEntity);
     ~Component();
+    virtual Component* clone() = 0; // virtual copy constructor
+
 
     Entity* entity;
 

@@ -1,6 +1,7 @@
 //#include <glad/glad.h>
 #include <glm.hpp>
 
+#include "Core.h"
 #include "Managers/AssetManager.h"
 #include "Renderer.h"
 #include "Resources/Shader.h"
@@ -17,7 +18,7 @@ void Renderer::Update()
 
     glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
-   
+    auto scene = Core::getInstance().GetScene();
 
     /*Get lights
       For each light

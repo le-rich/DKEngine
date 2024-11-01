@@ -21,3 +21,9 @@ void Scene::SpawnSceneDefinition()
 
 
 }
+
+Entity* Scene::GetSceneCopy()
+{
+    Entity* cur = new Entity(*sceneRoot);
+    return cur;
+}
