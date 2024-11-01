@@ -55,6 +55,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\Resources\Asset.h" />
     <ClInclude Include="include\Buffers\IndexBuffer.h" />
     <ClInclude Include="include\Buffers\UniformBuffer.h" />
     <ClInclude Include="include\Buffers\VertexBuffer.h" />
@@ -74,6 +75,7 @@
     <ClInclude Include="include\Utils\Logger.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Resources\Asset.cpp" />
     <ClCompile Include="src\Buffers\IndexBuffer.cpp" />
     <ClCompile Include="src\Buffers\UniformBuffer.cpp" />
     <ClCompile Include="src\Buffers\VertexBuffer.cpp" />
