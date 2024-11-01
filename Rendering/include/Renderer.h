@@ -13,6 +13,8 @@ public:
     Renderer();
     ~Renderer();
 
+    void Initialize() override;
+
     void Update() override;
 
     const char* GetName() const override {

@@ -6,7 +6,7 @@
 class CameraComponent : public Component
 {
 public:
-    Transform* lookAtTarget;
+    Transform* lookAtTarget = nullptr;
 
     float fieldOfView = 90;
     float farClipPlane = 1000.0f;

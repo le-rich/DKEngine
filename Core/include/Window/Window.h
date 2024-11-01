@@ -20,6 +20,13 @@ public:
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	}
 
+	// Sets the OpenGL or OpenGL ES context of the specified window current on the calling thread.
+	// That is, only one thread can be associated with one window at a time.
+	inline void SetWindowToCurrentThread()
+	{
+		glfwMakeContextCurrent(mWindow);
+	}
+
 	// The window has two buffers, front and back.
 	// This allows us to display the front buffer while writing to the back buffer.
 	// Once rendering is done/finished writing to the back buffer, we call this function to swap the front and back buffers
@@ -28,6 +35,7 @@ public:
 	inline void SwapWindowBuffers()
 	{
 		std::lock_guard<std::mutex> lock(mMutex);
+		SetWindowToCurrentThread();
 		glfwSwapBuffers(mWindow);
 	}
 
@@ -37,26 +45,21 @@ public:
 	inline void PollEvents()
 	{
 		std::lock_guard<std::mutex> lock(mMutex);
+		SetWindowToCurrentThread();
 		glfwPollEvents();
-	}
-
-	// Sets the OpenGL or OpenGL ES context of the specified window current on the calling thread.
-	// That is, only one thread can be associated with one window at a time.
-	inline void SetWindowToCurrentThread()
-	{
-		std::lock_guard<std::mutex> lock(mMutex);
-		glfwMakeContextCurrent(mWindow);
 	}
 
 	inline void SetKeyCallback(GLFWkeyfun pCallback)
 	{
 		std::lock_guard<std::mutex> lock(mMutex);
+		SetWindowToCurrentThread();
 		glfwSetKeyCallback(mWindow, pCallback);
 	}
 
 	inline void SetMouseButtonCallback(GLFWmousebuttonfun pCallback)
 	{
 		std::lock_guard<std::mutex> lock(mMutex);
+		SetWindowToCurrentThread();
 		glfwSetMouseButtonCallback(mWindow, pCallback);
 	}
 
@@ -65,6 +68,7 @@ public:
 	inline void SetFramebufferSizeCallback()
 	{
 		std::lock_guard<std::mutex> lock(mMutex);
+		SetWindowToCurrentThread();
 		glfwSetFramebufferSizeCallback(mWindow, framebuffer_size_callback);
 	}
 
@@ -72,8 +76,8 @@ public:
 	inline int GetWidth() { return mWidth; }
 	inline int GetHeight() { return mHeight; }
 
-private:
 	std::mutex mMutex;
+private:
 
 	int mWidth, mHeight;
 	const char* mTitle;

@@ -4,7 +4,7 @@ Entity::Entity(const Entity& other)
 {
     entityID = other.entityID;
     entityDisplayName = other.entityDisplayName;
-    *transform = *other.transform;
+    transform = (Transform*)other.transform->clone();
 
     // TODO
     components.reserve(other.components.size());

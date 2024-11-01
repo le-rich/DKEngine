@@ -9,9 +9,9 @@
 
 class System
 {
-private:
+protected:
     std::atomic<bool> isActive;
-    std::thread updateThread;
+    std::thread* updateThread;
     std::mutex mutex;
 
 public:
@@ -37,9 +37,9 @@ public:
             std::lock_guard<std::mutex> lock(mutex);
             isActive = false;
         }
-        if (updateThread.joinable())
+        if (updateThread->joinable())
         {
-            updateThread.join(); // Wait for the thread to finish
+            updateThread->join(); // Wait for the thread to finish
         }
     }
 
