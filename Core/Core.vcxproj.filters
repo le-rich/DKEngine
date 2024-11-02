@@ -36,6 +36,9 @@
     <ClCompile Include="src\Utils\IDUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Managers\AssetManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Component.h">
@@ -51,9 +54,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\System.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Utils\endianness.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Utils\IDUtils.h">
@@ -77,13 +77,7 @@
     <ClInclude Include="include\Core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\fmod.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Managers\AudioManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\fmod_common.h">
+    <ClInclude Include="include\Managers\AssetManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
