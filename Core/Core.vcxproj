@@ -171,9 +171,12 @@
     <ClInclude Include="include\Components\Transform.h" />
     <ClInclude Include="include\Core.h" />
     <ClInclude Include="include\Entity.h" />
+    <ClInclude Include="include\fmod.h" />
+    <ClInclude Include="include\fmod_common.h" />
     <ClInclude Include="include\GLTFLoader.h" />
     <ClInclude Include="include\Input.h" />
     <ClInclude Include="include\Managers\AssetManager.h" />
+    <ClInclude Include="include\Managers\AudioManager.h" />
     <ClInclude Include="include\Managers\ComponentManager.h" />
     <ClInclude Include="include\Managers\EntityManager.h" />
     <ClInclude Include="include\Scene.h" />
