@@ -2,6 +2,7 @@
 #include <glm.hpp>
 
 #include "Managers/AssetManager.h"
+#include "Managers/EntityManager.h"
 #include "Renderer.h"
 #include "Resources/Shader.h"
 #include "Resources/Texture.h"
@@ -32,7 +33,10 @@ void Renderer::Update()
         );
 
     mEngineUniformBuffer.SetSubData(modelMatrix, 0);
+
     // TODO: Set camera uniform data
+    // Should Entity Manager Be Static?
+    EntityManager::getInstance().findEntitiesByComponent();
 
     /*
     Material Based:

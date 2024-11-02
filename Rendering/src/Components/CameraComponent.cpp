@@ -7,4 +7,5 @@ CameraComponent::CameraComponent(Entity* mEntity) : Component(mEntity)
 
 CameraComponent::~CameraComponent()
 {
+
 }
