@@ -154,7 +154,7 @@
     <ClCompile Include="src\MenuBar.cpp" />
     <ClCompile Include="src\UI.cpp" />
     <ClCompile Include="src\Viewport.cpp" />
-    <ClCompile Include="src\Windows.cpp" />
+    <ClCompile Include="src\DKWindows.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\External\imgui\include\imconfig.h" />
@@ -173,9 +173,9 @@
     <ClInclude Include="include\Hierarchy.h" />
     <ClInclude Include="include\Inspector.h" />
     <ClInclude Include="include\MenuBar.h" />
-    <ClInclude Include="include\ui.h" />
+    <ClInclude Include="include\UI.h" />
     <ClInclude Include="include\Viewport.h" />
-    <ClInclude Include="include\Windows.h" />
+    <ClInclude Include="include\DKWindows.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

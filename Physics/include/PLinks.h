@@ -3,7 +3,7 @@
 #define PLINK_HEADER
 
 #include "pointmass.h"
-#include "pcontacts.h"
+#include "PContacts.h"
 
 namespace AE86
 {

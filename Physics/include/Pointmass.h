@@ -2,7 +2,7 @@
 
 #define PM_HEADER
 
-#include "core.h"
+#include "Core.h"
 
 namespace AE86 {
 	/**

@@ -2,7 +2,7 @@
 
 #define PFGEN_HEADER
 
-#include "core.h"
+#include "Core.h"
 #include "pointmass.h"
 #include <vector>
 

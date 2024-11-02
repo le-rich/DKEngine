@@ -128,28 +128,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\body.h" />
-    <ClInclude Include="include\core.h" />
-    <ClInclude Include="include\fgen.h" />
-    <ClInclude Include="include\pcontacts.h" />
-    <ClInclude Include="include\plinks.h" />
-    <ClInclude Include="include\pointmass.h" />
-    <ClInclude Include="include\precision.h" />
-    <ClInclude Include="include\pfgen.h" />
-    <ClInclude Include="include\pworld.h" />
-    <ClInclude Include="include\world.h" />
-    <ClInclude Include="physics.h" />
-    <ClInclude Include="src\core.cpp" />
+    <ClInclude Include="include\Body.h" />
+    <ClInclude Include="include\Core.h" />
+    <ClInclude Include="include\FGen.h" />
+    <ClInclude Include="include\PContacts.h" />
+    <ClInclude Include="include\PLinks.h" />
+    <ClInclude Include="include\Pointmass.h" />
+    <ClInclude Include="include\Precision.h" />
+    <ClInclude Include="include\PFGen.h" />
+    <ClInclude Include="include\PWorld.h" />
+    <ClInclude Include="include\World.h" />
+    <ClInclude Include="Physics.h" />
+    <ClInclude Include="src\Core.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\body.cpp" />
-    <ClCompile Include="src\fgen.cpp" />
-    <ClCompile Include="src\pcontacts.cpp" />
-    <ClCompile Include="src\plinks.cpp" />
-    <ClCompile Include="src\pointmass.cpp" />
-    <ClCompile Include="src\pfgen.cpp" />
-    <ClCompile Include="src\pworld.cpp" />
-    <ClCompile Include="src\world.cpp" />
+    <ClCompile Include="src\Body.cpp" />
+    <ClCompile Include="src\FGen.cpp" />
+    <ClCompile Include="src\PContacts.cpp" />
+    <ClCompile Include="src\PLinks.cpp" />
+    <ClCompile Include="src\Pointmass.cpp" />
+    <ClCompile Include="src\PFGen.cpp" />
+    <ClCompile Include="src\PWorld.cpp" />
+    <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

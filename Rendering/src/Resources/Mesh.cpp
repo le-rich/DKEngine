@@ -5,6 +5,7 @@ void Mesh::Draw()
 {
     for (auto primitive : mPrimitives)
     {
-        primitive.Draw();
+        //primitive.Draw();
+        primitive.DrawWithOwnMaterial();
     }
 }
