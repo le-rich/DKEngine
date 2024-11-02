@@ -557,6 +557,31 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B50EAB63-4A3
 		External\imgui\src\imgui_widgets.cpp = External\imgui\src\imgui_widgets.cpp
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FMOD", "FMOD", "{70574CA3-632A-4DE8-8603-900BEB3DCEC3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "include", "include", "{4DD8159E-1F18-42B2-9973-7DEA8382CDD7}"
+	ProjectSection(SolutionItems) = preProject
+		External\FMOD\inc\fmod.cs = External\FMOD\inc\fmod.cs
+		External\FMOD\inc\fmod.h = External\FMOD\inc\fmod.h
+		External\FMOD\inc\fmod.hpp = External\FMOD\inc\fmod.hpp
+		External\FMOD\inc\fmod_codec.h = External\FMOD\inc\fmod_codec.h
+		External\FMOD\inc\fmod_common.h = External\FMOD\inc\fmod_common.h
+		External\FMOD\inc\fmod_dsp.cs = External\FMOD\inc\fmod_dsp.cs
+		External\FMOD\inc\fmod_dsp.h = External\FMOD\inc\fmod_dsp.h
+		External\FMOD\inc\fmod_dsp_effects.h = External\FMOD\inc\fmod_dsp_effects.h
+		External\FMOD\inc\fmod_errors.cs = External\FMOD\inc\fmod_errors.cs
+		External\FMOD\inc\fmod_errors.h = External\FMOD\inc\fmod_errors.h
+		External\FMOD\inc\fmod_output.h = External\FMOD\inc\fmod_output.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{C3B7202D-8E05-44C4-8D6A-DAD3383D864F}"
+	ProjectSection(SolutionItems) = preProject
+		External\FMOD\lib\fmod.dll = External\FMOD\lib\fmod.dll
+		External\FMOD\lib\fmodL.dll = External\FMOD\lib\fmodL.dll
+		External\FMOD\lib\fmodL_vc.lib = External\FMOD\lib\fmodL_vc.lib
+		External\FMOD\lib\fmod_vc.lib = External\FMOD\lib\fmod_vc.lib
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -625,6 +650,9 @@ Global
 		{278C44F6-3DDF-4932-944E-BA0A3CB77278} = {686626F8-3F9F-495E-A323-8787ED7222C6}
 		{4AB2EA99-6B12-4E94-BEFA-B2DC29C0C98E} = {1A9BD20B-6AA5-4C93-AF6F-36205BDCC049}
 		{B50EAB63-4A30-4B26-97ED-43FAC77C08DB} = {1A9BD20B-6AA5-4C93-AF6F-36205BDCC049}
+		{70574CA3-632A-4DE8-8603-900BEB3DCEC3} = {686626F8-3F9F-495E-A323-8787ED7222C6}
+		{4DD8159E-1F18-42B2-9973-7DEA8382CDD7} = {70574CA3-632A-4DE8-8603-900BEB3DCEC3}
+		{C3B7202D-8E05-44C4-8D6A-DAD3383D864F} = {70574CA3-632A-4DE8-8603-900BEB3DCEC3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B539A217-C268-4BB2-B1E8-624C71DE29E3}
