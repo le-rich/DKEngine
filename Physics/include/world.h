@@ -1,7 +1,7 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-#include "body.h"
+#include "Body.h"
 #include <vector>
 
 namespace AE86 {

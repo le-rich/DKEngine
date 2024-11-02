@@ -1,5 +1,5 @@
 #include <assert.h>
-#include "../include/pointmass.h"
+#include "../include/Pointmass.h"
 
 
 using namespace AE86;

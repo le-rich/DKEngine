@@ -1,5 +1,5 @@
 
-#include "../include/world.h"
+#include "../include/World.h"
 #include <iostream>
 
 namespace AE86 {

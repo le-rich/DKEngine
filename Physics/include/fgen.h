@@ -2,8 +2,8 @@
 
 #define FGEN_HEADER
 
-#include "body.h"
-#include "pfgen.h"
+#include "Body.h"
+#include "PFGen.h"
 
 namespace AE86 {
 	/** 

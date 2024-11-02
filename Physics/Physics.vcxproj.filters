@@ -15,66 +15,66 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\core.h">
+    <ClInclude Include="include\Core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\precision.h">
+    <ClInclude Include="include\Precision.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\pointmass.h">
+    <ClInclude Include="include\Pointmass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="physics.h">
+    <ClInclude Include="Physics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\pfgen.h">
+    <ClInclude Include="include\PFGen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\plinks.h">
+    <ClInclude Include="include\PLinks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\pcontacts.h">
+    <ClInclude Include="include\PContacts.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\pworld.h">
+    <ClInclude Include="include\PWorld.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\core.cpp">
+    <ClInclude Include="include\Body.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\body.h">
+    <ClInclude Include="include\FGen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\fgen.h">
+    <ClInclude Include="include\World.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\world.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="src\Core.cpp">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\pointmass.cpp">
+    <ClCompile Include="src\Pointmass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\pfgen.cpp">
+    <ClCompile Include="src\PFGen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\plinks.cpp">
+    <ClCompile Include="src\PLinks.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\pcontacts.cpp">
+    <ClCompile Include="src\PContacts.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\pworld.cpp">
+    <ClCompile Include="src\PWorld.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\body.cpp">
+    <ClCompile Include="src\Body.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\fgen.cpp">
+    <ClCompile Include="src\FGen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\world.cpp">
+    <ClCompile Include="src\World.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

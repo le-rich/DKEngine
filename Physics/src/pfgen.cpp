@@ -1,4 +1,4 @@
-#include "../include/pfgen.h"
+#include "../include/PFGen.h"
 
 using namespace AE86;
 

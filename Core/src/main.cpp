@@ -1,23 +1,23 @@
-#include <iostream>
-#include <mutex>
-#include <thread>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "Core.h"
+#include <iostream>
+#include <mutex>
+#include <thread>
+
 #include "Component.h"
+#include "Components/Transform.h"
+#include "Core.h"
 #include "Entity.h"
-#include "include/ui.h"
+#include "GLTFLoader.h"
 #include "Input.h"
 #include "Managers/EntityManager.h"
-#include "physics.h"
-#include "Scene.h"
-#include "Utils/IDUtils.h"
-
-#include "Components/Transform.h"
-#include "GLTFLoader.h"
+#include "Physics.h"
 #include "Renderer.h"
+#include "Scene.h"
 #include "System.h"
+#include "UI.h"
+#include "Utils/IDUtils.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -70,13 +70,18 @@ int run_glfw()
     Core::getInstance().SetScene(defaultScene);
     defaultScene->SpawnSceneDefinition();
 
+
     // TODO: Refactor to a Single Car Entity with Mesh and Rigidbody components
+    std::string SOURCE_FOLDER = "Assets/TestAE/"; // TODO: JSONparser for list of assets, each asset has a PATH and FILE string.
     Entity testCar;
-    tinygltf::Model gltfModel = GLTFLoader::LoadFromFile("Assets/TestAE/ae86.gltf"); // TODO: Figure out location of assets/non code files within solution
-    Mesh testMesh = GLTFLoader::LoadMesh(gltfModel, gltfModel.meshes[0]);
+    tinygltf::Model gltfModel = GLTFLoader::LoadFromFile(SOURCE_FOLDER + "ae86.gltf"); // TODO: Figure out location of assets/non code files within solution
+    std::vector<UUIDv4::UUID> textures = GLTFLoader::LoadTextures(gltfModel, SOURCE_FOLDER);
+    std::vector<UUIDv4::UUID> materials = GLTFLoader::LoadMaterials(gltfModel, textures);
+    Mesh testMesh = GLTFLoader::LoadMesh(gltfModel, gltfModel.meshes[0], materials);
     Transform* CAR_TRANSFORM = new Transform(&testCar);
     // end TODO
     EntityManager::getInstance().Instantiate(&testCar);
+
 
     UI* ui = new UI();
     Physics* physx = new Physics(CAR_TRANSFORM);
@@ -97,7 +102,11 @@ int run_glfw()
 
     // TODO: Refactor to getting Scene instance
     renderer->testMesh = testMesh;
+    //renderer->testTextures = textures;
+    renderer->testMaterials = materials;
     renderer->testTransform = CAR_TRANSFORM;
+
+    // end TODO
 
     // We want some check like this visible to the other threads
     // That way those threads will stop once the window closes. ### Has to be conditional for main thread ###
@@ -118,11 +127,11 @@ int run_glfw()
         fixedUpdateBuffer += std::chrono::duration_cast<std::chrono::milliseconds>(elapsedTime).count();
         std::cout << "COUNT: " << fixedUpdateBuffer << "\n"; // Commenting this line causes the Fixed update loop to stutter.
 
-		Input::RunInputListener();
-		glfwMakeContextCurrent(window);
-		// Rendering related calls, we can move these to the loop of the rendering thread
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		renderer->Update(); // draw tri or square
+        Input::RunInputListener();
+        glfwMakeContextCurrent(window);
+        // Rendering related calls, we can move these to the loop of the rendering thread
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        renderer->Update(); // draw tri or square
 
         // The window has two buffers, front and back.
         // This allows us to display the front buffer while writing to the back buffer.
@@ -156,13 +165,14 @@ int run_glfw()
             //CAR_TRANSFORM->mtx.unlock();
         }
 
-		for (auto system : systems) {
-			system->Update();
-		}
+        for (auto system : systems)
+        {
+            system->Update();
+        }
 
-		//REMOVE THIS LATER. Above loops are never getting entered so UI update was never getting called. Remove this line below when fixed.
-		ui->Update();
-	}
+        //REMOVE THIS LATER. Above loops are never getting entered so UI update was never getting called. Remove this line below when fixed.
+        ui->Update();
+    }
 
     // Destroys library, may cause race condition if it gets destroyed while other threads are using it.
     glfwTerminate();

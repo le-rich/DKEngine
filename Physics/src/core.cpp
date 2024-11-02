@@ -1,4 +1,4 @@
-#include "../include/core.h"
+#include "../include/Core.h"
 
 namespace AE86 {
 
