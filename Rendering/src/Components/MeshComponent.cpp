@@ -7,7 +7,10 @@ MeshComponent::MeshComponent(Entity *mEntity) : Component(mEntity)
 
 MeshComponent::~MeshComponent() {}
 
-void MeshComponent::setMesh(Mesh *mesh) {}
+void MeshComponent::setMesh(Mesh *mesh) 
+{
+    this->mesh = mesh;
+}
 
 Mesh* MeshComponent::getMesh() {
     return this->mesh;
