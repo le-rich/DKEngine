@@ -9,7 +9,14 @@
 #include <iostream>
 #include <cstdlib>
 
-Renderer::Renderer() {}
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
+Renderer::Renderer(GLFWwindow* window)
+{
+    m_Window = window;
+}
+
 Renderer::~Renderer() {}
 
 void Renderer::Initialize() {
@@ -53,16 +60,21 @@ void Renderer::Update()
 
     mEngineUniformBuffer.SetSubData(modelMatrix, 0);
 
-    // TODO: Set camera uniform data
+
+    // CAMERA =====================
     Transform* cameraTransform = dynamic_cast<Transform*>(mainCameraEntity->getComponent(ComponentType::Transform));
     CameraComponent* cameraComponent = dynamic_cast<CameraComponent*>(mainCameraEntity->getComponent(ComponentType::Camera));
 
-    // Get VIEW MATRIX based on camera here.
     if (cameraTransform != nullptr && cameraComponent != nullptr){
-       cameraComponent->calculateViewMatrix();
-       cameraComponent->calculateViewMatrix();
+        // Update Aspect Ratio if the window has resized
+        int width, height;
+        glfwGetWindowSize(m_Window, &width, &height);
+        cameraComponent->updateAspectRatio(width, height);
 
+        cameraComponent->calculateViewMatrix(cameraTransform);
+        cameraComponent->calculateProjectionMatrix();
     }
+    // ============================
 
     /*
     Material Based:
@@ -78,6 +90,14 @@ void Renderer::Update()
 
      // Kinda okay methodology
      //TODO: Replace with Scene based or Material based Draw
+    
+    auto meshComponentUUIDs = EntityManager::getInstance().findEntitiesByComponent(ComponentType::Mesh);
+    
+    for (auto& uuid : meshComponentUUIDs) 
+    {
+        auto entity = EntityManager::getInstance().getEntity(uuid);
+        MeshComponent* meshComponent = dynamic_cast<MeshComponent*>(entity->getComponent(ComponentType::Mesh));
+    }
     testMesh.Draw();
 
 

@@ -13,7 +13,8 @@ enum class ComponentType : uint8_t {
     None = 0,
     Transform, 
     Camera, 
-    Count,
+    Mesh,
+    Count, // This needs to be last. It represents how many components there are for bitmask.
 };
 
 // Defines a type - Component Mask - that is a bitmask of components on an entity. Used for querying.

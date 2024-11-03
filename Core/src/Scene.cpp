@@ -20,5 +20,5 @@ void Scene::SpawnSceneDefinition()
     cameraEntity->SetDisplayName("Main Camera");
     EntityManager::getInstance().Instantiate(cameraEntity);
 
-
+    sceneRoot->addChild(cameraEntity);
 }

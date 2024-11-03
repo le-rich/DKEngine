@@ -1,5 +1,7 @@
 #include "Components/CameraComponent.h"
 
+#include <glad/glad.h>
+
 CameraComponent::CameraComponent(Entity* mEntity) : Component(mEntity)
 {
 
@@ -21,9 +23,14 @@ void CameraComponent::calculateViewMatrix(Transform* transform)
 
 void CameraComponent::calculateProjectionMatrix() 
 {
-    this->m_projectionMatrix = glm::perspective(glm::radians(fieldOfView), )    
+    this->m_projectionMatrix = glm::perspective(glm::radians(fieldOfView), aspectRatio, nearClipPlane, farClipPlane);    
 }
 
-glm::mat4 CameraComponent::getViewMatrix() { return glm::mat4(); }
+void CameraComponent::updateAspectRatio(int width, int height) 
+{
+   this-> aspectRatio = static_cast<float>(width) / static_cast<float>(height);
+}
 
-glm::mat4 CameraComponent::getProjectionMatrix() { return glm::mat4(); }
+glm::mat4 CameraComponent::getViewMatrix() { return m_viewMatrix; }
+
+glm::mat4 CameraComponent::getProjectionMatrix() { return m_projectionMatrix; }

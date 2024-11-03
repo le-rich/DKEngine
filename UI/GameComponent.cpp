@@ -1,11 +1,11 @@
 #include "GameComponent.h"
 
 // Constructor definition
-GameComponent::GameComponent(ComponentType type, const std::string& name)
+GameComponent::GameComponent(DebugComponentType type, const std::string& name)
     : type(type), name(name) {}
 
 // Get the type of the component
-ComponentType GameComponent::getType() const {
+DebugComponentType GameComponent::getType() const {
     return type;
 }
 

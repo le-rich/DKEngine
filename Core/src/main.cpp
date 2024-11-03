@@ -85,7 +85,7 @@ int run_glfw()
 
     UI* ui = new UI();
     Physics* physx = new Physics(CAR_TRANSFORM);
-    Renderer* renderer = new Renderer();
+    Renderer* renderer = new Renderer(window);
 
     Core::getInstance().AddSystem(ui);
     Core::getInstance().AddSystem(physx);
