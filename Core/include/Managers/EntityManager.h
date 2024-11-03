@@ -134,11 +134,9 @@ public:
             {
                 return uuid;
             }
-            else {
-                std::cerr << "Error: Entity with display name " << displayName << " not found in the map." << std::endl;
-                return nullptr;
-            }
         }
+
+        return nullptr;
     }
 
     // clean and remove entity from the tree

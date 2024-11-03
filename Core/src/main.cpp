@@ -9,7 +9,6 @@
 #include "Components/Transform.h"
 #include "Core.h"
 #include "Entity.h"
-#include "GLTFLoader.h"
 #include "Input.h"
 #include "Managers/EntityManager.h"
 #include "Physics.h"
@@ -71,17 +70,10 @@ int run_glfw()
     defaultScene->SpawnSceneDefinition();
 
 
-    // TODO: Refactor to a Single Car Entity with Mesh and Rigidbody components
-    std::string SOURCE_FOLDER = "Assets/TestAE/"; // TODO: JSONparser for list of assets, each asset has a PATH and FILE string.
-    Entity testCar;
-    tinygltf::Model gltfModel = GLTFLoader::LoadFromFile(SOURCE_FOLDER + "ae86.gltf"); // TODO: Figure out location of assets/non code files within solution
-    std::vector<UUIDv4::UUID> textures = GLTFLoader::LoadTextures(gltfModel, SOURCE_FOLDER);
-    std::vector<UUIDv4::UUID> materials = GLTFLoader::LoadMaterials(gltfModel, textures);
-    Mesh testMesh = GLTFLoader::LoadMesh(gltfModel, gltfModel.meshes[0], materials);
-    Transform* CAR_TRANSFORM = new Transform(&testCar);
-    // end TODO
-    EntityManager::getInstance().Instantiate(&testCar);
+    auto testCarUUID = EntityManager::getInstance().findFirstEntityByDisplayName("Test Car");
+    Entity* testCarEntity = EntityManager::getInstance().getEntity(testCarUUID);
 
+    Transform* CAR_TRANSFORM = testCarEntity->transform;
 
     UI* ui = new UI();
     Physics* physx = new Physics(CAR_TRANSFORM);
@@ -101,9 +93,9 @@ int run_glfw()
     auto previousTime = std::chrono::high_resolution_clock::now();
 
     // TODO: Refactor to getting Scene instance
-    renderer->testMesh = testMesh;
-    //renderer->testTextures = textures;
-    renderer->testMaterials = materials;
+    // renderer->testMesh = testMesh;
+    // renderer->testTextures = textures;
+    // renderer->testMaterials = materials;
     renderer->testTransform = CAR_TRANSFORM;
 
     // end TODO

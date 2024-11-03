@@ -1,8 +1,8 @@
-#include <glm.hpp>
+#include "Renderer.h"
 
+#include "Components/MeshComponent.h"
 #include "Managers/AssetManager.h"
 #include "Managers/EntityManager.h"
-#include "Renderer.h"
 #include "Resources/Shader.h"
 #include "Resources/Texture.h"
 
@@ -11,6 +11,7 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm.hpp>
 
 Renderer::Renderer(GLFWwindow* window)
 {
@@ -62,16 +63,15 @@ void Renderer::Update()
 
 
     // CAMERA =====================
-    Transform* cameraTransform = dynamic_cast<Transform*>(mainCameraEntity->getComponent(ComponentType::Transform));
     CameraComponent* cameraComponent = dynamic_cast<CameraComponent*>(mainCameraEntity->getComponent(ComponentType::Camera));
 
-    if (cameraTransform != nullptr && cameraComponent != nullptr){
+    if (cameraComponent != nullptr){
         // Update Aspect Ratio if the window has resized
         int width, height;
         glfwGetWindowSize(m_Window, &width, &height);
         cameraComponent->updateAspectRatio(width, height);
 
-        cameraComponent->calculateViewMatrix(cameraTransform);
+        cameraComponent->calculateViewMatrix(cameraComponent->entity->transform);
         cameraComponent->calculateProjectionMatrix();
     }
     // ============================
@@ -91,15 +91,26 @@ void Renderer::Update()
      // Kinda okay methodology
      //TODO: Replace with Scene based or Material based Draw
     
+
+    // MESHES ============================
     auto meshComponentUUIDs = EntityManager::getInstance().findEntitiesByComponent(ComponentType::Mesh);
     
     for (auto& uuid : meshComponentUUIDs) 
     {
         auto entity = EntityManager::getInstance().getEntity(uuid);
         MeshComponent* meshComponent = dynamic_cast<MeshComponent*>(entity->getComponent(ComponentType::Mesh));
-    }
-    testMesh.Draw();
 
+        if (meshComponent != nullptr)
+        {
+            // glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), entity->transform->getWorldPosition()) *
+            //                        glm::mat4_cast(entity->transform->getWorldOrientation()) *
+            //                        glm::scale(glm::mat4(1.0f), entity->transform->getWorldScale());
+            
+            meshComponent->getMesh()->Draw();
+        }
+    }
+
+    // ===================================
 
     /*Perform Post Processing
       Draw Frame Buffer*/

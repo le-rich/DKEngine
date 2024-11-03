@@ -4,7 +4,7 @@
 
 CameraComponent::CameraComponent(Entity* mEntity) : Component(mEntity)
 {
-
+    this->componentType = ComponentType::Camera;
 }
 
 CameraComponent::~CameraComponent()

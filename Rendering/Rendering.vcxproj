@@ -61,6 +61,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\Components\MeshComponent.h" />
     <ClInclude Include="include\Resources\Asset.h" />
     <ClInclude Include="include\Buffers\IndexBuffer.h" />
     <ClInclude Include="include\Buffers\UniformBuffer.h" />
@@ -81,6 +82,7 @@
     <ClInclude Include="include\Utils\Logger.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Components\MeshComponent.cpp" />
     <ClCompile Include="src\Resources\Asset.cpp" />
     <ClCompile Include="src\Buffers\IndexBuffer.cpp" />
     <ClCompile Include="src\Buffers\UniformBuffer.cpp" />
