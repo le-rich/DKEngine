@@ -17,6 +17,7 @@ Scene::~Scene()
 void Scene::SpawnSceneDefinition()
 {
     CameraEntity* cameraEntity = new CameraEntity();
+    cameraEntity->SetDisplayName("Main Camera");
     EntityManager::getInstance().Instantiate(cameraEntity);
 
 

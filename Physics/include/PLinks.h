@@ -47,6 +47,40 @@ namespace AE86
 
 		virtual unsigned addContact(PointMassContact* contact, unsigned limit) const;
 	};
+
+	class PointMassConstraint : public PointMassContactGenerator
+	{
+	public:
+		PointMass* pointMass;
+
+		Vector3 anchor;
+
+	protected:
+		real currentLength() const;
+
+	public:
+		virtual unsigned addContact(PointMassContact* contact, unsigned limit) const = 0;
+	};
+
+	class PointMassCableConstraint : public PointMassConstraint
+	{
+	public:
+		real maxLength;
+
+		real restitution;
+
+	public:
+		virtual unsigned addContact(PointMassContact* contact, unsigned limit) const;
+	};
+
+	class PointMassRodConstraint : public PointMassConstraint
+	{
+	public:
+		real length;
+
+	public:
+		virtual unsigned addContact(PointMassContact* contact, unsigned limit) const;
+	};
 }
 
 #endif
