@@ -557,6 +557,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B50EAB63-4A3
 		External\imgui\src\imgui_widgets.cpp = External\imgui\src\imgui_widgets.cpp
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game", "Game\Game.vcxproj", "{C1F31546-8124-4CF0-9E35-E3D8A67B44BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -597,6 +599,14 @@ Global
 		{2E825CB0-DE55-4F0B-A560-9548A33442A0}.Release|x64.Build.0 = Release|x64
 		{2E825CB0-DE55-4F0B-A560-9548A33442A0}.Release|x86.ActiveCfg = Release|Win32
 		{2E825CB0-DE55-4F0B-A560-9548A33442A0}.Release|x86.Build.0 = Release|Win32
+		{C1F31546-8124-4CF0-9E35-E3D8A67B44BF}.Debug|x64.ActiveCfg = Debug|x64
+		{C1F31546-8124-4CF0-9E35-E3D8A67B44BF}.Debug|x64.Build.0 = Debug|x64
+		{C1F31546-8124-4CF0-9E35-E3D8A67B44BF}.Debug|x86.ActiveCfg = Debug|Win32
+		{C1F31546-8124-4CF0-9E35-E3D8A67B44BF}.Debug|x86.Build.0 = Debug|Win32
+		{C1F31546-8124-4CF0-9E35-E3D8A67B44BF}.Release|x64.ActiveCfg = Release|x64
+		{C1F31546-8124-4CF0-9E35-E3D8A67B44BF}.Release|x64.Build.0 = Release|x64
+		{C1F31546-8124-4CF0-9E35-E3D8A67B44BF}.Release|x86.ActiveCfg = Release|Win32
+		{C1F31546-8124-4CF0-9E35-E3D8A67B44BF}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
