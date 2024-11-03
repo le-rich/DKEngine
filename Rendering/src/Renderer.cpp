@@ -1,13 +1,33 @@
-//#include <glad/glad.h>
 #include <glm.hpp>
 
 #include "Managers/AssetManager.h"
+#include "Managers/EntityManager.h"
 #include "Renderer.h"
 #include "Resources/Shader.h"
 #include "Resources/Texture.h"
 
+#include <iostream>
+#include <cstdlib>
+
 Renderer::Renderer() {}
 Renderer::~Renderer() {}
+
+void Renderer::Initialize() {
+    System::Initialize(); 
+
+    // Get Camera if it exists
+    auto mainCameraUUID = EntityManager::getInstance().findFirstEntityByDisplayName("Main Camera");
+    auto mainCamera = EntityManager::getInstance().getEntity(mainCameraUUID);
+    if (mainCamera != nullptr) {
+        this->mainCameraEntity = mainCamera;
+    } 
+    else 
+    {
+        std::cerr << "Error: Main Camera not found. The program will now exit." << std::endl;
+        std::cin.get();
+        std::exit(EXIT_FAILURE);  // Terminate program with failure status
+    }
+}
 
 void Renderer::Update()
 {
@@ -33,6 +53,15 @@ void Renderer::Update()
 
     mEngineUniformBuffer.SetSubData(modelMatrix, 0);
     // TODO: Set camera uniform data
+    Transform* cameraTransform = dynamic_cast<Transform*>(mainCameraEntity->getComponent(ComponentType::Transform));
+    CameraComponent* cameraComponent = dynamic_cast<CameraComponent*>(mainCameraEntity->getComponent(ComponentType::Camera));
+
+    // Get VIEW MATRIX based on camera here.
+    if (cameraTransform != nullptr && cameraComponent != nullptr){
+       cameraComponent->calculateViewMatrix();
+       cameraComponent->calculateViewMatrix();
+
+    }
 
     /*
     Material Based:
@@ -55,6 +84,10 @@ void Renderer::Update()
       Draw Frame Buffer*/
 
       // Swap window buffers. can be moved to post update
+}
+
+void Renderer::FixedUpdate() {
+    
 }
 
 

@@ -154,15 +154,7 @@ int run_glfw()
         while (fixedUpdateBuffer >= FIXED_UPDATE_INTERVAL)
         {
             physx->FixedUpdate();
-            /*	for (auto system : systems) {
-                    system->FixedUpdate();
-                }*/
-
             fixedUpdateBuffer -= FIXED_UPDATE_INTERVAL;
-            //CAR_TRANSFORM->mtx.lock();
-            //glm::vec3 carPos = CAR_TRANSFORM->getLocalPosition();
-            //std::cout << "MAIN LOOP - CAR TRANSFORM POSITION: " << carPos.x << ", " << carPos.y << ", " << carPos.z << "\n";
-            //CAR_TRANSFORM->mtx.unlock();
         }
 
         for (auto system : systems)
@@ -170,7 +162,7 @@ int run_glfw()
             system->Update();
         }
 
-        //REMOVE THIS LATER. Above loops are never getting entered so UI update was never getting called. Remove this line below when fixed.
+        //@TODO: REMOVE THIS LATER. Above loops are never getting entered so UI update was never getting called. Remove this line below when fixed.
         ui->Update();
     }
 
