@@ -558,6 +558,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B50EAB63-4A3
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game", "Game\Game.vcxproj", "{C1F31546-8124-4CF0-9E35-E3D8A67B44BF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6830DF2E-2DA1-4BF7-B475-6C45523DED54} = {6830DF2E-2DA1-4BF7-B475-6C45523DED54}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

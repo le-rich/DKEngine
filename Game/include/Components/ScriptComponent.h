@@ -1,10 +1,15 @@
+#pragma once
 #include "Script.h"
 
 #include <vector>
 #include <memory>
 
-class ScriptComponent {
+class ScriptComponent : public Component {
 public:
+
+    ScriptComponent(Entity* mEntity) : Component(mEntity) {}
+    ~ScriptComponent();
+
     template<typename T, typename...Args>
     void AddScript(Args&&... args) {
         scripts.emplace_back(std::make_unique<T>(std::forward<Args>(args)...));
