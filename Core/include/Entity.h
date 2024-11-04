@@ -161,6 +161,11 @@ public:
     // add a child entity
     void addChild(Entity* child)
     {
+       for (Entity* e : children) {
+          if (e == child) {
+             return;
+          }
+       }
         children.push_back(child);
         child->parent = this;
     }

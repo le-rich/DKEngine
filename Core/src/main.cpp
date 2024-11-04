@@ -76,7 +76,7 @@ int run_glfw()
 
     Transform* CAR_TRANSFORM = testCarEntity->transform;
 
-    UI* ui = new UI();
+    UI* ui = new UI(Core::getInstance().GetScene());
     Physics* physx = new Physics(CAR_TRANSFORM);
     Renderer* renderer = new Renderer(window);
     Game* game = new Game();

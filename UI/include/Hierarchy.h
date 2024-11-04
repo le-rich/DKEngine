@@ -7,11 +7,11 @@
 #include <vector>
 #include <memory>  // Use smart pointers for safe memory management
 #include "../GameObject.h"
-//#include "Entity.h"
+#include "Entity.h"
+#include "Scene.h"
 
-void drawHierarchyLine(GameObject* obj);
-void drawHierarchy();
-GameObject* getSelectedGameObject();
-std::string getNextRootObjectName();
-extern std::vector<GameObject*> gameObjects;
+void drawHierarchyLine(Entity* entity);
+void drawHierarchy(Scene* s);
+Entity* getSelectedEntity();
+//std::string getNextRootObjectName();
 #endif

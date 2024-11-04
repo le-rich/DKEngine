@@ -119,7 +119,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>/include;$(SolutionDir)/Rendering/include;</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\glm\gtc;$(SolutionDir)External\;$(SolutionDir)External\GLFW\x64\include;$(SolutionDir)External\glad\include;$(SolutionDir)External\tinygltf;$(SolutionDir)Core\include\;$(SolutionDir)Game\;$(SolutionDir)UI\include;$(SolutionDir)Rendering\;$(SolutionDir)Physics\;$(SolutionDir)External\glm;$(SolutionDir)External\stb;$(SolutionDir)External\imgui\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\glm\gtc;$(SolutionDir)External\;$(SolutionDir)External\GLFW\x64\include;$(SolutionDir)External\glad\include;$(SolutionDir)External\tinygltf;$(SolutionDir)Core\include\;$(SolutionDir)Game\include\scripts;$(SolutionDir)Game\include\;$(SolutionDir)UI\include;$(SolutionDir)Rendering\;$(SolutionDir)Physics\;$(SolutionDir)External\glm;$(SolutionDir)External\stb;$(SolutionDir)External\imgui\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

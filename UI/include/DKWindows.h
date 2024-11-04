@@ -9,5 +9,6 @@
 #include "Hierarchy.h"
 #include "Inspector.h"
 #include "Viewport.h"
-void createImGuiWindows();
+#include "Scene.h"
+void createImGuiWindows(Scene* s);
 
