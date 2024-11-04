@@ -5,7 +5,7 @@
 #include "Component.h"
 #include <glm.hpp>
 #include <gtc/type_ptr.hpp>
-#include <quaternion.hpp>
+#include <gtc/quaternion.hpp>
 
 void drawInspector() {
    //Get object information and display

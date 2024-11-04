@@ -4,7 +4,7 @@
 #include "Component.h"
 
 #include <glm.hpp>
-#include <quaternion.hpp>
+#include <gtc/quaternion.hpp>
 #include <mutex>
 
 class Entity;
