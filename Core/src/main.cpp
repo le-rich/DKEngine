@@ -127,6 +127,7 @@ int run_glfw()
         glfwMakeContextCurrent(window);
         // Rendering related calls, we can move these to the loop of the rendering thread
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glEnable(GL_DEPTH_TEST);
         renderer->Update(deltaTimeFloatSeconds); // draw tri or square
         game->Update(deltaTimeFloatSeconds);
 
