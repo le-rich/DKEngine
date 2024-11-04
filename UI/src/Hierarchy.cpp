@@ -1,6 +1,5 @@
 #include "../include/Hierarchy.h"
 #include "../include/Console.h"
-#include "../GameObject.h"
 #include "Scene.h"
 #include "Entity.h"
 #include <set> // Include for std::set

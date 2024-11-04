@@ -145,8 +145,6 @@
     <ClCompile Include="..\External\imgui\src\imgui_impl_opengl3.cpp" />
     <ClCompile Include="..\External\imgui\src\imgui_tables.cpp" />
     <ClCompile Include="..\External\imgui\src\imgui_widgets.cpp" />
-    <ClCompile Include="GameComponent.cpp" />
-    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="src\Browser.cpp" />
     <ClCompile Include="src\Console.cpp" />
     <ClCompile Include="src\Hierarchy.cpp" />
@@ -166,8 +164,6 @@
     <ClInclude Include="..\External\imgui\include\imstb_rectpack.h" />
     <ClInclude Include="..\External\imgui\include\imstb_textedit.h" />
     <ClInclude Include="..\External\imgui\include\imstb_truetype.h" />
-    <ClInclude Include="GameComponent.h" />
-    <ClInclude Include="GameObject.h" />
     <ClInclude Include="include\Browser.h" />
     <ClInclude Include="include\Console.h" />
     <ClInclude Include="include\Hierarchy.h" />
