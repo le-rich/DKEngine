@@ -119,20 +119,6 @@ void drawHierarchy(Scene* s) {
        drawHierarchyLine(rootEntity);
     }
 
-    // Create a new GameObject on right-click
-    //if (ImGui::BeginPopupContextWindow()) {
-    //    if (ImGui::MenuItem("New GameObject")) {
-    //        std::string rootName = getNextRootObjectName();
-    //        GameObject* newObject = new GameObject(rootName); // Default name
-    //        gameObjects.emplace_back(newObject);
-    //        selectedGameObject = newObject; // Select newly created object
-    //        consoleLog("Created New GameObject: " + newObject->getName() + " with ID: " + std::to_string(reinterpret_cast<uintptr_t>(newObject)));
-    //        
-    //    }
-
-    //    ImGui::EndPopup();
-    //}
-
     ImGui::End();
 }
 
@@ -140,25 +126,3 @@ void drawHierarchy(Scene* s) {
 Entity* getSelectedEntity() {
     return selectedEntity;
 }
-
-
-//std::string getNextRootObjectName() {
-//    int count = 0;
-//    std::string baseName = "GameObject";
-//    std::string newName = baseName;
-//
-//    // Count how many root objects have the name "GameObject", "GameObject(1)", etc.
-//    for (const auto* rootObject : gameObjects) {
-//        const std::string& rootName = rootObject->getName();
-//        if (rootName == baseName || (rootName.find(baseName + "(") == 0 && rootName.back() == ')')) {
-//            count++;
-//        }
-//    }
-//
-//    // Append the number if count > 0 (e.g., "GameObject(1)", "GameObject(2)")
-//    if (count > 0) {
-//        newName = baseName + "(" + std::to_string(count) + ")";
-//    }
-//
-//    return newName;
-//}
