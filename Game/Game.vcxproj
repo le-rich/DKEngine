@@ -27,13 +27,13 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -110,7 +110,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)UI\include;$(SolutionDir)Rendering\include;$(SolutionDir)Physics\include;$(SolutionDir)Core\include;$(SolutionDir)Game\include;$(SolutionDir)Game\include\Scripts\include;$(SolutionDir)Game\include\Scenes\include;$(IncludePath);$(SolutionDir)External\stb;$(SolutionDir)External\glm\gtc;$(SolutionDir)External\glm;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\glad\include;$(SolutionDir)Rendering\include\Utils;$(SolutionDir)Rendering\include\Resources;$(SolutionDir)Rendering\include\Entities;$(SolutionDir)Rendering\include\Data;$(SolutionDir)Rendering\include\Components;$(SolutionDir)Rendering\include\Buffers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)UI\include;$(SolutionDir)Rendering\include;$(SolutionDir)Physics\include;$(SolutionDir)Core\include;$(SolutionDir)Game\include;$(IncludePath);$(SolutionDir)External\stb;$(SolutionDir)External\glm\gtc;$(SolutionDir)External\glm;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\glad\include;$(SolutionDir)Rendering\include\Utils;$(SolutionDir)Rendering\include\Resources;$(SolutionDir)Rendering\include\Entities;$(SolutionDir)Rendering\include\Data;$(SolutionDir)Rendering\include\Components;$(SolutionDir)Rendering\include\Buffers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -126,7 +126,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)UI\include;$(SolutionDir)Rendering\include;$(SolutionDir)Physics\include;$(SolutionDir)Core\include;$(SolutionDir)Game\include;$(SolutionDir)Game\include\Scripts\include;$(SolutionDir)Game\include\Scenes\include;$(IncludePath);$(SolutionDir)External\stb;$(SolutionDir)External\glm\gtc;$(SolutionDir)External\glm;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\glad\include;$(SolutionDir)Rendering\include\Utils;$(SolutionDir)Rendering\include\Resources;$(SolutionDir)Rendering\include\Entities;$(SolutionDir)Rendering\include\Data;$(SolutionDir)Rendering\include\Components;$(SolutionDir)Rendering\include\Buffers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)UI\include;$(SolutionDir)Rendering\include;$(SolutionDir)Physics\include;$(SolutionDir)Core\include;$(SolutionDir)Game\include;$(IncludePath);$(SolutionDir)External\stb;$(SolutionDir)External\glm\gtc;$(SolutionDir)External\glm;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\glad\include;$(SolutionDir)Rendering\include\Utils;$(SolutionDir)Rendering\include\Resources;$(SolutionDir)Rendering\include\Entities;$(SolutionDir)Rendering\include\Data;$(SolutionDir)Rendering\include\Components;$(SolutionDir)Rendering\include\Buffers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

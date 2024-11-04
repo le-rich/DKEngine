@@ -1,13 +1,16 @@
 #pragma once
 #include "Script.h"
 
+class Component;
+class Entity;
+
 #include <vector>
 #include <memory>
 
 class ScriptComponent : public Component {
 public:
 
-    ScriptComponent(Entity* mEntity) : Component(mEntity) {}
+    ScriptComponent(Entity* mEntity);
     ~ScriptComponent();
 
     template<typename T, typename...Args>

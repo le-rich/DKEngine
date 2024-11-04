@@ -4,6 +4,8 @@
 #include "GLTFLoader.h"
 #include "Managers/EntityManager.h"
 #include "Components/MeshComponent.h"
+#include "Components/ScriptComponent.h"
+#include "OrbitScript.h"
 
 Scene::Scene()
 {
@@ -41,6 +43,11 @@ void Scene::SpawnSceneDefinition()
     testCar->addComponent(*meshComponent);
 
     // end TODO
+
+    ScriptComponent* carScriptComponent = new ScriptComponent(testCar);
+    OrbitScript* orbitScript = new OrbitScript(testCar);
+    orbitScript->setOrbitTarget(testCar->transform);
+
 
     EntityManager::getInstance().Instantiate(testCar);
 }
