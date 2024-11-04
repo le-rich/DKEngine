@@ -115,8 +115,8 @@ int run_glfw()
             physx->body->addForce(AE86::Vector3(1.0, 0.0, 0.0));
 
         auto currentTime = std::chrono::high_resolution_clock::now();
-        auto deltaTime = currentTime - previousTime;
-        auto deltaTimeFloatSeconds = std::chrono::duration<float>(deltaTime).count();
+        std::chrono::duration<float> deltaTime = currentTime - previousTime;
+        auto deltaTimeFloatSeconds = deltaTime.count();
 
         previousTime = currentTime;
 
@@ -128,6 +128,7 @@ int run_glfw()
         // Rendering related calls, we can move these to the loop of the rendering thread
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         renderer->Update(deltaTimeFloatSeconds); // draw tri or square
+        game->Update(deltaTimeFloatSeconds);
 
         // The window has two buffers, front and back.
         // This allows us to display the front buffer while writing to the back buffer.

@@ -22,7 +22,6 @@ void Scene::SpawnSceneDefinition()
 {
     CameraEntity* cameraEntity = new CameraEntity();
     cameraEntity->SetDisplayName("Main Camera");
-    EntityManager::getInstance().Instantiate(cameraEntity);
 
     sceneRoot->addChild(cameraEntity);
 
@@ -41,13 +40,15 @@ void Scene::SpawnSceneDefinition()
     meshComponent->setMesh(testMesh);
 
     testCar->addComponent(*meshComponent);
-
+    EntityManager::getInstance().Instantiate(testCar);
     // end TODO
 
-    ScriptComponent* carScriptComponent = new ScriptComponent(testCar);
-    OrbitScript* orbitScript = new OrbitScript(testCar);
+    ScriptComponent* cameraScriptComponent = new ScriptComponent(cameraEntity);
+    OrbitScript* orbitScript = new OrbitScript(cameraEntity);
     orbitScript->setOrbitTarget(testCar->transform);
 
+    cameraScriptComponent->AddScript<OrbitScript>(*orbitScript);
+    cameraEntity->addComponent(*cameraScriptComponent);
+    EntityManager::getInstance().Instantiate(cameraEntity);
 
-    EntityManager::getInstance().Instantiate(testCar);
 }
