@@ -17,8 +17,8 @@ public:
 private:
     Transform* m_OrbitTarget = nullptr;
 
-    float m_Radius = 5;
-    float m_Speed = 2;
+    float m_Radius = 2;
+    float m_Speed = 1.5f;
 
     float currentAngle = 0;
 };

@@ -22,6 +22,7 @@ void Scene::SpawnSceneDefinition()
 {
     CameraEntity* cameraEntity = new CameraEntity();
     cameraEntity->SetDisplayName("Main Camera");
+    cameraEntity->transform->setWorldPosition(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
 
     sceneRoot->addChild(cameraEntity);
 
