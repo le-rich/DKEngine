@@ -187,11 +187,11 @@ namespace GLTFLoader
     /*
     * Returns mesh
     */
-    static Mesh LoadMesh(tinygltf::Model pGltfModel, tinygltf::Mesh pMesh, std::vector<UUIDv4::UUID>& materials)
+    static Mesh* LoadMesh(tinygltf::Model pGltfModel, tinygltf::Mesh pMesh, std::vector<UUIDv4::UUID>& materials)
     {
-        Mesh mesh;
+        Mesh* mesh = new Mesh();
         for (tinygltf::Primitive const& primitive : pMesh.primitives)
-            mesh.AddPrimitive(ProcessPrimitive(pGltfModel, primitive, materials));
+            mesh->AddPrimitive(ProcessPrimitive(pGltfModel, primitive, materials));
         return mesh;
     }
 

@@ -3,8 +3,8 @@
 #include "Component.h"
 #include "Entity.h"
 
-#include <../glm/glm.hpp>
-#include<glm/gtc/quaternion.hpp>
+#include <glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 Transform::Transform(Entity* mEntity) :Component(mEntity), localPosition(0.0f, 0.0f, 0.0f),
 localOrientation(1.0f, 0.0f, 0.0f, 0.0f),
@@ -59,7 +59,7 @@ void Transform::lookAt(Transform* target) {}
 
 glm::vec3 Transform::getWorldPosition()
 {
-    return transformMatrix * glm::vec4(localPosition, 1.0);
+    return glm::vec3(transformMatrix * glm::vec4(localPosition, 1.0));
 }
 
 glm::quat Transform::getWorldOrientation()
@@ -93,7 +93,7 @@ void Transform::setLocalOrientation(glm::quat orientation)
     localOrientation.z = orientation.z;
 }
 
-void Transform::setWorldSpacePosition(glm::vec4 position)
+void Transform::setWorldPosition(glm::vec4 position)
 {
     glm::vec4 localUpdate = transformMatrix * position;
 
@@ -101,15 +101,19 @@ void Transform::setWorldSpacePosition(glm::vec4 position)
     localPosition.y = localUpdate.y;
     localPosition.z = localUpdate.z;
 
+    localPosition = glm::vec3(localUpdate);
+
 }
 
-void Transform::setWorldSpaceOrientation(glm::quat orientation)
+void Transform::setWorldOrientation(glm::quat orientation)
 {
     // TODO: flesh out later when making scene graph
     localOrientation.w = orientation.w;
     localOrientation.x = orientation.x;
     localOrientation.y = orientation.y;
     localOrientation.z = orientation.z;
+
+    localOrientation = orientation;
 }
 
 glm::vec3 Transform::getWorldScale()

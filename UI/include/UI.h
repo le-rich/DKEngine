@@ -23,7 +23,7 @@ public:
         return "UI";
     }
 
-    void Update() override;
+    void Update(float deltaTime) override;
 
     void FixedUpdate() override {
         // Update Loop logic here

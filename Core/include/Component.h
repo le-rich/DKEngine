@@ -1,22 +1,38 @@
 #pragma once
 
-#include <Utils/IDUtils.h>
+#include "Utils/IDUtils.h"
+
+#include <bitset>
 #include <string>
 
 class Entity;
 class Transform;
+
+// An Enum registry of Components. Annoying to have to keep track, but necessary for querying the entity tree.
+enum class ComponentType : uint8_t {
+    None = 0,
+    Transform, 
+    Camera, 
+    Mesh,
+    Script,
+    Count, // This needs to be last. It represents how many components there are for bitmask.
+};
+
+// Defines a type - Component Mask - that is a bitmask of components on an entity. Used for querying.
+using ComponentMask = std::bitset<static_cast<size_t>(ComponentType::Count)>;
 
 class Component
 {
 
 public:
     Component(Entity* mEntity);
-    ~Component();
+    virtual ~Component() = default;
 
     Entity* entity;
 
     UUIDv4::UUID componentID;
     std::string componentDisplayName;
+    ComponentType componentType;
 
     UUIDv4::UUID GetComponentID()
     {
@@ -42,5 +58,5 @@ public:
     bool operator==(const Component& other) const;
 
 private:
-
+    
 };

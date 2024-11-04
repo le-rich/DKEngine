@@ -43,7 +43,7 @@ public:
     int getID() const;
     
     // Add a component to the game object
-    void addComponent(ComponentType type, const std::string& componentName);
+    void addComponent(DebugComponentType type, const std::string& componentName);
 
     // List all components attached to this game object
     void listComponents() const;
