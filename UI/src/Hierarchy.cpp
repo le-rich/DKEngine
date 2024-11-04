@@ -110,10 +110,10 @@ void drawHierarchyLine(Entity* entity) {
 }
 
 // Function to draw the entire hierarchy window
-void drawHierarchy(Scene* s) {
+void drawHierarchy(Scene* scene) {
     ImGui::Begin("Hierarchy");
 
-    Entity* rootEntity = s->getRoot();
+    Entity* rootEntity = scene->getRoot();
 
     if (rootEntity) {
        drawHierarchyLine(rootEntity);

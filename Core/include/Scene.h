@@ -12,8 +12,8 @@ public:
        return sceneRoot;
     };
     
-    void setRoot(Entity* e) {
-       sceneRoot = e;
+    void setRoot(Entity* newRoot) {
+       sceneRoot = newRoot;
     };
 
     Entity* sceneRoot = nullptr;

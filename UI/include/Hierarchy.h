@@ -10,7 +10,7 @@
 #include "Scene.h"
 
 void drawHierarchyLine(Entity* entity);
-void drawHierarchy(Scene* s);
+void drawHierarchy(Scene* scene);
 Entity* getSelectedEntity();
 //std::string getNextRootObjectName();
 #endif
