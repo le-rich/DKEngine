@@ -4,6 +4,7 @@
 #include "Entity.h"
 #include "Component.h"
 #include <glm.hpp>
+#include <gtc/type_ptr.hpp>
 #include <quaternion.hpp>
 
 void drawInspector() {
@@ -36,32 +37,33 @@ void drawInspector() {
        //ImGui::Text("Selected Object: %s", selected->getName().c_str());
 
        if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
-          Transform* transform = dynamic_cast<Transform*>(selectedEntity->getComponent(ComponentType::Transform));
+          Transform* transform = selectedEntity->transform;
           if (transform != nullptr) {
 
              // Position
              glm::vec3 position = transform->getLocalPosition();
              ImGui::Text("Position");
              ImGui::SameLine(75); // Adjust the value (100) to set appropriate spacing for label alignment
-             // (ImGui::DragFloat3("##Position", position.data(), 0.1f)) {
-             //  transform->setPosition(position);
-             //
+             if(ImGui::DragFloat3("##Position", glm::value_ptr(position), 0.1f)) {
+                  transform->setLocalPosition(position);
+             }
 
              // Rotation
-             glm::quat rotation = transform->getLocalOrientation();
+             glm::vec3 rotation = glm::degrees(glm::eulerAngles(transform->getLocalOrientation()));
              ImGui::Text("Rotation");
              ImGui::SameLine(75);
-             //if (ImGui::DragFloat3("##Rotation", rotation.data(), 0.1f)) {
-             //    transform->setRotation(rotation);
-             //}
+             if (ImGui::DragFloat3("##Rotation", glm::value_ptr(rotation), 0.1f)) {
+
+                 transform->setLocalOrientation(glm::quat(glm::radians(rotation)));
+             }
 
              // Scale
              glm::vec3 scale = transform->getLocalScale();
              ImGui::Text("Scale");
              ImGui::SameLine(75);
-             //if (ImGui::DragFloat3("##Scale", scale.data(), 0.1f)) {
-             //    transform->setScale(scale);
-             //}
+             if (ImGui::DragFloat3("##Scale", glm::value_ptr(scale), 0.1f)) {
+                transform->setLocalScale(position);
+             }
           }
        }
    }
