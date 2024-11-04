@@ -37,7 +37,7 @@ void Renderer::Initialize() {
     }
 }
 
-void Renderer::Update()
+void Renderer::Update(float deltaTime)
 {
     // Clear color and depth buffers (can be moved to pre update
 

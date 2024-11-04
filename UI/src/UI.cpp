@@ -50,7 +50,7 @@ UI::UI() {
    //return 0;
 }
 
-void UI::Update() {
+void UI::Update(float deltaTime) {
    // Update Loop logic here
    std::cout << "UI Update" << std::endl;
    //while (!glfwWindowShouldClose(window)) {

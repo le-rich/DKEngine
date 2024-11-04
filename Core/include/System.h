@@ -49,7 +49,7 @@ public:
     }
 
     virtual const char* GetName() const = 0;
-    virtual void Update() = 0;
+    virtual void Update(float deltaTime) = 0;
     virtual void FixedUpdate() = 0;
 
 };

@@ -11,6 +11,7 @@
 #include "Entity.h"
 #include "Input.h"
 #include "Managers/EntityManager.h"
+#include "Game.h"
 #include "Physics.h"
 #include "Renderer.h"
 #include "Scene.h"
@@ -78,14 +79,17 @@ int run_glfw()
     UI* ui = new UI();
     Physics* physx = new Physics(CAR_TRANSFORM);
     Renderer* renderer = new Renderer(window);
+    Game* game = new Game();
 
     Core::getInstance().AddSystem(ui);
     Core::getInstance().AddSystem(physx);
     Core::getInstance().AddSystem(renderer);
+    Core::getInstance().AddSystem(game);
 
     ui->Initialize();
     physx->Initialize();
     renderer->Initialize();
+    game->Initialize();
 
     // Timing
     double fixedUpdateBuffer = 0.0;
@@ -111,19 +115,19 @@ int run_glfw()
             physx->body->addForce(AE86::Vector3(1.0, 0.0, 0.0));
 
         auto currentTime = std::chrono::high_resolution_clock::now();
-
-        auto elapsedTime = currentTime - previousTime;
+        auto deltaTime = currentTime - previousTime;
+        auto deltaTimeFloatSeconds = std::chrono::duration<float>(deltaTime).count();
 
         previousTime = currentTime;
 
-        fixedUpdateBuffer += std::chrono::duration_cast<std::chrono::milliseconds>(elapsedTime).count();
+        fixedUpdateBuffer += std::chrono::duration_cast<std::chrono::milliseconds>(deltaTime).count();
         std::cout << "COUNT: " << fixedUpdateBuffer << "\n"; // Commenting this line causes the Fixed update loop to stutter.
 
         Input::RunInputListener();
         glfwMakeContextCurrent(window);
         // Rendering related calls, we can move these to the loop of the rendering thread
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        renderer->Update(); // draw tri or square
+        renderer->Update(deltaTimeFloatSeconds); // draw tri or square
 
         // The window has two buffers, front and back.
         // This allows us to display the front buffer while writing to the back buffer.
@@ -151,11 +155,11 @@ int run_glfw()
 
         for (auto system : systems)
         {
-            system->Update();
+            system->Update(deltaTimeFloatSeconds);
         }
 
         //@TODO: REMOVE THIS LATER. Above loops are never getting entered so UI update was never getting called. Remove this line below when fixed.
-        ui->Update();
+        ui->Update(deltaTimeFloatSeconds);
     }
 
     // Destroys library, may cause race condition if it gets destroyed while other threads are using it.

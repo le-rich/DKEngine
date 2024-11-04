@@ -18,7 +18,7 @@ public:
 
     void Initialize() override;
 
-    void Update() override;
+    void Update(float deltaTime) override;
 
     const char* GetName() const override {
         return "Renderer";

@@ -138,11 +138,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\Components\ScriptComponent.h" />
+    <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\Script.h" />
     <ClInclude Include="include\Scripts\OrbitScript.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Components\ScriptComponent.cpp" />
+    <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Scripts\OrbitScript.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
