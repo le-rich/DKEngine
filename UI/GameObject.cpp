@@ -85,7 +85,7 @@ void GameObject::setScale(const std::array<float, 3>& newScale) {
 }
 
 // Add a component to the game object
-void GameObject::addComponent(ComponentType type, const std::string& componentName) {
+void GameObject::addComponent(DebugComponentType type, const std::string& componentName) {
     components.emplace_back(type, componentName);
 }
 

@@ -45,7 +45,7 @@ public:
         return "Physics";
     }
 
-    void Update() override {
+    void Update(float deltaTime) override {
         // Update Loop logic here
         //auto currentTime = std::chrono::high_resolution_clock::now();
         //timeBuffer += currentTime - prevTime;

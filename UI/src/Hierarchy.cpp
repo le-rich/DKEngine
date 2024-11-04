@@ -49,7 +49,7 @@ void drawHierarchyLine(GameObject* gameObject) {
         }
         if (ImGui::MenuItem("Add Component")) {
             if (selectedGameObject) {
-                selectedGameObject->addComponent(ComponentType::Transform, "NewTransform");
+                selectedGameObject->addComponent(DebugComponentType::Transform, "NewTransform");
                 consoleLog("Added Transform component to " + selectedGameObject->getName());
             }
         }

@@ -3,7 +3,7 @@
 
 #include <string>
 
-enum class ComponentType {
+enum class DebugComponentType {
     Transform,
     Renderer,
     Collider,
@@ -13,10 +13,10 @@ enum class ComponentType {
 class GameComponent {
 public:
     // Constructor
-    GameComponent(ComponentType type, const std::string& name);
+    GameComponent(DebugComponentType type, const std::string& name);
 
     // Get the type of the component
-    ComponentType getType() const;
+    DebugComponentType getType() const;
 
     // Get the name of the component
     std::string getName() const;
@@ -25,7 +25,7 @@ public:
     void setName(const std::string& newName);
 
 private:
-    ComponentType type; // Component type (Transform, Renderer, etc.)
+    DebugComponentType type; // Component type (Transform, Renderer, etc.)
     std::string name;   // Component name
 };
 
