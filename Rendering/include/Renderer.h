@@ -1,50 +1,45 @@
 #pragma once
-/* @TODO: Extrapolate shader functionality, error handling, and
-implement pre and post methods.*/
+#include "System.h"
+#include "Buffers/UniformBuffer.h"
+#include "Buffers/ShaderStorageBuffer.h"
+// @TODO: Remove TESTING INCLUDE
+#include "Resources/Mesh.h"
+#include "Components/Transform.h"
+#include "Components/CameraComponent.h"
+#include "Entities/CameraEntity.h"
 
 #include <glad/glad.h>
-#include <string>
+#include <GLFW/glfw3.h>
 
-#include "Buffers/ShaderStorageBuffer.h"
-#include "Primitives.h"
-#include "Renderer.h"
-
-
-// Macro definitions for error handling
-#define ASSERT(x) if (!(x)) __debugbreak();
-#define GLCall(x) GLClearError();\
-    x;\
-    ASSERT(GLLogCall(#x, __FILE__, __LINE__))
-
-// Error handling functions
-
-void GLClearError();
-bool GLLogCall(const char* function, const char* file, int line);
-
-
-class Renderer
+class Renderer : public System
 {
 public:
-    Renderer();
+    Renderer(GLFWwindow* window);
     ~Renderer();
 
-    enum class ShaderType
-    {
-        NONE = -1, VERTEX = 0, FRAGMENT = 1
-    };
+    void Initialize() override;
 
-    struct ShaderProgramSource
-    {
-        std::string VertexSource;
-        std::string FragmentSource;
-    };
+    void Update(float deltaTime) override;
 
-    void Update();
+    const char* GetName() const override {
+        return "Renderer";
+    }
+
+    void FixedUpdate() override;
+
+    // GARBAGE BLOCK HATE IT
+    // TODO: Decouple from member to scene reference
+    Mesh testMesh;
+    Transform* testTransform = nullptr;
+    std::vector<UUIDv4::UUID> testMaterials;
 
 private:
-    ShaderStorageBuffer shaderStorageBufferObject;
+    GLFWwindow* m_Window;
 
-    static unsigned int CompileShader(unsigned int type, const std::string& source);
-    static unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
-    static ShaderProgramSource ParseShader(const std::string& filePath);
+
+    Entity* mainCameraEntity = nullptr; 
+
+
+    UniformBuffer mEngineUniformBuffer;
+    ShaderStorageBuffer shaderStorageBufferObject;
 };

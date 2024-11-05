@@ -1,13 +1,19 @@
 #pragma once
 
+#include "../include/Component.h"
 #include "../include/Entity.h"
+#include "../include/Utils/IDUtils.h"
 
-class ComponentManager{
+#include <map>
+
+class ComponentManager
+{
 
     // TODO: map of components
 
     // default constructor
-    ComponentManager(){
+    ComponentManager()
+    {
         // iterate over map
     }
 

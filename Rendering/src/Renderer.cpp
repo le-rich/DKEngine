@@ -1,29 +1,47 @@
-#include <glad/glad.h>
-#include <glm.hpp>
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <sstream>
-#include <vector>
-
-#include "Primitives.h"
-#include "Objects/Light.h"
 #include "Renderer.h"
 
-// Constructor.
-Renderer::Renderer() {}
+#include "Components/MeshComponent.h"
+#include "Managers/AssetManager.h"
+#include "Managers/EntityManager.h"
+#include "Entities/Light.h"
+#include "Resources/Shader.h"
+#include "Resources/Texture.h"
 
-// Destructor.
+#include <iostream>
+#include <cstdlib>
+
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include <glm.hpp>
+
+Renderer::Renderer(GLFWwindow* window)
+{
+    m_Window = window;
+}
+
 Renderer::~Renderer() {}
 
-void Renderer::Update()
+void Renderer::Initialize() {
+    System::Initialize(); 
+
+    // Get Camera if it exists
+    auto mainCameraUUID = EntityManager::getInstance().findFirstEntityByDisplayName("Main Camera");
+    auto mainCamera = EntityManager::getInstance().getEntity(mainCameraUUID);
+    if (mainCamera != nullptr) {
+        this->mainCameraEntity = mainCamera;
+    } 
+    else 
+    {
+        std::cerr << "Error: Main Camera not found. The program will now exit." << std::endl;
+        std::cin.get();
+        std::exit(EXIT_FAILURE);  // Terminate program with failure status
+    }
+}
+
+void Renderer::Update(float deltaTime)
 {
     // Clear color and depth buffers (can be moved to pre update
 
-    // Get example primitive
-    Cube cube;
-    Primitive primitive(cube.vertices, cube.indices);
-     
     /*Get lights
       For each light
         Get lighting matrix
@@ -33,107 +51,93 @@ void Renderer::Update()
     std::vector<glm::mat4> lightMatricies;
     lightMatricies.push_back(light.GenerateMatrix());
     shaderStorageBufferObject.SendBlocks(lightMatricies.data(), lightMatricies.size() * sizeof(glm::mat4));
-
     shaderStorageBufferObject.Bind(0);
-    //For each Material
-    //if texture --> bind texture
-    //if shader  --> bind shader
-    ShaderProgramSource source = ParseShader("../Rendering/Shaders/default.glsl");
-    GLuint shader = CreateShader(source.VertexSource, source.FragmentSource);
-    GLCall(glUseProgram(shader));
-    //Apply Uniforms (lighting, view matrices, etc...)
-    /*For each Primitive
-        Bind Vertex Array
-        Bind Index Buffer
-        DrawCall*/
-    primitive.Draw();
 
+    // TODO: Bug Physics/Core on way to get modelMatrix directly from transform
+    glm::vec3 localScale = testTransform->getLocalScale();
+    glm::mat4 modelMatrix =
+        glm::translate(glm::mat4(1.0f), testTransform->getWorldPosition()) *
+        glm::mat4_cast(testTransform->getLocalOrientation()) *
+        glm::mat4( // creates a scale matrix 
+            glm::vec4(localScale.x, 0.0f, 0.0f, 0.0f),
+            glm::vec4(0.0f, localScale.y, 0.0f, 0.0f),
+            glm::vec4(0.0f, 0.0f, localScale.z, 0.0f),
+            glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)
+        );
+
+    mEngineUniformBuffer.SetSubData(modelMatrix, 0);
+
+
+    // CAMERA =====================
+    CameraComponent* cameraComponent = dynamic_cast<CameraComponent*>(mainCameraEntity->getComponent(ComponentType::Camera));
+
+    if (cameraComponent != nullptr){
+        // Update Aspect Ratio if the window has resized
+        int width, height;
+        glfwGetWindowSize(m_Window, &width, &height);
+        cameraComponent->updateAspectRatio(width, height);
+
+        cameraComponent->calculateViewMatrix(cameraComponent->entity->transform);
+        cameraComponent->calculateProjectionMatrix();
+    }
+    // ============================
+
+    /*
+    Material Based:
+    For each Material
+        Bind Material
+        Apply Material specific Uniforms
+        For each Primitive in Material
+            Bind Vertex Array
+            Bind Index Buffer
+            DrawCall
+        Unbind Material
+     */
+
+     // Kinda okay methodology
+     //TODO: Replace with Scene based or Material based Draw
+    
+
+    // MESHES ============================
+    auto meshComponentUUIDs = EntityManager::getInstance().findEntitiesByComponent(ComponentType::Mesh);
+    
+    for (auto& uuid : meshComponentUUIDs) 
+    {
+        auto entity = EntityManager::getInstance().getEntity(uuid);
+        MeshComponent* meshComponent = dynamic_cast<MeshComponent*>(entity->getComponent(ComponentType::Mesh));
+
+        if (meshComponent != nullptr)
+        {
+            glm::vec3 localScale = entity->transform->getLocalScale();
+
+            glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), entity->transform->getWorldPosition()) *
+                                    glm::mat4_cast(entity->transform->getLocalOrientation()) *
+                                    glm::scale(glm::mat4(1.0f), localScale);
+
+            mEngineUniformBuffer.updateMatrices(
+                modelMatrix, 
+                cameraComponent->getViewMatrix(), 
+                cameraComponent->getProjectionMatrix(),
+                mainCameraEntity->transform->getWorldPosition()
+            );
+            
+            meshComponent->getMesh()->Draw();
+        }
+    }
     shaderStorageBufferObject.Unbind();
+    // ===================================
+
     /*Perform Post Processing
       Draw Frame Buffer*/
 
-    // Swap window buffers. can be moved to post update
+      // Swap window buffers. can be moved to post update
 }
 
-// Returns a ID of the compiled shader program on the GPU.
-unsigned int Renderer::CompileShader(unsigned int type, const std::string& source) {
-    unsigned int id = glCreateShader(type);
-    const char* src = source.c_str(); // ptr to beginning of data of string
-
-    GLCall(glShaderSource(id, 1, &src, nullptr));
-    GLCall(glCompileShader(id));
-
-    int result;
-    GLCall(glGetShaderiv(id, GL_COMPILE_STATUS, &result));
-    if (result == GL_FALSE) { // did not compile successfully
-        int length;
-        GLCall(glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length));
-        char* message = (char*)alloca(length * sizeof(char));
-        GLCall(glGetShaderInfoLog(id, length, &length, message));
-        std::cout << "Failed to compile " <<
-            (type == GL_VERTEX_SHADER ? "vertex" : "fragment") << " shader!" << std::endl;
-        std::cout << message << std::endl;
-        GLCall(glDeleteShader(id));
-        return 0;
-    }
-
-    return id;
+void Renderer::FixedUpdate() {
+    
 }
 
-// Returns a shader program.
-unsigned int Renderer::CreateShader(const std::string& vertexShader, const std::string& fragmentShader) {
-    unsigned int program = glCreateProgram();
-    // Create shaders
-    unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
-    unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
-    // Attach shaders to program (link files to program)
-    GLCall(glAttachShader(program, vs));
-    GLCall(glAttachShader(program, fs));
-    GLCall(glLinkProgram(program));
-    GLCall(glValidateProgram(program));
-    // Delete the shaders since they have been linked to the program
-    GLCall(glDeleteShader(vs));
-    GLCall(glDeleteShader(fs));
 
-    return program;
-}
 
-// Returns vertex and fragment shader programs from a given path to a file.
-Renderer::ShaderProgramSource Renderer::ParseShader(const std::string& filepath) {
-    std::ifstream stream(filepath);
-    std::string line;
-    std::stringstream ss[2]; // stores both vertex and fragment shader
-    ShaderType type = ShaderType::NONE;
 
-    while (getline(stream, line))
-    {
-        // finds type of shader from custom # tags
-        if (line.find("#shader") != std::string::npos) // if not invalid string pos since .find returns position of string (size_t)
-        {
-            if (line.find("vertex") != std::string::npos)
-                type = ShaderType::VERTEX;
-            else if (line.find("fragment") != std::string::npos)
-                type = ShaderType::FRAGMENT;
-        }
-        else
-        {
-            ss[(int)type] << line << '\n'; // dump the contents of the shader program
-        }
-    }
 
-    return { ss[0].str(), ss[1].str() };
-}
-
-// Iterates through OpenGL error flags until there are no more.
-void GLClearError() {
-    while (glGetError() != GL_NO_ERROR);
-}
-
-// Prints to console any openGL error flags with a corresponding function, file, and line number.
-bool GLLogCall(const char* function, const char* file, int line) {
-    while (GLenum error = glGetError()) {
-        std::cout << "[OpenGL Error] (" << error << "): " << function << " " << file << ":" << line << std::endl;
-        return false;
-    }
-    return true;
-}
