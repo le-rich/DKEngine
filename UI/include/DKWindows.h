@@ -10,5 +10,5 @@
 #include "Inspector.h"
 #include "Viewport.h"
 #include "Scene.h"
-void createImGuiWindows(Scene* s);
+void createImGuiWindows(Scene* scene);
 

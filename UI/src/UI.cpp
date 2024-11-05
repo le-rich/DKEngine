@@ -4,10 +4,10 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-UI::UI(Scene* s) {
+UI::UI(Scene* scene) {
    std::cout << "UI PROJECT" << std::endl;
 
-   this->scene = s;
+   this->scene = scene;
 
    // Initialize GLFW (Already initialized in main)
    //glfwInit();
@@ -69,7 +69,7 @@ void UI::Update(float deltaTime) {
    createMenuBar();
 
    // Create the ImGui windows
-   createImGuiWindows(scene);
+   createImGuiWindows(this->scene);
 
    // Render ImGui
    ImGui::Render();

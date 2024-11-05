@@ -30,7 +30,6 @@ void drawHierarchyLine(Entity* entity) {
         selectedEntity = entity;
         consoleLog("Selected: " + entity->GetDisplayName());
 
-        //entity->listChildren();
     }
 
     // Check right-click to open the context menu
@@ -42,14 +41,13 @@ void drawHierarchyLine(Entity* entity) {
     // Handle right-click context menu for the GameObject
     if (ImGui::BeginPopupContextItem()) {
         if (ImGui::MenuItem("Create Child GameObject")) {
-            //std::string childName = entity->getNextChildName();
-           std::string childName = "New Entity";
+            std::string childName = "New Entity";
             Entity* childObject = new Entity(childName);
             entity->addChild(childObject);
         }
         if (ImGui::MenuItem("Add Component")) {
             if (selectedEntity) {
-                //selectedEntity->addComponent(DebugComponentType::Transform, "NewTransform");
+                //TODO Add component code here
                 consoleLog("Added Transform component to " + selectedEntity->GetDisplayName());
             }
         }

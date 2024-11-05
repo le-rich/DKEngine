@@ -11,10 +11,6 @@ public:
     Entity* getRoot() {
        return sceneRoot;
     };
-    
-    void setRoot(Entity* newRoot) {
-       sceneRoot = newRoot;
-    };
 
     Entity* sceneRoot = nullptr;
 

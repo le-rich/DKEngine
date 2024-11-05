@@ -1,7 +1,7 @@
 #include "../include/DKWindows.h"
 
 // Function to create the dockspace and additional windows
-void createImGuiWindows(Scene* s) {
+void createImGuiWindows(Scene* scene) {
    // Setup a dockspace
    ImGuiWindowFlags dockspace_flags = ImGuiWindowFlags_NoDocking;
    ImGuiViewport* viewport = ImGui::GetMainViewport();
@@ -49,7 +49,7 @@ void createImGuiWindows(Scene* s) {
    }
 
    drawViewport();
-   drawHierarchy(s);
+   drawHierarchy(scene);
    drawInspector();
    drawBrowser();
    drawConsole();

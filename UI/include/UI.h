@@ -18,7 +18,7 @@ class UI : public System {
 
 public:
 
-   UI(Scene* s);
+   UI(Scene* scene);
 
     const char* GetName() const override {
         return "UI";
