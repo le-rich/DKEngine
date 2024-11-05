@@ -1,98 +1,83 @@
 #include "../include/Hierarchy.h"
 #include "../include/Console.h"
-#include "../GameObject.h"
+#include "Scene.h"
+#include "Entity.h"
 #include <set> // Include for std::set
 #include <iostream>
 using namespace std;
 
-GameObject* selectedGameObject = nullptr;
-
-std::vector<GameObject*> gameObjects = {};
+Entity* selectedEntity = nullptr;
 
 // Global variable to track the renaming state
-GameObject* renamingGameObject = nullptr; // Currently selected GameObject for renaming
+Entity* renamingEntity = nullptr; // Currently selected GameObject for renaming
 char renamingBuffer[256]; // Buffer to hold the new name input (adjust size as needed)
 
 // Helper function to draw individual hierarchy lines for each GameObject
-void drawHierarchyLine(GameObject* gameObject) {
+void drawHierarchyLine(Entity* entity) {
     ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
 
-    if (gameObject == selectedGameObject) {
+    if (entity == selectedEntity) {
         nodeFlags |= ImGuiTreeNodeFlags_Selected;
     }
 
     // Create a unique ID using the name and the memory address of the GameObject
-    ImGui::PushID(gameObject); // Push the GameObject pointer to the ID stack
-    bool nodeOpen = ImGui::TreeNodeEx(gameObject->getName().c_str(), nodeFlags);
+    ImGui::PushID(entity->GetEntityID().str().c_str()); // Push the GameObject pointer to the ID stack
+    bool nodeOpen = ImGui::TreeNodeEx(entity->GetDisplayName().c_str(), nodeFlags);
     ImGui::PopID(); // Pop the ID from the stack
 
     // Handle left-click selection
     if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen()) {
-        selectedGameObject = gameObject;
-        consoleLog("Selected: " + gameObject->getName());
+        selectedEntity = entity;
+        consoleLog("Selected: " + entity->GetDisplayName());
 
-        gameObject->listChildren();
     }
 
     // Check right-click to open the context menu
     if (ImGui::IsItemClicked(ImGuiMouseButton_Right)) {
-        selectedGameObject = gameObject;  // Set as selected
-        consoleLog("Right-clicked on " + gameObject->getName());
+        selectedEntity = entity;  // Set as selected
+        consoleLog("Right-clicked on " + entity->GetDisplayName());
     }
 
     // Handle right-click context menu for the GameObject
     if (ImGui::BeginPopupContextItem()) {
         if (ImGui::MenuItem("Create Child GameObject")) {
-            std::string childName = gameObject->getNextChildName();
-            GameObject* childObject = new GameObject(childName);
-            gameObject->addChild(childObject);
+            std::string childName = "New Entity";
+            Entity* childObject = new Entity(childName);
+            entity->addChild(childObject);
         }
         if (ImGui::MenuItem("Add Component")) {
-            if (selectedGameObject) {
-                selectedGameObject->addComponent(ComponentType::Transform, "NewTransform");
-                consoleLog("Added Transform component to " + selectedGameObject->getName());
+            if (selectedEntity) {
+                //TODO Add component code here
+                consoleLog("Added Transform component to " + selectedEntity->GetDisplayName());
             }
         }
 
         if (ImGui::MenuItem("Rename")) {
-            renamingGameObject = gameObject; // Set the GameObject to be renamed
-            strncpy_s(renamingBuffer, gameObject->getName().c_str(), sizeof(renamingBuffer)); // Copy name to buffer
+            renamingEntity = entity; // Set the GameObject to be renamed
+            strncpy_s(renamingBuffer, entity->GetDisplayName().c_str(), sizeof(renamingBuffer)); // Copy name to buffer
             renamingBuffer[sizeof(renamingBuffer) - 1] = '\0'; // Ensure null-termination
         }
 
         if (ImGui::MenuItem("Delete GameObject")) {
-            if (selectedGameObject) {
-                consoleLog("Attempting to delete selected GameObject: " + selectedGameObject->getName());
+            if (selectedEntity) {
+                consoleLog("Attempting to delete selected GameObject: " + selectedEntity->GetDisplayName());
 
                 // Check if the selected object has a parent
-                if (selectedGameObject->getParent() != nullptr) {
+                if (selectedEntity->getParent() != nullptr) {
                     // Adding log to ensure parent reference exists
-                    consoleLog("Found parent for GameObject: " + selectedGameObject->getName() +
-                        ", Parent: " + selectedGameObject->getParent()->getName());
+                    consoleLog("Found parent for GameObject: " + selectedEntity->GetDisplayName() + ", Parent: " + selectedEntity->getParent()->GetDisplayName());
 
-                    consoleLog("Deleting child object with ID: " + std::to_string(selectedGameObject->getID()) +
-                        " from parent: " + selectedGameObject->getParent()->getName());
-                    selectedGameObject->getParent()->removeChild(selectedGameObject);
+                    consoleLog("Deleting child object with ID: " + selectedEntity->GetEntityID().str() + " from parent: " + selectedEntity->getParent()->GetDisplayName());
+                    selectedEntity->getParent()->removeChild(selectedEntity);
 
                     // Log to confirm child removal process initiated
-                    consoleLog("Child object removed from parent: " + selectedGameObject->getName());
+                    consoleLog("Child object removed from parent: " + selectedEntity->GetDisplayName());
                 }
                 else {
-                    consoleLog("No parent found for GameObject: " + selectedGameObject->getName());
+                    consoleLog("No parent found for GameObject: " + selectedEntity->GetDisplayName());
                 }
 
-                // If no parent, it's a root object, so delete from the global list
-                auto it = std::find(gameObjects.begin(), gameObjects.end(), selectedGameObject);
-                if (it != gameObjects.end()) {
-                    consoleLog("Deleting root object: " + selectedGameObject->getName());
-                    delete* it;
-                    gameObjects.erase(it);
-                }
-                else {
-                    consoleLog("Root object not found in global list: " + selectedGameObject->getName());
-                }
-
-                selectedGameObject = nullptr; // Clear the selected pointer after deletion
+                selectedEntity = nullptr; // Clear the selected pointer after deletion
             }
             else {
                 consoleLog("No selected GameObject found to delete.");
@@ -103,19 +88,19 @@ void drawHierarchyLine(GameObject* gameObject) {
     }
 
     // Renaming logic
-    if (renamingGameObject == gameObject) {
+    if (renamingEntity == entity) {
         ImGui::InputText("##RenameInput", renamingBuffer, sizeof(renamingBuffer)); // Render input field for renaming
 
         if (ImGui::IsItemDeactivatedAfterEdit() || ImGui::IsKeyPressed(ImGuiKey_Enter)) {
-            consoleLog("Renamed " + gameObject->getName() + " to: " + renamingBuffer);
-            gameObject->setName(renamingBuffer); // Set new name
-            renamingGameObject = nullptr; // Clear renaming state
+            consoleLog("Renamed " + entity->GetDisplayName() + " to: " + renamingBuffer);
+            entity->SetDisplayName(renamingBuffer); // Set new name
+            renamingEntity = nullptr; // Clear renaming state
         }
     }
 
     // Draw children recursively if the node is open
     if (nodeOpen) {
-        for (auto* child : gameObject->getChildren()) {
+        for (auto* child : entity->getChildren()) {
             drawHierarchyLine(child);  // Use .get() to pass the raw pointer to drawHierarchyLine
         }
         ImGui::TreePop();
@@ -123,54 +108,19 @@ void drawHierarchyLine(GameObject* gameObject) {
 }
 
 // Function to draw the entire hierarchy window
-void drawHierarchy() {
+void drawHierarchy(Scene* scene) {
     ImGui::Begin("Hierarchy");
 
-    // Create a new GameObject on right-click
-    if (ImGui::BeginPopupContextWindow()) {
-        if (ImGui::MenuItem("New GameObject")) {
-            std::string rootName = getNextRootObjectName();
-            GameObject* newObject = new GameObject(rootName); // Default name
-            gameObjects.emplace_back(newObject);
-            selectedGameObject = newObject; // Select newly created object
-            consoleLog("Created New GameObject: " + newObject->getName() + " with ID: " + std::to_string(reinterpret_cast<uintptr_t>(newObject)));
-            
-        }
+    Entity* rootEntity = scene->getRoot();
 
-        ImGui::EndPopup();
-    }
-
-    // Loop over all root game objects in the scene
-    for (auto* rootObject : gameObjects) {
-        drawHierarchyLine(rootObject);
+    if (rootEntity) {
+       drawHierarchyLine(rootEntity);
     }
 
     ImGui::End();
 }
 
 // Function to retrieve the currently selected GameObject
-GameObject* getSelectedGameObject() {
-    return selectedGameObject;
-}
-
-
-std::string getNextRootObjectName() {
-    int count = 0;
-    std::string baseName = "GameObject";
-    std::string newName = baseName;
-
-    // Count how many root objects have the name "GameObject", "GameObject(1)", etc.
-    for (const auto* rootObject : gameObjects) {
-        const std::string& rootName = rootObject->getName();
-        if (rootName == baseName || (rootName.find(baseName + "(") == 0 && rootName.back() == ')')) {
-            count++;
-        }
-    }
-
-    // Append the number if count > 0 (e.g., "GameObject(1)", "GameObject(2)")
-    if (count > 0) {
-        newName = baseName + "(" + std::to_string(count) + ")";
-    }
-
-    return newName;
+Entity* getSelectedEntity() {
+    return selectedEntity;
 }

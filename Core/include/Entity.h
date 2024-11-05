@@ -11,7 +11,8 @@
 class Transform;
 
 //template<typename T>
-class Entity {
+class Entity
+{
 
 protected:
     // unique id for entity
@@ -22,6 +23,7 @@ protected:
 
     // array of components
     std::vector<Component*> components;
+    ComponentMask componentMask;
 
     // pointer to its parent Entity
     Entity* parent = nullptr;
@@ -34,12 +36,18 @@ public:
     TransformComponent* transform;
 
     // retrieve id of entity
-    UUIDv4::UUID GetEntityID() {
+    UUIDv4::UUID GetEntityID()
+    {
         return entityID;
     }
 
+    ComponentMask GetComponentMask() const { 
+        return componentMask;
+    }
+
     // set the entity uuid
-    void SetEntityID(const UUIDv4::UUID& newid) {
+    void SetEntityID(const UUIDv4::UUID& newid)
+    {
         this->entityID = newid;
     }
 
@@ -56,7 +64,8 @@ public:
     }
 
     // get array of components
-    const std::vector<Component*>& getComponents() const {
+    const std::vector<Component*>& getComponents() const
+    {
         return components;
     }
 
@@ -71,6 +80,8 @@ public:
     void addComponent(Component& c)
     {
         components.push_back(&c);
+
+        componentMask.set(static_cast<size_t>(c.componentType));
     }
 
     // remove component from the entity
@@ -80,18 +91,27 @@ public:
             std::remove_if(components.begin(), components.end(),
                 [&c](const Component* comp) { return comp == &c; }),
             components.end());
-    }
-    
-    Component* getComponent(const Component& c) {
-        auto it = std::find_if(components.begin(), components.end(),
-            [&c](const Component* comp) { return comp == &c; });
 
-        if (it != components.end()) {
+        componentMask.reset(static_cast<size_t>(c.componentType));
+    }
+
+    Component* getComponent(const ComponentType& componentType)
+    {
+        auto it = std::find_if(components.begin(), components.end(),
+            [&componentType](const Component* comp) { return comp->componentType == componentType; });
+
+        if (it != components.end())
+        {
             return *it;
         }
-        else {
+        else
+        {
             return nullptr;
         }
+    }
+
+    bool HasComponent(ComponentType type) const {
+        return componentMask.test(static_cast<size_t>(type));
     }
 
     // default constructor
@@ -102,42 +122,57 @@ public:
         // init code
     }
 
-    Entity(std::string DisplayName) {
+    Entity(std::string DisplayName)
+    {
         this->entityDisplayName = DisplayName;
+        this->entityID = uuidGen.getUUID();
+        this->transform = new Transform(this);
     }
 
     // default destructor
-    ~Entity(){
+    ~Entity()
+    {
         // destructor code        
     }
 
     // parent code
 
     // set parent entity
-    void setParent(Entity* parentEntity) {
-        if (this->parent != nullptr) {
+    void setParent(Entity* parentEntity)
+    {
+        if (this->parent != nullptr)
+        {
             this->parent->removeChild(this);
         }
         this->parent = parentEntity;
 
-        if (parentEntity != nullptr) {
+        if (parentEntity != nullptr)
+        {
             parentEntity->addChild(this);
         }
     }
 
     // retrieve parent entity
-    Entity* getParent() const {
+    Entity* getParent() const
+    {
         return parent;
     }
 
     // add a child entity
-    void addChild(Entity* child) {
+    void addChild(Entity* child)
+    {
+       for (Entity* e : children) {
+          if (e == child) {
+             return;
+          }
+       }
         children.push_back(child);
         child->parent = this;
     }
 
     // remove a child entity
-    void removeChild(Entity* child) {
+    void removeChild(Entity* child)
+    {
         children.erase(
             std::remove_if(children.begin(), children.end(),
                 [child](Entity* c) { return c == child; }),
@@ -150,18 +185,22 @@ public:
     }
 
     // retrieve all children entities
-    const std::vector<Entity*>& getChildren() const {
+    const std::vector<Entity*>& getChildren() const
+    {
         return children;
     }
 
     // retrieve a specific component from a parent
-    Component* getComponentFromParent(const Component& c) {
-        Component* comp = getComponent(c);
-        if (comp != nullptr) {
+    Component* getComponentFromParent(const ComponentType& componentType)
+    {
+        Component* comp = getComponent(componentType);
+        if (comp != nullptr)
+        {
             return comp;
         }
-        if (parent != nullptr) {
-            return parent->getComponentFromParent(c);
+        if (parent != nullptr)
+        {
+            return parent->getComponentFromParent(componentType);
         }
         return nullptr;
     }
@@ -173,5 +212,5 @@ public:
     }
 
     // TODO: enable/disable
-    
+
 };

@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>..\External\glad\include;..\External\GLFW\include;..\Rendering\include;$(IncludePath)</IncludePath>
-    <IncludePath>C:\Users\Sepeh\source\repos\DKEngine\Core\ECS;..\External\glad\include;..\External\GLFW\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\External\glad\include;..\External\GLFW\include;$(IncludePath)%(AdditionalIncludeDirectories)</IncludePath>
     <LibraryPath>..\External\GLFW\x64\lib;$(LibraryPath)</LibraryPath>
     <PublicIncludeDirectories>..\External\GLFW\include;..\External\glad\include;..\Rendering\include;$(PublicIncludeDirectories)</PublicIncludeDirectories>
     <AllProjectIncludesArePublic>true</AllProjectIncludesArePublic>
@@ -119,12 +119,12 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>/include;$(SolutionDir)/Rendering/include;</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\glm\gtc;$(SolutionDir)External\;$(SolutionDir)External\GLFW\x64\include;$(SolutionDir)External\glad\include;$(SolutionDir)External\tinygltf;$(SolutionDir)Core\include\;$(SolutionDir)UI\;$(SolutionDir)Rendering\;$(SolutionDir)Physics\;$(SolutionDir)External\glm;$(SolutionDir)External\stb;$(SolutionDir)External\imgui\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\glm\gtc;$(SolutionDir)External\;$(SolutionDir)External\GLFW\x64\include;$(SolutionDir)External\glad\include;$(SolutionDir)External\tinygltf;$(SolutionDir)Core\include\;$(SolutionDir)Game\;$(SolutionDir)UI\include;$(SolutionDir)Rendering\;$(SolutionDir)Physics\;$(SolutionDir)External\glm;$(SolutionDir)External\stb;$(SolutionDir)External\imgui\include;$(SolutionDir)Game\include;$(SolutionDir)Game\include\Scripts;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glad.lib;glfw3.lib;opengl32.lib;UI.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glad.lib;glfw3.lib;opengl32.lib;UI.lib;Game.lib;Rendering.lib;Physics.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <AdditionalLibraryDirectories>$(SolutionDir)External\glad\lib;$(SolutionDir)External\GLFW\lib;$(SolutionDir)External\;$(SolutionDir)External\imgui;$(SolutionDir)x64\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
@@ -137,7 +137,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\glm\gtc;$(SolutionDir)External\;$(SolutionDir)External\GLFW\x64\include;$(SolutionDir)External\glad\include;$(SolutionDir)External\tinygltf;$(SolutionDir)Core\include\;$(SolutionDir)UI\;$(SolutionDir)Rendering\;$(SolutionDir)Physics\;$(SolutionDir)External\glm;$(SolutionDir)External\stb;$(SolutionDir)External\imgui\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\glm\gtc;$(SolutionDir)External\;$(SolutionDir)External\GLFW\x64\include;$(SolutionDir)External\glad\include;$(SolutionDir)External\tinygltf;$(SolutionDir)Core\include\;$(SolutionDir)UI\include;$(SolutionDir)Rendering\;$(SolutionDir)Physics\;$(SolutionDir)External\glm;$(SolutionDir)External\stb;$(SolutionDir)External\imgui\include;$(SolutionDir)Game\include;$(SolutionDir)Game\include\Scripts\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -145,7 +145,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)External\glad\lib;$(SolutionDir)External\GLFW\lib;$(SolutionDir)External\;$(SolutionDir)External\imgui;$(SolutionDir)x64\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glad.lib;glfw3.lib;opengl32.lib;UI.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glad.lib;glfw3.lib;opengl32.lib;UI.lib;Game.lib;Rendering.lib;Physics.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -156,6 +156,7 @@
     <ClCompile Include="src\Components\TransformComponent.cpp" />
     <ClCompile Include="src\Core.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Managers\AssetManager.cpp" />
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\Utils\IDUtils.cpp" />
   </ItemGroup>
@@ -174,11 +175,11 @@
     <ClInclude Include="include\Entity.h" />
     <ClInclude Include="include\GLTFLoader.h" />
     <ClInclude Include="include\Input.h" />
+    <ClInclude Include="include\Managers\AssetManager.h" />
     <ClInclude Include="include\Managers\ComponentManager.h" />
     <ClInclude Include="include\Managers\EntityManager.h" />
     <ClInclude Include="include\Scene.h" />
     <ClInclude Include="include\System.h" />
-    <ClInclude Include="include\Utils\endianness.h" />
     <ClInclude Include="include\Utils\IDUtils.h" />
     <ClInclude Include="include\Utils\uuid_v4.h" />
     <ClInclude Include="RenderComponent.h" />
