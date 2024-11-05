@@ -6,7 +6,7 @@
 #include <glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
-TransformComponent::TransformComponent(Entity* mEntity) :Component(mEntity), localPosition(0.0f, 0.0f, 0.0f, 1.0f),
+TransformComponent::TransformComponent(Entity* mEntity) :Component(mEntity), localPosition(0.0f, 0.0f, 0.0f),
 	localOrientation(1.0f, 0.0f, 0.0f, 0.0f),
 	localScale(1.0f, 1.0f, 1.0f),
 	transformMatrix(1.0f) 
@@ -26,6 +26,7 @@ TransformComponent::TransformComponent(Entity* mEntity, glm::vec4 position, glm:
 
 TransformComponent::~TransformComponent()
 {
+}
 
 void TransformComponent::updateTransformMatrix()
 {
@@ -55,8 +56,10 @@ void TransformComponent::updateTransformMatrix()
     }
 }
 
-void TransformComponent::lookAt(Transform* target)
+void TransformComponent::lookAt(TransformComponent* target)
 {
+
+}
 
 
 glm::vec3 TransformComponent::getWorldPosition()

@@ -42,7 +42,6 @@
     <ClCompile Include="src\Managers\AssetManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Component.h">

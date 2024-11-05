@@ -150,7 +150,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="RenderComponent.cpp" />
     <ClCompile Include="RigidBodyComponent.cpp" />
     <ClCompile Include="src\Component.cpp" />
     <ClCompile Include="src\Components\TransformComponent.cpp" />
@@ -182,7 +181,6 @@
     <ClInclude Include="include\System.h" />
     <ClInclude Include="include\Utils\IDUtils.h" />
     <ClInclude Include="include\Utils\uuid_v4.h" />
-    <ClInclude Include="RenderComponent.h" />
     <ClInclude Include="RigidBodyComponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

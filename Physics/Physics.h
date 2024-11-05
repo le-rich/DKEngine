@@ -5,7 +5,7 @@
 #include "glm.hpp"
 #include <mutex>
 #include <chrono>
-#include "Components/Transform.h"
+#include "Components/TransformComponent.h"
 
 
 // 120 HZ tick rate
@@ -17,9 +17,9 @@ public:
     std::chrono::time_point<std::chrono::high_resolution_clock> prevTime;
     std::chrono::duration<double> timeBuffer;
     AE86::RigidBody* body;
-    Transform* CAR_TRANSFORM;
+    TransformComponent* CAR_TRANSFORM;
     
-	Physics(Transform* carTransform) {
+	Physics(TransformComponent* carTransform) {
         CAR_TRANSFORM = carTransform;
         world = AE86::World();
         prevTime = std::chrono::high_resolution_clock::now();

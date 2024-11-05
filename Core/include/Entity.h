@@ -8,8 +8,6 @@
 #include <memory>
 #include <vector>
 
-class Transform;
-
 //template<typename T>
 class Entity
 {
@@ -126,7 +124,7 @@ public:
     {
         this->entityDisplayName = DisplayName;
         this->entityID = uuidGen.getUUID();
-        this->transform = new Transform(this);
+        this->transform = new TransformComponent(this);
     }
 
     // default destructor

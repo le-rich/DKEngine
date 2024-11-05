@@ -1,6 +1,6 @@
 #include "Scripts/OrbitScript.h"
 
-#include "Components/Transform.h"
+#include "Components/TransformComponent.h"
 
 OrbitScript::OrbitScript(Entity *mEntity) : Script(mEntity)
 {
@@ -11,7 +11,7 @@ OrbitScript::~OrbitScript() {}
 
 void OrbitScript::Update(float deltaTime)
 {
-    Transform* transform = this->entity->transform;
+    TransformComponent* transform = this->entity->transform;
     if (!transform || !m_OrbitTarget) {
         return;
     }

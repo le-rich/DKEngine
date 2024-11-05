@@ -42,7 +42,7 @@ public:
      * to then be updated. This method does that.
      */
     void updateTransformMatrix();
-    void lookAt(Transform* target);
+    void lookAt(TransformComponent* target);
 
 
     /********************************************/
@@ -51,10 +51,10 @@ public:
     inline const glm::mat4 getTransformMatrix() { return transformMatrix; }
 
     glm::vec3 getWorldPosition();
-    glm::quat getWorldOrientation();
+    glm::quat getWorldOrientation() const;
 
     glm::vec3 getLocalPosition();
-    glm::quat getLocalOrientation();
+    glm::quat getLocalOrientation() const;
 
     void setLocalPosition(glm::vec3 position);
     void setLocalOrientation(glm::quat orientation);
@@ -62,10 +62,10 @@ public:
     void setWorldPosition(glm::vec4 position);
     void setWorldOrientation(glm::quat orientation);
 
-    glm::vec3 getWorldScale();
+    glm::vec3 getWorldScale() const;
     void setWorldScale(glm::vec3 scale);
 
-    glm::vec3 getLocalScale();
+    glm::vec3 getLocalScale() const;
     void setLocalScale(glm::vec3 scale);
 
 	TransformComponent& operator=(const TransformComponent& other);
