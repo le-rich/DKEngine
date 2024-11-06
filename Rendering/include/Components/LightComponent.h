@@ -1,8 +1,11 @@
 #pragma once
 
-#include <stdint.h>
+//#include <stdint.h>
 #include <glm.hpp>
 #include <gtc/quaternion.hpp>
+
+#include "Component.h"
+#include "Components/Transform.h"
 
 enum LightType
 {
@@ -13,20 +16,14 @@ enum LightType
     AreaLight // Needs additional information that does not currently fit in generated matrix (reuse cutoff variables?)
 };
 
-class Light
+class LightComponent : public Component
 {
 public:
-    Light(glm::vec3 pWorldPos, LightType pType = AmbientLight) : mWorldPos(pWorldPos), mType(pType) {}
-    Light(glm::vec3 pWorldPos, glm::quat pWorldRotation, LightType pType = AmbientLight) : mWorldPos(pWorldPos), mWorldRotation(pWorldRotation), mType(pType) {}
-    Light(glm::vec3 pWorldPos, glm::vec3 pWorldRotationEuler, LightType pType = AmbientLight);
-    Light(glm::mat4 transform, LightType pType = AmbientLight);
+    LightComponent(Entity* pEntity);
 
-    // Return single 4x4 matrix representing all light information
-    glm::mat4 GenerateMatrix();
-    void SetWorldRotationFromEuler(glm::vec3 pWorldRoationEuler);
+    // Return single 4x4 matrix representing all LightComponent information
+    glm::mat4 GenerateMatrix(Transform* pTransform);
 
-    inline glm::vec3 GetWorldPos() const { return mWorldPos; }
-    inline glm::quat GetWorldRotation() const { return mWorldRotation; }
     inline glm::vec4 GetColor() const { return mColor; }
     inline float GetIntensity() const { return mIntensity; }
     inline float GetConstant() const { return mConstant; }
@@ -36,8 +33,6 @@ public:
     inline float GetOuterCutoff() const { return mOuterCutoff; }
     inline float GetType() const { return mType; }
 
-    inline void SetWorldPos(glm::vec3 pWorldPos) { mWorldPos = pWorldPos; }
-    inline void SetWorldRotation(glm::quat pWorldRotation) { mWorldRotation = pWorldRotation; }
     inline void SetColor(glm::vec4 pColor) { mColor = pColor; }
     inline void SetIntensity(float pIntensity) { mIntensity = pIntensity; }
     inline void SetConstant(float pConstant) { mConstant = pConstant; }
@@ -49,11 +44,6 @@ public:
 
 
 private:
-    // location in world
-    glm::vec3 mWorldPos = glm::vec3(0.f, 0.f, 0.f);
-    // 
-    glm::quat mWorldRotation = glm::quat(0.f, 0.f, 0.f, 0.f);
-
     glm::vec4 mColor = { 1.0f, 1.0f, 1.0f, 1.0f };
     float mIntensity = 1.f;
     float mConstant = 0.0f;

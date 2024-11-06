@@ -12,7 +12,8 @@ class Transform;
 enum class ComponentType : uint8_t {
     None = 0,
     Transform, 
-    Camera, 
+    Camera,
+    Light,
     Mesh,
     Script,
     Count, // This needs to be last. It represents how many components there are for bitmask.

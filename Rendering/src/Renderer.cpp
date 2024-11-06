@@ -1,9 +1,9 @@
 #include "Renderer.h"
 
 #include "Components/MeshComponent.h"
+#include "Components/LightComponent.h"
 #include "Managers/AssetManager.h"
 #include "Managers/EntityManager.h"
-#include "Entities/Light.h"
 #include "Resources/Shader.h"
 #include "Resources/Texture.h"
 
@@ -47,9 +47,17 @@ void Renderer::Update(float deltaTime)
         Get lighting matrix
         Add lighting matrix to list
       bind lighting list to Shader Buffer*/
-    Light light(glm::vec3(0.f, 5.f, 0.f), glm::vec3(120.0f, -40.0f, 0.0f), LightType::DirectionalLight);
+
     std::vector<glm::mat4> lightMatricies;
-    lightMatricies.push_back(light.GenerateMatrix());
+    auto lightComponentUUIDs = EntityManager::getInstance().findEntitiesByComponent(ComponentType::Light);
+    for (auto& uuid : lightComponentUUIDs)
+    {
+        auto entity = EntityManager::getInstance().getEntity(uuid);
+        LightComponent* lightComponent = dynamic_cast<LightComponent*>(entity->getComponent(ComponentType::Light));
+        if (lightComponent == nullptr) continue;
+        lightMatricies.push_back(lightComponent->GenerateMatrix(lightComponent->entity->transform));
+    }
+
     shaderStorageBufferObject.SendBlocks(lightMatricies.data(), lightMatricies.size() * sizeof(glm::mat4));
     shaderStorageBufferObject.Bind(0);
 

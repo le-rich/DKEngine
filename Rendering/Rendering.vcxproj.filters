@@ -54,7 +54,7 @@
     <ClInclude Include="include\Data\VertexBufferLayout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Entities\Light.h">
+    <ClInclude Include="include\Components\LightComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Entities\CameraEntity.h">
@@ -73,6 +73,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Buffers\ShaderStorageBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Entities\LightEntity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -104,7 +107,7 @@
     <ClCompile Include="src\Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Entities\Light.cpp">
+    <ClCompile Include="src\Components\LightComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Entities\CameraEntity.cpp">
@@ -126,6 +129,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Buffers\ShaderStorageBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Entities\LightEntity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
