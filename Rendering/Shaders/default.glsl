@@ -14,10 +14,14 @@ layout (std140, binding = 0) uniform EngineUBO
 };
 
 out vec2 v_TexCoord;
+out vec3 v_WorldPos;
 
 void main()
 {
-    gl_Position = ubo_Model * vec4(position, 1.0);
+    vec4 worldPosition = ubo_Model * vec4(position, 1.0);
+    v_WorldPos = worldPosition.xyz;
+
+    gl_Position = ubo_Projection * ubo_View * worldPosition;
     v_TexCoord = texCoord;
 }
 
@@ -27,6 +31,15 @@ void main()
 layout(location = 0) out vec4 colour;
 
 in vec2 v_TexCoord;
+in vec3 v_WorldPos;
+
+layout (std140, binding = 0) uniform EngineUBO
+{
+    mat4    ubo_Model;
+    mat4    ubo_View;
+    mat4    ubo_Projection;
+    vec3    ubo_ViewPos;
+};
 
 uniform sampler2D u_Texture;
 

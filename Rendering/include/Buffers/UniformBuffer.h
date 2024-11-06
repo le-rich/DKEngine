@@ -12,7 +12,10 @@ public:
 
 	void Bind() const;
 	void Unbind() const;
-	void UploadUboData(glm::mat4 viewMatrix, glm::mat4 projectionMatrix, glm::vec3 viewPosition);
+
+    void updateMatrices(const glm::mat4 &model, const glm::mat4 &view,
+                        const glm::mat4 &projection,
+                        const glm::vec3 &cameraPos);
 
 	template<typename T>
 	void SetSubData(const T& p_data, size_t&& p_offset)
@@ -37,5 +40,6 @@ public:
 
 private:
 	GLuint mBufferID;
+	const GLuint BINDING_POINT = 0;
 
 };

@@ -4,8 +4,10 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-UI::UI() {
+UI::UI(Scene* scene) {
    std::cout << "UI PROJECT" << std::endl;
+
+   this->scene = scene;
 
    // Initialize GLFW (Already initialized in main)
    //glfwInit();
@@ -50,7 +52,7 @@ UI::UI() {
    //return 0;
 }
 
-void UI::Update() {
+void UI::Update(float deltaTime) {
    // Update Loop logic here
    std::cout << "UI Update" << std::endl;
    //while (!glfwWindowShouldClose(window)) {
@@ -67,7 +69,7 @@ void UI::Update() {
    createMenuBar();
 
    // Create the ImGui windows
-   createImGuiWindows();
+   createImGuiWindows(this->scene);
 
    // Render ImGui
    ImGui::Render();

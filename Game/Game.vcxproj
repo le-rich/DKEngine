@@ -21,19 +21,19 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{2e825cb0-de55-4f0b-a560-9548a33442a0}</ProjectGuid>
-    <RootNamespace>UI</RootNamespace>
+    <ProjectGuid>{c1f31546-8124-4cf0-9e35-e3d8a67b44bf}</ProjectGuid>
+    <RootNamespace>Game</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -71,7 +71,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(IncludePath);%(AdditionalIncludeDirectories)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(IncludePath);%(AdditionalIncludeDirectories)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -79,7 +82,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>imgui</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -94,7 +96,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>imgui</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -109,13 +110,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Core\include\;$(SolutionDir)External\imgui\include;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\glad\include;$(SolutionDir)External\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Core\include;$(SolutionDir)UI\include;$(SolutionDir)Rendering\include;$(SolutionDir)Physics\include;$(SolutionDir)Game\include;$(SolutionDir)External\glm;$(SolutionDir)External\glm\gtc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)External\glad\lib;$(SolutionDir)External\GLFW\lib;$(SolutionDir)External\imgui\include</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glad.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)x64\$(Configuration)\;$(SolutionDir)External\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -126,52 +126,26 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Core\include\;$(SolutionDir)External\imgui\include;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\glad\include;$(SolutionDir)External\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Core\include;$(SolutionDir)UI\include;$(SolutionDir)Rendering\include;$(SolutionDir)Physics\include;$(SolutionDir)Game\include;$(SolutionDir)External\glm;$(SolutionDir)External\glm\gtc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)External\glad\lib;$(SolutionDir)External\GLFW\lib;$(SolutionDir)External\imgui\include</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glad.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)x64\$(Configuration)\;$(SolutionDir)External\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\External\imgui\src\imgui.cpp" />
-    <ClCompile Include="..\External\imgui\src\imgui_demo.cpp" />
-    <ClCompile Include="..\External\imgui\src\imgui_draw.cpp" />
-    <ClCompile Include="..\External\imgui\src\imgui_impl_glfw.cpp" />
-    <ClCompile Include="..\External\imgui\src\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="..\External\imgui\src\imgui_tables.cpp" />
-    <ClCompile Include="..\External\imgui\src\imgui_widgets.cpp" />
-    <ClCompile Include="src\Browser.cpp" />
-    <ClCompile Include="src\Console.cpp" />
-    <ClCompile Include="src\Hierarchy.cpp" />
-    <ClCompile Include="src\Inspector.cpp" />
-    <ClCompile Include="src\MenuBar.cpp" />
-    <ClCompile Include="src\UI.cpp" />
-    <ClCompile Include="src\Viewport.cpp" />
-    <ClCompile Include="src\DKWindows.cpp" />
+    <ClInclude Include="include\Components\ScriptComponent.h" />
+    <ClInclude Include="include\Game.h" />
+    <ClInclude Include="include\Script.h" />
+    <ClInclude Include="include\Scripts\OrbitScript.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\External\imgui\include\imconfig.h" />
-    <ClInclude Include="..\External\imgui\include\imgui.h" />
-    <ClInclude Include="..\External\imgui\include\imgui_impl_glfw.h" />
-    <ClInclude Include="..\External\imgui\include\imgui_impl_opengl3.h" />
-    <ClInclude Include="..\External\imgui\include\imgui_impl_opengl3_loader.h" />
-    <ClInclude Include="..\External\imgui\include\imgui_internal.h" />
-    <ClInclude Include="..\External\imgui\include\imstb_rectpack.h" />
-    <ClInclude Include="..\External\imgui\include\imstb_textedit.h" />
-    <ClInclude Include="..\External\imgui\include\imstb_truetype.h" />
-    <ClInclude Include="include\Browser.h" />
-    <ClInclude Include="include\Console.h" />
-    <ClInclude Include="include\Hierarchy.h" />
-    <ClInclude Include="include\Inspector.h" />
-    <ClInclude Include="include\MenuBar.h" />
-    <ClInclude Include="include\UI.h" />
-    <ClInclude Include="include\Viewport.h" />
-    <ClInclude Include="include\DKWindows.h" />
+    <ClCompile Include="src\Components\ScriptComponent.cpp" />
+    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\Scripts\OrbitScript.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

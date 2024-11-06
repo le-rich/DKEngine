@@ -9,9 +9,9 @@
 #include "Components/Transform.h"
 #include "Core.h"
 #include "Entity.h"
-#include "GLTFLoader.h"
 #include "Input.h"
 #include "Managers/EntityManager.h"
+#include "Game.h"
 #include "Physics.h"
 #include "Renderer.h"
 #include "Scene.h"
@@ -63,40 +63,37 @@ int run_glfw() {
 	defaultScene->SpawnSceneDefinition();
 
 
-	// TODO: Refactor to a Single Car Entity with Mesh and Rigidbody components
-	std::string SOURCE_FOLDER = "Assets/TestAE/"; // TODO: JSONparser for list of assets, each asset has a PATH and FILE string.
-	Entity testCar;
-	tinygltf::Model gltfModel = GLTFLoader::LoadFromFile(SOURCE_FOLDER + "ae86.gltf"); // TODO: Figure out location of assets/non code files within solution
-	std::vector<UUIDv4::UUID> textures = GLTFLoader::LoadTextures(gltfModel, SOURCE_FOLDER);
-	std::vector<UUIDv4::UUID> materials = GLTFLoader::LoadMaterials(gltfModel, textures);
-	Mesh testMesh = GLTFLoader::LoadMesh(gltfModel, gltfModel.meshes[0], materials);
-	Transform* CAR_TRANSFORM = new Transform(&testCar);
-	// end TODO
-	EntityManager::getInstance().Instantiate(&testCar);
+    auto testCarUUID = EntityManager::getInstance().findFirstEntityByDisplayName("Test Car");
+    Entity* testCarEntity = EntityManager::getInstance().getEntity(testCarUUID);
 
+    Transform* CAR_TRANSFORM = testCarEntity->transform;
 
-	UI* ui = new UI();
-	Physics* physx = new Physics(CAR_TRANSFORM);
-	Renderer* renderer = new Renderer();
+    UI* ui = new UI(Core::getInstance().GetScene());
+    Physics* physx = new Physics(CAR_TRANSFORM);
+    Renderer* renderer = new Renderer(&window);
+    Game* game = new Game();
 
-	Core::getInstance().AddSystem(ui);
-	Core::getInstance().AddSystem(physx);
-	Core::getInstance().AddSystem(renderer);
+    Core::getInstance().AddSystem(ui);
+    Core::getInstance().AddSystem(physx);
+    Core::getInstance().AddSystem(renderer);
+    Core::getInstance().AddSystem(game);
 
-	ui->Initialize();
-	physx->Initialize();
-	renderer->Initialize();
+    ui->Initialize();
+    physx->Initialize();
+    renderer->Initialize();
+    game->Initialize();
 
 	// Timing
 	double fixedUpdateBuffer = 0.0;
 	double FIXED_UPDATE_INTERVAL = 20; // in milliseconds
 	auto previousTime = std::chrono::high_resolution_clock::now();
 
-	// TODO: Refactor to getting Scene instance
-	renderer->windowRef = &window;
-	renderer->testMesh = testMesh;
-	renderer->testMaterials = materials;
-	renderer->testTransform = CAR_TRANSFORM;
+    // TODO: Refactor to getting Scene instance
+	//renderer->windowRef = &window;
+    // renderer->testMesh = testMesh;
+    // renderer->testTextures = textures;
+    // renderer->testMaterials = materials;
+    renderer->testTransform = CAR_TRANSFORM;
 
 	// end TODO
 	// 
@@ -110,20 +107,23 @@ int run_glfw() {
 		if (Input::keys[GLFW_KEY_S])
 			physx->body->addForce(AE86::Vector3(1.0, 0.0, 0.0));
 
-		auto currentTime = std::chrono::high_resolution_clock::now();
-
-		auto elapsedTime = currentTime - previousTime;
+        auto currentTime = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<float> deltaTime = currentTime - previousTime;
+        auto deltaTimeFloatSeconds = deltaTime.count();
 
 		previousTime = currentTime;
 
-		fixedUpdateBuffer += std::chrono::duration_cast<std::chrono::milliseconds>(elapsedTime).count();
-		std::cout << "COUNT: " << fixedUpdateBuffer << "\n"; // Commenting this line causes the Fixed update loop to stutter.
+        fixedUpdateBuffer += std::chrono::duration_cast<std::chrono::milliseconds>(deltaTime).count();
+        std::cout << "COUNT: " << fixedUpdateBuffer << "\n"; // Commenting this line causes the Fixed update loop to stutter.
 
-		window.PollEvents();
-		Input::RunInputListener();
-
-		// TODO: Move to render thread
-		// Rendering related calls, we can move these to the loop of the rendering thread
+        Input::RunInputListener();
+        //glfwMakeContextCurrent(window);
+		window.SetWindowToCurrentThread();
+        // Rendering related calls, we can move these to the loop of the rendering thread
+        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        //glEnable(GL_DEPTH_TEST);
+        //renderer->Update(deltaTimeFloatSeconds); // draw tri or square
+        game->Update(deltaTimeFloatSeconds);
 
 		//renderer->Update(); // draw tri or square
 
@@ -132,27 +132,20 @@ int run_glfw() {
 		// Have them be updated by GLFW callback. This works because glfwpollevents() is a synchronous method that runs all callbacks
 		// As long as all components are called after glfwpollevents, behavior should be fine.
 
-		while (fixedUpdateBuffer >= FIXED_UPDATE_INTERVAL)
-		{
-			physx->FixedUpdate();
-			/*	for (auto system : systems) {
-					system->FixedUpdate();
-				}*/
+        while (fixedUpdateBuffer >= FIXED_UPDATE_INTERVAL)
+        {
+            physx->FixedUpdate();
+            fixedUpdateBuffer -= FIXED_UPDATE_INTERVAL;
+        }
 
-			fixedUpdateBuffer -= FIXED_UPDATE_INTERVAL;
-			//CAR_TRANSFORM->mtx.lock();
-			//glm::vec3 carPos = CAR_TRANSFORM->getLocalPosition();
-			//std::cout << "MAIN LOOP - CAR TRANSFORM POSITION: " << carPos.x << ", " << carPos.y << ", " << carPos.z << "\n";
-			//CAR_TRANSFORM->mtx.unlock();
-		}
+        for (auto system : systems)
+        {
+            //system->Update(deltaTimeFloatSeconds);
+        }
 
-		for (auto system : Core::getInstance().GetSystems()) {
-			//system->Update();
-		}
-
-		//REMOVE THIS LATER. Above loops are never getting entered so UI update was never getting called. Remove this line below when fixed.
-		ui->Update();
-	}
+        //@TODO: REMOVE THIS LATER. Above loops are never getting entered so UI update was never getting called. Remove this line below when fixed.
+        ui->Update(deltaTimeFloatSeconds);
+    }
 
 	// Destroys library, may cause race condition if it gets destroyed while other threads are using it.
 	glfwTerminate();

@@ -105,10 +105,7 @@ public:
         }
     }
 
-    // TODO: This actually needs to check some sort of typeof. 
-    // Simply checking a ref or pointer is not enough...
-    // queries the entity map to return an array of entities with the component
-    std::vector<UUIDv4::UUID> findEntitiesByComponent(const Component* component)
+    std::vector<UUIDv4::UUID> findEntitiesByComponent(const ComponentType componentType)
     {
         std::vector<UUIDv4::UUID> result;
 
@@ -117,9 +114,8 @@ public:
             const UUIDv4::UUID& uuid = it->first;
             const Entity& entity = *it->second;
 
-            if (std::find(entity.getComponents().begin(), entity.getComponents().end(), component) != entity.getComponents().end())
-            {
-                result.push_back(uuid);
+            if (entity.HasComponent(componentType)) {
+                result.push_back(it->first);
             }
         }
 
@@ -138,11 +134,9 @@ public:
             {
                 return uuid;
             }
-            else {
-                std::cerr << "Error: Entity with display name " << displayName << " not found in the map." << std::endl;
-                return nullptr;
-            }
         }
+
+        return nullptr;
     }
 
     // clean and remove entity from the tree

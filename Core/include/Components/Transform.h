@@ -4,7 +4,7 @@
 #include "Component.h"
 
 #include <glm.hpp>
-#include <quaternion.hpp>
+#include <gtc/quaternion.hpp>
 #include <mutex>
 
 class Entity;
@@ -63,8 +63,8 @@ public:
     void setLocalPosition(glm::vec3 position);
     void setLocalOrientation(glm::quat orientation);
 
-    void setWorldSpacePosition(glm::vec4 position);
-    void setWorldSpaceOrientation(glm::quat orientation);
+    void setWorldPosition(glm::vec4 position);
+    void setWorldOrientation(glm::quat orientation);
 
     glm::vec3 getWorldScale();
     void setWorldScale(glm::vec3 scale);

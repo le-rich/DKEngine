@@ -44,17 +44,24 @@
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LibraryPath>$(VC_IncludePath);$(WindowsSDK_IncludePath);..\External\GLFW\x64\lib;..\External\glad\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LibraryPath>$(VC_IncludePath);$(WindowsSDK_IncludePath);..\External\GLFW\x64\lib;..\External\glad\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)External;$(SolutionDir)Core\include;$(SolutionDir)External\stb;$(SolutionDir)External\glm\gtc;$(SolutionDir)External\glm;$(SolutionDir)External\glad\include;$(SolutionDir)Rendering\include\Utils;$(SolutionDir)Rendering\include\Resources;$(SolutionDir)Rendering\include\Entities;$(SolutionDir)Rendering\include\Data;$(SolutionDir)Rendering\include\Components;$(SolutionDir)Rendering\include\Buffers;$(SolutionDir)Rendering\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Core\include;$(SolutionDir)External\stb;$(SolutionDir)External\glm\gtc;$(SolutionDir)External\glm;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\glad\include;$(SolutionDir)Rendering\include\Utils;$(SolutionDir)Rendering\include\Resources;$(SolutionDir)Rendering\include\Entities;$(SolutionDir)Rendering\include\Data;$(SolutionDir)Rendering\include\Components;$(SolutionDir)Rendering\include\Buffers;$(SolutionDir)Rendering\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)External;$(SolutionDir)Core\include;$(SolutionDir)External\stb;$(SolutionDir)External\glm\gtc;$(SolutionDir)External\glm;$(SolutionDir)External\glad\include;$(SolutionDir)Rendering\include\Utils;$(SolutionDir)Rendering\include\Resources;$(SolutionDir)Rendering\include\Entities;$(SolutionDir)Rendering\include\Data;$(SolutionDir)Rendering\include\Components;$(SolutionDir)Rendering\include\Buffers;$(SolutionDir)Rendering\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Core\include;$(SolutionDir)External\stb;$(SolutionDir)External\glm\gtc;$(SolutionDir)External\glm;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\glad\include;$(SolutionDir)Rendering\include\Utils;$(SolutionDir)Rendering\include\Resources;$(SolutionDir)Rendering\include\Entities;$(SolutionDir)Rendering\include\Data;$(SolutionDir)Rendering\include\Components;$(SolutionDir)Rendering\include\Buffers;$(SolutionDir)Rendering\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\Components\MeshComponent.h" />
     <ClInclude Include="include\Resources\Asset.h" />
     <ClInclude Include="include\Buffers\IndexBuffer.h" />
     <ClInclude Include="include\Buffers\UniformBuffer.h" />
@@ -75,6 +82,7 @@
     <ClInclude Include="include\Utils\Logger.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Components\MeshComponent.cpp" />
     <ClCompile Include="src\Resources\Asset.cpp" />
     <ClCompile Include="src\Buffers\IndexBuffer.cpp" />
     <ClCompile Include="src\Buffers\UniformBuffer.cpp" />

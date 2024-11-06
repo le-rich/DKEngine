@@ -23,6 +23,7 @@ protected:
 
     // array of components
     std::vector<Component*> components;
+    ComponentMask componentMask;
 
     // pointer to its parent Entity
     Entity* parent = nullptr;
@@ -38,6 +39,10 @@ public:
     UUIDv4::UUID GetEntityID()
     {
         return entityID;
+    }
+
+    ComponentMask GetComponentMask() const { 
+        return componentMask;
     }
 
     // set the entity uuid
@@ -75,6 +80,8 @@ public:
     void addComponent(Component& c)
     {
         components.push_back(&c);
+
+        componentMask.set(static_cast<size_t>(c.componentType));
     }
 
     // remove component from the entity
@@ -84,12 +91,14 @@ public:
             std::remove_if(components.begin(), components.end(),
                 [&c](const Component* comp) { return comp == &c; }),
             components.end());
+
+        componentMask.reset(static_cast<size_t>(c.componentType));
     }
 
-    Component* getComponent(const Component& c)
+    Component* getComponent(const ComponentType& componentType)
     {
         auto it = std::find_if(components.begin(), components.end(),
-            [&c](const Component* comp) { return comp == &c; });
+            [&componentType](const Component* comp) { return comp->componentType == componentType; });
 
         if (it != components.end())
         {
@@ -99,6 +108,10 @@ public:
         {
             return nullptr;
         }
+    }
+
+    bool HasComponent(ComponentType type) const {
+        return componentMask.test(static_cast<size_t>(type));
     }
 
     // default constructor
@@ -151,6 +164,11 @@ public:
     // add a child entity
     void addChild(Entity* child)
     {
+       for (Entity* e : children) {
+          if (e == child) {
+             return;
+          }
+       }
         children.push_back(child);
         child->parent = this;
     }
@@ -176,16 +194,16 @@ public:
     }
 
     // retrieve a specific component from a parent
-    Component* getComponentFromParent(const Component& c)
+    Component* getComponentFromParent(const ComponentType& componentType)
     {
-        Component* comp = getComponent(c);
+        Component* comp = getComponent(componentType);
         if (comp != nullptr)
         {
             return comp;
         }
         if (parent != nullptr)
         {
-            return parent->getComponentFromParent(c);
+            return parent->getComponentFromParent(componentType);
         }
         return nullptr;
     }

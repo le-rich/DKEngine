@@ -3,11 +3,16 @@
 
 #include "Entity.h"
 
+
 class Scene
 {
 public:
     Scene();
     ~Scene();
+
+    Entity* getRoot() {
+       return sceneRoot;
+    };
 
     Entity* sceneRoot = nullptr;
     // lock to guarantee mutual exclusion
