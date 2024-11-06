@@ -17,26 +17,26 @@
 
 Renderer::Renderer(Window* window)
 {
-    windowRef = window;
+	windowRef = window;
 }
 
 Renderer::~Renderer() {}
 
 void Renderer::Initialize() {
-    System::Initialize(); 
+	System::Initialize();
 
-    // Get Camera if it exists
-    auto mainCameraUUID = EntityManager::getInstance().findFirstEntityByDisplayName("Main Camera");
-    auto mainCamera = EntityManager::getInstance().getEntity(mainCameraUUID);
-    if (mainCamera != nullptr) {
-        this->mainCameraEntity = mainCamera;
-    } 
-    else 
-    {
-        std::cerr << "Error: Main Camera not found. The program will now exit." << std::endl;
-        std::cin.get();
-        std::exit(EXIT_FAILURE);  // Terminate program with failure status
-    }
+	// Get Camera if it exists
+	auto mainCameraUUID = EntityManager::getInstance().findFirstEntityByDisplayName("Main Camera");
+	auto mainCamera = EntityManager::getInstance().getEntity(mainCameraUUID);
+	if (mainCamera != nullptr) {
+		this->mainCameraEntity = mainCamera;
+	}
+	else
+	{
+		std::cerr << "Error: Main Camera not found. The program will now exit." << std::endl;
+		std::cin.get();
+		std::exit(EXIT_FAILURE);  // Terminate program with failure status
+	}
 	updateThread = new std::thread([&]()
 		{
 			auto previousTime = std::chrono::high_resolution_clock::now();
@@ -53,7 +53,7 @@ void Renderer::Initialize() {
 
 void Renderer::Update(float deltaTime)
 {
-	
+
 	Scene* scene = Core::getInstance().GetScene();
 	Entity* root;
 	{
@@ -68,7 +68,7 @@ void Renderer::Update(float deltaTime)
 		Add lighting matrix to list
 	 */
 
-	  // TODO: Bug Physics/Core on way to get modelMatrix directly from transform
+	 // TODO: Bug Physics/Core on way to get modelMatrix directly from transform
 	glm::vec3 localScale = testTransform->getLocalScale();
 	glm::mat4 modelMatrix =
 		glm::translate(glm::mat4(1.0f), testTransform->getWorldPosition()) *
@@ -87,81 +87,81 @@ void Renderer::Update(float deltaTime)
 
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_DEPTH_TEST);
+		mEngineUniformBuffer.SetSubData(modelMatrix, 0);
 
-    mEngineUniformBuffer.SetSubData(modelMatrix, 0);
 
 
-    // CAMERA =====================
-    CameraComponent* cameraComponent = dynamic_cast<CameraComponent*>(mainCameraEntity->getComponent(ComponentType::Camera));
+		// CAMERA =====================
+		CameraComponent* cameraComponent = dynamic_cast<CameraComponent*>(mainCameraEntity->getComponent(ComponentType::Camera));
 
-    if (cameraComponent != nullptr){
-        // Update Aspect Ratio if the window has resized
-        int width, height;
-        glfwGetWindowSize(windowRef->GetWindow(), &width, &height);
-        cameraComponent->updateAspectRatio(width, height);
+		if (cameraComponent != nullptr) {
+			// Update Aspect Ratio if the window has resized
+			int width, height;
+			glfwGetWindowSize(windowRef->GetWindow(), &width, &height);
+			cameraComponent->updateAspectRatio(width, height);
 
-        cameraComponent->calculateViewMatrix(cameraComponent->entity->transform);
-        cameraComponent->calculateProjectionMatrix();
-    }
-    // ============================
+			cameraComponent->calculateViewMatrix(cameraComponent->entity->transform);
+			cameraComponent->calculateProjectionMatrix();
+		}
+		// ============================
 
-		/*
-		Material Based:
-		For each Material
-			Bind Material
-			Apply Material specific Uniforms
-			For each Primitive in Material
-				Bind Vertex Array
-				Bind Index Buffer
-				DrawCall
-			Unbind Material
-		 */
+			/*
+			Material Based:
+			For each Material
+				Bind Material
+				Apply Material specific Uniforms
+				For each Primitive in Material
+					Bind Vertex Array
+					Bind Index Buffer
+					DrawCall
+				Unbind Material
+			 */
 
-     // Kinda okay methodology
-     //TODO: Replace with Scene based or Material based Draw
-    
+			 // Kinda okay methodology
+			 //TODO: Replace with Scene based or Material based Draw
 
-    // MESHES ============================
-    auto meshComponentUUIDs = EntityManager::getInstance().findEntitiesByComponent(ComponentType::Mesh);
-    
-    for (auto& uuid : meshComponentUUIDs) 
-    {
-        auto entity = EntityManager::getInstance().getEntity(uuid);
-        MeshComponent* meshComponent = dynamic_cast<MeshComponent*>(entity->getComponent(ComponentType::Mesh));
 
-        if (meshComponent != nullptr)
-        {
-            glm::vec3 localScale = entity->transform->getLocalScale();
+			// MESHES ============================
+		auto meshComponentUUIDs = EntityManager::getInstance().findEntitiesByComponent(ComponentType::Mesh);
 
-            glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), entity->transform->getWorldPosition()) *
-                                    glm::mat4_cast(entity->transform->getLocalOrientation()) *
-                                    glm::scale(glm::mat4(1.0f), localScale);
+		for (auto& uuid : meshComponentUUIDs)
+		{
+			auto entity = EntityManager::getInstance().getEntity(uuid);
+			MeshComponent* meshComponent = dynamic_cast<MeshComponent*>(entity->getComponent(ComponentType::Mesh));
 
-            mEngineUniformBuffer.updateMatrices(
-                modelMatrix, 
-                cameraComponent->getViewMatrix(), 
-                cameraComponent->getProjectionMatrix(),
-                mainCameraEntity->transform->getWorldPosition()
-            );
-            
-            meshComponent->getMesh()->Draw();
-        }
-    }
+			if (meshComponent != nullptr)
+			{
+				glm::vec3 localScale = entity->transform->getLocalScale();
 
-    // ===================================
+				glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), entity->transform->getWorldPosition()) *
+					glm::mat4_cast(entity->transform->getLocalOrientation()) *
+					glm::scale(glm::mat4(1.0f), localScale);
 
-		/*Perform Post Processing
-		  Draw Frame Buffer*/
+				mEngineUniformBuffer.updateMatrices(
+					modelMatrix,
+					cameraComponent->getViewMatrix(),
+					cameraComponent->getProjectionMatrix(),
+					mainCameraEntity->transform->getWorldPosition()
+				);
 
-		  // Swap window buffers. can be moved to post update
-		//texture->Unbind();
+				meshComponent->getMesh()->Draw();
+			}
+		}
+
+		// ===================================
+
+			/*Perform Post Processing
+			  Draw Frame Buffer*/
+
+			  // Swap window buffers. can be moved to post update
+			//texture->Unbind();
 	}
 	// Swap window buffers. can be moved to post update
 	windowRef->SwapWindowBuffers();
 }
 
 void Renderer::FixedUpdate() {
-    
+
 }
 
 
