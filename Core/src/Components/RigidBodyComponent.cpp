@@ -1,5 +1,5 @@
 #include "Entity.h"
-#include "RigidBodyComponent.h"
+#include "Components/RigidBodyComponent.h"
 
 RigidBodyComponent::RigidBodyComponent(Entity* mEntity, std::shared_ptr<AE86::RigidBody> rigidBody, float mass)
 	: Component(mEntity), rb(rigidBody) {
