@@ -114,16 +114,6 @@ vec3 CalculateDirectionalLight(mat4 plight)
     return BlinnPhong(-plight[1].rgb, UnPackColor(plight[2][0]), plight[3][3]);
 }
 
-//vec3 CalculateDirectionalLight(mat4 plight)
-//{
-//    return BlinnPhong(-plight[1].rgb, UnPackColor(plight[2][0]), plight[3][3]);
-//}
-//
-//vec3 CalculateDirectionalLight(mat4 plight)
-//{
-//    return BlinnPhong(-plight[1].rgb, UnPackColor(plight[2][0]), plight[3][3]);
-//}
-
 vec3 CalculateLightSum()
 {
     vec3 lightSum = vec3(0.0);
