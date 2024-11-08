@@ -60,7 +60,7 @@ void Renderer::Update(float deltaTime)
 		std::lock_guard<std::mutex> lock(scene->mtx);
 		root = scene->GetSceneCopy();
 	}
-	delete root;
+	delete root; // Memory Leak
 
 	/*Get lights
 	  For each light
@@ -68,28 +68,14 @@ void Renderer::Update(float deltaTime)
 		Add lighting matrix to list
 	 */
 
-	 // TODO: Bug Physics/Core on way to get modelMatrix directly from transform
-	glm::vec3 localScale = testTransform->getLocalScale();
-	glm::mat4 modelMatrix =
-		glm::translate(glm::mat4(1.0f), testTransform->getWorldPosition()) *
-		glm::mat4_cast(testTransform->getLocalOrientation()) *
-		glm::mat4( // creates a scale matrix 
-			glm::vec4(localScale.x, 0.0f, 0.0f, 0.0f),
-			glm::vec4(0.0f, localScale.y, 0.0f, 0.0f),
-			glm::vec4(0.0f, 0.0f, localScale.z, 0.0f),
-			glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)
-		);
+
 	{
 		std::lock_guard<std::mutex> lock(windowRef->mMutex);
 		windowRef->SetWindowToCurrentThread();
-		// Clear color and depth buffers (can be moved to pre update
+		// Clear color and depth buffers for set Framebuffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_DEPTH_TEST);
-		mEngineUniformBuffer.SetSubData(modelMatrix, 0);
-
-
 
 		// CAMERA =====================
 		CameraComponent* cameraComponent = dynamic_cast<CameraComponent*>(mainCameraEntity->getComponent(ComponentType::Camera));
@@ -133,6 +119,7 @@ void Renderer::Update(float deltaTime)
 			{
 				glm::vec3 localScale = entity->transform->getLocalScale();
 
+				// TODO: Bug Physics/Core on way to get modelMatrix directly from transform
 				glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), entity->transform->getWorldPosition()) *
 					glm::mat4_cast(entity->transform->getLocalOrientation()) *
 					glm::scale(glm::mat4(1.0f), localScale);
@@ -152,9 +139,6 @@ void Renderer::Update(float deltaTime)
 
 			/*Perform Post Processing
 			  Draw Frame Buffer*/
-
-			  // Swap window buffers. can be moved to post update
-			//texture->Unbind();
 	}
 	// Swap window buffers. can be moved to post update
 	windowRef->SwapWindowBuffers();
