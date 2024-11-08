@@ -12,8 +12,7 @@ class Entity;
 /**
  *
  */
-class Transform : public Component
-{
+class TransformComponent : public Component {
 private:
     // parent space coords for Transform's origin's position.
     glm::vec3 localPosition;
@@ -31,11 +30,11 @@ private:
     glm::mat4 transformMatrix;
 
 public:
-    Transform(Entity* mEntity);
-    // the constructor, takes global position, orientation, scale, parent, child
-    Transform(Entity* mEntity, glm::vec4 position, glm::quat orientation, float scale);
-    Transform(Transform const&);
-    ~Transform();
+	TransformComponent(Entity* mEntity);
+	// the constructor, takes global position, orientation, scale, parent, child
+	TransformComponent(Entity* mEntity, glm::vec4 position, glm::quat orientation, float scale);
+    TransformComponent(TransformComponent& const);
+	~TransformComponent();
 
     Component* clone() override;
 
@@ -46,7 +45,7 @@ public:
      * to then be updated. This method does that.
      */
     void updateTransformMatrix();
-    void lookAt(Transform* target);
+    void lookAt(TransformComponent* target);
 
 
     /********************************************/
@@ -55,10 +54,10 @@ public:
     inline const glm::mat4 getTransformMatrix() { return transformMatrix; }
 
     glm::vec3 getWorldPosition();
-    glm::quat getWorldOrientation();
+    glm::quat getWorldOrientation() const;
 
     glm::vec3 getLocalPosition();
-    glm::quat getLocalOrientation();
+    glm::quat getLocalOrientation() const;
 
     void setLocalPosition(glm::vec3 position);
     void setLocalOrientation(glm::quat orientation);
@@ -66,11 +65,11 @@ public:
     void setWorldPosition(glm::vec4 position);
     void setWorldOrientation(glm::quat orientation);
 
-    glm::vec3 getWorldScale();
+    glm::vec3 getWorldScale() const;
     void setWorldScale(glm::vec3 scale);
 
-    glm::vec3 getLocalScale();
+    glm::vec3 getLocalScale() const;
     void setLocalScale(glm::vec3 scale);
 
-    Transform& operator=(const Transform& other);
+	TransformComponent& operator=(const TransformComponent& other);
 };

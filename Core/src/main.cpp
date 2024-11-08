@@ -6,7 +6,7 @@
 #include <thread>
 
 #include "Component.h"
-#include "Components/Transform.h"
+#include "Components/TransformComponent.h"
 #include "Core.h"
 #include "Entity.h"
 #include "Input.h"
@@ -66,7 +66,7 @@ int run_glfw() {
     auto testCarUUID = EntityManager::getInstance().findFirstEntityByDisplayName("Test Car");
     Entity* testCarEntity = EntityManager::getInstance().getEntity(testCarUUID);
 
-    Transform* CAR_TRANSFORM = testCarEntity->transform;
+    TransformComponent* CAR_TRANSFORM = testCarEntity->transform;
 
     UI* ui = new UI(Core::getInstance().GetScene());
     Physics* physx = new Physics(CAR_TRANSFORM);

@@ -12,7 +12,7 @@ CameraComponent::CameraComponent(Entity* mEntity) : Component(mEntity)
 CameraComponent::~CameraComponent()
 {}
 
-void CameraComponent::calculateViewMatrix(Transform* transform) 
+void CameraComponent::calculateViewMatrix(TransformComponent* transform) 
 {
     glm::vec3 cameraPosition = transform->getWorldPosition();
     glm::quat cameraOrientation = transform->getWorldOrientation();

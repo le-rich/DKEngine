@@ -174,8 +174,7 @@ public:
         entity->setParent(parent);
     }
 
-    void Instantiate(Entity* entity, Transform* transform)
-    {
+    void Instantiate(Entity* entity, TransformComponent* transform) {
         Core::getInstance().GetScene()->sceneRoot->addChild(entity);
         entity->setParent(Core::getInstance().GetScene()->sceneRoot);
 
@@ -184,7 +183,7 @@ public:
         addEntityToMap(*entity);
     }
 
-    void Instantiate(Entity* entity, Transform* transform, Entity* parent)
+    void Instantiate(Entity* entity, TransformComponent* transform, Entity* parent)
     {
         Scene* scene = Core::getInstance().GetScene();
         UUIDv4::UUID parentUUID = parent->GetEntityID();

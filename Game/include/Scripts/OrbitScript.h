@@ -2,7 +2,7 @@
 
 #include "Script.h"
 
-#include "Components/Transform.h"
+#include "Components/TransformComponent.h"
 
 class OrbitScript : public Script 
 {
@@ -12,10 +12,10 @@ public:
 
     void Update(float deltaTime) override;
 
-    void setOrbitTarget(Transform* transform) { m_OrbitTarget = transform; }
+    void setOrbitTarget(TransformComponent* transform) { m_OrbitTarget = transform; }
 
 private:
-    Transform* m_OrbitTarget = nullptr;
+    TransformComponent* m_OrbitTarget = nullptr;
 
     float m_Radius = 2;
     float m_Speed = 1.5f;
