@@ -62,13 +62,15 @@ void Renderer::Update(float deltaTime)
     mEngineUniformBuffer.SetSubData(modelMatrix, 0);
 
 
+    // Update Aspect Ratio if the window has resized
+    int width, height;
+    glfwGetWindowSize(m_Window, &width, &height);
+    mRenderFrameBuffer.Resize(width, height);
+    mRenderFrameBuffer.Bind();
     // CAMERA =====================
     CameraComponent* cameraComponent = dynamic_cast<CameraComponent*>(mainCameraEntity->getComponent(ComponentType::Camera));
 
     if (cameraComponent != nullptr){
-        // Update Aspect Ratio if the window has resized
-        int width, height;
-        glfwGetWindowSize(m_Window, &width, &height);
         cameraComponent->updateAspectRatio(width, height);
 
         cameraComponent->calculateViewMatrix(cameraComponent->entity->transform);
