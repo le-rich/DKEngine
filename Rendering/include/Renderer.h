@@ -30,6 +30,8 @@ public:
 
     void FixedUpdate() override;
 
+    void RenderToFrame();
+
     // GARBAGE BLOCK HATE IT
     // TODO: Decouple from member to scene reference
     Mesh testMesh;
@@ -39,11 +41,9 @@ public:
 private:
     //GLFWwindow* m_Window;
     Window* windowRef;
-
-
     Entity* mainCameraEntity = nullptr; 
-
-
     UniformBuffer mEngineUniformBuffer;
     ShaderStorageBuffer shaderStorageBufferObject;
+
+    void DrawByMesh();
 };
