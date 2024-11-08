@@ -8,6 +8,9 @@ class MeshComponent : public Component
 public:
     MeshComponent(Entity* mEntity);
     ~MeshComponent();
+
+    MeshComponent(const MeshComponent& other);
+    Component* clone() const override;
     
     void setMesh(Mesh* mesh);
     Mesh* getMesh();

@@ -57,6 +57,8 @@ public:
 
     bool operator==(const Component& other) const;
 
+    virtual Component* clone() const = 0;
+
 private:
     
 };

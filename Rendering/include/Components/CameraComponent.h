@@ -16,6 +16,10 @@ public:
     CameraComponent(Entity* mEntity);
     ~CameraComponent();
 
+    CameraComponent(const CameraComponent& other);
+
+    Component* clone() const override;
+
     void calculateViewMatrix(TransformComponent* transform);
     void calculateProjectionMatrix();
     void updateAspectRatio(int width, int height);

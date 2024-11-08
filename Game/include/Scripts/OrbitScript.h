@@ -14,6 +14,10 @@ public:
 
     void setOrbitTarget(TransformComponent* transform) { m_OrbitTarget = transform; }
 
+    std::unique_ptr<Script> clone() const override {
+        return std::make_unique<OrbitScript>(*this);
+    }
+
 private:
     TransformComponent* m_OrbitTarget = nullptr;
 

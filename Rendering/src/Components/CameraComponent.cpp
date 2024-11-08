@@ -34,3 +34,20 @@ void CameraComponent::updateAspectRatio(int width, int height)
 glm::mat4 CameraComponent::getViewMatrix() { return m_viewMatrix; }
 
 glm::mat4 CameraComponent::getProjectionMatrix() { return m_projectionMatrix; }
+
+CameraComponent::CameraComponent(const CameraComponent& other)
+    : Component(other.entity),
+    lookAtTarget(other.lookAtTarget),
+    fieldOfView(other.fieldOfView),
+    farClipPlane(other.farClipPlane),
+    nearClipPlane(other.nearClipPlane),
+    aspectRatio(other.aspectRatio),
+    m_viewMatrix(other.m_viewMatrix),
+    m_projectionMatrix(other.m_projectionMatrix)
+{
+    this->componentType = ComponentType::Camera;
+}
+
+Component* CameraComponent::clone() const {
+    return new CameraComponent(*this);
+}

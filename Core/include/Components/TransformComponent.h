@@ -69,4 +69,8 @@ public:
     void setLocalScale(glm::vec3 scale);
 
 	TransformComponent& operator=(const TransformComponent& other);
+
+    // copy constructor for clone
+    TransformComponent(const TransformComponent& other);
+    Component* clone() const override;
 };

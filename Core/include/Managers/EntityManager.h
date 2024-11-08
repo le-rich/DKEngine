@@ -195,4 +195,26 @@ public:
 
         addEntityToMap(*entity);
     }
+
+    Entity* duplicateEntity(Entity* originalEntity) {
+        if (!originalEntity) return nullptr;
+
+        // create a new entity with a copy name
+        Entity* duplicate = new Entity(originalEntity->GetDisplayName() + "_copy");
+
+        // duplicate components
+        for (const auto& comp : originalEntity->getComponents()) {
+            duplicate->addComponent(*comp->clone());
+        }
+
+        // recursive duplicate children
+        for (auto* child : originalEntity->getChildren()) {
+            Entity* childDuplicate = duplicateEntity(child);
+            duplicate->addChild(childDuplicate);
+        }
+
+        addEntityToMap(*duplicate);
+
+        return duplicate;
+    }
 };
