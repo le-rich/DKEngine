@@ -56,12 +56,14 @@ void Renderer::Initialize() {
 void Renderer::Update(float deltaTime)
 {
 	// TODO: Create copy of Scene Graph/Entity manager to avoid race conditions with other threads
-	std::lock_guard<std::mutex> lock(windowRef->mMutex);
-	windowRef->SetWindowToCurrentThread();
-	// Set FrameBuffer
-	RenderToFrame();
-	//Perform Post Processing
-	//Draw Frame Buffer
+	{
+		std::lock_guard<std::mutex> lock(windowRef->mMutex);
+		windowRef->SetWindowToCurrentThread();
+		// Set FrameBuffer
+		RenderToFrame();
+		//Perform Post Processing
+		//Draw Frame Buffer
+	}
 
 	// Swap window buffers. can be moved to post update
 	windowRef->SwapWindowBuffers();
