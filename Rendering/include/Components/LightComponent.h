@@ -5,7 +5,7 @@
 #include <gtc/quaternion.hpp>
 
 #include "Component.h"
-#include "Components/Transform.h"
+#include "Components/TransformComponent.h"
 
 enum LightType
 {
@@ -20,9 +20,10 @@ class LightComponent : public Component
 {
 public:
     LightComponent(Entity* pEntity);
+    LightComponent(const LightComponent& other);
 
     // Return single 4x4 matrix representing all LightComponent information
-    glm::mat4 GenerateMatrix(Transform* pTransform);
+    glm::mat4 GenerateMatrix(TransformComponent* pTransform);
 
     inline glm::vec4 GetColor() const { return mColor; }
     inline float GetIntensity() const { return mIntensity; }
@@ -41,6 +42,8 @@ public:
     inline void SetCutoff(float pCutoff) { mCutoff = pCutoff; }
     inline void SetOuterCutoff(float pOuterCutoff) { mOuterCutoff = pOuterCutoff; }
     inline void SetType(LightType pType) { mType = pType; }
+
+    virtual Component* clone() const override;
 
 
 private:
