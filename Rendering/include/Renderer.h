@@ -1,6 +1,7 @@
 #pragma once
 #include "System.h"
 #include "Buffers/UniformBuffer.h"
+#include "Buffers/ShaderStorageBuffer.h"
 // @TODO: Remove TESTING INCLUDE
 #include "Resources/Mesh.h"
 #include "Components/Transform.h"
@@ -40,5 +41,5 @@ private:
 
 
     UniformBuffer mEngineUniformBuffer;
-
+    ShaderStorageBuffer shaderStorageBufferObject;
 };
