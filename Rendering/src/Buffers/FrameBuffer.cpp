@@ -16,6 +16,7 @@ void FrameBuffer::Resize(unsigned int width, unsigned int height)
 	mBufferWidth = width;
 	mBufferHeight = height;
 	Unbind();
+	GLCall(glDeleteFramebuffers(1, &mBufferID));
 	Init(width, height);
 }
 

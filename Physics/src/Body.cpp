@@ -304,4 +304,8 @@ namespace AE86 {
     {
         return rotation;
     }
+    
+    Vector3 RigidBody::getForceAccum() const {
+        return forceAccum;
+    }
 }

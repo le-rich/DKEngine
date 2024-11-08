@@ -37,7 +37,7 @@ void drawInspector() {
        //ImGui::Text("Selected Object: %s", selected->getName().c_str());
 
        if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
-          Transform* transform = selectedEntity->transform;
+          TransformComponent* transform = selectedEntity->transform;
           if (transform != nullptr) {
 
              // Position

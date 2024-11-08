@@ -12,10 +12,13 @@ public:
 
     ScriptComponent(Entity* mEntity);
     ~ScriptComponent();
+    ScriptComponent(const ScriptComponent& other);
+
+    Component* clone() const override;
 
     template<typename T, typename...Args>
     void AddScript(Args&&... args) {
-        scripts.emplace_back(std::make_unique<T>(std::forward<Args>(args)...));
+        scripts.emplace_back(std::make_shared<T>(std::forward<Args>(args)...));
     }
 
     void UpdateScripts(float deltaTime) {
@@ -25,6 +28,8 @@ public:
         }
     }
 
+    ScriptComponent& operator=(ScriptComponent& const other);
+
 private:
-    std::vector<std::unique_ptr<Script>> scripts;
+    std::vector<std::shared_ptr<Script>> scripts;
 };

@@ -174,8 +174,7 @@ public:
         entity->setParent(parent);
     }
 
-    void Instantiate(Entity* entity, Transform* transform)
-    {
+    void Instantiate(Entity* entity, TransformComponent* transform) {
         Core::getInstance().GetScene()->sceneRoot->addChild(entity);
         entity->setParent(Core::getInstance().GetScene()->sceneRoot);
 
@@ -184,7 +183,7 @@ public:
         addEntityToMap(*entity);
     }
 
-    void Instantiate(Entity* entity, Transform* transform, Entity* parent)
+    void Instantiate(Entity* entity, TransformComponent* transform, Entity* parent)
     {
         Scene* scene = Core::getInstance().GetScene();
         UUIDv4::UUID parentUUID = parent->GetEntityID();
@@ -195,5 +194,27 @@ public:
         entity->transform = transform;
 
         addEntityToMap(*entity);
+    }
+
+    Entity* duplicateEntity(Entity* originalEntity) {
+        if (!originalEntity) return nullptr;
+
+        // create a new entity with a copy name
+        Entity* duplicate = new Entity(originalEntity->GetDisplayName() + "_copy");
+
+        // duplicate components
+        for (const auto& comp : originalEntity->getComponents()) {
+            duplicate->addComponent(*comp->clone());
+        }
+
+        // recursive duplicate children
+        for (auto* child : originalEntity->getChildren()) {
+            Entity* childDuplicate = duplicateEntity(child);
+            duplicate->addChild(childDuplicate);
+        }
+
+        addEntityToMap(*duplicate);
+
+        return duplicate;
     }
 };

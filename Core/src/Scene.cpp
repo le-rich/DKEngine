@@ -1,6 +1,7 @@
 #include "Scene.h"
 
 #include "Entities/CameraEntity.h"
+#include "Entities/LightEntity.h"
 #include "GLTFLoader.h"
 #include "Managers/EntityManager.h"
 #include "Components/MeshComponent.h"
@@ -25,6 +26,14 @@ void Scene::SpawnSceneDefinition()
     cameraEntity->transform->setWorldPosition(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
 
     sceneRoot->addChild(cameraEntity);
+
+    LightEntity* lightEntity = new LightEntity();
+    lightEntity->SetDisplayName("Light");
+    lightEntity->transform->setLocalPosition(glm::vec3(0.f, 5.f, 0.f));
+    lightEntity->transform->setLocalOrientation(glm::quat(-0.5f, 0.5f, 0.5f, 0.f));
+    EntityManager::getInstance().Instantiate(lightEntity);
+
+    //(glm::vec3(0.f, 5.f, 0.f), glm::vec3(120.0f, -40.0f, 0.0f), LightType::DirectionalLight);
 
     // TODO: Refactor to a Single Car Entity with Mesh and Rigidbody components
 
@@ -52,4 +61,10 @@ void Scene::SpawnSceneDefinition()
     cameraEntity->addComponent(*cameraScriptComponent);
     EntityManager::getInstance().Instantiate(cameraEntity);
 
+}
+
+Entity* Scene::GetSceneCopy()
+{
+    Entity* cur = new Entity(*sceneRoot);
+    return cur;
 }

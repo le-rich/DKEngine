@@ -12,7 +12,8 @@ class Transform;
 enum class ComponentType : uint8_t {
     None = 0,
     Transform, 
-    Camera, 
+    Camera,
+    Light,
     Mesh,
     Script,
     Count, // This needs to be last. It represents how many components there are for bitmask.
@@ -27,7 +28,7 @@ class Component
 public:
     Component(Entity* mEntity);
     virtual ~Component() = default;
-
+   
     Entity* entity;
 
     UUIDv4::UUID componentID;
@@ -56,6 +57,9 @@ public:
     }
 
     bool operator==(const Component& other) const;
+
+    // Polymorphic copy constructor
+    virtual Component* clone() const = 0;
 
 private:
     
