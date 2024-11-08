@@ -31,14 +31,6 @@ void main()
 in vec2 v_TexCoord;
 in vec3 v_WorldPos;
 
-//layout (std140, binding = 0) uniform EngineUBO
-//{
-//    mat4    ubo_Model;
-//    mat4    ubo_View;
-//    mat4    ubo_Projection;
-//    vec3    ubo_ViewPos;
-//};
-
 layout(std140, binding = 0) buffer LightSSBO
 {
     mat4 ssboLights[];
@@ -46,9 +38,8 @@ layout(std140, binding = 0) buffer LightSSBO
 
 uniform sampler2D uDiffuseMap;
 
-uniform vec4 uDiffuse    = vec4(1.0, 1.0, 1.0, 1.0);
-
 // Uniforms
+uniform vec4 uDiffuse    = vec4(1.0, 1.0, 1.0, 1.0);
 uniform float uShininess = 100.0;
 
 // Globals
@@ -103,7 +94,4 @@ void main()
     }
 
     FragColor = vec4(lightSum, gDiffuseTexel.a);
-
-//    vec4 texColour = texture(uDiffuseMap, v_TexCoord);
-//    FragColor = texColour;
 }

@@ -42,12 +42,6 @@ void Renderer::Update(float deltaTime)
 {
     // Clear color and depth buffers (can be moved to pre update
 
-    /*Get lights
-      For each light
-        Get lighting matrix
-        Add lighting matrix to list
-      bind lighting list to Shader Buffer*/
-
     std::vector<glm::mat4> lightMatricies;
     auto lightComponentUUIDs = EntityManager::getInstance().findEntitiesByComponent(ComponentType::Light);
     for (auto& uuid : lightComponentUUIDs)
@@ -60,21 +54,6 @@ void Renderer::Update(float deltaTime)
 
     shaderStorageBufferObject.SendBlocks(lightMatricies.data(), lightMatricies.size() * sizeof(glm::mat4));
     shaderStorageBufferObject.Bind(0);
-
-    // TODO: Bug Physics/Core on way to get modelMatrix directly from transform
-    glm::vec3 localScale = testTransform->getLocalScale();
-    glm::mat4 modelMatrix =
-        glm::translate(glm::mat4(1.0f), testTransform->getWorldPosition()) *
-        glm::mat4_cast(testTransform->getLocalOrientation()) *
-        glm::mat4( // creates a scale matrix 
-            glm::vec4(localScale.x, 0.0f, 0.0f, 0.0f),
-            glm::vec4(0.0f, localScale.y, 0.0f, 0.0f),
-            glm::vec4(0.0f, 0.0f, localScale.z, 0.0f),
-            glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)
-        );
-
-    mEngineUniformBuffer.SetSubData(modelMatrix, 0);
-
 
     // CAMERA =====================
     CameraComponent* cameraComponent = dynamic_cast<CameraComponent*>(mainCameraEntity->getComponent(ComponentType::Camera));
@@ -118,6 +97,7 @@ void Renderer::Update(float deltaTime)
         {
             glm::vec3 localScale = entity->transform->getLocalScale();
 
+            // TODO: Bug Physics/Core on way to get modelMatrix directly from transform
             glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), entity->transform->getWorldPosition()) *
                                     glm::mat4_cast(entity->transform->getLocalOrientation()) *
                                     glm::scale(glm::mat4(1.0f), localScale);
