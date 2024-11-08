@@ -4,7 +4,7 @@
 #include "Buffers/ShaderStorageBuffer.h"
 // @TODO: Remove TESTING INCLUDE
 #include "Resources/Mesh.h"
-#include "Components/Transform.h"
+#include "Components/TransformComponent.h"
 #include "Components/CameraComponent.h"
 #include "Entities/CameraEntity.h"
 
@@ -30,7 +30,7 @@ public:
     // GARBAGE BLOCK HATE IT
     // TODO: Decouple from member to scene reference
     Mesh testMesh;
-    Transform* testTransform = nullptr;
+    TransformComponent* testTransform = nullptr;
     std::vector<UUIDv4::UUID> testMaterials;
 
 private:

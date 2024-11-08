@@ -7,7 +7,7 @@ LightComponent::LightComponent(Entity* pEntity) : Component(pEntity)
     this->componentType = ComponentType::Light;
 }
 
-glm::mat4 LightComponent::GenerateMatrix(Transform* pTransform)
+glm::mat4 LightComponent::GenerateMatrix(TransformComponent* pTransform)
 {
     glm::vec3 worldPos = pTransform->getWorldPosition();
     glm::quat worldRotation = pTransform->getWorldOrientation();
@@ -41,4 +41,20 @@ glm::mat4 LightComponent::GenerateMatrix(Transform* pTransform)
     result[3][3] = mIntensity;
 
     return result;
+}
+
+Component* LightComponent::clone() const {
+    return new LightComponent(*this);
+}
+
+LightComponent::LightComponent(const LightComponent& other) : Component(other)
+{
+    mColor = other.mColor;
+    mIntensity = other.mIntensity;
+    mConstant = other.mConstant;
+    mLinear = other.mLinear;
+    mQuadratic = other.mQuadratic;
+    mCutoff = other.mCutoff;
+    mOuterCutoff = other.mOuterCutoff;
+    mType = other.mType;
 }

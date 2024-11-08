@@ -1,12 +1,12 @@
 #pragma once
 #include "Component.h"
 
-#include "Components/Transform.h"
+#include "Components/TransformComponent.h"
 
 class CameraComponent : public Component
 {
 public:
-    Transform* lookAtTarget;
+	TransformComponent* lookAtTarget;
 
     float fieldOfView = 90;
     float farClipPlane = 1000.0f;
@@ -16,7 +16,11 @@ public:
     CameraComponent(Entity* mEntity);
     ~CameraComponent();
 
-    void calculateViewMatrix(Transform* transform);
+    CameraComponent(const CameraComponent& other);
+
+    Component* clone() const override;
+
+    void calculateViewMatrix(TransformComponent* transform);
     void calculateProjectionMatrix();
     void updateAspectRatio(int width, int height);
 

@@ -2,13 +2,11 @@
 
 #include "Utils/IDUtils.h"
 #include "Component.h"
-#include "Components/Transform.h"
+#include "Components/TransformComponent.h"
 
 #include <algorithm>
 #include <memory>
 #include <vector>
-
-class Transform;
 
 //template<typename T>
 class Entity
@@ -33,7 +31,7 @@ protected:
 
 public:
     // Every entity should by default have a transform.
-    Transform* transform;
+    TransformComponent* transform;
 
     // retrieve id of entity
     UUIDv4::UUID GetEntityID()
@@ -118,7 +116,7 @@ public:
     Entity()
     {
         this->entityID = uuidGen.getUUID();
-        this->transform = new Transform(this);
+        this->transform = new TransformComponent(this);
         // init code
     }
 
@@ -126,7 +124,7 @@ public:
     {
         this->entityDisplayName = DisplayName;
         this->entityID = uuidGen.getUUID();
-        this->transform = new Transform(this);
+        this->transform = new TransformComponent(this);
     }
 
     // default destructor

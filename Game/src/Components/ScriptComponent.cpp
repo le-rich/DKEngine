@@ -12,3 +12,19 @@ ScriptComponent::~ScriptComponent()
 {
 
 }
+
+// copy constructor
+ScriptComponent::ScriptComponent(const ScriptComponent& other)
+    : Component(other.entity) {
+    this->componentType = ComponentType::Script;
+
+    // Deep copy each script using clone()
+    for (const auto& script : other.scripts) {
+        scripts.push_back(script->clone());
+    }
+}
+
+// overridden clone
+Component* ScriptComponent::clone() const {
+    return new ScriptComponent(*this);
+}

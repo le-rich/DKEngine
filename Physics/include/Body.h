@@ -145,6 +145,9 @@ s		 */
 		void setRotation(const Vector3& rotation);
 		Vector3 getRotation() const;
 
+		// Getter for force accum
+		Vector3 getForceAccum() const;
+
 		/*************************************/
 
 
