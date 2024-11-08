@@ -37,6 +37,7 @@ public:
 		std::lock_guard<std::mutex> lock(mMutex);
 		SetWindowToCurrentThread();
 		glfwSwapBuffers(mWindow);
+		glfwMakeContextCurrent(NULL);
 	}
 
 	// This function processes all events in the event queue, including window and input events.
@@ -47,6 +48,7 @@ public:
 		std::lock_guard<std::mutex> lock(mMutex);
 		SetWindowToCurrentThread();
 		glfwPollEvents();
+		glfwMakeContextCurrent(NULL);
 	}
 
 	inline void SetKeyCallback(GLFWkeyfun pCallback)

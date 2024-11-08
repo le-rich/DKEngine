@@ -42,8 +42,11 @@ void Renderer::Initialize() {
 	updateThread = new std::thread([&]()
 		{
 			auto previousTime = std::chrono::high_resolution_clock::now();
-			while (!glfwWindowShouldClose(windowRef->GetWindow()))
+			auto window = windowRef->GetWindow();
+			while (!glfwWindowShouldClose(window))
 			{
+				printf("RENDERLOOP"); // Commenting this line causes stuttering of the renderthread.
+				//windowRef->PollEvents();
 				auto currentTime = std::chrono::high_resolution_clock::now();
 				std::chrono::duration<float> deltaTime = currentTime - previousTime;
 				auto deltaTimeFloatSeconds = deltaTime.count();
@@ -61,8 +64,10 @@ void Renderer::Update(float deltaTime)
 		windowRef->SetWindowToCurrentThread();
 		// Set FrameBuffer
 		RenderToFrame();
+
 		//Perform Post Processing
 		//Draw Frame Buffer
+		glfwMakeContextCurrent(NULL);
 	}
 
 	// Swap window buffers. can be moved to post update

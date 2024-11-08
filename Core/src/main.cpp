@@ -83,7 +83,8 @@ int run_glfw() {
 
 	// We want some check like this visible to the other threads
 	// That way those threads will stop once the window closes. ### Has to be conditional for main thread ###
-	while (!glfwWindowShouldClose(window.GetWindow()))
+	auto glfwWindow = window.GetWindow();
+	while (!glfwWindowShouldClose(glfwWindow))
 	{
 		// TODO: Refactor to proper input handler
 		if (Input::keys[GLFW_KEY_W])
