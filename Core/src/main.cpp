@@ -20,13 +20,6 @@
 #include "Utils/IDUtils.h"
 #include "Window/Window.h"
 
-//void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-//{
-//    glViewport(0, 0, width, height);
-//}
-
-
-// TODO: Refactor Window setup to enable concurrent access to the window object for the render thread.
 // Theres some experimentation we'll need to do regarding updating objects on the main thread and rendering on the render thread.
 // That can wait for the time being.
 int run_glfw() {
@@ -52,8 +45,6 @@ int run_glfw() {
 
 	// Set size of framebuffer
 	glViewport(0, 0, window.GetWidth(), window.GetHeight());
-
-
 	window.SetFramebufferSizeCallback();
 
 	std::vector<System*> systems;
@@ -63,40 +54,33 @@ int run_glfw() {
 	defaultScene->SpawnSceneDefinition();
 
 
-    auto testCarUUID = EntityManager::getInstance().findFirstEntityByDisplayName("Test Car");
-    Entity* testCarEntity = EntityManager::getInstance().getEntity(testCarUUID);
+	auto testCarUUID = EntityManager::getInstance().findFirstEntityByDisplayName("Test Car");
+	Entity* testCarEntity = EntityManager::getInstance().getEntity(testCarUUID);
 
-    TransformComponent* CAR_TRANSFORM = testCarEntity->transform;
+	TransformComponent* CAR_TRANSFORM = testCarEntity->transform;
 
-    UI* ui = new UI(Core::getInstance().GetScene());
-    Physics* physx = new Physics(CAR_TRANSFORM);
-    Renderer* renderer = new Renderer(&window);
-    Game* game = new Game();
+	UI* ui = new UI(Core::getInstance().GetScene());
+	Physics* physx = new Physics(CAR_TRANSFORM);
+	Renderer* renderer = new Renderer(&window);
+	Game* game = new Game();
 
-    Core::getInstance().AddSystem(ui);
-    Core::getInstance().AddSystem(physx);
-    Core::getInstance().AddSystem(renderer);
-    Core::getInstance().AddSystem(game);
+	Core::getInstance().AddSystem(ui);
+	Core::getInstance().AddSystem(physx);
+	Core::getInstance().AddSystem(renderer);
+	Core::getInstance().AddSystem(game);
 
-    ui->Initialize();
-    physx->Initialize();
-    renderer->Initialize();
-    game->Initialize();
+	ui->Initialize();
+	physx->Initialize();
+	renderer->Initialize();
+	game->Initialize();
 
 	// Timing
 	double fixedUpdateBuffer = 0.0;
 	double FIXED_UPDATE_INTERVAL = 20; // in milliseconds
 	auto previousTime = std::chrono::high_resolution_clock::now();
 
-    // TODO: Refactor to getting Scene instance
-	//renderer->windowRef = &window;
-    // renderer->testMesh = testMesh;
-    // renderer->testTextures = textures;
-    // renderer->testMaterials = materials;
-    renderer->testTransform = CAR_TRANSFORM;
+	renderer->testTransform = CAR_TRANSFORM;
 
-	// end TODO
-	// 
 	// We want some check like this visible to the other threads
 	// That way those threads will stop once the window closes. ### Has to be conditional for main thread ###
 	while (!glfwWindowShouldClose(window.GetWindow()))
@@ -107,45 +91,29 @@ int run_glfw() {
 		if (Input::keys[GLFW_KEY_S])
 			physx->body->addForce(AE86::Vector3(1.0, 0.0, 0.0));
 
-        auto currentTime = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<float> deltaTime = currentTime - previousTime;
-        auto deltaTimeFloatSeconds = deltaTime.count();
+		auto currentTime = std::chrono::high_resolution_clock::now();
+		std::chrono::duration<float> deltaTime = currentTime - previousTime;
+		auto deltaTimeFloatSeconds = deltaTime.count();
 
 		previousTime = currentTime;
 
-        fixedUpdateBuffer += std::chrono::duration_cast<std::chrono::milliseconds>(deltaTime).count();
-        std::cout << "COUNT: " << fixedUpdateBuffer << "\n"; // Commenting this line causes the Fixed update loop to stutter.
-
-        Input::RunInputListener();
-        //glfwMakeContextCurrent(window);
-		window.SetWindowToCurrentThread();
-        // Rendering related calls, we can move these to the loop of the rendering thread
-        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        //glEnable(GL_DEPTH_TEST);
-        //renderer->Update(deltaTimeFloatSeconds); // draw tri or square
-        game->Update(deltaTimeFloatSeconds);
-
-		//renderer->Update(); // draw tri or square
-
+		fixedUpdateBuffer += std::chrono::duration_cast<std::chrono::milliseconds>(deltaTime).count();
+		std::cout << "COUNT: " << fixedUpdateBuffer << "\n"; // Commenting this line causes the Fixed update loop to stutter.
 
 		// TODO: Create extractions/enums for key presses on whether they would be pressed-down or not,
 		// Have them be updated by GLFW callback. This works because glfwpollevents() is a synchronous method that runs all callbacks
 		// As long as all components are called after glfwpollevents, behavior should be fine.
+		window.PollEvents();
+		Input::RunInputListener();
 
-        while (fixedUpdateBuffer >= FIXED_UPDATE_INTERVAL)
-        {
-            physx->FixedUpdate();
-            fixedUpdateBuffer -= FIXED_UPDATE_INTERVAL;
-        }
-
-        for (auto system : systems)
-        {
-            //system->Update(deltaTimeFloatSeconds);
-        }
-
-        //@TODO: REMOVE THIS LATER. Above loops are never getting entered so UI update was never getting called. Remove this line below when fixed.
-        ui->Update(deltaTimeFloatSeconds);
-    }
+		while (fixedUpdateBuffer >= FIXED_UPDATE_INTERVAL)
+		{
+			physx->FixedUpdate();
+			fixedUpdateBuffer -= FIXED_UPDATE_INTERVAL;
+		}
+		game->Update(deltaTimeFloatSeconds);
+		ui->Update(deltaTimeFloatSeconds);
+	}
 
 	// Destroys library, may cause race condition if it gets destroyed while other threads are using it.
 	glfwTerminate();
@@ -166,12 +134,8 @@ int main(int argc, char* argv[])
 
 	std::cout << "Do you know what DK Stands for? Donkey Kong? Nah. Drift King." << std::endl;
 
-	// TODO - By Rendering Team Make this a call to the Render Project
-
 	// Currently has its own while loop blocking main
 	run_glfw();
-
-
 
 	return 0;
 }

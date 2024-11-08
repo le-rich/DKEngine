@@ -14,10 +14,8 @@ public:
     float aspectRatio;
 
     CameraComponent(Entity* mEntity);
-    //CameraComponent(CameraComponent const&);
-    ~CameraComponent();
-
     CameraComponent(const CameraComponent& other);
+    ~CameraComponent();
 
     Component* clone() const override;
 

@@ -1,8 +1,8 @@
 #pragma once
-#include <mutex>
 
 #include "Entity.h"
 
+#include <mutex>
 
 class Scene
 {

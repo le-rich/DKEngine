@@ -1,11 +1,13 @@
 #pragma once
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
 
 #include "System.h"
 #include "Buffers/UniformBuffer.h"
 #include "Buffers/ShaderStorageBuffer.h"
 #include "Window/Window.h"
+
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
 // @TODO: Remove TESTING INCLUDE
 #include "Resources/Mesh.h"
 #include "Components/TransformComponent.h"
