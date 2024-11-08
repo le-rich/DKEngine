@@ -30,11 +30,6 @@ TransformComponent::~TransformComponent()
 {
 }
 
-Component* TransformComponent::clone()
-{
-	return (new TransformComponent(*this));
-}
-
 void TransformComponent::updateTransformMatrix()
 {
 	if (entity->getParent() == nullptr)
@@ -162,4 +157,16 @@ TransformComponent& TransformComponent::operator=(const TransformComponent& othe
 
 	this->transformMatrix = other.transformMatrix;
 	this->entity->GetEntityID() == other.entity->GetEntityID();
+}
+
+TransformComponent::TransformComponent(const TransformComponent& other)
+    : Component(other.entity), 
+    localPosition(other.localPosition),
+    localOrientation(other.localOrientation),
+    localScale(other.localScale),
+    transformMatrix(other.transformMatrix)
+{}
+
+Component* TransformComponent::clone() const {
+    return new TransformComponent(*this);
 }

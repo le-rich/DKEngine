@@ -36,8 +36,6 @@ public:
     TransformComponent(TransformComponent& const);
 	~TransformComponent();
 
-    Component* clone() override;
-
     // lock to guarantee mutual exclusion
     std::mutex mtx;
 
@@ -72,4 +70,8 @@ public:
     void setLocalScale(glm::vec3 scale);
 
 	TransformComponent& operator=(const TransformComponent& other);
+
+    // copy constructor for clone
+    TransformComponent(const TransformComponent& other);
+    Component* clone() const override;
 };

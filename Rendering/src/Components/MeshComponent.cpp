@@ -10,11 +10,6 @@ MeshComponent::MeshComponent(Entity *mEntity) : Component(mEntity)
 
 MeshComponent::~MeshComponent() {}
 
-Component* MeshComponent::clone() {
-    //MeshComponent* cloneMesh = ;
-	return (new MeshComponent(*this));
-}
-
 void MeshComponent::setMesh(Mesh *mesh) 
 {
     this->mesh = mesh;
@@ -22,6 +17,16 @@ void MeshComponent::setMesh(Mesh *mesh)
 
 Mesh* MeshComponent::getMesh() {
     return this->mesh;
+}
+
+MeshComponent::MeshComponent(const MeshComponent& other)
+    : Component(other.entity), mesh(other.mesh) 
+{
+    this->componentType = ComponentType::Mesh;
+}
+
+Component* MeshComponent::clone() const {
+    return new MeshComponent(*this);
 }
 
 MeshComponent& MeshComponent::operator=(MeshComponent& const other)

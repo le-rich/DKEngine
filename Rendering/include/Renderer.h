@@ -4,6 +4,7 @@
 
 #include "System.h"
 #include "Buffers/UniformBuffer.h"
+#include "Buffers/ShaderStorageBuffer.h"
 #include "Window/Window.h"
 // @TODO: Remove TESTING INCLUDE
 #include "Resources/Mesh.h"
@@ -44,5 +45,5 @@ private:
 
 
     UniformBuffer mEngineUniformBuffer;
-
+    ShaderStorageBuffer shaderStorageBufferObject;
 };

@@ -17,13 +17,16 @@ public:
     //CameraComponent(CameraComponent const&);
     ~CameraComponent();
 
+    CameraComponent(const CameraComponent& other);
+
+    Component* clone() const override;
+
     void calculateViewMatrix(TransformComponent* transform);
     void calculateProjectionMatrix();
     void updateAspectRatio(int width, int height);
 
     glm::mat4 getViewMatrix();
     glm::mat4 getProjectionMatrix();
-    Component* clone() override;
 
     CameraComponent& operator=(CameraComponent& const other);
 private:

@@ -1,6 +1,7 @@
 #include "Renderer.h"
 
 #include "Components/MeshComponent.h"
+#include "Components/LightComponent.h"
 #include "Core.h"
 #include "Scene.h"
 #include "Managers/AssetManager.h"
@@ -76,6 +77,18 @@ void Renderer::Update(float deltaTime)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_DEPTH_TEST);
+    std::vector<glm::mat4> lightMatricies;
+    auto lightComponentUUIDs = EntityManager::getInstance().findEntitiesByComponent(ComponentType::Light);
+    for (auto& uuid : lightComponentUUIDs)
+    {
+        auto entity = EntityManager::getInstance().getEntity(uuid);
+        LightComponent* lightComponent = dynamic_cast<LightComponent*>(entity->getComponent(ComponentType::Light));
+        if (lightComponent == nullptr) continue;
+        lightMatricies.push_back(lightComponent->GenerateMatrix(lightComponent->entity->transform));
+    }
+
+    shaderStorageBufferObject.SendBlocks(lightMatricies.data(), lightMatricies.size() * sizeof(glm::mat4));
+    shaderStorageBufferObject.Bind(0);
 
 		// CAMERA =====================
 		CameraComponent* cameraComponent = dynamic_cast<CameraComponent*>(mainCameraEntity->getComponent(ComponentType::Camera));
@@ -119,23 +132,23 @@ void Renderer::Update(float deltaTime)
 			{
 				glm::vec3 localScale = entity->transform->getLocalScale();
 
-				// TODO: Bug Physics/Core on way to get modelMatrix directly from transform
-				glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), entity->transform->getWorldPosition()) *
-					glm::mat4_cast(entity->transform->getLocalOrientation()) *
-					glm::scale(glm::mat4(1.0f), localScale);
+            // TODO: Bug Physics/Core on way to get modelMatrix directly from transform
+            glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), entity->transform->getWorldPosition()) *
+                                    glm::mat4_cast(entity->transform->getLocalOrientation()) *
+                                    glm::scale(glm::mat4(1.0f), localScale);
 
-				mEngineUniformBuffer.updateMatrices(
-					modelMatrix,
-					cameraComponent->getViewMatrix(),
-					cameraComponent->getProjectionMatrix(),
-					mainCameraEntity->transform->getWorldPosition()
-				);
-
-				meshComponent->getMesh()->Draw();
-			}
-		}
-
-		// ===================================
+            mEngineUniformBuffer.updateMatrices(
+                modelMatrix, 
+                cameraComponent->getViewMatrix(), 
+                cameraComponent->getProjectionMatrix(),
+                mainCameraEntity->transform->getWorldPosition()
+            );
+            
+            meshComponent->getMesh()->Draw();
+        }
+    }
+    shaderStorageBufferObject.Unbind();
+    // ===================================
 
 			/*Perform Post Processing
 			  Draw Frame Buffer*/

@@ -9,7 +9,8 @@ public:
     MeshComponent(Entity* mEntity);
     ~MeshComponent();
 
-    Component* clone() override;
+    MeshComponent(const MeshComponent& other);
+    Component* clone() const override;
     
     void setMesh(Mesh* mesh);
     Mesh* getMesh();

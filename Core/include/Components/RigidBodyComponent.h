@@ -9,11 +9,11 @@
 class RigidBodyComponent : public Component {
 
 protected:
-	AE86::RigidBody& rb;
+	std::shared_ptr<AE86::RigidBody> rb;
 
 public:
 	// init to a default mass like unity?
-	RigidBodyComponent(Entity* mEntity, AE86::RigidBody& rigidBody, float mass = 1.0f);
+	RigidBodyComponent(Entity* mEntity, std::shared_ptr<AE86::RigidBody> rigidBody, float mass = 1.0f);
 	~RigidBodyComponent();
 
 	// getters and setters
@@ -49,6 +49,9 @@ public:
 	void update();
 
 	bool operator==(const RigidBodyComponent& other) const;
+	// copy constructor for clone
+	RigidBodyComponent(const RigidBodyComponent& other);
+	Component* clone() const override;
 
 };
 
