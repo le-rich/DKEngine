@@ -29,7 +29,8 @@ void Renderer::Initialize() {
 	// Get Camera if it exists
 	auto mainCameraUUID = EntityManager::getInstance().findFirstEntityByDisplayName("Main Camera");
 	auto mainCamera = EntityManager::getInstance().getEntity(mainCameraUUID);
-	if (mainCamera != nullptr) {
+	if (mainCamera != nullptr) 
+	{
 		this->mainCameraEntity = mainCamera;
 	}
 	else
@@ -54,15 +55,9 @@ void Renderer::Initialize() {
 
 void Renderer::Update(float deltaTime)
 {
-
-	Scene* scene = Core::getInstance().GetScene();
-	Entity* root;
-	{
-		std::lock_guard<std::mutex> lock(scene->mtx);
-		root = scene->GetSceneCopy();
-	}
-	delete root; // Memory Leak
-
+	// TODO: Create copy of Scene Graph/Entity manager to avoid race conditions with other threads
+	std::lock_guard<std::mutex> lock(windowRef->mMutex);
+	windowRef->SetWindowToCurrentThread();
 	// Set FrameBuffer
 	RenderToFrame();
 	//Perform Post Processing
@@ -76,8 +71,6 @@ void Renderer::FixedUpdate() {}
 
 void Renderer::RenderToFrame()
 {
-	std::lock_guard<std::mutex> lock(windowRef->mMutex);
-	windowRef->SetWindowToCurrentThread();
 	// Clear color and depth buffers for set Framebuffer
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_CULL_FACE);
