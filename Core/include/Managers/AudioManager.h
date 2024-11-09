@@ -21,7 +21,10 @@ public:
 	// forward and up necessary for automated spatial audio.
 	void setListenerAttributes(const FMOD_VECTOR& position, const FMOD_VECTOR& forward, const FMOD_VECTOR& up);
 
-		void setMasterVolume(float volume);
+	void setMasterVolume(float volume);
+
+	void playSound(const std::string& soundName);
+
 private:
 	FMOD::System* fmodSystem = nullptr;
 	std::unordered_map<std::string, FMOD::Sound*> soundCache;

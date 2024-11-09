@@ -1,4 +1,5 @@
 #include "Managers/AudioManager.h"
+#include "iostream"
 
 AudioManager::AudioManager()
 {
@@ -44,5 +45,16 @@ void AudioManager::setListenerAttributes(const FMOD_VECTOR& position, const FMOD
 void AudioManager::setMasterVolume(float volume) {
 	fmodSystem->setSoftwareFormat(0, FMOD_SPEAKERMODE_STEREO, 0);
 	fmodSystem->setSoftwareChannels(100);
-	// (Global volume changes can also be handled via channel groups, if preferred)
+}
+
+void AudioManager::playSound(const std::string& soundName) {
+
+	
+	auto it = soundCache.find(soundName);
+	if (it != soundCache.end()) {
+		FMOD::Channel* newChannel = nullptr;
+		fmodSystem->playSound(it->second, nullptr, false, &newChannel);
+	} else {
+		std::cerr << "Sound not found: " << soundName << std::endl;
+	}
 }

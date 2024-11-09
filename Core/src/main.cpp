@@ -7,6 +7,7 @@
 
 #include "Component.h"
 #include "Components/Transform.h"
+#include "Managers/AudioManager.h"
 #include "Core.h"
 #include "Entity.h"
 #include "GLTFLoader.h"
@@ -18,6 +19,7 @@
 #include "System.h"
 #include "UI.h"
 #include "Utils/IDUtils.h"
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -31,6 +33,9 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 int run_glfw()
 {
 
+    AudioManager audioManager;
+    FMOD::Sound* backgroundMusic = audioManager.loadSound("Assets/Sound/yippee.mp3");
+    
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -112,9 +117,25 @@ int run_glfw()
     // That way those threads will stop once the window closes. ### Has to be conditional for main thread ###
     while (!glfwWindowShouldClose(window))
     {
+
+        audioManager.update();
+
+        
         // TODO: Refactor to proper input handler
         if (Input::keys[GLFW_KEY_W])
+        {
             physx->body->addForce(AE86::Vector3(-1.0, 0.0, 0.0));
+            
+            if (backgroundMusic) {
+                static FMOD::Channel* channel = nullptr;
+                if (!channel) {
+                    audioManager.getSystem()->playSound(backgroundMusic, nullptr, true, &channel);
+                    channel->setVolume(0.5f); // Set volume
+                    channel->setPaused(false); // Start playback
+                }
+            }
+        }
+            
         if (Input::keys[GLFW_KEY_S])
             physx->body->addForce(AE86::Vector3(1.0, 0.0, 0.0));
 
