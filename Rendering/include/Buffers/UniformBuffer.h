@@ -13,9 +13,13 @@ public:
 	void Bind() const;
 	void Unbind() const;
 
-    void updateMatrices(const glm::mat4 &model, const glm::mat4 &view,
-                        const glm::mat4 &projection,
-                        const glm::vec3 &cameraPos);
+	void updateMatrices(const glm::mat4& model, const glm::mat4& view,
+		const glm::mat4& projection,
+		const glm::vec3& cameraPos);
+
+	void SetCameraMatrices(const glm::mat4& view,
+		const glm::mat4& projection,
+		const glm::vec3& cameraPos);
 
 	template<typename T>
 	void SetSubData(const T& p_data, size_t&& p_offset)

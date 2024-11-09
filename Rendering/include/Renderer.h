@@ -2,19 +2,21 @@
 #include "System.h"
 #include "Buffers/UniformBuffer.h"
 #include "Buffers/ShaderStorageBuffer.h"
+#include "Window/Window.h"
+
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
 // @TODO: Remove TESTING INCLUDE
 #include "Resources/Mesh.h"
 #include "Components/TransformComponent.h"
 #include "Components/CameraComponent.h"
 #include "Entities/CameraEntity.h"
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-
 class Renderer : public System
 {
 public:
-    Renderer(GLFWwindow* window);
+    Renderer(Window* window);
     ~Renderer();
 
     void Initialize() override;
@@ -27,6 +29,8 @@ public:
 
     void FixedUpdate() override;
 
+    void RenderToFrame();
+
     // GARBAGE BLOCK HATE IT
     // TODO: Decouple from member to scene reference
     Mesh testMesh;
@@ -34,12 +38,12 @@ public:
     std::vector<UUIDv4::UUID> testMaterials;
 
 private:
-    GLFWwindow* m_Window;
-
+    Window* windowRef;
 
     Entity* mainCameraEntity = nullptr; 
 
-
     UniformBuffer mEngineUniformBuffer;
     ShaderStorageBuffer shaderStorageBufferObject;
+
+    void DrawByMesh();
 };
