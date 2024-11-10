@@ -14,8 +14,11 @@ public:
 	void Bind() const;
 	void Unbind() const;
 
+	void BindFrameTexture() const;
+	void UnbindFrameTexture() const;
+
 private:
-	GLuint mBufferID;
+	GLuint mBufferID, mColorBufferID, mRenderBufferID;
 	unsigned int mBufferWidth;
 	unsigned int mBufferHeight;
 
