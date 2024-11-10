@@ -16,7 +16,7 @@ void FrameBuffer::Resize(unsigned int width, unsigned int height)
     mBufferWidth = width;
     mBufferHeight = height;
 
-    // Resize Color buffer
+    // Resize Color attachment texture
     GLCall(glBindFramebuffer(GL_FRAMEBUFFER, mBufferID));
     glBindTexture(GL_TEXTURE_2D, mColorBufferID);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, mBufferWidth, mBufferHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
@@ -61,7 +61,6 @@ void FrameBuffer::Init(unsigned int width, unsigned int height)
     GLCall(glBindFramebuffer(GL_FRAMEBUFFER, mBufferID));
 
     // create a color attachment texture
-    //unsigned int textureColorbuffer;
     glGenTextures(1, &mColorBufferID);
     glBindTexture(GL_TEXTURE_2D, mColorBufferID);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, mBufferWidth, mBufferHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
@@ -69,14 +68,12 @@ void FrameBuffer::Init(unsigned int width, unsigned int height)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mColorBufferID, 0);
 
-    // create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
-    //unsigned int rbo;
+    // create a renderbuffer object
     glGenRenderbuffers(1, &mRenderBufferID);
     glBindRenderbuffer(GL_RENDERBUFFER, mRenderBufferID);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, mBufferWidth, mBufferHeight); // use a single renderbuffer object for both a depth AND stencil buffer.
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, mRenderBufferID); // now actually attach it
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, mRenderBufferID);
 
-    // now that we actually created the framebuffer and added all attachments we want to check if it is actually complete now
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
         printf("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
 

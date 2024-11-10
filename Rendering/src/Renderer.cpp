@@ -8,14 +8,7 @@
 #include "Managers/AssetManager.h"
 #include "Managers/EntityManager.h"
 #include "Resources/Mesh.h"
-//#include "Resources/Shader.h"
-#include "Resources/Texture.h"
 
-#include <iostream>
-#include <cstdlib>
-
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
 #include <glm.hpp>
 
 Renderer::Renderer(Window* window) : mScreenQuad(Quad.vertices, Quad.indices)

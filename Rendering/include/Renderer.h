@@ -13,12 +13,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-// @TODO: Remove TESTING INCLUDE
-//#include "Resources/Mesh.h"
-//#include "Components/TransformComponent.h"
-//#include "Components/CameraComponent.h"
-//#include "Entities/CameraEntity.h"
-
 static const std::string SCREEN_SHADER_PATH = "../Rendering/Shaders/screen.glsl";
 
 class Renderer : public System
