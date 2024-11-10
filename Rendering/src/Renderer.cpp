@@ -14,23 +14,25 @@
 #include <GLFW/glfw3.h>
 #include <glm.hpp>
 
-Renderer::Renderer(GLFWwindow* window)
+Renderer::Renderer(Window* window)
 {
-    m_Window = window;
+    windowRef = window;
 }
 
 Renderer::~Renderer() {}
 
-void Renderer::Initialize() {
-    System::Initialize(); 
+void Renderer::Initialize()
+{
+    System::Initialize();
 
     // Get Camera if it exists
     auto mainCameraUUID = EntityManager::getInstance().findFirstEntityByDisplayName("Main Camera");
     auto mainCamera = EntityManager::getInstance().getEntity(mainCameraUUID);
-    if (mainCamera != nullptr) {
+    if (mainCamera != nullptr)
+    {
         this->mainCameraEntity = mainCamera;
-    } 
-    else 
+    }
+    else
     {
         std::cerr << "Error: Main Camera not found. The program will now exit." << std::endl;
         std::cin.get();
@@ -39,8 +41,26 @@ void Renderer::Initialize() {
 }
 
 void Renderer::Update(float deltaTime)
+{ 
+    windowRef->SetWindowToCurrentThread();
+    // Set FrameBuffer
+    RenderToFrame();
+
+    //Perform Post Processing
+    //Draw Frame Buffer
+
+    // Swap window buffers. can be moved to post update
+    windowRef->SwapWindowBuffers();
+}
+
+void Renderer::FixedUpdate() {}
+
+void Renderer::RenderToFrame()
 {
-    // Clear color and depth buffers (can be moved to pre update
+    // Clear color and depth buffers for set Framebuffer
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
 
     std::vector<glm::mat4> lightMatricies;
     auto lightComponentUUIDs = EntityManager::getInstance().findEntitiesByComponent(ComponentType::Light);
@@ -58,37 +78,44 @@ void Renderer::Update(float deltaTime)
     // CAMERA =====================
     CameraComponent* cameraComponent = dynamic_cast<CameraComponent*>(mainCameraEntity->getComponent(ComponentType::Camera));
 
-    if (cameraComponent != nullptr){
+    if (cameraComponent != nullptr)
+    {
         // Update Aspect Ratio if the window has resized
         int width, height;
-        glfwGetWindowSize(m_Window, &width, &height);
+        glfwGetWindowSize(windowRef->GetWindow(), &width, &height);
         cameraComponent->updateAspectRatio(width, height);
 
         cameraComponent->calculateViewMatrix(cameraComponent->entity->transform);
         cameraComponent->calculateProjectionMatrix();
+        mEngineUniformBuffer.SetCameraMatrices(
+            cameraComponent->getViewMatrix(),
+            cameraComponent->getProjectionMatrix(),
+            mainCameraEntity->transform->getWorldPosition()
+        );
     }
+
+    //TODO: Replace with Scene based or Material based Draw
+    DrawByMesh();
     // ============================
+    //Material Based:
+    //For each Material
+    //	Bind Material
+    //	Apply Material specific Uniforms
+    //	For each Primitive in Material
+    //		Bind Vertex Array
+    //		Bind Index Buffer
+    //		DrawCall
+    //	Unbind Material
+    //	
 
-    /*
-    Material Based:
-    For each Material
-        Bind Material
-        Apply Material specific Uniforms
-        For each Primitive in Material
-            Bind Vertex Array
-            Bind Index Buffer
-            DrawCall
-        Unbind Material
-     */
+    shaderStorageBufferObject.Unbind();
+}
 
-     // Kinda okay methodology
-     //TODO: Replace with Scene based or Material based Draw
-    
-
-    // MESHES ============================
+void Renderer::DrawByMesh()
+{
     auto meshComponentUUIDs = EntityManager::getInstance().findEntitiesByComponent(ComponentType::Mesh);
-    
-    for (auto& uuid : meshComponentUUIDs) 
+
+    for (auto& uuid : meshComponentUUIDs)
     {
         auto entity = EntityManager::getInstance().getEntity(uuid);
         MeshComponent* meshComponent = dynamic_cast<MeshComponent*>(entity->getComponent(ComponentType::Mesh));
@@ -99,30 +126,12 @@ void Renderer::Update(float deltaTime)
 
             // TODO: Bug Physics/Core on way to get modelMatrix directly from transform
             glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), entity->transform->getWorldPosition()) *
-                                    glm::mat4_cast(entity->transform->getLocalOrientation()) *
-                                    glm::scale(glm::mat4(1.0f), localScale);
-
-            mEngineUniformBuffer.updateMatrices(
-                modelMatrix, 
-                cameraComponent->getViewMatrix(), 
-                cameraComponent->getProjectionMatrix(),
-                mainCameraEntity->transform->getWorldPosition()
-            );
-            
+                glm::mat4_cast(entity->transform->getLocalOrientation()) *
+                glm::scale(glm::mat4(1.0f), localScale);
+            mEngineUniformBuffer.SetSubData(modelMatrix, 0);
             meshComponent->getMesh()->Draw();
         }
     }
-    shaderStorageBufferObject.Unbind();
-    // ===================================
-
-    /*Perform Post Processing
-      Draw Frame Buffer*/
-
-      // Swap window buffers. can be moved to post update
-}
-
-void Renderer::FixedUpdate() {
-    
 }
 
 

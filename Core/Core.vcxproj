@@ -158,6 +158,7 @@
     <ClCompile Include="src\Managers\AssetManager.cpp" />
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\Utils\IDUtils.cpp" />
+    <ClCompile Include="src\Window\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Physics\Physics.vcxproj">
@@ -182,6 +183,7 @@
     <ClInclude Include="include\Utils\IDUtils.h" />
     <ClInclude Include="include\Utils\uuid_v4.h" />
     <ClInclude Include="RigidBodyComponent.h" />
+    <ClInclude Include="include\Window\Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
