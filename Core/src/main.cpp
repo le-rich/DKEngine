@@ -109,10 +109,7 @@ int run_glfw()
     while (!glfwWindowShouldClose(window))
     {
         // TODO: Refactor to proper input handler
-        if (Input::keys[GLFW_KEY_W])
-            physx->body->addForce(AE86::Vector3(-1.0, 0.0, 0.0));
-        if (Input::keys[GLFW_KEY_S])
-            physx->body->addForce(AE86::Vector3(1.0, 0.0, 0.0));
+
 
         auto currentTime = std::chrono::high_resolution_clock::now();
         std::chrono::duration<float> deltaTime = currentTime - previousTime;
@@ -123,7 +120,7 @@ int run_glfw()
         fixedUpdateBuffer += std::chrono::duration_cast<std::chrono::milliseconds>(deltaTime).count();
         std::cout << "COUNT: " << fixedUpdateBuffer << "\n"; // Commenting this line causes the Fixed update loop to stutter.
 
-        Input::RunInputListener();
+        Input::RunInputListener(physx->body);
         glfwMakeContextCurrent(window);
         // Rendering related calls, we can move these to the loop of the rendering thread
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
