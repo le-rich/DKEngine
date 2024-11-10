@@ -22,9 +22,8 @@
 
 // Theres some experimentation we'll need to do regarding updating objects on the main thread and rendering on the render thread.
 // That can wait for the time being.
-int run_glfw() {
-
-
+int run_glfw()
+{
     Window::InitWindow();
     Window window;
     if (window.GetWindow() == NULL)
@@ -37,12 +36,12 @@ int run_glfw() {
     window.SetKeyCallback(Input::KeyCallback);
     window.SetMouseButtonCallback(Input::MouseButtonCallback);
 
-	// Load GLAD
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-	{
-		std::cout << "Failed to initialize GLAD" << std::endl;
-		return -1;
-	}
+    // Load GLAD
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return -1;
+    }
 
     // Set size of framebuffer
     glViewport(0, 0, window.GetWidth(), window.GetHeight());
@@ -51,14 +50,14 @@ int run_glfw() {
     std::vector<System*> systems;
     Scene* defaultScene = new Scene();
 
-	Core::getInstance().SetScene(defaultScene);
-	defaultScene->SpawnSceneDefinition();
+    Core::getInstance().SetScene(defaultScene);
+    defaultScene->SpawnSceneDefinition();
 
 
-	auto testCarUUID = EntityManager::getInstance().findFirstEntityByDisplayName("Test Car");
-	Entity* testCarEntity = EntityManager::getInstance().getEntity(testCarUUID);
+    auto testCarUUID = EntityManager::getInstance().findFirstEntityByDisplayName("Test Car");
+    Entity* testCarEntity = EntityManager::getInstance().getEntity(testCarUUID);
 
-	TransformComponent* CAR_TRANSFORM = testCarEntity->transform;
+    TransformComponent* CAR_TRANSFORM = testCarEntity->transform;
 
     window.SetWindowToCurrentThread();
     Renderer* renderer = new Renderer(&window);
@@ -66,20 +65,20 @@ int run_glfw() {
     UI* ui = new UI(Core::getInstance().GetScene());
     Game* game = new Game();
 
-	Core::getInstance().AddSystem(ui);
-	Core::getInstance().AddSystem(physx);
-	Core::getInstance().AddSystem(renderer);
-	Core::getInstance().AddSystem(game);
+    Core::getInstance().AddSystem(ui);
+    Core::getInstance().AddSystem(physx);
+    Core::getInstance().AddSystem(renderer);
+    Core::getInstance().AddSystem(game);
 
-	ui->Initialize();
-	renderer->Initialize();
-	physx->Initialize();
-	game->Initialize();
+    ui->Initialize();
+    renderer->Initialize();
+    physx->Initialize();
+    game->Initialize();
 
-	// Timing
-	double fixedUpdateBuffer = 0.0;
-	double FIXED_UPDATE_INTERVAL = 20; // in milliseconds
-	auto previousTime = std::chrono::high_resolution_clock::now();
+    // Timing
+    double fixedUpdateBuffer = 0.0;
+    double FIXED_UPDATE_INTERVAL = 20; // in milliseconds
+    auto previousTime = std::chrono::high_resolution_clock::now();
 
     // We want some check like this visible to the other threads
     // That way those threads will stop once the window closes. ### Has to be conditional for main thread ###
@@ -92,20 +91,20 @@ int run_glfw() {
         if (Input::keys[GLFW_KEY_S])
             physx->body->addForce(AE86::Vector3(1.0, 0.0, 0.0));
 
-		auto currentTime = std::chrono::high_resolution_clock::now();
-		std::chrono::duration<float> deltaTime = currentTime - previousTime;
-		auto deltaTimeFloatSeconds = deltaTime.count();
+        auto currentTime = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<float> deltaTime = currentTime - previousTime;
+        auto deltaTimeFloatSeconds = deltaTime.count();
 
-		previousTime = currentTime;
+        previousTime = currentTime;
 
-		fixedUpdateBuffer += std::chrono::duration_cast<std::chrono::milliseconds>(deltaTime).count();
-		std::cout << "COUNT: " << fixedUpdateBuffer << "\n"; // Commenting this line causes the Fixed update loop to stutter.
+        fixedUpdateBuffer += std::chrono::duration_cast<std::chrono::milliseconds>(deltaTime).count();
+        std::cout << "COUNT: " << fixedUpdateBuffer << "\n"; // Commenting this line causes the Fixed update loop to stutter.
 
 
         // Callbacks on all the keys that sets key-codes Or prsssdown to true or false.
         // Potential Mouse inputs; May have to figure out how it can work when extracting
         // Scrollwheels
-        
+
         // TODO: Create extractions/enums for key presses on whether they would be pressed-down or not,
         // Have them be updated by GLFW callback. This works because glfwpollevents() is a synchronous method that runs all callbacks
         // As long as all components are called after glfwpollevents, behavior should be fine.
@@ -126,14 +125,14 @@ int run_glfw() {
         ui->Update(deltaTimeFloatSeconds);
     }
 
-	// Destroys library, may cause race condition if it gets destroyed while other threads are using it.
-	glfwTerminate();
+    // Destroys library, may cause race condition if it gets destroyed while other threads are using it.
+    glfwTerminate();
 
-	// Destroy all systems upon closing window
-	for (auto sys : systems)
-	{
-		sys->Kill();
-	}
+    // Destroy all systems upon closing window
+    for (auto sys : systems)
+    {
+        sys->Kill();
+    }
 
 }
 

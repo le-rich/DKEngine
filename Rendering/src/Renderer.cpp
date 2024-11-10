@@ -47,9 +47,13 @@ void Renderer::Initialize()
 void Renderer::Update(float deltaTime)
 { 
     windowRef->SetWindowToCurrentThread();
+    int width, height;
+    glfwGetWindowSize(windowRef->GetWindow(), &width, &height);
+    mFrameBuffer.Resize(width, height);
+
     // Set FrameBuffer
     mFrameBuffer.Bind();
-    RenderToFrame();
+    RenderToFrame(width, height);
     mFrameBuffer.Unbind();
 
     //Perform Post Processing and Draw Frame Buffer
@@ -61,47 +65,17 @@ void Renderer::Update(float deltaTime)
 
 void Renderer::FixedUpdate() {}
 
-void Renderer::RenderToFrame()
+void Renderer::RenderToFrame(int pWidth, int pHeight)
 {
     // Clear color and depth buffers for set Framebuffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
 
-    std::vector<glm::mat4> lightMatricies;
-    auto lightComponentUUIDs = EntityManager::getInstance().findEntitiesByComponent(ComponentType::Light);
-    for (auto& uuid : lightComponentUUIDs)
-    {
-        auto entity = EntityManager::getInstance().getEntity(uuid);
-        LightComponent* lightComponent = dynamic_cast<LightComponent*>(entity->getComponent(ComponentType::Light));
-        if (lightComponent == nullptr) continue;
-        lightMatricies.push_back(lightComponent->GenerateMatrix(lightComponent->entity->transform));
-    }
-
-	shaderStorageBufferObject.SendBlocks(lightMatricies.data(), lightMatricies.size() * sizeof(glm::mat4));
-	shaderStorageBufferObject.Bind(0);
-
-    // CAMERA =====================
-    CameraComponent* cameraComponent = dynamic_cast<CameraComponent*>(mainCameraEntity->getComponent(ComponentType::Camera));
-
-    if (cameraComponent != nullptr)
-    {
-        // Update Aspect Ratio if the window has resized
-        int width, height;
-        glfwGetWindowSize(windowRef->GetWindow(), &width, &height);
-        cameraComponent->updateAspectRatio(width, height);
-
-        cameraComponent->calculateViewMatrix(cameraComponent->entity->transform);
-        cameraComponent->calculateProjectionMatrix();
-        mEngineUniformBuffer.SetCameraMatrices(
-            cameraComponent->getViewMatrix(),
-            cameraComponent->getProjectionMatrix(),
-            mainCameraEntity->transform->getWorldPosition()
-        );
-    }
-
+    SetEngineUBO(pWidth, pHeight);
     //TODO: Replace with Scene based or Material based Draw
     DrawByMesh();
+
     // ============================
     //Material Based:
     //For each Material
@@ -114,7 +88,7 @@ void Renderer::RenderToFrame()
     //	Unbind Material
     //	
 
-    shaderStorageBufferObject.Unbind();
+    //shaderStorageBufferObject.Unbind();
 }
 
 void Renderer::RenderFrame()
@@ -154,7 +128,35 @@ void Renderer::DrawByMesh()
     }
 }
 
+void Renderer::SetEngineUBO(int pWidth, int pHeight)
+{
+    std::vector<glm::mat4> lightMatricies;
+    auto lightComponentUUIDs = EntityManager::getInstance().findEntitiesByComponent(ComponentType::Light);
+    for (auto& uuid : lightComponentUUIDs)
+    {
+        auto entity = EntityManager::getInstance().getEntity(uuid);
+        LightComponent* lightComponent = dynamic_cast<LightComponent*>(entity->getComponent(ComponentType::Light));
+        if (lightComponent == nullptr) continue;
+        lightMatricies.push_back(lightComponent->GenerateMatrix(lightComponent->entity->transform));
+    }
 
+    shaderStorageBufferObject.SendBlocks(lightMatricies.data(), lightMatricies.size() * sizeof(glm::mat4));
+    shaderStorageBufferObject.Bind(0);
 
+    // CAMERA =====================
+    CameraComponent* cameraComponent = dynamic_cast<CameraComponent*>(mainCameraEntity->getComponent(ComponentType::Camera));
 
+    if (cameraComponent != nullptr)
+    {
+        // Update Aspect Ratio if the window has resized
+        cameraComponent->updateAspectRatio(pWidth, pHeight);
 
+        cameraComponent->calculateViewMatrix(cameraComponent->entity->transform);
+        cameraComponent->calculateProjectionMatrix();
+        mEngineUniformBuffer.SetCameraMatrices(
+            cameraComponent->getViewMatrix(),
+            cameraComponent->getProjectionMatrix(),
+            mainCameraEntity->transform->getWorldPosition()
+        );
+    }
+}

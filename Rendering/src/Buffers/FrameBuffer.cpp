@@ -13,21 +13,33 @@ FrameBuffer::~FrameBuffer()
 
 void FrameBuffer::Resize(unsigned int width, unsigned int height)
 {
-	mBufferWidth = width;
-	mBufferHeight = height;
-	Unbind();
-	GLCall(glDeleteFramebuffers(1, &mBufferID));
-	Init(width, height);
+    mBufferWidth = width;
+    mBufferHeight = height;
+
+    // Resize Color buffer
+    GLCall(glBindFramebuffer(GL_FRAMEBUFFER, mBufferID));
+    glBindTexture(GL_TEXTURE_2D, mColorBufferID);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, mBufferWidth, mBufferHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mColorBufferID, 0);
+
+    // Resize Renderbuffer
+    glBindRenderbuffer(GL_RENDERBUFFER, mRenderBufferID);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, mBufferWidth, mBufferHeight);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, mRenderBufferID);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void FrameBuffer::Bind() const
 {
 	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, mBufferID));
+    glViewport(0, 0, mBufferWidth, mBufferHeight);
 }
 
 void FrameBuffer::Unbind() const
 {
-	GLCall(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0));
+	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 }
 
 void FrameBuffer::BindFrameTexture() const
