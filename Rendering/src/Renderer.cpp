@@ -1,12 +1,14 @@
 #include "Renderer.h"
 
-#include "Components/MeshComponent.h"
+#include "Components/CameraComponent.h"
 #include "Components/LightComponent.h"
+#include "Components/MeshComponent.h"
 #include "Core.h"
 #include "Scene.h"
 #include "Managers/AssetManager.h"
 #include "Managers/EntityManager.h"
-#include "Resources/Shader.h"
+#include "Resources/Mesh.h"
+//#include "Resources/Shader.h"
 #include "Resources/Texture.h"
 
 #include <iostream>
@@ -16,7 +18,7 @@
 #include <GLFW/glfw3.h>
 #include <glm.hpp>
 
-Renderer::Renderer(Window* window)
+Renderer::Renderer(Window* window) : mScreenQuad(Quad.vertices, Quad.indices)
 {
     windowRef = window;
 }
@@ -46,10 +48,12 @@ void Renderer::Update(float deltaTime)
 { 
     windowRef->SetWindowToCurrentThread();
     // Set FrameBuffer
+    mFrameBuffer.Bind();
     RenderToFrame();
+    mFrameBuffer.Unbind();
 
-    //Perform Post Processing
-    //Draw Frame Buffer
+    //Perform Post Processing and Draw Frame Buffer
+    RenderFrame();
 
     // Swap window buffers. can be moved to post update
     windowRef->SwapWindowBuffers();
@@ -111,6 +115,20 @@ void Renderer::RenderToFrame()
     //	
 
     shaderStorageBufferObject.Unbind();
+}
+
+void Renderer::RenderFrame()
+{
+    glDisable(GL_DEPTH_TEST);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Bind Screen Shader
+    mScreenShader->Use();
+    //AssetManager::GetInstance().GetDefaultShader()->Use();
+    // Bind Frame Texture
+    mFrameBuffer.BindFrameTexture();
+    // Draw Screen Quad
+    mScreenQuad.Draw();
 }
 
 void Renderer::DrawByMesh()

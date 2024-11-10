@@ -24,6 +24,7 @@
 // That can wait for the time being.
 int run_glfw() {
 
+
     Window::InitWindow();
     Window window;
     if (window.GetWindow() == NULL)
@@ -59,9 +60,10 @@ int run_glfw() {
 
 	TransformComponent* CAR_TRANSFORM = testCarEntity->transform;
 
-    UI* ui = new UI(Core::getInstance().GetScene());
-    Physics* physx = new Physics(CAR_TRANSFORM);
+    window.SetWindowToCurrentThread();
     Renderer* renderer = new Renderer(&window);
+    Physics* physx = new Physics(CAR_TRANSFORM);
+    UI* ui = new UI(Core::getInstance().GetScene());
     Game* game = new Game();
 
 	Core::getInstance().AddSystem(ui);
@@ -70,8 +72,8 @@ int run_glfw() {
 	Core::getInstance().AddSystem(game);
 
 	ui->Initialize();
-	physx->Initialize();
 	renderer->Initialize();
+	physx->Initialize();
 	game->Initialize();
 
 	// Timing
