@@ -1,7 +1,7 @@
 #include "Buffers/UniformBuffer.h"
+#include "Utils/Logger.h"
 
 #include <glm.hpp>
-#include "Utils/Logger.h"
 #include <gtc/type_ptr.hpp>
 
 
@@ -44,5 +44,20 @@ void UniformBuffer::updateMatrices(const glm::mat4& model, const glm::mat4& view
     offset += sizeof(glm::mat4);
     GLCall(glBufferSubData(GL_UNIFORM_BUFFER, offset, sizeof(glm::vec3), glm::value_ptr(cameraPos)));
     
+    GLCall(glBindBuffer(GL_UNIFORM_BUFFER, 0));
+}
+
+void UniformBuffer::SetCameraMatrices(const glm::mat4& view, const glm::mat4& projection, const glm::vec3& cameraPos)
+{
+    GLCall(glBindBuffer(GL_UNIFORM_BUFFER, mBufferID));
+
+    // Update all Camera matrices in one go
+    size_t offset = sizeof(glm::mat4);
+    GLCall(glBufferSubData(GL_UNIFORM_BUFFER, offset, sizeof(glm::mat4), glm::value_ptr(view)));
+    offset += sizeof(glm::mat4);
+    GLCall(glBufferSubData(GL_UNIFORM_BUFFER, offset, sizeof(glm::mat4), glm::value_ptr(projection)));
+    offset += sizeof(glm::mat4);
+    GLCall(glBufferSubData(GL_UNIFORM_BUFFER, offset, sizeof(glm::vec3), glm::value_ptr(cameraPos)));
+
     GLCall(glBindBuffer(GL_UNIFORM_BUFFER, 0));
 }
