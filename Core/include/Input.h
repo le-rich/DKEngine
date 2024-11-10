@@ -1,8 +1,8 @@
-#include <queue>
+#pragma once
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <queue>
 #include <iostream>
-#include <mutex>
 
 #include "include/Body.h"
 
@@ -12,7 +12,7 @@ public:
     enum ActionType { PRESS, RELEASE, HOLD };
 
     struct InputEvent {
-        int code;
+        int key;
         ActionType action;
     };
 
@@ -40,35 +40,35 @@ public:
             InputEvent event = eventQueue.front();
             eventQueue.pop();
 
-            // Chekcs for press, release or hold
+            // Checks for press, release or hold
             if (event.action == PRESS)
             {
-                if (event.code == GLFW_KEY_W)
+                if (event.key == GLFW_KEY_W)
                     rigidBody->addForce(AE86::Vector3(-1.0, 0.0, 0.0));
-                else if (event.code == GLFW_KEY_S)
+                else if (event.key == GLFW_KEY_S)
                     rigidBody->addForce(AE86::Vector3(1.0, 0.0, 0.0));
-                else if (event.code == GLFW_KEY_A)
+                else if (event.key == GLFW_KEY_A)
                     std::cout << "A key pressed" << std::endl;
-                else if (event.code == GLFW_KEY_D)
+                else if (event.key == GLFW_KEY_D)
                     std::cout << "D key pressed" << std::endl;
-                else if (event.code == GLFW_MOUSE_BUTTON_LEFT)
+                else if (event.key == GLFW_MOUSE_BUTTON_LEFT)
                     std::cout << "LMB clicked" << std::endl;
-                else if (event.code == GLFW_MOUSE_BUTTON_RIGHT)
+                else if (event.key == GLFW_MOUSE_BUTTON_RIGHT)
                     std::cout << "RMB clicked" << std::endl;
             }
             else if (event.action == HOLD)
             {
-                if (event.code == GLFW_KEY_W)
+                if (event.key == GLFW_KEY_W)
                     std::cout << "holding W key" << std::endl;
-                else if (event.code == GLFW_KEY_A)
+                else if (event.key == GLFW_KEY_A)
                     std::cout << "holding A key" << std::endl;
-                else if (event.code == GLFW_KEY_D)
+                else if (event.key == GLFW_KEY_D)
                     std::cout << "holding D key" << std::endl;
-                else if (event.code == GLFW_MOUSE_BUTTON_LEFT)
+                else if (event.key == GLFW_MOUSE_BUTTON_LEFT)
                     std::cout << "Left mouse button is being held down" << std::endl;
-                else if (event.code == GLFW_MOUSE_BUTTON_RIGHT)
+                else if (event.key == GLFW_MOUSE_BUTTON_RIGHT)
                     std::cout << "Right mouse button is being held down" << std::endl;
-            } 
+            }
             else if (event.action == RELEASE)
             {
                 // Can change this if we want to check on the release of a specific key
