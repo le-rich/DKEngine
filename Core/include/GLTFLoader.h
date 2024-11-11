@@ -305,61 +305,102 @@ namespace GLTFLoader
         return gltfModel;
     }
 
-    glm::mat4 GetNodeLocalTransformMatrix(tinygltf::Node const& Node)
+    Transform GetNodeLocalTransformMatrix(tinygltf::Node const& Node)
     {
-        glm::vec3 Translation{};
+        glm::vec3 translation{};
         if (!Node.translation.empty())
         {
-            Translation.x = static_cast<float>(Node.translation[0]);
-            Translation.y = static_cast<float>(Node.translation[1]);
-            Translation.z = static_cast<float>(Node.translation[2]);
+            translation.x = static_cast<float>(Node.translation[0]);
+            translation.y = static_cast<float>(Node.translation[1]);
+            translation.z = static_cast<float>(Node.translation[2]);
         }
 
-        glm::vec3 Scale{ 1.0f };
+        glm::vec3 scale{ 1.0f };
         if (!Node.scale.empty())
         {
-            Scale.x = static_cast<float>(Node.scale[0]);
-            Scale.y = static_cast<float>(Node.scale[1]);
-            Scale.z = static_cast<float>(Node.scale[2]);
+            scale.x = static_cast<float>(Node.scale[0]);
+            scale.y = static_cast<float>(Node.scale[1]);
+            scale.z = static_cast<float>(Node.scale[2]);
         }
 
-        glm::quat Rotation{};
+        glm::quat rotation{};
         if (!Node.rotation.empty())
         {
-            Rotation.x = static_cast<float>(Node.rotation[0]);
-            Rotation.y = static_cast<float>(Node.rotation[1]);
-            Rotation.z = static_cast<float>(Node.rotation[2]);
-            Rotation.w = static_cast<float>(Node.rotation[3]);
+            rotation.x = static_cast<float>(Node.rotation[0]);
+            rotation.y = static_cast<float>(Node.rotation[1]);
+            rotation.z = static_cast<float>(Node.rotation[2]);
+            rotation.w = static_cast<float>(Node.rotation[3]);
         }
 
-        glm::mat4 EyeMatrix = glm::mat4{ 1.0f };
-        glm::mat4 TranslateMatrix = glm::translate(EyeMatrix, Translation);
-        glm::mat4 RotateMatrix = glm::mat4(Rotation);
-        glm::mat4 ScaleMatrix = glm::scale(EyeMatrix, Scale);
-        return TranslateMatrix * RotateMatrix * ScaleMatrix;
+        //glm::mat4 EyeMatrix = glm::mat4{ 1.0f };
+        //glm::mat4 TranslateMatrix = glm::translate(EyeMatrix, Translation);
+        //glm::mat4 RotateMatrix = glm::mat4(Rotation);
+        //glm::mat4 ScaleMatrix = glm::scale(EyeMatrix, Scale);
+        Transform transform{ translation, rotation, scale };
+        return transform;
     }
 
+    static void LoadChildEntities(Entity* pParentEntity, tinygltf::Model& const pGltfModel, std::vector<UUIDv4::UUID>& pMaterials, std::vector<int>& const pChildIndexes)
+    {
+        for (int childIndex : pChildIndexes)
+        {
+            tinygltf::Node const rootNode = pGltfModel.nodes[childIndex];
+            Entity* childEntity = new Entity(rootNode.name);
+            pParentEntity->addChild(childEntity);
+            childEntity->setParent(pParentEntity);
+
+            int meshIndex = rootNode.mesh;
+            Mesh* testMesh = GLTFLoader::LoadMesh(pGltfModel, pGltfModel.meshes[meshIndex], pMaterials);
+            MeshComponent* meshComponent = new MeshComponent(childEntity);
+            meshComponent->setMesh(testMesh);
+            childEntity->addComponent(*meshComponent);
+
+            // Process components to be added to entity
+            std::string nodeName = rootNode.name;
+            Transform nodeTransform = GetNodeLocalTransformMatrix(rootNode);
+            childEntity->transform->setLocalPosition(nodeTransform.localPosition);
+            childEntity->transform->setLocalOrientation(nodeTransform.localOrientation);
+            childEntity->transform->setLocalScale(nodeTransform.localScale);
+        }
+    }
+
+    // Loads given model file as an entity
     static void LoadModelInEntity(Entity* pEntity, std::string const pSourceFolder, std::string const pModelFile)
     {
-       tinygltf::Model gltfModel = LoadFromFile(pSourceFolder + pModelFile);
-       std::vector<UUIDv4::UUID> textures = LoadTextures(gltfModel, pSourceFolder);
-       std::vector<UUIDv4::UUID> materials = LoadMaterials(gltfModel, textures);
+        tinygltf::Model gltfModel = LoadFromFile(pSourceFolder + pModelFile);
+        std::vector<UUIDv4::UUID> textures = LoadTextures(gltfModel, pSourceFolder);
+        std::vector<UUIDv4::UUID> materials = LoadMaterials(gltfModel, textures);
 
-       // Traverse nodes and assign entities and components to the entity for each child
-       tinygltf::Scene gltfScene = gltfModel.scenes[gltfModel.defaultScene];
-       // Get Root nodes in model
-       std::vector<int> rootIndexes = gltfScene.nodes;
-       for (int const rootIndex : rootIndexes)
-       {
-           // For each root, create enity and process tree
-           tinygltf::Node const rootNode = gltfModel.nodes[rootIndex];
-           int meshIndex = rootNode.mesh;
+        // Traverse nodes and assign entities and components to the entity for each child
+        tinygltf::Scene gltfScene = gltfModel.scenes[gltfModel.defaultScene];
+        // Get Root nodes in model
+        std::vector<int> rootIndexes = gltfScene.nodes;
 
-           Mesh* testMesh = GLTFLoader::LoadMesh(gltfModel, gltfModel.meshes[meshIndex], materials);
-           MeshComponent* meshComponent = new MeshComponent(pEntity);
-           meshComponent->setMesh(testMesh);
-           pEntity->addComponent(*meshComponent);
-       }
+        if (rootIndexes.size() == 1)
+        {
+            tinygltf::Node const rootNode = gltfModel.nodes[rootIndexes[0]];
+            // Process Node Name and apply components
+            int meshIndex = rootNode.mesh;
+            Mesh* testMesh = GLTFLoader::LoadMesh(gltfModel, gltfModel.meshes[meshIndex], materials);
+            MeshComponent* meshComponent = new MeshComponent(pEntity);
+            meshComponent->setMesh(testMesh);
+            pEntity->addComponent(*meshComponent);
 
+            // Process components to be added to entity
+            std::string nodeName = rootNode.name;
+            Transform nodeTransform = GetNodeLocalTransformMatrix(rootNode);
+            pEntity->transform->setLocalOrientation(nodeTransform.localOrientation);
+            pEntity->transform->setLocalPosition(nodeTransform.localPosition);
+            pEntity->transform->setLocalScale(nodeTransform.localScale);
+
+            // Process child nodes
+            std::vector<int> childIndexes = rootNode.children;
+            LoadChildEntities(pEntity, gltfModel, materials, childIndexes);
+            return;
+        }
+        else
+        {
+            LoadChildEntities(pEntity, gltfModel, materials, rootIndexes);
+        }
     }
 }

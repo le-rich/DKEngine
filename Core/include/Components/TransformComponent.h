@@ -9,6 +9,19 @@
 
 class Entity;
 
+struct Transform
+{    
+    // parent space coords for Transform's origin's position.
+    glm::vec3 localPosition;
+
+    // parent space angular orientation
+    glm::quat localOrientation;
+
+    // parent-relative scale
+    glm::vec3 localScale;
+
+};
+
 /**
  *
  */

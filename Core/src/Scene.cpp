@@ -33,8 +33,6 @@ void Scene::SpawnSceneDefinition()
     lightEntity->transform->setLocalOrientation(glm::quat(-0.5f, 0.5f, 0.5f, 0.f));
     EntityManager::getInstance().Instantiate(lightEntity);
 
-    //(glm::vec3(0.f, 5.f, 0.f), glm::vec3(120.0f, -40.0f, 0.0f), LightType::DirectionalLight);
-
     // TODO: Refactor to a Single Car Entity with Mesh and Rigidbody components
     // 
     // TODO: Figure out location of assets/non code files within solution
@@ -45,10 +43,6 @@ void Scene::SpawnSceneDefinition()
     Entity* testCar = new Entity();
     testCar->SetDisplayName("Test Car");
     GLTFLoader::LoadModelInEntity(testCar, SOURCE_FOLDER, SOURCE_FILE);
-    // Assign model to entity
-    // Load model into entity
-    // Instatntiate Entity
-
     EntityManager::getInstance().Instantiate(testCar);
     // end TODO
 
