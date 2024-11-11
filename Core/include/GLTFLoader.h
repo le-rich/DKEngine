@@ -1,6 +1,7 @@
 #pragma once
 #include "Components/MeshComponent.h"
 #include "Managers/AssetManager.h"
+#include "Managers/ComponentManager.h"
 #include "Resources/Mesh.h"
 #include "Resources/Material.h"
 #include "Resources/Texture.h"
@@ -352,10 +353,8 @@ namespace GLTFLoader
             int meshIndex = rootNode.mesh;
             if (meshIndex >= 0)
             {
-                Mesh* testMesh = GLTFLoader::LoadMesh(pGltfModel, pGltfModel.meshes[meshIndex], pMaterials);
-                MeshComponent* meshComponent = new MeshComponent(childEntity);
-                meshComponent->setMesh(testMesh);
-                childEntity->addComponent(*meshComponent);
+                Mesh* mesh = GLTFLoader::LoadMesh(pGltfModel, pGltfModel.meshes[meshIndex], pMaterials);
+                ComponentManager::AddMeshComponent(childEntity, mesh);
             }
 
             // Process non mesh components to be added to entity
@@ -384,16 +383,14 @@ namespace GLTFLoader
             int meshIndex = rootNode.mesh;
             if (meshIndex >= 0)
             {
-                Mesh* testMesh = GLTFLoader::LoadMesh(gltfModel, gltfModel.meshes[meshIndex], materials);
-                MeshComponent* meshComponent = new MeshComponent(pEntity);
-                meshComponent->setMesh(testMesh);
-                pEntity->addComponent(*meshComponent);
+                Mesh* mesh = GLTFLoader::LoadMesh(gltfModel, gltfModel.meshes[meshIndex], materials);
+                ComponentManager::AddMeshComponent(pEntity, mesh);
             }
 
-            // Process components to be added to entity
-            std::string nodeName = rootNode.name;
             Transform nodeTransform = GetNodeLocalTransformMatrix(rootNode);
             pEntity->transform->setTransform(nodeTransform);
+            // Process components to be added to entity
+            std::string nodeName = rootNode.name;
 
             // Process child nodes
             std::vector<int> childIndexes = rootNode.children;

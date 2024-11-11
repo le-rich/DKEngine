@@ -27,6 +27,9 @@
     <ClInclude Include="include\Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Scripts\ScriptList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Scripts\OrbitScript.cpp">

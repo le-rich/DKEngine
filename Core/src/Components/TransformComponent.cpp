@@ -9,7 +9,6 @@
 TransformComponent::TransformComponent(Entity* mEntity) : Component(mEntity), mTransform{ glm::vec3(0.0f, 0.0f, 0.0f) , glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(1.f) },
 transformMatrix(1.0f)
 {
-    updateTransformMatrix();
 }
 
 
@@ -62,6 +61,7 @@ void TransformComponent::lookAt(TransformComponent* target)
 
 glm::vec3 TransformComponent::getWorldPosition()
 {
+    //updateTransformMatrix();
     return glm::vec3(transformMatrix * glm::vec4(mTransform.localPosition, 1.0));
 }
 
