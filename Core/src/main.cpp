@@ -85,11 +85,6 @@ int run_glfw()
     auto glfwWindow = window.GetWindow();
     while (!glfwWindowShouldClose(glfwWindow))
     {
-        // TODO: Refactor to proper input handler
-        if (Input::keys[GLFW_KEY_W])
-            physx->body->addForce(AE86::Vector3(-1.0, 0.0, 0.0));
-        if (Input::keys[GLFW_KEY_S])
-            physx->body->addForce(AE86::Vector3(1.0, 0.0, 0.0));
 
         auto currentTime = std::chrono::high_resolution_clock::now();
         std::chrono::duration<float> deltaTime = currentTime - previousTime;
@@ -109,7 +104,7 @@ int run_glfw()
         // Have them be updated by GLFW callback. This works because glfwpollevents() is a synchronous method that runs all callbacks
         // As long as all components are called after glfwpollevents, behavior should be fine.
         window.PollEvents();
-        Input::RunInputListener();
+        Input::RunInputListener(physx->body);
 
         // Rendering related calls, we can move these to the loop of the rendering thread
         renderer->Update(deltaTimeFloatSeconds); // draw tri or square
