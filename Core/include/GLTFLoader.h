@@ -350,17 +350,18 @@ namespace GLTFLoader
             childEntity->setParent(pParentEntity);
 
             int meshIndex = rootNode.mesh;
-            Mesh* testMesh = GLTFLoader::LoadMesh(pGltfModel, pGltfModel.meshes[meshIndex], pMaterials);
-            MeshComponent* meshComponent = new MeshComponent(childEntity);
-            meshComponent->setMesh(testMesh);
-            childEntity->addComponent(*meshComponent);
+            if (meshIndex >= 0)
+            {
+                Mesh* testMesh = GLTFLoader::LoadMesh(pGltfModel, pGltfModel.meshes[meshIndex], pMaterials);
+                MeshComponent* meshComponent = new MeshComponent(childEntity);
+                meshComponent->setMesh(testMesh);
+                childEntity->addComponent(*meshComponent);
+            }
 
-            // Process components to be added to entity
+            // Process non mesh components to be added to entity
             std::string nodeName = rootNode.name;
             Transform nodeTransform = GetNodeLocalTransformMatrix(rootNode);
-            childEntity->transform->setLocalPosition(nodeTransform.localPosition);
-            childEntity->transform->setLocalOrientation(nodeTransform.localOrientation);
-            childEntity->transform->setLocalScale(nodeTransform.localScale);
+            childEntity->transform->setTransform(nodeTransform);
         }
     }
 
@@ -381,17 +382,18 @@ namespace GLTFLoader
             tinygltf::Node const rootNode = gltfModel.nodes[rootIndexes[0]];
             // Process Node Name and apply components
             int meshIndex = rootNode.mesh;
-            Mesh* testMesh = GLTFLoader::LoadMesh(gltfModel, gltfModel.meshes[meshIndex], materials);
-            MeshComponent* meshComponent = new MeshComponent(pEntity);
-            meshComponent->setMesh(testMesh);
-            pEntity->addComponent(*meshComponent);
+            if (meshIndex >= 0)
+            {
+                Mesh* testMesh = GLTFLoader::LoadMesh(gltfModel, gltfModel.meshes[meshIndex], materials);
+                MeshComponent* meshComponent = new MeshComponent(pEntity);
+                meshComponent->setMesh(testMesh);
+                pEntity->addComponent(*meshComponent);
+            }
 
             // Process components to be added to entity
             std::string nodeName = rootNode.name;
             Transform nodeTransform = GetNodeLocalTransformMatrix(rootNode);
-            pEntity->transform->setLocalOrientation(nodeTransform.localOrientation);
-            pEntity->transform->setLocalPosition(nodeTransform.localPosition);
-            pEntity->transform->setLocalScale(nodeTransform.localScale);
+            pEntity->transform->setTransform(nodeTransform);
 
             // Process child nodes
             std::vector<int> childIndexes = rootNode.children;
