@@ -37,7 +37,7 @@ void Scene::SpawnSceneDefinition()
     // 
     // TODO: Figure out location of assets/non code files within solution
     // TODO: JSONparser for list of assets, each asset has a PATH and FILE string.
-    const std::string SOURCE_FOLDER = "Assets/TestAE/";
+    const std::string SOURCE_FOLDER = "Assets/TestAE2/";
     const std::string SOURCE_FILE = "ae86.gltf";
 
     Entity* testCar = new Entity();

@@ -333,34 +333,39 @@ namespace GLTFLoader
             rotation.w = static_cast<float>(Node.rotation[3]);
         }
 
-        //glm::mat4 EyeMatrix = glm::mat4{ 1.0f };
-        //glm::mat4 TranslateMatrix = glm::translate(EyeMatrix, Translation);
-        //glm::mat4 RotateMatrix = glm::mat4(Rotation);
-        //glm::mat4 ScaleMatrix = glm::scale(EyeMatrix, Scale);
         Transform transform{ translation, rotation, scale };
         return transform;
+    }
+
+    static void LoadEntity(Entity* pEntity, tinygltf::Node& const node, tinygltf::Model& const pGltfModel, std::vector<UUIDv4::UUID>& pMaterials)
+    {
+        int meshIndex = node.mesh;
+        if (meshIndex >= 0)
+        {
+            Mesh* mesh = GLTFLoader::LoadMesh(pGltfModel, pGltfModel.meshes[meshIndex], pMaterials);
+            ComponentManager::AddMeshComponent(pEntity, mesh);
+        }
+
+        // Process non mesh components to be added to entity
+        std::string nodeName = node.name;
+        Transform nodeTransform = GetNodeLocalTransformMatrix(node);
+        pEntity->transform->setTransform(nodeTransform);
+        ComponentManager::AddComponents(pEntity, nodeName);
     }
 
     static void LoadChildEntities(Entity* pParentEntity, tinygltf::Model& const pGltfModel, std::vector<UUIDv4::UUID>& pMaterials, std::vector<int>& const pChildIndexes)
     {
         for (int childIndex : pChildIndexes)
         {
-            tinygltf::Node const rootNode = pGltfModel.nodes[childIndex];
-            Entity* childEntity = new Entity(rootNode.name);
+            tinygltf::Node node = pGltfModel.nodes[childIndex];
+            Entity* childEntity = new Entity(node.name);
             pParentEntity->addChild(childEntity);
             childEntity->setParent(pParentEntity);
 
-            int meshIndex = rootNode.mesh;
-            if (meshIndex >= 0)
-            {
-                Mesh* mesh = GLTFLoader::LoadMesh(pGltfModel, pGltfModel.meshes[meshIndex], pMaterials);
-                ComponentManager::AddMeshComponent(childEntity, mesh);
-            }
+            LoadEntity(childEntity, node, pGltfModel, pMaterials);
 
-            // Process non mesh components to be added to entity
-            std::string nodeName = rootNode.name;
-            Transform nodeTransform = GetNodeLocalTransformMatrix(rootNode);
-            childEntity->transform->setTransform(nodeTransform);
+            std::vector<int> childIndexes = node.children;
+            LoadChildEntities(childEntity, pGltfModel, pMaterials, childIndexes);
         }
     }
 
@@ -376,30 +381,16 @@ namespace GLTFLoader
         // Get Root nodes in model
         std::vector<int> rootIndexes = gltfScene.nodes;
 
-        if (rootIndexes.size() == 1)
-        {
-            tinygltf::Node const rootNode = gltfModel.nodes[rootIndexes[0]];
-            // Process Node Name and apply components
-            int meshIndex = rootNode.mesh;
-            if (meshIndex >= 0)
-            {
-                Mesh* mesh = GLTFLoader::LoadMesh(gltfModel, gltfModel.meshes[meshIndex], materials);
-                ComponentManager::AddMeshComponent(pEntity, mesh);
-            }
-
-            Transform nodeTransform = GetNodeLocalTransformMatrix(rootNode);
-            pEntity->transform->setTransform(nodeTransform);
-            // Process components to be added to entity
-            std::string nodeName = rootNode.name;
-
-            // Process child nodes
-            std::vector<int> childIndexes = rootNode.children;
-            LoadChildEntities(pEntity, gltfModel, materials, childIndexes);
-            return;
-        }
-        else
+        if (rootIndexes.size() > 1)
         {
             LoadChildEntities(pEntity, gltfModel, materials, rootIndexes);
+            return;
         }
+
+        tinygltf::Node rootNode = gltfModel.nodes[rootIndexes[0]];
+        LoadEntity(pEntity, rootNode, gltfModel, materials);
+
+        std::vector<int> childIndexes = rootNode.children;
+        LoadChildEntities(pEntity, gltfModel, materials, childIndexes);
     }
 }
