@@ -1,12 +1,13 @@
 #pragma once
-
-
-#include <tiny_gltf.cc>
-
+#include "Components/MeshComponent.h"
 #include "Managers/AssetManager.h"
 #include "Resources/Mesh.h"
 #include "Resources/Material.h"
 #include "Resources/Texture.h"
+
+#include <tiny_gltf.cc>
+#include <glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 namespace GLTFLoader
 {
@@ -302,5 +303,63 @@ namespace GLTFLoader
         // return the processed model
         printf("Loaded '%s'\n", pFilePath.c_str());
         return gltfModel;
+    }
+
+    glm::mat4 GetNodeLocalTransformMatrix(tinygltf::Node const& Node)
+    {
+        glm::vec3 Translation{};
+        if (!Node.translation.empty())
+        {
+            Translation.x = static_cast<float>(Node.translation[0]);
+            Translation.y = static_cast<float>(Node.translation[1]);
+            Translation.z = static_cast<float>(Node.translation[2]);
+        }
+
+        glm::vec3 Scale{ 1.0f };
+        if (!Node.scale.empty())
+        {
+            Scale.x = static_cast<float>(Node.scale[0]);
+            Scale.y = static_cast<float>(Node.scale[1]);
+            Scale.z = static_cast<float>(Node.scale[2]);
+        }
+
+        glm::quat Rotation{};
+        if (!Node.rotation.empty())
+        {
+            Rotation.x = static_cast<float>(Node.rotation[0]);
+            Rotation.y = static_cast<float>(Node.rotation[1]);
+            Rotation.z = static_cast<float>(Node.rotation[2]);
+            Rotation.w = static_cast<float>(Node.rotation[3]);
+        }
+
+        glm::mat4 EyeMatrix = glm::mat4{ 1.0f };
+        glm::mat4 TranslateMatrix = glm::translate(EyeMatrix, Translation);
+        glm::mat4 RotateMatrix = glm::mat4(Rotation);
+        glm::mat4 ScaleMatrix = glm::scale(EyeMatrix, Scale);
+        return TranslateMatrix * RotateMatrix * ScaleMatrix;
+    }
+
+    static void LoadModelInEntity(Entity* pEntity, std::string const pSourceFolder, std::string const pModelFile)
+    {
+       tinygltf::Model gltfModel = LoadFromFile(pSourceFolder + pModelFile);
+       std::vector<UUIDv4::UUID> textures = LoadTextures(gltfModel, pSourceFolder);
+       std::vector<UUIDv4::UUID> materials = LoadMaterials(gltfModel, textures);
+
+       // Traverse nodes and assign entities and components to the entity for each child
+       tinygltf::Scene gltfScene = gltfModel.scenes[gltfModel.defaultScene];
+       // Get Root nodes in model
+       std::vector<int> rootIndexes = gltfScene.nodes;
+       for (int const rootIndex : rootIndexes)
+       {
+           // For each root, create enity and process tree
+           tinygltf::Node const rootNode = gltfModel.nodes[rootIndex];
+           int meshIndex = rootNode.mesh;
+
+           Mesh* testMesh = GLTFLoader::LoadMesh(gltfModel, gltfModel.meshes[meshIndex], materials);
+           MeshComponent* meshComponent = new MeshComponent(pEntity);
+           meshComponent->setMesh(testMesh);
+           pEntity->addComponent(*meshComponent);
+       }
+
     }
 }

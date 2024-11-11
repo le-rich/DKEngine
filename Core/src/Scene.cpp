@@ -36,20 +36,19 @@ void Scene::SpawnSceneDefinition()
     //(glm::vec3(0.f, 5.f, 0.f), glm::vec3(120.0f, -40.0f, 0.0f), LightType::DirectionalLight);
 
     // TODO: Refactor to a Single Car Entity with Mesh and Rigidbody components
+    // 
+    // TODO: Figure out location of assets/non code files within solution
+    // TODO: JSONparser for list of assets, each asset has a PATH and FILE string.
+    const std::string SOURCE_FOLDER = "Assets/TestAE/";
+    const std::string SOURCE_FILE = "ae86.gltf";
 
-    std::string SOURCE_FOLDER = "Assets/TestAE/"; // TODO: JSONparser for list of assets, each asset has a PATH and FILE string.
     Entity* testCar = new Entity();
     testCar->SetDisplayName("Test Car");
+    GLTFLoader::LoadModelInEntity(testCar, SOURCE_FOLDER, SOURCE_FILE);
+    // Assign model to entity
+    // Load model into entity
+    // Instatntiate Entity
 
-    tinygltf::Model gltfModel = GLTFLoader::LoadFromFile(SOURCE_FOLDER + "ae86.gltf"); // TODO: Figure out location of assets/non code files within solution
-    std::vector<UUIDv4::UUID> textures = GLTFLoader::LoadTextures(gltfModel, SOURCE_FOLDER);
-    std::vector<UUIDv4::UUID> materials = GLTFLoader::LoadMaterials(gltfModel, textures);
-    Mesh* testMesh = GLTFLoader::LoadMesh(gltfModel, gltfModel.meshes[0], materials);
-
-    MeshComponent* meshComponent = new MeshComponent(testCar);
-    meshComponent->setMesh(testMesh);
-
-    testCar->addComponent(*meshComponent);
     EntityManager::getInstance().Instantiate(testCar);
     // end TODO
 
