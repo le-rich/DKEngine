@@ -370,7 +370,7 @@ namespace GLTFLoader
     }
 
     // Loads given model file as an entity
-    static void LoadModelInEntity(Entity* pEntity, std::string const pSourceFolder, std::string const pModelFile)
+    static void LoadModelAsEntity(Entity* pEntity, std::string const pSourceFolder, std::string const pModelFile)
     {
         tinygltf::Model gltfModel = LoadFromFile(pSourceFolder + pModelFile);
         std::vector<UUIDv4::UUID> textures = LoadTextures(gltfModel, pSourceFolder);

@@ -42,16 +42,14 @@ void Scene::SpawnSceneDefinition()
 
     Entity* testCar = new Entity();
     testCar->SetDisplayName("Test Car");
-    GLTFLoader::LoadModelInEntity(testCar, SOURCE_FOLDER, SOURCE_FILE);
+    GLTFLoader::LoadModelAsEntity(testCar, SOURCE_FOLDER, SOURCE_FILE);
     EntityManager::getInstance().Instantiate(testCar);
     // end TODO
 
-    ScriptComponent* cameraScriptComponent = new ScriptComponent(cameraEntity);
-    OrbitScript* orbitScript = new OrbitScript(cameraEntity);
-    orbitScript->setOrbitTarget(testCar->transform);
+    OrbitScriptParams params;
+    params.m_OrbitTarget = testCar->transform;
+    ScriptComponent* component = ComponentManager::AddScriptComponent(cameraEntity);
+    ComponentManager::AddScriptToComponent(cameraEntity, component, ScriptType::OrbitScript, &params);
 
-    cameraScriptComponent->AddScript<OrbitScript>(*orbitScript);
-    cameraEntity->addComponent(*cameraScriptComponent);
     EntityManager::getInstance().Instantiate(cameraEntity);
-
 }

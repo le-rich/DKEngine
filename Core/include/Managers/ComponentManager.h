@@ -19,45 +19,58 @@ void ParseComponents(std::string pName, std::vector<std::pair< ComponentType, st
     // TODO: Parse script section to get scripts to add
 }
 
-std::vector<ScriptName> ParseScriptData(std::string pScriptString)
+std::vector<std::pair<ScriptType, ScriptParams*>> ParseScriptData(std::string pScriptString)
 {
-    return std::vector<ScriptName>();
+    return { { ScriptType::OrbitScript, new OrbitScriptParams{} } };
 }
 
 namespace ComponentManager
 {
 
-    static void AddMeshComponent(Entity* pEntity, Mesh* pMesh)
+    static MeshComponent* AddMeshComponent(Entity* pEntity, Mesh* pMesh)
     {
         MeshComponent* meshComponent = new MeshComponent(pEntity);
         meshComponent->setMesh(pMesh);
         pEntity->addComponent(*meshComponent);
+        return meshComponent;
     }
 
-    static void AddCameraComponent(Entity* pEntity)
+    static CameraComponent* AddCameraComponent(Entity* pEntity)
     {
-        //TODO
+        CameraComponent* cameraComponent = new CameraComponent(pEntity);
+        pEntity->addComponent(*cameraComponent);
+        return cameraComponent;
     }
 
-    static void AddLightComponent(Entity* pEntity)
+    static LightComponent* AddLightComponent(Entity* pEntity)
     {
-        //TODO
+        LightComponent* lightComponent = new LightComponent(pEntity);
+        pEntity->addComponent(*lightComponent);
+        return lightComponent;
     }
 
-    static void AddScriptComponent(Entity* pEntity, std::vector<ScriptName> const pScriptList)
+    static void AddScriptToComponent(Entity* pEntity, ScriptComponent* pScriptComponent, ScriptType pScriptType, ScriptParams* pScriptParams)
     {
-        //TODO: Setup each Script
-        for (ScriptName script : pScriptList)
+        switch (pScriptType)
         {
-            switch (script)
-            {
-            case ScriptName::OrbitalScript:
-                break;
-            default:
-                break;
-            }
+        case ScriptType::OrbitScript:
+        {
+            OrbitScript* script;
+            script = new OrbitScript(pEntity);
+            script->SetParameters(pScriptParams);
+            pScriptComponent->AddScript<OrbitScript>(*script);
+            break;
         }
+        default:
+            break;
+        }
+    }
 
+    static ScriptComponent* AddScriptComponent(Entity* pEntity)
+    {
+        ScriptComponent* scriptComponent = new ScriptComponent(pEntity);
+        pEntity->addComponent(*scriptComponent);
+        return scriptComponent;
     }
 
     // Add components to entity from entity name
@@ -78,10 +91,15 @@ namespace ComponentManager
                 AddLightComponent(pEntity);
                 break;
             case ComponentType::Script:
-                // TODO: parse secondary field into scriptList
-                //std::vector<ScriptName> scriptList;
-                AddScriptComponent(pEntity, ParseScriptData(component.second));
-                break;
+            {
+                std::vector<std::pair<ScriptType, ScriptParams*>> scripts = ParseScriptData(component.second);
+                ScriptComponent* component = AddScriptComponent(pEntity);
+                for (auto& scriptData : scripts)
+                {
+                    AddScriptToComponent(pEntity, component, scriptData.first, scriptData.second);
+                }
+            }
+            break;
             default:
                 break;
             }
