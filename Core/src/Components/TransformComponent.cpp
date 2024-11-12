@@ -11,8 +11,6 @@ transformMatrix(1.0f)
 {
 }
 
-
-
 TransformComponent::TransformComponent(Entity* mEntity, glm::vec4 position, glm::quat orientation, float scale)
     : Component(mEntity), mTransform{ position, orientation, glm::vec3(scale) }
 {
