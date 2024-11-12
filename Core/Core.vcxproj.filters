@@ -31,9 +31,16 @@
     <ClCompile Include="src\Managers\AssetManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Components\RigidBodyComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Window\Window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Component.h" />
+    <ClInclude Include="include\Components\RigidBodyComponent.h" />
     <ClInclude Include="include\Components\TransformComponent.h" />
     <ClInclude Include="include\Core.h" />
     <ClInclude Include="include\Entity.h" />
@@ -46,7 +53,5 @@
     <ClInclude Include="include\System.h" />
     <ClInclude Include="include\Utils\IDUtils.h" />
     <ClInclude Include="include\Utils\uuid_v4.h" />
-    <ClInclude Include="include\Window\Window.h" />
-    <ClInclude Include="include\Components\RigidBodyComponent.h" />
   </ItemGroup>
 </Project>

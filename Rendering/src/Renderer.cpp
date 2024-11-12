@@ -18,13 +18,14 @@
 
 Renderer::Renderer(Window* window)
 {
-	windowRef = window;
+    windowRef = window;
 }
 
 Renderer::~Renderer() {}
 
-void Renderer::Initialize() {
-	System::Initialize();
+void Renderer::Initialize()
+{
+    System::Initialize();
 
 	// Get Camera if it exists
 	auto mainCameraUUID = EntityManager::getInstance().findFirstEntityByDisplayName("Main Camera");
@@ -116,43 +117,44 @@ void Renderer::RenderToFrame()
 	}
 	// ============================
 
-	//Material Based:
-	//For each Material
-	//	Bind Material
-	//	Apply Material specific Uniforms
-	//	For each Primitive in Material
-	//		Bind Vertex Array
-	//		Bind Index Buffer
-	//		DrawCall
-	//	Unbind Material
-	//	
-	//TODO: Replace with Scene based or Material based Draw
-	DrawByMesh();
+    //TODO: Replace with Scene based or Material based Draw
+    DrawByMesh();
+    // ============================
+    //Material Based:
+    //For each Material
+    //	Bind Material
+    //	Apply Material specific Uniforms
+    //	For each Primitive in Material
+    //		Bind Vertex Array
+    //		Bind Index Buffer
+    //		DrawCall
+    //	Unbind Material
+    //	
 
-	shaderStorageBufferObject.Unbind();
+    shaderStorageBufferObject.Unbind();
 }
 
 void Renderer::DrawByMesh()
 {
-	auto meshComponentUUIDs = EntityManager::getInstance().findEntitiesByComponent(ComponentType::Mesh);
+    auto meshComponentUUIDs = EntityManager::getInstance().findEntitiesByComponent(ComponentType::Mesh);
 
-	for (auto& uuid : meshComponentUUIDs)
-	{
-		auto entity = EntityManager::getInstance().getEntity(uuid);
-		MeshComponent* meshComponent = dynamic_cast<MeshComponent*>(entity->getComponent(ComponentType::Mesh));
+    for (auto& uuid : meshComponentUUIDs)
+    {
+        auto entity = EntityManager::getInstance().getEntity(uuid);
+        MeshComponent* meshComponent = dynamic_cast<MeshComponent*>(entity->getComponent(ComponentType::Mesh));
 
 		if (meshComponent != nullptr)
 		{
 			glm::vec3 localScale = entity->transform->getLocalScale();
 
-			// TODO: Bug Physics/Core on way to get modelMatrix directly from transform
-			glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), entity->transform->getWorldPosition()) *
-				glm::mat4_cast(entity->transform->getLocalOrientation()) *
-				glm::scale(glm::mat4(1.0f), localScale);
-			mEngineUniformBuffer.SetSubData(modelMatrix, 0);
-			meshComponent->getMesh()->Draw();
-		}
-	}
+            // TODO: Bug Physics/Core on way to get modelMatrix directly from transform
+            glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), entity->transform->getWorldPosition()) *
+                glm::mat4_cast(entity->transform->getLocalOrientation()) *
+                glm::scale(glm::mat4(1.0f), localScale);
+            mEngineUniformBuffer.SetSubData(modelMatrix, 0);
+            meshComponent->getMesh()->Draw();
+        }
+    }
 }
 
 

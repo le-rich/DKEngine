@@ -14,8 +14,6 @@
 #include "Components/CameraComponent.h"
 #include "Entities/CameraEntity.h"
 
-
-
 class Renderer : public System
 {
 public:
@@ -41,9 +39,10 @@ public:
     std::vector<UUIDv4::UUID> testMaterials;
 
 private:
-    //GLFWwindow* m_Window;
     Window* windowRef;
+
     Entity* mainCameraEntity = nullptr; 
+
     UniformBuffer mEngineUniformBuffer;
     ShaderStorageBuffer shaderStorageBufferObject;
 

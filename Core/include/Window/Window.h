@@ -13,7 +13,8 @@ public:
 	Window();
 	Window(int pWidth, int pHeight, const char* pTitle, GLFWmonitor* pMonitor = NULL, GLFWwindow* pShare = NULL);
 
-	static void InitWindow() {
+	static void InitWindow()
+	{
 		glfwInit();
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
