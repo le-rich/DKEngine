@@ -17,7 +17,7 @@ public:
 	}
 
 	void FixedUpdate() override {
-		// Not sure what we want here, maybe nothing
+		// @Richard & @Sepehr: Not sure what we want here, maybe nothing
 	}
 
 	FMOD::System* getSystem();
