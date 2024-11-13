@@ -1,15 +1,25 @@
 #ifndef AUDIO_MGR_H
 
+#include "System.h"
 #include "FMOD/inc/fmod.hpp"
 #include <string>
 #include <unordered_map>
 
-class AudioManager {
+class AudioManager : public System {
 public:
 	AudioManager();
 	~AudioManager();
 
-	void update();
+	void Update();
+
+	const char* GetName() const override {
+		return "AudioManager";
+	}
+
+	void FixedUpdate() override {
+		// Not sure what we want here, maybe nothing
+	}
+
 	FMOD::System* getSystem();
 
 	FMOD::Sound* loadSound(const std::string& filePath);

@@ -16,7 +16,7 @@ AudioManager::~AudioManager()
 	fmodSystem->release();
 }
 
-void AudioManager::update()
+void AudioManager::Update()
 {
 	fmodSystem->update();
 }

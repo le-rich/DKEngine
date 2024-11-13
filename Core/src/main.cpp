@@ -32,10 +32,6 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 // That can wait for the time being.
 int run_glfw()
 {
-
-    AudioManager audioManager;
-    FMOD::Sound* backgroundMusic = audioManager.loadSound("Assets/Sound/yippee.mp3");
-    
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -91,14 +87,18 @@ int run_glfw()
     UI* ui = new UI();
     Physics* physx = new Physics(CAR_TRANSFORM);
     Renderer* renderer = new Renderer();
+    AudioManager* audio = new AudioManager();
+    
 
     Core::getInstance().AddSystem(ui);
     Core::getInstance().AddSystem(physx);
     Core::getInstance().AddSystem(renderer);
+    Core::getInstance().AddSystem(audio);
 
     ui->Initialize();
     physx->Initialize();
     renderer->Initialize();
+    audio->Initialize();
 
     // Timing
     double fixedUpdateBuffer = 0.0;
@@ -113,12 +113,14 @@ int run_glfw()
 
     // end TODO
 
+    FMOD::Sound* backgroundMusic = audio->loadSound("Assets/Sound/yippee.mp3");
+
     // We want some check like this visible to the other threads
     // That way those threads will stop once the window closes. ### Has to be conditional for main thread ###
     while (!glfwWindowShouldClose(window))
     {
 
-        audioManager.update();
+        audio->Update(); // @Sepehr, replace due to system implementation [Y/N]
 
         
         // TODO: Refactor to proper input handler
@@ -129,7 +131,7 @@ int run_glfw()
             if (backgroundMusic) {
                 static FMOD::Channel* channel = nullptr;
                 if (!channel) {
-                    audioManager.getSystem()->playSound(backgroundMusic, nullptr, true, &channel);
+                    audio->getSystem()->playSound(backgroundMusic, nullptr, true, &channel);
                     channel->setVolume(0.5f); // Set volume
                     channel->setPaused(false); // Start playback
                 }
