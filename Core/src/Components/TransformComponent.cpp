@@ -127,9 +127,9 @@ glm::vec3 TransformComponent::getLocalScale() const {
 }
 
 void TransformComponent::setLocalScale(glm::vec3 scale) {
-	localOrientation.x = scale.x;
-	localOrientation.y = scale.y;
-	localOrientation.z = scale.z;
+	localScale.x = scale.x;
+	localScale.y = scale.y;
+	localScale.z = scale.z;
 }
 
 TransformComponent& TransformComponent::operator=(const TransformComponent& other)
