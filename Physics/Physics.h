@@ -74,7 +74,6 @@ public:
 
         CAR_TRANSFORM->setLocalPosition(glm::vec3(updatedPosition.x, updatedPosition.y, updatedPosition.z));
         CAR_TRANSFORM->setLocalOrientation(glm::quat(updatedOrientation.r, updatedOrientation.i, updatedOrientation.j, updatedOrientation.k));
-        CAR_TRANSFORM->updateTransformMatrix();
         std::cout << "PHYSICS - WE HAVE UPDATED THE TRANSFORM AND RELEASING LOCK\n";
     }
 
