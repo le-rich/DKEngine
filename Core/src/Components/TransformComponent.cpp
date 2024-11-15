@@ -6,49 +6,46 @@
 #include <glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
-TransformComponent::TransformComponent(Entity* mEntity) : Component(mEntity), mTransform{ glm::vec3(0.0f, 0.0f, 0.0f) , glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(1.f) },
-transformMatrix(1.0f)
-{
-}
+TransformComponent::TransformComponent(Entity* mEntity) : Component(mEntity), mTransform{ glm::vec3(0.0f, 0.0f, 0.0f) , glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(1.f) }, transformMatrix(glm::mat4(1.f))
+{}
 
 TransformComponent::TransformComponent(Entity* mEntity, glm::vec4 position, glm::quat orientation, float scale)
-    : Component(mEntity), mTransform{ position, orientation, glm::vec3(scale) }
+    : Component(mEntity), mTransform{ position, orientation, glm::vec3(scale) }, transformMatrix(glm::mat4(1.f))
 {
-    updateTransformMatrix();
 
     // DO NOT REVERSE LINK mEntity->transform = this. This should be handled in Entity's initialization.
 }
 
-TransformComponent::TransformComponent(Entity* mEntity, Transform transform) : Component(mEntity), mTransform(transform)
-{
-    updateTransformMatrix();
-}
+TransformComponent::TransformComponent(Entity* mEntity, Transform transform) : Component(mEntity), mTransform(transform), transformMatrix(glm::mat4(1.f))
+{}
 
 TransformComponent::~TransformComponent()
 {}
 
-void TransformComponent::updateTransformMatrix()
+const glm::mat4 TransformComponent::getLocalTransformMatrix()
 {
-    if (entity->getParent() == nullptr)
+    // right-to-left linear transformations: scale, rotate, translate    
+    return
+        glm::translate(glm::mat4(1.0f), mTransform.localPosition) *
+        glm::mat4_cast(mTransform.localOrientation) *
+        glm::mat4(
+            glm::vec4(mTransform.localScale.x, 0.0f, 0.0f, 0.0f),
+            glm::vec4(0.0f, mTransform.localScale.y, 0.0f, 0.0f),
+            glm::vec4(0.0f, 0.0f, mTransform.localScale.z, 0.0f),
+            glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)
+        );
+}
+
+const glm::mat4 TransformComponent::getTransformMatrix()
+{
+    auto parent = this->entity->getParent();
+    if (parent)
     {
-        transformMatrix = glm::mat4(1.0f); // identity matrix
+        transformMatrix = parent->transform->getTransformMatrix();
+        return transformMatrix * getLocalTransformMatrix();
     }
     else
-    {
-        glm::mat4 parentTransformMatrix = entity->getParent()->transform->getTransformMatrix();
-        glm::vec3 parentLocationXYZ = entity->getParent()->transform->getLocalPosition().xyz;
-        glm::quat parentOrientation = entity->getParent()->transform->getLocalOrientation();
-        glm::vec3 parentScale = entity->getParent()->transform->getLocalScale();
-
-        transformMatrix = parentTransformMatrix *
-            // scale, rotate, translate matrix for parent: 
-            (
-                // creates a translation matrix
-                glm::translate(glm::mat4(1.0f), parentLocationXYZ) *
-                glm::mat4_cast(parentOrientation) * // gets a rotation matrix from the quaternion
-                glm::scale( glm::mat4(1.f), parentScale)
-                );
-    }
+        return getLocalTransformMatrix();
 }
 
 void TransformComponent::lookAt(TransformComponent* target)

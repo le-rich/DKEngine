@@ -29,7 +29,6 @@ class TransformComponent : public Component
 private:
     Transform mTransform;
 
-
     // Holds a transform matrix for converting local space to world space, and world scale.
     glm::mat4 transformMatrix;
 
@@ -43,17 +42,18 @@ public:
     // lock to guarantee mutual exclusion
     std::mutex mtx;
 
-    /** the parent might move or scale, the transform matrix needs
-     * to then be updated. This method does that.
-     */
-    void updateTransformMatrix();
     void lookAt(TransformComponent* target);
 
 
     /********************************************/
     /* SETTERS AND GETTERS FOR POS/ORIENT/SCALE */
     /********************************************/
-    inline const glm::mat4 getTransformMatrix() { return transformMatrix; }
+
+    // returns a 4x4 transformation matrix local to the parent
+    const glm::mat4 getLocalTransformMatrix();
+
+    // returns a world transformation matrix
+    const glm::mat4 getTransformMatrix();
     inline const void setTransform(Transform& pTransform) { mTransform = pTransform; }
 
     glm::vec3 getWorldPosition();

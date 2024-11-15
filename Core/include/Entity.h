@@ -148,8 +148,6 @@ public:
         {
             parentEntity->addChild(this);
         }
-        // Update transform to be relative to parent cause we don't call this elsewhere.
-        transform->updateTransformMatrix();
         // TODO: After updating transform matrix, locals should be updated to reflect positioning relative to parent.
         // ie. Update locals such that the object doesn't change world position
         // Execption: Model loading

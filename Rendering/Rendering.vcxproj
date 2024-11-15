@@ -63,6 +63,7 @@
   <ItemGroup>
     <ClInclude Include="include\Buffers\ShaderStorageBuffer.h" />
     <ClInclude Include="include\Components\MeshComponent.h" />
+    <ClInclude Include="include\Data\Shape.h" />
     <ClInclude Include="include\Resources\Asset.h" />
     <ClInclude Include="include\Buffers\IndexBuffer.h" />
     <ClInclude Include="include\Buffers\UniformBuffer.h" />
@@ -102,6 +103,9 @@
     <ClCompile Include="src\Components\CameraComponent.cpp" />
     <ClCompile Include="src\Buffers\FrameBuffer.cpp" />
     <ClCompile Include="src\Resources\Primitives.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\screen.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
