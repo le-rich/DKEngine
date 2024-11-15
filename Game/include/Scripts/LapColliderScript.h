@@ -29,8 +29,8 @@ public:
 private:
 	TransformComponent* m_Self = nullptr;
 	TransformComponent* m_Other = nullptr;
-	AABB* m_SelfBox;
-	AABB* m_OtherBox;
+	AABB* m_SelfBox = nullptr;
+	AABB* m_OtherBox = nullptr;
 	float m_BoxOffset = 0.5f;
 };
 

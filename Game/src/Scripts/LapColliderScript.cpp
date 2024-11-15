@@ -6,31 +6,33 @@
 LapColliderScript::LapColliderScript(Entity* mEntity) : Script(mEntity)
 {
 	m_Self = this->entity->transform;
+	m_Other = nullptr;
+
 }
 
 LapColliderScript::~LapColliderScript() {}
 
 void LapColliderScript::Update(float deltaTime)
 {
+	if (!m_Self || !m_Other) { return; }
 
+	glm::vec3 selfPosition = m_Self->getWorldPosition();
+	glm::vec3 otherPosition = m_Other->getWorldPosition();
 
 	// make bounding box for this entity
-	glm::vec3 selfPosition = m_Self->getWorldPosition();
 	glm::vec3 boxMin = glm::vec3(selfPosition.x - m_BoxOffset, selfPosition.y - m_BoxOffset, selfPosition.z - m_BoxOffset);
 	glm::vec3 boxMax = glm::vec3(selfPosition.x + m_BoxOffset, selfPosition.y + m_BoxOffset, selfPosition.z + m_BoxOffset);
 	m_SelfBox = new AABB(boxMin, boxMax);
 
-	//std::cout << "Lap Checkpoint Bounding Box: " << std::to_string(m_Other->getWorldPosition()) << std::endl;
-
 	// make bounding box for car entity
-	glm::vec3 otherPosition = m_Other->getWorldPosition();
 	boxMin = glm::vec3(otherPosition.x - m_BoxOffset, otherPosition.y - m_BoxOffset, otherPosition.z - m_BoxOffset);
 	boxMax = glm::vec3(otherPosition.x + m_BoxOffset, otherPosition.y + m_BoxOffset, otherPosition.z + m_BoxOffset);
 	m_OtherBox = new AABB(boxMin, boxMax);
 
 	if (AABBCollision(m_SelfBox, m_OtherBox))
 	{
-		std::cout << "Overlap detected!!!" << std::endl;
+		std::string name = this->entity->GetDisplayName();
+		std::cout << "Overlap with " << name << " detected!!!" << std::endl;
 	}
 	else
 	{
