@@ -31,5 +31,6 @@ private:
 	TransformComponent* m_Other = nullptr;
 	AABB* m_SelfBox;
 	AABB* m_OtherBox;
+	float m_BoxOffset = 0.5f;
 };
 
