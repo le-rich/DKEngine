@@ -140,12 +140,14 @@
     <ClInclude Include="include\Components\ScriptComponent.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\Script.h" />
+    <ClInclude Include="include\Scripts\LapColliderScript.h" />
     <ClInclude Include="include\Scripts\OrbitScript.h" />
     <ClInclude Include="include\Scripts\TimerScript.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Components\ScriptComponent.cpp" />
     <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\Scripts\LapColliderScript.cpp" />
     <ClCompile Include="src\Scripts\OrbitScript.cpp" />
     <ClCompile Include="src\Scripts\TimerScript.cpp" />
   </ItemGroup>
