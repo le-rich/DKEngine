@@ -24,8 +24,7 @@ void Scene::SpawnSceneDefinition()
     CameraEntity* cameraEntity = new CameraEntity();
     cameraEntity->SetDisplayName("Main Camera");
     cameraEntity->transform->setWorldPosition(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
-
-    sceneRoot->addChild(cameraEntity);
+    EntityManager::getInstance().Instantiate(cameraEntity);
 
     LightEntity* lightEntity = new LightEntity();
     lightEntity->SetDisplayName("Light");
@@ -33,23 +32,31 @@ void Scene::SpawnSceneDefinition()
     lightEntity->transform->setLocalOrientation(glm::quat(-0.5f, 0.5f, 0.5f, 0.f));
     EntityManager::getInstance().Instantiate(lightEntity);
 
-    // TODO: Refactor to a Single Car Entity with Mesh and Rigidbody components
-    // 
-    // TODO: Figure out location of assets/non code files within solution
-    // TODO: JSONparser for list of assets, each asset has a PATH and FILE string.
-    const std::string SOURCE_FOLDER = "Assets/TestAE2/";
-    const std::string SOURCE_FILE = "ae86.gltf";
+    // TODO: JSONparser for Scene entities and scripts/components.
+    // TODO: Figure out location and pathing of assets/non code files within solution
+    const std::string SOURCE_FOLDER = "TestAE2/";
+    const std::string MODEL_FILE = "ae86.gltf";
 
     Entity* testCar = new Entity();
     testCar->SetDisplayName("Test Car");
-    GLTFLoader::LoadModelAsEntity(testCar, SOURCE_FOLDER, SOURCE_FILE);
+    GLTFLoader::LoadModelAsEntity(testCar, SOURCE_FOLDER, MODEL_FILE);
     EntityManager::getInstance().Instantiate(testCar);
-    // end TODO
+
+    // Example of using findFirstEntityByDisplayName() for adding additional components
+    auto* entityManager = &(EntityManager::getInstance());
+    auto cameraID = entityManager->findFirstEntityByDisplayName("Main Camera");
+    auto cameraEnt = entityManager->getEntity(cameraID);
+
+    ScriptComponent* scriptComponent = new ScriptComponent(cameraEnt);
+    cameraEnt->addComponent(*scriptComponent);
+
+    auto carID = entityManager->findFirstEntityByDisplayName("Test Car");
+    auto carEnt = entityManager->getEntity(carID);
 
     OrbitScriptParams params;
-    params.m_OrbitTarget = testCar->transform;
-    ScriptComponent* component = ComponentManager::AddScriptComponent(cameraEntity);
-    ComponentManager::AddScriptToComponent(cameraEntity, component, ScriptType::OrbitScript, &params);
+    params.m_OrbitTarget = carEnt->transform;
+    scriptComponent->AddScriptToComponent<OrbitScript>(&params);
+    // End Example
 
-    EntityManager::getInstance().Instantiate(cameraEntity);
+
 }

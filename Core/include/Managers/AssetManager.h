@@ -7,6 +7,7 @@
 #include "Resources/Texture.h"
 
 static const std::string DEFAULT_SHADER_PATH = "../Rendering/Shaders/default.glsl";
+static const std::string DEFAULT_ASSET_FOLDER = "Assets/";
 
 class AssetManager
 {

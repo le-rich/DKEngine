@@ -111,7 +111,7 @@ int run_glfw()
 
         while (fixedUpdateBuffer >= FIXED_UPDATE_INTERVAL)
         {
-            //physx->FixedUpdate();
+            physx->FixedUpdate();
             fixedUpdateBuffer -= FIXED_UPDATE_INTERVAL;
         }
         game->Update(deltaTimeFloatSeconds);

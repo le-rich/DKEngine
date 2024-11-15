@@ -1,7 +1,7 @@
 #pragma once
 #include "Components/MeshComponent.h"
+#include "Components/RigidbodyComponent.h"
 #include "Managers/AssetManager.h"
-#include "Managers/ComponentManager.h"
 #include "Resources/Mesh.h"
 #include "Resources/Material.h"
 #include "Resources/Texture.h"
@@ -9,6 +9,7 @@
 #include <tiny_gltf.cc>
 #include <glm.hpp>
 #include <glm/gtc/quaternion.hpp>
+#include <regex>
 
 namespace GLTFLoader
 {
@@ -339,18 +340,30 @@ namespace GLTFLoader
 
     static void LoadEntity(Entity* pEntity, tinygltf::Node& const node, tinygltf::Model& const pGltfModel, std::vector<UUIDv4::UUID>& pMaterials)
     {
+        pEntity->SetDisplayName(node.name);
+
+        Transform nodeTransform = GetNodeLocalTransformMatrix(node);
+        pEntity->transform->setTransform(nodeTransform);
+
         int meshIndex = node.mesh;
         if (meshIndex >= 0)
         {
             Mesh* mesh = GLTFLoader::LoadMesh(pGltfModel, pGltfModel.meshes[meshIndex], pMaterials);
-            ComponentManager::AddMeshComponent(pEntity, mesh);
+            //ComponentManager::AddMeshComponent(pEntity, mesh);
+            MeshComponent* meshComponent = new MeshComponent(pEntity);
+            meshComponent->setMesh(mesh);
+            pEntity->addComponent(*meshComponent);
         }
 
-        // Process non mesh components to be added to entity
-        std::string nodeName = node.name;
-        Transform nodeTransform = GetNodeLocalTransformMatrix(node);
-        pEntity->transform->setTransform(nodeTransform);
-        ComponentManager::AddComponents(pEntity, nodeName);
+        // Check if entity should have rigidbody
+        std::regex self_regex("_RB\\b");
+        if (std::regex_search(node.name, self_regex))
+        {
+            // Add rigidbody
+            std::shared_ptr<AE86::RigidBody> rb = std::make_shared<AE86::RigidBody>();
+            RigidBodyComponent rigidComponent(pEntity, rb);
+            pEntity->addComponent(rigidComponent);
+        }
     }
 
     static void LoadChildEntities(Entity* pParentEntity, tinygltf::Model& const pGltfModel, std::vector<UUIDv4::UUID>& pMaterials, std::vector<int>& const pChildIndexes)
@@ -358,7 +371,7 @@ namespace GLTFLoader
         for (int childIndex : pChildIndexes)
         {
             tinygltf::Node node = pGltfModel.nodes[childIndex];
-            Entity* childEntity = new Entity(node.name);
+            Entity* childEntity = new Entity();
             pParentEntity->addChild(childEntity);
             childEntity->setParent(pParentEntity);
 
@@ -372,8 +385,9 @@ namespace GLTFLoader
     // Loads given model file as an entity
     static void LoadModelAsEntity(Entity* pEntity, std::string const pSourceFolder, std::string const pModelFile)
     {
-        tinygltf::Model gltfModel = LoadFromFile(pSourceFolder + pModelFile);
-        std::vector<UUIDv4::UUID> textures = LoadTextures(gltfModel, pSourceFolder);
+        
+        tinygltf::Model gltfModel = LoadFromFile(DEFAULT_ASSET_FOLDER + pSourceFolder + pModelFile);
+        std::vector<UUIDv4::UUID> textures = LoadTextures(gltfModel, DEFAULT_ASSET_FOLDER + pSourceFolder);
         std::vector<UUIDv4::UUID> materials = LoadMaterials(gltfModel, textures);
 
         // Traverse nodes and assign entities and components to the entity for each child

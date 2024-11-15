@@ -11,14 +11,14 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				2
+				3
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"FrontWheels",
+			"name":"FrontWheels_RB",
 			"translation":[
 				0.00046316778752952814,
 				-0.10823958367109299,
@@ -26,26 +26,32 @@
 			]
 		},
 		{
-			"mesh":1,
-			"name":"RearWheels",
-			"translation":[
+			"mesh": 1,
+			"name": "RearWheels_RB",
+			"translation": [
 				0.0004634234355762601,
 				-0.1082395687699318,
 				-0.5886247158050537
 			]
 		},
 		{
-			"children":[
+			"children": [
 				0,
 				1
 			],
-			"mesh":2,
-			"name":"Body",
-			"translation":[
+			"mesh": 2,
+			"name": "Body_RB",
+			"translation": [
 				0.00021824859140906483,
 				0.21919678151607513,
 				0.19317808747291565
 			]
+		},
+		{
+			"children": [
+				2
+			],
+			"name": "Test Car"
 		}
 	],
 	"materials":[

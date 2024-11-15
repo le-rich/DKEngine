@@ -53,9 +53,6 @@
     <ClInclude Include="include\Entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Managers\ComponentManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Managers\EntityManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>

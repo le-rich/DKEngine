@@ -177,7 +177,6 @@
     <ClInclude Include="include\GLTFLoader.h" />
     <ClInclude Include="include\Input.h" />
     <ClInclude Include="include\Managers\AssetManager.h" />
-    <ClInclude Include="include\Managers\ComponentManager.h" />
     <ClInclude Include="include\Managers\EntityManager.h" />
     <ClInclude Include="include\Scene.h" />
     <ClInclude Include="include\System.h" />
