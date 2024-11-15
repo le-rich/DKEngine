@@ -61,7 +61,9 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\Buffers\ShaderStorageBuffer.h" />
     <ClInclude Include="include\Components\MeshComponent.h" />
+    <ClInclude Include="include\Data\Shape.h" />
     <ClInclude Include="include\Resources\Asset.h" />
     <ClInclude Include="include\Buffers\IndexBuffer.h" />
     <ClInclude Include="include\Buffers\UniformBuffer.h" />
@@ -76,12 +78,15 @@
     <ClInclude Include="include\Resources\Primitives.h" />
     <ClInclude Include="include\Buffers\FrameBuffer.h" />
     <ClInclude Include="include\Data\VertexBufferLayout.h" />
-    <ClInclude Include="include\Entities\Light.h" />
+    <ClInclude Include="include\Components\LightComponent.h" />
     <ClInclude Include="include\Entities\CameraEntity.h" />
     <ClInclude Include="include\Components\CameraComponent.h" />
     <ClInclude Include="include\Utils\Logger.h" />
+    <ClInclude Include="include\Entities\LightEntity.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Entities\LightEntity.cpp" />
+    <ClCompile Include="src\Buffers\ShaderStorageBuffer.cpp" />
     <ClCompile Include="src\Components\MeshComponent.cpp" />
     <ClCompile Include="src\Resources\Asset.cpp" />
     <ClCompile Include="src\Buffers\IndexBuffer.cpp" />
@@ -93,11 +98,14 @@
     <ClCompile Include="src\Resources\Mesh.cpp" />
     <ClCompile Include="src\Buffers\VertexArray.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
-    <ClCompile Include="src\Entities\Light.cpp" />
+    <ClCompile Include="src\Components\LightComponent.cpp" />
     <ClCompile Include="src\Entities\CameraEntity.cpp" />
     <ClCompile Include="src\Components\CameraComponent.cpp" />
     <ClCompile Include="src\Buffers\FrameBuffer.cpp" />
     <ClCompile Include="src\Resources\Primitives.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\screen.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

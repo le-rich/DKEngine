@@ -151,12 +151,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Component.cpp" />
-    <ClCompile Include="src\Components\Transform.cpp" />
+    <ClCompile Include="src\Components\RigidBodyComponent.cpp" />
+    <ClCompile Include="src\Components\TransformComponent.cpp" />
     <ClCompile Include="src\Core.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Managers\AssetManager.cpp" />
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\Utils\IDUtils.cpp" />
+    <ClCompile Include="src\Window\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Physics\Physics.vcxproj">
@@ -168,7 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Component.h" />
-    <ClInclude Include="include\Components\Transform.h" />
+    <ClInclude Include="include\Components\TransformComponent.h" />
     <ClInclude Include="include\Core.h" />
     <ClInclude Include="include\Entity.h" />
     <ClInclude Include="include\GLTFLoader.h" />
@@ -180,6 +182,8 @@
     <ClInclude Include="include\System.h" />
     <ClInclude Include="include\Utils\IDUtils.h" />
     <ClInclude Include="include\Utils\uuid_v4.h" />
+    <ClInclude Include="RigidBodyComponent.h" />
+    <ClInclude Include="include\Window\Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

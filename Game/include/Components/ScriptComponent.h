@@ -12,6 +12,9 @@ public:
 
     ScriptComponent(Entity* mEntity);
     ~ScriptComponent();
+    ScriptComponent(const ScriptComponent& other);
+
+    Component* clone() const override;
 
     template<typename T, typename...Args>
     void AddScript(Args&&... args) {

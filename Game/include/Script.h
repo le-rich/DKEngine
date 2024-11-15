@@ -9,4 +9,6 @@ public:
     virtual void Update(float deltaTime) = 0;
 
     Entity* entity = nullptr;
+
+    virtual std::unique_ptr<Script> clone() const = 0;
 };

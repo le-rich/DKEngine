@@ -9,7 +9,8 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "DKWindows.h"  
-#include "MenuBar.h"  
+#include "MenuBar.h"
+#include "Scene.h"
 
 struct GLFWwindow;
 
@@ -17,7 +18,7 @@ class UI : public System {
 
 public:
 
-   UI();
+   UI(Scene* scene);
 
     const char* GetName() const override {
         return "UI";
@@ -33,6 +34,7 @@ public:
 private:
 
    GLFWwindow* window;
+   Scene* scene;
    
 };
 

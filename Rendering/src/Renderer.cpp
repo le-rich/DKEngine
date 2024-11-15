@@ -1,35 +1,35 @@
 #include "Renderer.h"
 
+#include "Components/CameraComponent.h"
+#include "Components/LightComponent.h"
 #include "Components/MeshComponent.h"
+#include "Core.h"
+#include "Scene.h"
 #include "Managers/AssetManager.h"
 #include "Managers/EntityManager.h"
-#include "Resources/Shader.h"
-#include "Resources/Texture.h"
+#include "Resources/Mesh.h"
 
-#include <iostream>
-#include <cstdlib>
-
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
 #include <glm.hpp>
 
-Renderer::Renderer(GLFWwindow* window)
+Renderer::Renderer(Window* window) : mScreenQuad(Quad.vertices, Quad.indices)
 {
-    m_Window = window;
+    windowRef = window;
 }
 
 Renderer::~Renderer() {}
 
-void Renderer::Initialize() {
-    System::Initialize(); 
+void Renderer::Initialize()
+{
+    System::Initialize();
 
     // Get Camera if it exists
     auto mainCameraUUID = EntityManager::getInstance().findFirstEntityByDisplayName("Main Camera");
     auto mainCamera = EntityManager::getInstance().getEntity(mainCameraUUID);
-    if (mainCamera != nullptr) {
+    if (mainCamera != nullptr)
+    {
         this->mainCameraEntity = mainCamera;
-    } 
-    else 
+    }
+    else
     {
         std::cerr << "Error: Main Camera not found. The program will now exit." << std::endl;
         std::cin.get();
@@ -39,63 +39,70 @@ void Renderer::Initialize() {
 
 void Renderer::Update(float deltaTime)
 {
-    // Clear color and depth buffers (can be moved to pre update
+    windowRef->SetWindowToCurrentThread();
+    int width, height;
+    glfwGetWindowSize(windowRef->GetWindow(), &width, &height);
+    mFrameBuffer.Resize(width, height);
 
-    /*Get lights
-      For each light
-        Get lighting matrix
-        Add lighting matrix to list
-      bind lighting list to Shader Buffer*/
+    // Set FrameBuffer
+    mFrameBuffer.Bind();
+    RenderToFrame(width, height);
+    mFrameBuffer.Unbind();
 
-    // TODO: Bug Physics/Core on way to get modelMatrix directly from transform
-    glm::vec3 localScale = testTransform->getLocalScale();
-    glm::mat4 modelMatrix =
-        glm::translate(glm::mat4(1.0f), testTransform->getWorldPosition()) *
-        glm::mat4_cast(testTransform->getLocalOrientation()) *
-        glm::mat4( // creates a scale matrix 
-            glm::vec4(localScale.x, 0.0f, 0.0f, 0.0f),
-            glm::vec4(0.0f, localScale.y, 0.0f, 0.0f),
-            glm::vec4(0.0f, 0.0f, localScale.z, 0.0f),
-            glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)
-        );
+    //Perform Post Processing and Draw Frame Buffer
+    RenderFrame();
 
-    mEngineUniformBuffer.SetSubData(modelMatrix, 0);
+    // Swap window buffers. can be moved to post update
+    windowRef->SwapWindowBuffers();
+}
 
+void Renderer::FixedUpdate() {}
 
-    // CAMERA =====================
-    CameraComponent* cameraComponent = dynamic_cast<CameraComponent*>(mainCameraEntity->getComponent(ComponentType::Camera));
+void Renderer::RenderToFrame(int pWidth, int pHeight)
+{
+    // Clear color and depth buffers for set Framebuffer
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
 
-    if (cameraComponent != nullptr){
-        // Update Aspect Ratio if the window has resized
-        int width, height;
-        glfwGetWindowSize(m_Window, &width, &height);
-        cameraComponent->updateAspectRatio(width, height);
+    SetEngineUBO(pWidth, pHeight);
+    //TODO: Replace with Scene based or Material based Draw
+    DrawByMesh();
 
-        cameraComponent->calculateViewMatrix(cameraComponent->entity->transform);
-        cameraComponent->calculateProjectionMatrix();
-    }
     // ============================
+    //Material Based:
+    //For each Material
+    //	Bind Material
+    //	Apply Material specific Uniforms
+    //	For each Primitive in Material
+    //		Bind Vertex Array
+    //		Bind Index Buffer
+    //		DrawCall
+    //	Unbind Material
+    //	
 
-    /*
-    Material Based:
-    For each Material
-        Bind Material
-        Apply Material specific Uniforms
-        For each Primitive in Material
-            Bind Vertex Array
-            Bind Index Buffer
-            DrawCall
-        Unbind Material
-     */
+    //shaderStorageBufferObject.Unbind();
+}
 
-     // Kinda okay methodology
-     //TODO: Replace with Scene based or Material based Draw
-    
+void Renderer::RenderFrame()
+{
+    glDisable(GL_DEPTH_TEST);
+    glClear(GL_COLOR_BUFFER_BIT);
 
-    // MESHES ============================
+    // Bind Screen Shader
+    mScreenShader->Use();
+    //AssetManager::GetInstance().GetDefaultShader()->Use();
+    // Bind Frame Texture
+    mFrameBuffer.BindFrameTexture();
+    // Draw Screen Quad
+    mScreenQuad.Draw();
+}
+
+void Renderer::DrawByMesh()
+{
     auto meshComponentUUIDs = EntityManager::getInstance().findEntitiesByComponent(ComponentType::Mesh);
-    
-    for (auto& uuid : meshComponentUUIDs) 
+
+    for (auto& uuid : meshComponentUUIDs)
     {
         auto entity = EntityManager::getInstance().getEntity(uuid);
         MeshComponent* meshComponent = dynamic_cast<MeshComponent*>(entity->getComponent(ComponentType::Mesh));
@@ -104,34 +111,45 @@ void Renderer::Update(float deltaTime)
         {
             glm::vec3 localScale = entity->transform->getLocalScale();
 
+            // TODO: Bug Physics/Core on way to get modelMatrix directly from transform
             glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), entity->transform->getWorldPosition()) *
-                                    glm::mat4_cast(entity->transform->getLocalOrientation()) *
-                                    glm::scale(glm::mat4(1.0f), localScale);
-
-            mEngineUniformBuffer.updateMatrices(
-                modelMatrix, 
-                cameraComponent->getViewMatrix(), 
-                cameraComponent->getProjectionMatrix(),
-                mainCameraEntity->transform->getWorldPosition()
-            );
-            
+                glm::mat4_cast(entity->transform->getLocalOrientation()) *
+                glm::scale(glm::mat4(1.0f), localScale);
+            mEngineUniformBuffer.SetSubData(modelMatrix, 0);
             meshComponent->getMesh()->Draw();
         }
     }
-
-    // ===================================
-
-    /*Perform Post Processing
-      Draw Frame Buffer*/
-
-      // Swap window buffers. can be moved to post update
 }
 
-void Renderer::FixedUpdate() {
-    
+void Renderer::SetEngineUBO(int pWidth, int pHeight)
+{
+    std::vector<glm::mat4> lightMatricies;
+    auto lightComponentUUIDs = EntityManager::getInstance().findEntitiesByComponent(ComponentType::Light);
+    for (auto& uuid : lightComponentUUIDs)
+    {
+        auto entity = EntityManager::getInstance().getEntity(uuid);
+        LightComponent* lightComponent = dynamic_cast<LightComponent*>(entity->getComponent(ComponentType::Light));
+        if (lightComponent == nullptr) continue;
+        lightMatricies.push_back(lightComponent->GenerateMatrix(lightComponent->entity->transform));
+    }
+
+    shaderStorageBufferObject.SendBlocks(lightMatricies.data(), lightMatricies.size() * sizeof(glm::mat4));
+    shaderStorageBufferObject.Bind(0);
+
+    // CAMERA =====================
+    CameraComponent* cameraComponent = dynamic_cast<CameraComponent*>(mainCameraEntity->getComponent(ComponentType::Camera));
+
+    if (cameraComponent != nullptr)
+    {
+        // Update Aspect Ratio if the window has resized
+        cameraComponent->updateAspectRatio(pWidth, pHeight);
+
+        cameraComponent->calculateViewMatrix(cameraComponent->entity->transform);
+        cameraComponent->calculateProjectionMatrix();
+        mEngineUniformBuffer.SetCameraMatrices(
+            cameraComponent->getViewMatrix(),
+            cameraComponent->getProjectionMatrix(),
+            mainCameraEntity->transform->getWorldPosition()
+        );
+    }
 }
-
-
-
-
-
