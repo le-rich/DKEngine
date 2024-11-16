@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include "Script.h"
 #include "Components/TransformComponent.h"
 
@@ -14,6 +16,8 @@ struct AABB
 class LapColliderScript : public Script
 {
 public:
+	static int ID;
+
 	LapColliderScript(Entity* mEntity);
 	~LapColliderScript();
 
@@ -22,6 +26,9 @@ public:
 	void SetSelf(TransformComponent* transform) { m_Self = transform; }
 	void SetOther(TransformComponent* transform) { m_Other = transform; }
 	bool AABBCollision(AABB* self, AABB* other);
+
+	using TriggerCallback = std::function<bool(int)>;
+	void SetTriggerCallback(TriggerCallback callback);
 
 	std::unique_ptr<Script> clone() const override {
 		return std::make_unique<LapColliderScript>(*this);
@@ -32,5 +39,9 @@ private:
 	AABB* m_SelfBox = nullptr;
 	AABB* m_OtherBox = nullptr;
 	float m_BoxOffset = 0.5f;
+	int m_ID;
+	TriggerCallback m_OnTrigger;
+	bool m_IsCheckpointRegistered;
+	bool m_IsAlreadyOverlapping;
 };
 

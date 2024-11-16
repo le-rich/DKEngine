@@ -8,7 +8,8 @@
 #include "Components/ScriptComponent.h"
 #include "OrbitScript.h"
 #include "TimerScript.h"
-#include "TimerScript.h"
+#include "LapColliderScript.h"
+#include "LapManagerScript.h"
 
 Scene::Scene()
 {
@@ -56,25 +57,29 @@ void Scene::SpawnSceneDefinition()
     ScriptComponent* cameraScriptComponent = new ScriptComponent(cameraEnt);
     cameraEnt->addComponent(*cameraScriptComponent);
     // Add lap counter entity
+    // Create Lap Manager Entity
+    Entity* lapManagerEntity = new Entity();
+    lapManagerEntity->SetDisplayName("Lap Manager");
+    ScriptComponent* lapManagerComponent = new ScriptComponent(lapManagerEntity);
+    LapManagerScript* lapManagerScript = new LapManagerScript(lapManagerEntity, 2);
+
+    // Add 1st lap trigger entity with script component
     Entity* lapTriggerEntity1 = new Entity();
     lapTriggerEntity1->SetDisplayName("Lap Trigger 1");
     ScriptComponent* lapTriggerComponent1 = new ScriptComponent(lapTriggerEntity1);
     LapColliderScript* lapColliderScript1 = new LapColliderScript(lapTriggerEntity1);
+    lapManagerScript->RegisterCheckpoint(lapColliderScript1); // Register the collider script
     lapColliderScript1->SetOther(testCar->transform);
     lapTriggerComponent1->AddScript<LapColliderScript>(*lapColliderScript1);    
     lapTriggerEntity1->addComponent(*lapTriggerComponent1);
-    lapTriggerEntity1->transform->setWorldPosition(glm::vec4(-2.0f, 0.f, 0.f, 1.0f));
+    lapTriggerEntity1->transform->setWorldPosition(glm::vec4(-1.5f, 0.f, 0.f, 1.0f));
     EntityManager::getInstance().Instantiate(lapTriggerEntity1);
 
-    Entity* lapTriggerEntity = new Entity();
-    lapTriggerEntity->SetDisplayName("Lap Trigger 2");
-    ScriptComponent* lapTriggerComponent = new ScriptComponent(lapTriggerEntity);
-    LapColliderScript* lapColliderScript = new LapColliderScript(lapTriggerEntity);
-    lapColliderScript->SetOther(testCar->transform);
-    lapTriggerComponent->AddScript<LapColliderScript>(*lapColliderScript);
-    lapTriggerEntity->addComponent(*lapTriggerComponent);
-    lapTriggerEntity->transform->setWorldPosition(glm::vec4(-4.5f, 0.f, 0.f, 1.0f));
-    EntityManager::getInstance().Instantiate(lapTriggerEntity);
+    lapManagerComponent->AddScript<LapManagerScript>(*lapManagerScript);
+    lapManagerEntity->addComponent(*lapManagerComponent);
+
+    // Init Lap Manager after checkpoints entities are created and assigned
+    EntityManager::getInstance().Instantiate(lapManagerEntity);
 
     auto carID = entityManager->findFirstEntityByDisplayName("Test Car");
     auto carEnt = entityManager->getEntity(carID);

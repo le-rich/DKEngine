@@ -3,11 +3,15 @@
 
 #include "Scripts/LapColliderScript.h"
 
-LapColliderScript::LapColliderScript(Entity* mEntity) : Script(mEntity)
+int LapColliderScript::ID = 1;
+
+LapColliderScript::LapColliderScript(Entity* mEntity) : Script(mEntity), m_ID(ID), 
+	m_OnTrigger(nullptr), m_IsCheckpointRegistered(false), m_IsAlreadyOverlapping(false)
 {
+	ID++;
+
 	m_Self = this->entity->transform;
 	m_Other = nullptr;
-
 }
 
 LapColliderScript::~LapColliderScript() {}
@@ -29,14 +33,22 @@ void LapColliderScript::Update(float deltaTime)
 	boxMax = glm::vec3(otherPosition.x + m_BoxOffset, otherPosition.y + m_BoxOffset, otherPosition.z + m_BoxOffset);
 	m_OtherBox = new AABB(boxMin, boxMax);
 
-	if (AABBCollision(m_SelfBox, m_OtherBox))
+	if (!m_IsCheckpointRegistered && AABBCollision(m_SelfBox, m_OtherBox))
 	{
+		bool success = false;
+		m_IsAlreadyOverlapping = true;
+
 		std::string name = this->entity->GetDisplayName();
 		std::cout << "Overlap with " << name << " detected!!!" << std::endl;
+		if (m_OnTrigger)
+		{
+			success = m_OnTrigger(this->m_ID);
+			if (success) { m_IsCheckpointRegistered = true; }
+		}
 	}
 	else
 	{
-		std::cout << "No Overlap" << std::endl;
+		std::cout << "No New Overlap detected" << std::endl;
 	}
 }
 
@@ -54,4 +66,9 @@ bool LapColliderScript::AABBCollision(AABB* self, AABB* other)
 		return false;
 
 	return true;
+}
+
+void LapColliderScript::SetTriggerCallback(TriggerCallback callback)
+{
+	this->m_OnTrigger = callback;
 }
