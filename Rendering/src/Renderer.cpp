@@ -23,8 +23,7 @@ void Renderer::Initialize()
     System::Initialize();
 
     // Get Camera if it exists
-    auto mainCameraUUID = EntityManager::getInstance().findFirstEntityByDisplayName("Main Camera");
-    auto mainCamera = EntityManager::getInstance().getEntity(mainCameraUUID);
+    Entity* mainCamera = EntityManager::getInstance().findFirstEntityByDisplayName("Main Camera");
     if (mainCamera != nullptr)
     {
         this->mainCameraEntity = mainCamera;

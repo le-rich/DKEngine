@@ -2,7 +2,7 @@
 
 #include "Entities/CameraEntity.h"
 #include "Entities/LightEntity.h"
-#include "GLTFLoader.h"
+//#include "GLTFLoader.h"
 #include "Managers/EntityManager.h"
 #include "Components/MeshComponent.h"
 #include "Components/ScriptComponent.h"
@@ -39,19 +39,17 @@ void Scene::SpawnSceneDefinition()
 
     Entity* testCar = new Entity();
     testCar->SetDisplayName("Test Car");
-    GLTFLoader::LoadModelAsEntity(testCar, SOURCE_FOLDER, MODEL_FILE);
+    //GLTFLoader::LoadModelAsEntity(testCar, SOURCE_FOLDER, MODEL_FILE);
     EntityManager::getInstance().Instantiate(testCar);
 
     // Example of using findFirstEntityByDisplayName() for adding additional components
     auto* entityManager = &(EntityManager::getInstance());
-    auto cameraID = entityManager->findFirstEntityByDisplayName("Main Camera");
-    auto cameraEnt = entityManager->getEntity(cameraID);
+    Entity* cameraEnt = entityManager->findFirstEntityByDisplayName("Main Camera");
 
     ScriptComponent* scriptComponent = new ScriptComponent(cameraEnt);
     cameraEnt->addComponent(*scriptComponent);
 
-    auto carID = entityManager->findFirstEntityByDisplayName("Test Car");
-    auto carEnt = entityManager->getEntity(carID);
+    Entity* carEnt = entityManager->findFirstEntityByDisplayName("Test Car");
 
     OrbitScriptParams params;
     params.m_OrbitTarget = carEnt->transform;

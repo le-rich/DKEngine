@@ -8,6 +8,7 @@
 #include "Physics.h"
 #include "Renderer.h"
 #include "Scene.h"
+#include "SceneParser.h"
 #include "System.h"
 #include "UI.h"
 #include "Utils/IDUtils.h"
@@ -52,11 +53,12 @@ int run_glfw()
     Scene* defaultScene = new Scene();
 
     Core::getInstance().SetScene(defaultScene);
-    defaultScene->SpawnSceneDefinition();
+    //defaultScene->SpawnSceneDefinition();
+
+    SceneParser::LoadScene("Scenes/TestScene.json");
 
 
-    auto testCarUUID = EntityManager::getInstance().findFirstEntityByDisplayName("Test Car");
-    Entity* testCarEntity = EntityManager::getInstance().getEntity(testCarUUID);
+    Entity* testCarEntity = EntityManager::getInstance().findFirstEntityByDisplayName("Test Car");
 
     TransformComponent* CAR_TRANSFORM = testCarEntity->transform;
 

@@ -15,6 +15,14 @@
       },
       "components": [
         {
+          "type": "Camera",
+          "params": {
+            "fieldOfView": 90,
+            "farClipPlane": 1000,
+            "nearClipPlane": 0.3
+          }
+        },
+        {
           "type": "Script",
           "params": {
             "scripts": [
