@@ -7,6 +7,7 @@
 #include "Components/MeshComponent.h"
 #include "Components/ScriptComponent.h"
 #include "OrbitScript.h"
+#include "TimerScript.h"
 
 Scene::Scene()
 {
@@ -42,21 +43,34 @@ void Scene::SpawnSceneDefinition()
     GLTFLoader::LoadModelAsEntity(testCar, SOURCE_FOLDER, MODEL_FILE);
     EntityManager::getInstance().Instantiate(testCar);
 
+    Entity* gameManager = new Entity();
+    gameManager->SetDisplayName("Game Manager");
+    EntityManager::getInstance().Instantiate(gameManager);
+
     // Example of using findFirstEntityByDisplayName() for adding additional components
     auto* entityManager = &(EntityManager::getInstance());
     auto cameraID = entityManager->findFirstEntityByDisplayName("Main Camera");
     auto cameraEnt = entityManager->getEntity(cameraID);
 
-    ScriptComponent* scriptComponent = new ScriptComponent(cameraEnt);
-    cameraEnt->addComponent(*scriptComponent);
+    ScriptComponent* cameraScriptComponent = new ScriptComponent(cameraEnt);
+    cameraEnt->addComponent(*cameraScriptComponent);
 
     auto carID = entityManager->findFirstEntityByDisplayName("Test Car");
     auto carEnt = entityManager->getEntity(carID);
 
-    OrbitScriptParams params;
-    params.m_OrbitTarget = carEnt->transform;
-    scriptComponent->AddScriptToComponent<OrbitScript>(&params);
+    OrbitScriptParams orbitParams;
+    orbitParams.m_OrbitTarget = carEnt->transform;
+    cameraScriptComponent->AddScriptToComponent<OrbitScript>(&orbitParams);
     // End Example
 
+    auto gameManagerID = entityManager->findFirstEntityByDisplayName("Game Manager");
+    auto gameManagerEnt = entityManager->getEntity(gameManagerID);
 
+    ScriptComponent* timerScriptComponent = new ScriptComponent(gameManagerEnt);
+    gameManagerEnt->addComponent(*timerScriptComponent);
+
+    TimerScriptParams timerParams;
+    timerParams.m_TimerTarget = carEnt->transform;
+    timerParams.m_OriginalPosition = carEnt->transform->getWorldPosition();
+    timerScriptComponent->AddScriptToComponent<TimerScript>(&timerParams);
 }
