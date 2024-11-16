@@ -69,6 +69,11 @@ public:
     // add an entity to the map
     void addEntityToMap(Entity& e)
     {
+        for (Entity* childEntity : e.getChildren())
+        {
+            addEntityToMap(*childEntity);
+        }
+
         auto result = entityMap.insert({ e.GetEntityID(), &e });
 
         if (result.second)

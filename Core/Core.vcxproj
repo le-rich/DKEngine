@@ -170,19 +170,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Component.h" />
+    <ClInclude Include="include\Components\RigidBodyComponent.h" />
     <ClInclude Include="include\Components\TransformComponent.h" />
     <ClInclude Include="include\Core.h" />
     <ClInclude Include="include\Entity.h" />
     <ClInclude Include="include\GLTFLoader.h" />
     <ClInclude Include="include\Input.h" />
     <ClInclude Include="include\Managers\AssetManager.h" />
-    <ClInclude Include="include\Managers\ComponentManager.h" />
     <ClInclude Include="include\Managers\EntityManager.h" />
     <ClInclude Include="include\Scene.h" />
     <ClInclude Include="include\System.h" />
     <ClInclude Include="include\Utils\IDUtils.h" />
     <ClInclude Include="include\Utils\uuid_v4.h" />
-    <ClInclude Include="RigidBodyComponent.h" />
     <ClInclude Include="include\Window\Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -9,11 +9,8 @@
 
 class Entity;
 
-/**
- *
- */
-class TransformComponent : public Component {
-private:
+struct Transform
+{
     // parent space coords for Transform's origin's position.
     glm::vec3 localPosition;
 
@@ -22,18 +19,25 @@ private:
 
     // parent-relative scale
     glm::vec3 localScale;
+};
 
-    /*
-     * Holds a transform matrix for converting local space
-     * to world space, and world scale.
-     */
+/**
+ * Transform Component
+ */
+class TransformComponent : public Component
+{
+private:
+    Transform mTransform;
+
+    // Holds a transform matrix for converting local space to world space, and world scale.
     glm::mat4 transformMatrix;
 
 public:
-	TransformComponent(Entity* mEntity);
-	// the constructor, takes global position, orientation, scale, parent, child
-	TransformComponent(Entity* mEntity, glm::vec4 position, glm::quat orientation, float scale);
-	~TransformComponent();
+    TransformComponent(Entity* mEntity);
+    // the constructor, takes global position, orientation, scale, parent, child
+    TransformComponent(Entity* mEntity, glm::vec4 position, glm::quat orientation, float scale);
+    TransformComponent(Entity* mEntity, Transform transform);
+    ~TransformComponent();
 
     // lock to guarantee mutual exclusion
     std::mutex mtx;
@@ -50,6 +54,7 @@ public:
 
     // returns a world transformation matrix
     const glm::mat4 getTransformMatrix();
+    inline const void setTransform(Transform& pTransform) { mTransform = pTransform; }
 
     glm::vec3 getWorldPosition();
     glm::quat getWorldOrientation() const;
@@ -69,7 +74,7 @@ public:
     glm::vec3 getLocalScale() const;
     void setLocalScale(glm::vec3 scale);
 
-	TransformComponent& operator=(const TransformComponent& other);
+    TransformComponent& operator=(const TransformComponent& other);
 
     // copy constructor for clone
     TransformComponent(const TransformComponent& other);

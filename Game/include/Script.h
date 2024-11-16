@@ -2,11 +2,20 @@
 
 #include "Entity.h"
 
-class Script {
+struct ScriptParams {};
+
+enum class ScriptType
+{
+    OrbitScript
+};
+
+class Script
+{
 public:
     Script(Entity* mEntity) : entity(mEntity) {};
     virtual ~Script() = default;
     virtual void Update(float deltaTime) = 0;
+    virtual void SetParameters(ScriptParams* pScriptParams) = 0;
 
     Entity* entity = nullptr;
 

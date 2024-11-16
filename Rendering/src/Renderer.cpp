@@ -109,12 +109,8 @@ void Renderer::DrawByMesh()
 
         if (meshComponent != nullptr)
         {
-            glm::vec3 localScale = entity->transform->getLocalScale();
-
             // TODO: Bug Physics/Core on way to get modelMatrix directly from transform
-            glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), entity->transform->getWorldPosition()) *
-                glm::mat4_cast(entity->transform->getLocalOrientation()) *
-                glm::scale(glm::mat4(1.0f), localScale);
+            glm::mat4 modelMatrix = entity->transform->getTransformMatrix();
             mEngineUniformBuffer.SetSubData(modelMatrix, 0);
             meshComponent->getMesh()->Draw();
         }

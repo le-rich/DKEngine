@@ -24,8 +24,7 @@ void Scene::SpawnSceneDefinition()
     CameraEntity* cameraEntity = new CameraEntity();
     cameraEntity->SetDisplayName("Main Camera");
     cameraEntity->transform->setWorldPosition(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
-
-    sceneRoot->addChild(cameraEntity);
+    EntityManager::getInstance().Instantiate(cameraEntity);
 
     LightEntity* lightEntity = new LightEntity();
     lightEntity->SetDisplayName("Light");
@@ -33,32 +32,31 @@ void Scene::SpawnSceneDefinition()
     lightEntity->transform->setLocalOrientation(glm::quat(-0.5f, 0.5f, 0.5f, 0.f));
     EntityManager::getInstance().Instantiate(lightEntity);
 
-    //(glm::vec3(0.f, 5.f, 0.f), glm::vec3(120.0f, -40.0f, 0.0f), LightType::DirectionalLight);
+    // TODO: JSONparser for Scene entities and scripts/components.
+    // TODO: Figure out location and pathing of assets/non code files within solution
+    const std::string SOURCE_FOLDER = "TestAE2/";
+    const std::string MODEL_FILE = "ae86.gltf";
 
-    // TODO: Refactor to a Single Car Entity with Mesh and Rigidbody components
-
-    std::string SOURCE_FOLDER = "Assets/TestAE/"; // TODO: JSONparser for list of assets, each asset has a PATH and FILE string.
     Entity* testCar = new Entity();
     testCar->SetDisplayName("Test Car");
-
-    tinygltf::Model gltfModel = GLTFLoader::LoadFromFile(SOURCE_FOLDER + "ae86.gltf"); // TODO: Figure out location of assets/non code files within solution
-    std::vector<UUIDv4::UUID> textures = GLTFLoader::LoadTextures(gltfModel, SOURCE_FOLDER);
-    std::vector<UUIDv4::UUID> materials = GLTFLoader::LoadMaterials(gltfModel, textures);
-    Mesh* testMesh = GLTFLoader::LoadMesh(gltfModel, gltfModel.meshes[0], materials);
-
-    MeshComponent* meshComponent = new MeshComponent(testCar);
-    meshComponent->setMesh(testMesh);
-
-    testCar->addComponent(*meshComponent);
+    GLTFLoader::LoadModelAsEntity(testCar, SOURCE_FOLDER, MODEL_FILE);
     EntityManager::getInstance().Instantiate(testCar);
-    // end TODO
 
-    ScriptComponent* cameraScriptComponent = new ScriptComponent(cameraEntity);
-    OrbitScript* orbitScript = new OrbitScript(cameraEntity);
-    orbitScript->setOrbitTarget(testCar->transform);
+    // Example of using findFirstEntityByDisplayName() for adding additional components
+    auto* entityManager = &(EntityManager::getInstance());
+    auto cameraID = entityManager->findFirstEntityByDisplayName("Main Camera");
+    auto cameraEnt = entityManager->getEntity(cameraID);
 
-    cameraScriptComponent->AddScript<OrbitScript>(*orbitScript);
-    cameraEntity->addComponent(*cameraScriptComponent);
-    EntityManager::getInstance().Instantiate(cameraEntity);
+    ScriptComponent* scriptComponent = new ScriptComponent(cameraEnt);
+    cameraEnt->addComponent(*scriptComponent);
+
+    auto carID = entityManager->findFirstEntityByDisplayName("Test Car");
+    auto carEnt = entityManager->getEntity(carID);
+
+    OrbitScriptParams params;
+    params.m_OrbitTarget = carEnt->transform;
+    scriptComponent->AddScriptToComponent<OrbitScript>(&params);
+    // End Example
+
 
 }
