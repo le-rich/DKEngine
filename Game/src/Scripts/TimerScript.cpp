@@ -11,12 +11,15 @@ TimerScript::~TimerScript() {}
 
 void TimerScript::Update(float deltaTime)
 {
+	mParams.m_rawTime += deltaTime;
+
 	if (mParams.m_TimerTarget->getWorldPosition().x > mParams.m_OriginalPosition.x)
 	{
-		std::cout << "Time elasped: " << deltaTime << std::endl;
-		/*mParams.m_Minutes = (int)deltaTime / 60;
-		mParams.m_Seconds = (int)deltaTime % 60;
-		std::cout << "Time elapsed: " << mParams.m_Minutes << ":" << mParams.m_Seconds << std::endl;*/
+		mParams.m_Minutes = (int)mParams.m_rawTime / 60;
+		mParams.m_Seconds = (int)mParams.m_rawTime % 60;
+		mParams.m_Milliseconds = (int)((mParams.m_rawTime - (int)mParams.m_rawTime % 60) * 1000);
+		std::cout << "Time elapsed: " << mParams.m_Minutes << ":" << mParams.m_Seconds
+			<< "." << mParams.m_Milliseconds << std::endl;
 	}
 }
 
