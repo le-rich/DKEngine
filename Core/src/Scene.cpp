@@ -55,7 +55,7 @@ void Scene::SpawnSceneDefinition()
 
     OrbitScriptParams params;
     params.m_OrbitTarget = carEnt->transform;
-    scriptComponent->AddScriptToComponent<OrbitScript>(&params);
+    scriptComponent->CreateAndAddScript<OrbitScript>(&params);
     // End Example
 
 

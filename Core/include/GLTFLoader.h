@@ -349,7 +349,6 @@ namespace GLTFLoader
         if (meshIndex >= 0)
         {
             Mesh* mesh = GLTFLoader::LoadMesh(pGltfModel, pGltfModel.meshes[meshIndex], pMaterials);
-            //ComponentManager::AddMeshComponent(pEntity, mesh);
             MeshComponent* meshComponent = new MeshComponent(pEntity);
             meshComponent->setMesh(mesh);
             pEntity->addComponent(*meshComponent);
