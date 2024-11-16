@@ -27,7 +27,7 @@
     <ClInclude Include="include\Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TimerScript.h">
+    <ClInclude Include="include\Scripts\TimerScript.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -39,6 +39,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scripts\TimerScript.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

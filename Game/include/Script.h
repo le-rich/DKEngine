@@ -6,7 +6,8 @@ struct ScriptParams {};
 
 enum class ScriptType
 {
-    OrbitScript
+    OrbitScript,
+    TimerScript
 };
 
 class Script
