@@ -15,6 +15,10 @@ struct TimerScriptParams : ScriptParams
 	int m_Minutes = 0;
 	int m_Seconds = 0;
 	int m_Milliseconds = 0;
+
+	int m_Split = 1;
+
+	bool updatedSplit = false;
 };
 
 class TimerScript : public Script
