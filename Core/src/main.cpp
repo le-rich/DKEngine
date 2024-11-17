@@ -92,28 +92,22 @@ int run_glfw() {
 		previousTime = currentTime;
 
 		fixedUpdateBuffer += std::chrono::duration_cast<std::chrono::milliseconds>(deltaTime).count();
-		std::cout << "COUNT: " << fixedUpdateBuffer << "\n"; // Commenting this line causes the Fixed update loop to stutter.
+		// std::cout << "COUNT: " << fixedUpdateBuffer << "\n"; // Commenting this line causes the Fixed update loop to stutter.
 
-
-        // Callbacks on all the keys that sets key-codes Or prsssdown to true or false.
-        // Potential Mouse inputs; May have to figure out how it can work when extracting
-        // Scrollwheels
-        
         // TODO: Create extractions/enums for key presses on whether they would be pressed-down or not,
         // Have them be updated by GLFW callback. This works because glfwpollevents() is a synchronous method that runs all callbacks
         // As long as all components are called after glfwpollevents, behavior should be fine.
         window.PollEvents();
         Input::RunInputListener(physx->body);
 
-        // Rendering related calls, we can move these to the loop of the rendering thread
-        //renderer->Update(deltaTimeFloatSeconds); // draw tri or square
-
 		while (fixedUpdateBuffer >= FIXED_UPDATE_INTERVAL)
 		{
 			physx->FixedUpdate();
 			fixedUpdateBuffer -= FIXED_UPDATE_INTERVAL;
 		}
+
 		game->Update(deltaTimeFloatSeconds);
+		renderer->Update(deltaTimeFloatSeconds);
 		ui->Update(deltaTimeFloatSeconds);
 	}
 

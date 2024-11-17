@@ -2,6 +2,7 @@
 
 #include "System.h"
 #include "Entity.h"
+#include "Components/TransformComponent.h"
 #include "Buffers/FrameBuffer.h"
 #include "Buffers/UniformBuffer.h"
 #include "Buffers/ShaderStorageBuffer.h"
@@ -14,6 +15,12 @@
 #include <GLFW/glfw3.h>
 
 static const std::string SCREEN_SHADER_PATH = "../Rendering/Shaders/screen.glsl";
+
+struct Renderable {
+    TransformComponent worldTransform;
+    Mesh* mesh;
+    Material* material; //TODO: To be changed to MaterialComponent.
+};
 
 class Renderer : public System
 {
@@ -33,7 +40,8 @@ public:
     void FixedUpdate() override;
 
     void RenderToFrame(int pWidth, int pHeight);
-    void RenderFrame();
+    void WriteToFrameBuffer();
+    void FetchRenderables();
 
     const FrameBuffer* GetFrameBuffer() { return &mFrameBuffer; }
 
@@ -48,6 +56,6 @@ private:
     UniformBuffer mEngineUniformBuffer;
     ShaderStorageBuffer shaderStorageBufferObject;
 
-    void DrawByMesh();
+    void IssueMeshDrawCalls();
     void SetEngineUBO(int pWidth, int pHeight);
 };

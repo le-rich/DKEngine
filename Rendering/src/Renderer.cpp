@@ -35,26 +35,31 @@ void Renderer::Initialize()
 		std::cin.get();
 		std::exit(EXIT_FAILURE);  // Terminate program with failure status
 	}
-	updateThread = new std::thread([&]()
+	
+	// This should be moved to Main? Avoid calling lamdba, make it a function callable.
+	updateThread = new std::thread(	[&]()
+	{
+		auto previousTime = std::chrono::high_resolution_clock::now();
+		auto window = windowRef->GetWindow();
+
+		while (!glfwWindowShouldClose(window))
 		{
-			auto previousTime = std::chrono::high_resolution_clock::now();
-			auto window = windowRef->GetWindow();
-			while (!glfwWindowShouldClose(window))
-			{
-				printf("RENDERLOOP"); // Commenting this line causes stuttering of the renderthread.
-				//windowRef->PollEvents();
-				auto currentTime = std::chrono::high_resolution_clock::now();
-				std::chrono::duration<float> deltaTime = currentTime - previousTime;
-				auto deltaTimeFloatSeconds = deltaTime.count();
-				previousTime = currentTime;
-				Update(deltaTimeFloatSeconds);
-			}
-		});
+			auto currentTime = std::chrono::high_resolution_clock::now();
+			std::chrono::duration<float> deltaTime = currentTime - previousTime;
+			auto deltaTimeFloatSeconds = deltaTime.count();
+			previousTime = currentTime;
+			Update(deltaTimeFloatSeconds);
+		}
+	});
 }
 
 void Renderer::Update(float deltaTime)
 {
+	// Fetch all Renderables Here
+
+
 	// TODO: Create copy of Scene Graph/Entity manager to avoid race conditions with other threads
+	// TODO: Revision, change such that renderables are taken and threads are spun up to do tasks within Renderer.
 	{
 		std::lock_guard<std::mutex> lock(windowRef->mMutex);
 		windowRef->SetWindowToCurrentThread();
@@ -70,7 +75,7 @@ void Renderer::Update(float deltaTime)
 
 		//Perform Post Processing
 		//Draw Frame Buffer
-		RenderFrame();
+		WriteToFrameBuffer();
 		glfwMakeContextCurrent(NULL);
 	}
 
@@ -89,7 +94,7 @@ void Renderer::RenderToFrame(int pWidth, int pHeight)
 
 	SetEngineUBO(pWidth, pHeight);
 	//TODO: Replace with Scene based or Material based Draw
-	DrawByMesh();
+	IssueMeshDrawCalls();
 
 	// ============================
 	//Material Based:
@@ -106,7 +111,7 @@ void Renderer::RenderToFrame(int pWidth, int pHeight)
 	//shaderStorageBufferObject.Unbind();
 }
 
-void Renderer::RenderFrame()
+void Renderer::WriteToFrameBuffer()
 {
 	glDisable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -120,7 +125,7 @@ void Renderer::RenderFrame()
 	mScreenQuad.Draw();
 }
 
-void Renderer::DrawByMesh()
+void Renderer::IssueMeshDrawCalls()
 {
 	auto meshComponentUUIDs = EntityManager::getInstance().findEntitiesByComponent(ComponentType::Mesh);
 
@@ -174,4 +179,9 @@ void Renderer::SetEngineUBO(int pWidth, int pHeight)
 			mainCameraEntity->transform->getWorldPosition()
 		);
 	}
+}
+
+void FetchRenderables() 
+{
+	
 }
