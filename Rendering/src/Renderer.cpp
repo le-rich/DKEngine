@@ -56,7 +56,25 @@ void Renderer::Initialize()
 void Renderer::Update(float deltaTime)
 {
 	// Fetch all Renderables Here
+	ComponentMask renderableComponentMask;
+	// TODO: Add Materials to this.
+	renderableComponentMask |= renderableComponentMask.set(static_cast<size_t>(ComponentType::Mesh) | static_cast<size_t>(ComponentType::Transform));
+	auto renderableEntities = EntityManager::getInstance().findEntitiesByComponentMask(renderableComponentMask);
 
+	for (auto renderEntity : renderableEntities)
+	{
+		TransformComponent* transformComponent = new TransformComponent(*(renderEntity->transform));
+		MeshComponent* meshComponent = dynamic_cast<MeshComponent*>(renderEntity->getComponent(ComponentType::Mesh));
+		// TODO: MaterialComponent pointer here.
+		Material* materialComponent = nullptr;
+
+		Renderable* renderable = new Renderable(transformComponent);
+		renderable->mesh = meshComponent->getMesh();
+
+		renderablesThisFrame.push_back(renderable);
+	}
+
+	FetchRenderables();
 
 	// TODO: Create copy of Scene Graph/Entity manager to avoid race conditions with other threads
 	// TODO: Revision, change such that renderables are taken and threads are spun up to do tasks within Renderer.
@@ -81,6 +99,7 @@ void Renderer::Update(float deltaTime)
 
 	// Swap window buffers. can be moved to post update
 	windowRef->SwapWindowBuffers();
+	renderablesThisFrame.clear();
 }
 
 void Renderer::FixedUpdate() {}

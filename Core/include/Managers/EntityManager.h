@@ -144,6 +144,23 @@ public:
         return nullptr;
     }
 
+    std::vector<Entity*> findEntitiesByComponentMask(ComponentMask componentMask) 
+    {
+        std::vector<Entity*> result;
+        for (auto it = entityMap.begin(); it != entityMap.end(); ++it)
+        {
+            UUIDv4::UUID uuid = it->first;
+            Entity* entity = it->second;
+
+            if (entity->GetComponentMask() == componentMask)
+            {
+                result.push_back(entity);
+            }
+        }
+
+        return result;
+    }
+
     // clean and remove entity from the tree
     void cleanAndRemoveEntity(Entity* e) {
         // if a parent exists, remove the reference of the entity from it

@@ -19,9 +19,11 @@
 static const std::string SCREEN_SHADER_PATH = "../Rendering/Shaders/screen.glsl";
 
 struct Renderable {
-    TransformComponent worldTransform;
+    TransformComponent* worldTransform;
     Mesh* mesh = nullptr;
     Material* material = nullptr; // TODO: To be changed to MaterialComponent.
+
+    Renderable(TransformComponent* transform) : worldTransform(transform) {}
 };
 
 class Renderer : public System
@@ -57,6 +59,7 @@ private:
 
     UniformBuffer mEngineUniformBuffer;
     ShaderStorageBuffer shaderStorageBufferObject;
+    std::vector<Renderable*> renderablesThisFrame;
 
     void IssueMeshDrawCalls();
     void SetEngineUBO(int pWidth, int pHeight);
