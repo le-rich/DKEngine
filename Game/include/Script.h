@@ -6,7 +6,11 @@ struct ScriptParams {};
 
 enum class ScriptType
 {
-    OrbitScript
+    OrbitScript = 0
+};
+
+std::unordered_map<std::string, ScriptType> const ScriptMap = {
+    {"OrbitScript", ScriptType::OrbitScript}
 };
 
 class Script

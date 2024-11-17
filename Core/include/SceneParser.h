@@ -5,6 +5,7 @@
 #include "Components/LightComponent.h"
 #include "Components/ScriptComponent.h"
 #include "Managers/EntityManager.h"
+#include "Scripts/OrbitScript.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -12,6 +13,10 @@
 #include <fstream>
 #include <iostream>
 #include <unordered_map>
+
+#define REQUIRED_EXCEPTION_HANDLER(object) catch (std::exception& e) { std::cout << "ERROR: " << e.what() << '\n'; std::cout << object << '\n'; return;}
+#define DEFAULT_EXCEPTION_HANDLER catch (std::exception& e) { std::cout << "WARNING: " << e.what() << '\n'; std::cout << "Verify naming of keys is correct \n";}
+#define OPTIONAL_EXCEPTION_HANDLER catch (std::exception& e) {}
 
 namespace SceneParser
 {
@@ -39,10 +44,7 @@ namespace SceneParser
             transformObject.at("localPosition").get_to(localPosition);
             transform.localPosition = (localPosition.size() > 0) ? glm::vec3(localPosition[0], localPosition[1], localPosition[2]) : glm::vec3();
         }
-        catch (json::out_of_range& e)
-        {
-            std::cout << e.what() << '\n';
-        }
+        OPTIONAL_EXCEPTION_HANDLER;
 
         try
         {
@@ -50,10 +52,7 @@ namespace SceneParser
             transformObject.at("localOrientation").get_to(localOrientation);
             transform.localOrientation = (localOrientation.size() > 0) ? glm::quat(localOrientation[0], localOrientation[1], localOrientation[2], localOrientation[3]) : glm::quat(1.f, 0, 0, 0);
         }
-        catch (json::out_of_range& e)
-        {
-            std::cout << e.what() << '\n';
-        }
+        OPTIONAL_EXCEPTION_HANDLER;
 
         try
         {
@@ -61,23 +60,180 @@ namespace SceneParser
             transformObject.at("localScale").get_to(localScale);
             transform.localScale = (localScale.size() > 0) ? glm::vec3(localScale[0], localScale[1], localScale[2]) : glm::vec3(1.f);
         }
-        catch (json::out_of_range& e)
-        {
-            std::cout << e.what() << '\n';
-        }
+        OPTIONAL_EXCEPTION_HANDLER;
 
         pEntity->transform->setTransform(transform);
     }
 
-    void getComponents(Entity* pEntity, json& pComponentObjects)
+    void ParseCamera(Entity* pEntity, json pCameraParams)
+    {
+        CameraComponent* cameraComponent = new CameraComponent(pEntity);
+        pEntity->addComponent(*cameraComponent);
+        try
+        {
+            pCameraParams.at("fieldOfView").get_to(cameraComponent->fieldOfView);
+        }
+        OPTIONAL_EXCEPTION_HANDLER;
+        try
+        {
+            pCameraParams.at("farClipPlane").get_to(cameraComponent->farClipPlane);
+        }
+        OPTIONAL_EXCEPTION_HANDLER;
+        try
+        {
+            pCameraParams.at("nearClipPlane").get_to(cameraComponent->nearClipPlane);
+        }
+        OPTIONAL_EXCEPTION_HANDLER;
+    }
+
+    void ParseLight(Entity* pEntity, json pLightParams)
+    {
+        LightComponent* lightComponent = new LightComponent(pEntity);
+        pEntity->addComponent(*lightComponent);
+
+        LightParams lightParams;
+        try
+        {
+            std::vector<float> color;
+            pLightParams.at("color").get_to(color);
+            lightParams.color = (color.size() > 0) ? glm::vec4(color[0], color[1], color[2], color[3]) : glm::vec4(1.f);
+        }
+        OPTIONAL_EXCEPTION_HANDLER;
+
+        std::string lightTypeString;
+        try
+        {
+            pLightParams.at("type").get_to(lightTypeString);
+            auto lightMapIt = LightTypeMap.find(lightTypeString);
+            if (lightMapIt != LightTypeMap.end())
+            {
+                lightParams.type = lightMapIt->second;
+            }
+            else
+            {
+                std::cout << "ERROR: " << lightTypeString << " not valid LightType" << std::endl;
+            }
+        }
+        OPTIONAL_EXCEPTION_HANDLER;
+
+        try
+        {
+            pLightParams.at("intensity").get_to(lightParams.intensity);
+        }
+        OPTIONAL_EXCEPTION_HANDLER;
+
+        try
+        {
+            pLightParams.at("constant").get_to(lightParams.constant);
+        }
+        OPTIONAL_EXCEPTION_HANDLER;
+
+        try
+        {
+            pLightParams.at("linear").get_to(lightParams.linear);
+        }
+        OPTIONAL_EXCEPTION_HANDLER;
+
+        try
+        {
+            pLightParams.at("quadratic").get_to(lightParams.quadratic);
+        }
+        OPTIONAL_EXCEPTION_HANDLER;
+
+        try
+        {
+            pLightParams.at("cutoff").get_to(lightParams.cutoff);
+        }
+        OPTIONAL_EXCEPTION_HANDLER;
+
+        try
+        {
+            pLightParams.at("outercutoff").get_to(lightParams.outercutoff);
+        }
+        OPTIONAL_EXCEPTION_HANDLER;
+
+        lightComponent->SetParams(lightParams);
+    }
+
+    void ParseScript(Entity* pEntity, json pScriptParams)
+    {
+        ScriptComponent* scriptComponent = new ScriptComponent(pEntity);
+        pEntity->addComponent(*scriptComponent);
+        json scripts;
+        try
+        {
+            scripts = pScriptParams.at("scripts");
+        }
+        DEFAULT_EXCEPTION_HANDLER;
+
+        for (auto& script : scripts.items())
+        {
+            try
+            {
+                const std::string typeString = script.value().at("script").template get<std::string>();
+                auto scriptTypeIt = ScriptMap.find(typeString);
+                if (scriptTypeIt == ScriptMap.end())
+                {
+                    std::cout << "ERROR: " << typeString << " not valid known Script" << std::endl;
+                    std::cout << "Check if the script is a valid listed script or is missing from script types" << std::endl;
+                    continue;
+                }
+                json scriptParams = script.value().at("params");
+                switch (scriptTypeIt->second)
+                {
+                    case ScriptType::OrbitScript:
+                    {
+                        OrbitScriptParams params;
+
+                        try
+                        {
+                            std::string target = scriptParams.at("target").template get<std::string>();
+                            Entity* targetEntity = EntityManager::getInstance().findFirstEntityByDisplayName(target);
+                            params.m_OrbitTarget = targetEntity->transform;
+                        }
+                        OPTIONAL_EXCEPTION_HANDLER;
+
+                        try
+                        {
+                            scriptParams.at("radius").get_to(params.m_Radius);
+                        }
+                        OPTIONAL_EXCEPTION_HANDLER;
+                        try
+                        {
+                            scriptParams.at("speed").get_to(params.m_Speed);
+                        }
+                        OPTIONAL_EXCEPTION_HANDLER;
+                        try
+                        {
+                            scriptParams.at("currentAngle").get_to(params.currentAngle);
+                        }
+                        OPTIONAL_EXCEPTION_HANDLER;
+
+                        scriptComponent->CreateAndAddScript<OrbitScript>(&params);
+                        break;
+                    }
+                    default:
+                        break;
+                }
+            }
+            REQUIRED_EXCEPTION_HANDLER(script);
+        }
+    }
+
+    void ParseComponents(Entity* pEntity, json& pComponentObjects)
     {
         for (auto& componentObject : pComponentObjects.items())
         {
-            std::cout << componentObject.key() << " : " << componentObject.value() << "\n";
             std::string typeString;
-            componentObject.value().at("type").get_to(typeString);
-            json params = componentObject.value().at("params");
-            std::cout << typeString << " : " << params << std::endl;
+            json params;
+
+            try
+            {
+                componentObject.value().at("type").get_to(typeString);
+                params = componentObject.value().at("params");
+                std::cout << typeString << " : " << params << std::endl;
+            }
+            REQUIRED_EXCEPTION_HANDLER(componentObject);
 
             auto componentMapIt = ComponentMap.find(typeString);
             if (componentMapIt == ComponentMap.end())
@@ -86,49 +242,18 @@ namespace SceneParser
                 std::cout << "Check if the component is a valid listed component or is missing from component types" << std::endl;
                 continue;
             }
-            ComponentType type = componentMapIt->second;
-            switch (type)
+
+            switch (componentMapIt->second)
             {
                 case ComponentType::Camera:
-                {
-                    // TODO: Check for missing fields
-                    CameraComponent* cameraComponent = new CameraComponent(pEntity);
-                    pEntity->addComponent(*cameraComponent);
-                    params.at("fieldOfView").get_to(cameraComponent->fieldOfView);
-                    params.at("farClipPlane").get_to(cameraComponent->farClipPlane);
-                    params.at("nearClipPlane").get_to(cameraComponent->nearClipPlane);
+                    ParseCamera(pEntity, params);
                     break;
-                }
+
                 case ComponentType::Light:
-                {
-                    LightComponent* lightComponent = new LightComponent(pEntity);
-                    pEntity->addComponent(*lightComponent);
-
-                    LightParams lightParams;
-                    std::vector<float> color;
-                    params.at("color").get_to(color);
-                    lightParams.color = (color.size() > 0) ? glm::vec4(color[0], color[1], color[2], color[3]) : glm::vec4(1.f);
-
-                    std::string lightTypeString;
-                    params.at("type").get_to(lightTypeString);
-                    auto lightMapIt = LightTypeMap.find(lightTypeString);
-                    if (lightMapIt == LightTypeMap.end())
-                    {
-                        std::cout << "ERROR: " << lightTypeString << " not valid LightType" << std::endl;
-                    }
-                    lightParams.type = lightMapIt->second;
-
-                    params.at("intensity").get_to(lightParams.intensity);
-                    params.at("constant").get_to(lightParams.constant);
-                    params.at("linear").get_to(lightParams.linear);
-                    params.at("quadratic").get_to(lightParams.quadratic);
-                    params.at("cutoff").get_to(lightParams.cutoff);
-                    params.at("outercutoff").get_to(lightParams.outercutoff);
-
-                    lightComponent->SetParams(lightParams);
-                }
-                break;
+                    ParseLight(pEntity, params);
+                    break;
                 case ComponentType::Script:
+                    ParseScript(pEntity, params);
                     break;
                 default:
                     break;
@@ -142,18 +267,15 @@ namespace SceneParser
         {
             try
             {
-                auto folder = asset.at("folder");
-                auto file = asset.at("file");
+                const std::string path = asset.at("path").template get<std::string>();
+                const std::string file = asset.at("file").template get<std::string>();
 
                 Entity* entity = new Entity();
-                GLTFLoader::LoadModelAsEntity(entity, folder, file);
+
+                GLTFLoader::LoadModelAsEntity(entity, path, file);
                 EntityManager::getInstance().Instantiate(entity);
             }
-            catch (const json::out_of_range& e)
-            {
-                std::cout << e.what() << '\n';
-                std::cout << asset << '\n';
-            }
+            DEFAULT_EXCEPTION_HANDLER;
         }
     }
 
@@ -173,33 +295,24 @@ namespace SceneParser
                 }
 
             }
-            catch (const json::out_of_range& e)
-            {
-                std::cout << e.what() << '\n';
-                entity = new Entity();
-                EntityManager::getInstance().Instantiate(entity);
-            }
+            REQUIRED_EXCEPTION_HANDLER(entityElement);
+
+            // Parse Transform
             try
             {
-                // Parse Transform
                 json transformObject = entityElement.at("transform");
                 ParseTransform(entity, transformObject);
 
             }
-            catch (const json::out_of_range& e)
-            {
-                std::cout << e.what() << '\n';
-            }
+            OPTIONAL_EXCEPTION_HANDLER;
+
+            // Parse Components
             try
             {
-                // Parse Components
                 json components = entityElement.at("components");
-                getComponents(entity, components);
+                ParseComponents(entity, components);
             }
-            catch (const json::out_of_range& e)
-            {
-                std::cout << e.what() << '\n';
-            }
+            OPTIONAL_EXCEPTION_HANDLER;
         }
     }
 
@@ -220,19 +333,13 @@ namespace SceneParser
             json assetObjects = sceneJSON.at(ASSET_KEY);
             ParseAssets(assetObjects);
         }
-        catch (const json::out_of_range& e)
-        {
-            std::cout << e.what() << '\n';
-        }
+        DEFAULT_EXCEPTION_HANDLER;
 
         try
         {
             json entitiesObject = sceneJSON.at(ENTITY_KEY);
             ParseEntities(entitiesObject);
         }
-        catch (const json::out_of_range& e)
-        {
-            std::cout << e.what() << '\n';
-        }
+        DEFAULT_EXCEPTION_HANDLER;
     }
 }
