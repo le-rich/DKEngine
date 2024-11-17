@@ -15,8 +15,7 @@ public:
     };
 
     Entity* sceneRoot = nullptr;
-    // lock to guarantee mutual exclusion
-    std::mutex mtx;
+    std::mutex sceneMutex;
 
     // TODO: This function loads and structures the scene graph. This should be made virtual only.
     void SpawnSceneDefinition();

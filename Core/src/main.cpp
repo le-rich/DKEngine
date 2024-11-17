@@ -16,14 +16,16 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <atomic>
 #include <iostream>
 #include <mutex>
 #include <thread>
 
-// Theres some experimentation we'll need to do regarding updating objects on the main thread and rendering on the render thread.
-// That can wait for the time being.
 int run_glfw() {
+	std::atomic<bool> running(true);
+	float deltaTimeFloatSeconds;
 
+	// WINDOW ================================================== 
     Window::InitWindow();
     Window window;
     if (window.GetWindow() == NULL)
@@ -34,8 +36,8 @@ int run_glfw() {
 
     window.SetWindowToCurrentThread();
     window.SetKeyCallback(Input::KeyCallback);
-    window.SetMouseButtonCallback(Input::MouseButtonCallback);
-
+    window.SetMouseButtonCallback(Input::MouseButtonCallback);    
+	
 	// Load GLAD
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
@@ -43,10 +45,11 @@ int run_glfw() {
 		return -1;
 	}
 
-    // Set size of framebuffer
+	// Set size of framebuffer
     glViewport(0, 0, window.GetWidth(), window.GetHeight());
     window.SetFramebufferSizeCallback();
 
+	// ECS ======================================================
     std::vector<System*> systems;
     Scene* defaultScene = new Scene();
 
@@ -60,76 +63,104 @@ int run_glfw() {
 	TransformComponent* CAR_TRANSFORM = testCarEntity->transform;
 
     UI* ui = new UI(Core::getInstance().GetScene());
-    Physics* physx = new Physics(CAR_TRANSFORM);
+    Physics* physics = new Physics(CAR_TRANSFORM);
     Renderer* renderer = new Renderer(&window);
     Game* game = new Game();
 
 	Core::getInstance().AddSystem(ui);
-	Core::getInstance().AddSystem(physx);
+	Core::getInstance().AddSystem(physics);
 	Core::getInstance().AddSystem(renderer);
 	Core::getInstance().AddSystem(game);
 
 	ui->Initialize();
-	physx->Initialize();
+	physics->Initialize();
 	renderer->Initialize();
 	game->Initialize();
 
-	// Timing
+    std::thread gameThread([&]()
+    {
+	    auto previousTime = std::chrono::high_resolution_clock::now();
+        while (running) 
+        {
+            auto currentTime = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<float> deltaTime = currentTime - previousTime;
+            deltaTimeFloatSeconds = deltaTime.count();
+            previousTime = currentTime;
+
+            game->Update(deltaTimeFloatSeconds);
+        }
+    });
+
+    std::thread rendererThread([&]() 
+    {
+	    auto previousTime = std::chrono::high_resolution_clock::now();
+        while(running) 
+        {
+            auto currentTime = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<float> deltaTime = currentTime - previousTime;
+            deltaTimeFloatSeconds = deltaTime.count();
+            previousTime = currentTime;
+
+            renderer->Update(deltaTimeFloatSeconds);      
+        }
+    });
+
+    std::thread uiThread([&]() 
+    {
+        auto previousTime = std::chrono::high_resolution_clock::now();
+        while (running) {
+            auto currentTime = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<float> deltaTime = currentTime - previousTime;
+            deltaTimeFloatSeconds = deltaTime.count();
+            previousTime = currentTime;
+            ui->Update(deltaTimeFloatSeconds);
+        }
+    });
+
+	// RUN =======================================================
 	double fixedUpdateBuffer = 0.0;
 	double FIXED_UPDATE_INTERVAL = 20; // in milliseconds
 	auto previousTime = std::chrono::high_resolution_clock::now();
 
-    // We want some check like this visible to the other threads
-    // That way those threads will stop once the window closes. ### Has to be conditional for main thread ###
     auto glfwWindow = window.GetWindow();
     while (!glfwWindowShouldClose(glfwWindow))
     {
-
 		auto currentTime = std::chrono::high_resolution_clock::now();
 		std::chrono::duration<float> deltaTime = currentTime - previousTime;
-		auto deltaTimeFloatSeconds = deltaTime.count();
-
+		deltaTimeFloatSeconds = deltaTime.count();
 		previousTime = currentTime;
-
 		fixedUpdateBuffer += std::chrono::duration_cast<std::chrono::milliseconds>(deltaTime).count();
-		// std::cout << "COUNT: " << fixedUpdateBuffer << "\n"; // Commenting this line causes the Fixed update loop to stutter.
 
-        // TODO: Create extractions/enums for key presses on whether they would be pressed-down or not,
-        // Have them be updated by GLFW callback. This works because glfwpollevents() is a synchronous method that runs all callbacks
-        // As long as all components are called after glfwpollevents, behavior should be fine.
         window.PollEvents();
-        Input::RunInputListener(physx->body);
+        Input::RunInputListener(physics->body);
 
 		while (fixedUpdateBuffer >= FIXED_UPDATE_INTERVAL)
 		{
-			physx->FixedUpdate();
+			physics->FixedUpdate();
 			fixedUpdateBuffer -= FIXED_UPDATE_INTERVAL;
 		}
-
-		game->Update(deltaTimeFloatSeconds);
-		renderer->Update(deltaTimeFloatSeconds);
-		ui->Update(deltaTimeFloatSeconds);
 	}
 
-	// Destroys library, may cause race condition if it gets destroyed while other threads are using it.
-	glfwTerminate();
+	// TEARDOWN ==================================================
+	running = false;
+    
+    if (gameThread.joinable())      { gameThread.join(); }
+    if (rendererThread.joinable())  { rendererThread.join(); }
+    if (uiThread.joinable())        { uiThread.join(); }
 
-	// Destroy all systems upon closing window
 	for (auto sys : systems)
 	{
 		sys->Kill();
 	}
 
+	glfwTerminate();
 }
 
-
-// TODO: Make core class static or singleton
 int main(int argc, char* argv[])
 {
     // Nobody dare touch this... I'm watching you... ?_?
     std::cout << "Do you know what DK Stands for? Donkey Kong? Nah. Drift King." << std::endl;
 
-    // Currently has its own while loop blocking main
     run_glfw();
 
     return 0;

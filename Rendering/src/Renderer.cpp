@@ -36,45 +36,26 @@ void Renderer::Initialize()
 		std::exit(EXIT_FAILURE);  // Terminate program with failure status
 	}
 	
-	// This should be moved to Main? Avoid calling lamdba, make it a function callable.
-	updateThread = new std::thread(	[&]()
-	{
-		auto previousTime = std::chrono::high_resolution_clock::now();
-		auto window = windowRef->GetWindow();
+	//// This should be moved to Main? Avoid calling lamdba, make it a function callable.
+	//updateThread = new std::thread(	[&]()
+	//{
+	//	auto previousTime = std::chrono::high_resolution_clock::now();
+	//	auto window = windowRef->GetWindow();
 
-		while (!glfwWindowShouldClose(window))
-		{
-			auto currentTime = std::chrono::high_resolution_clock::now();
-			std::chrono::duration<float> deltaTime = currentTime - previousTime;
-			auto deltaTimeFloatSeconds = deltaTime.count();
-			previousTime = currentTime;
-			Update(deltaTimeFloatSeconds);
-		}
-	});
+	//	while (!glfwWindowShouldClose(window))
+	//	{
+	//		auto currentTime = std::chrono::high_resolution_clock::now();
+	//		std::chrono::duration<float> deltaTime = currentTime - previousTime;
+	//		auto deltaTimeFloatSeconds = deltaTime.count();
+	//		previousTime = currentTime;
+	//		Update(deltaTimeFloatSeconds);
+	//	}
+	//});
 }
 
 void Renderer::Update(float deltaTime)
 {
-	// Fetch all Renderables Here
-	ComponentMask renderableComponentMask;
-	// TODO: Add Materials to this.
-	renderableComponentMask |= renderableComponentMask.set(static_cast<size_t>(ComponentType::Mesh) | static_cast<size_t>(ComponentType::Transform));
-	auto renderableEntities = EntityManager::getInstance().findEntitiesByComponentMask(renderableComponentMask);
-
-	for (auto renderEntity : renderableEntities)
-	{
-		TransformComponent* transformComponent = new TransformComponent(*(renderEntity->transform));
-		MeshComponent* meshComponent = dynamic_cast<MeshComponent*>(renderEntity->getComponent(ComponentType::Mesh));
-		// TODO: MaterialComponent pointer here.
-		Material* materialComponent = nullptr;
-
-		Renderable* renderable = new Renderable(transformComponent);
-		renderable->mesh = meshComponent->getMesh();
-
-		renderablesThisFrame.push_back(renderable);
-	}
-
-	FetchRenderables();
+	// FetchRenderables();
 
 	// TODO: Create copy of Scene Graph/Entity manager to avoid race conditions with other threads
 	// TODO: Revision, change such that renderables are taken and threads are spun up to do tasks within Renderer.
@@ -99,6 +80,11 @@ void Renderer::Update(float deltaTime)
 
 	// Swap window buffers. can be moved to post update
 	windowRef->SwapWindowBuffers();
+
+	for (auto ptr : renderablesThisFrame){
+		delete ptr;
+	}
+
 	renderablesThisFrame.clear();
 }
 
@@ -196,7 +182,23 @@ void Renderer::SetEngineUBO(int pWidth, int pHeight)
 	}
 }
 
-void FetchRenderables() 
+void Renderer::FetchRenderables() 
 {
-	
+	ComponentMask renderableComponentMask;
+	// TODO: Add Materials to this.
+	renderableComponentMask |= renderableComponentMask.set(static_cast<size_t>(ComponentType::Mesh) | static_cast<size_t>(ComponentType::Transform));
+	auto renderableEntities = EntityManager::getInstance().findEntitiesByComponentMask(renderableComponentMask);
+
+	for (auto renderEntity : renderableEntities)
+	{
+		TransformComponent* transformComponent = new TransformComponent(*(renderEntity->transform));
+		MeshComponent* meshComponent = dynamic_cast<MeshComponent*>(renderEntity->getComponent(ComponentType::Mesh));
+		// TODO: MaterialComponent pointer here.
+		Material* materialComponent = nullptr;
+
+		Renderable* renderable = new Renderable(transformComponent);
+		renderable->mesh = meshComponent->getMesh();
+
+		renderablesThisFrame.push_back(renderable);
+	}
 }

@@ -3,12 +3,12 @@
 #include "System.h"
 #include "Entity.h"
 #include "Components/TransformComponent.h"
+#include "Resources/Material.h"
+#include "Resources/Mesh.h"
 #include "Buffers/FrameBuffer.h"
 #include "Buffers/UniformBuffer.h"
 #include "Buffers/ShaderStorageBuffer.h"
 #include "Data/Shape.h"
-#include "Material.h"
-#include "Mesh.h"
 #include "Resources/Shader.h"
 #include "Resources/Primitives.h"
 #include "Window/Window.h"
@@ -24,6 +24,12 @@ struct Renderable {
     Material* material = nullptr; // TODO: To be changed to MaterialComponent.
 
     Renderable(TransformComponent* transform) : worldTransform(transform) {}
+
+    ~Renderable(){
+        // World Transform is the only dynamically created thing for renderables.
+        // Mesh and Material is referencing existing objects.
+        delete worldTransform;
+    }
 };
 
 class Renderer : public System

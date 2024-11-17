@@ -1,5 +1,4 @@
-#ifndef SYSTEM_H
-#define SYSTEM_H
+#pragma once
 
 #include <mutex>
 #include <thread>
@@ -12,7 +11,7 @@ class System
 protected:
     std::atomic<bool> isActive;
     std::thread* updateThread;
-    std::mutex mutex;
+    std::mutex systemMutex;
 
 public:
 
@@ -24,7 +23,7 @@ public:
 
     virtual void Initialize()
     {
-        std::lock_guard<std::mutex> lock(mutex);
+        std::lock_guard<std::mutex> lock(systemMutex);
         if (!isActive)
         {
             isActive = true;
@@ -34,7 +33,7 @@ public:
     void Kill()
     {
         {
-            std::lock_guard<std::mutex> lock(mutex);
+            std::lock_guard<std::mutex> lock(systemMutex);
             isActive = false;
         }
         if (updateThread->joinable())
@@ -54,4 +53,3 @@ public:
 
 };
 
-#endif // SYSTEM_H

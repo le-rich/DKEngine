@@ -6,7 +6,7 @@ void AssetManager::AddMaterial(std::shared_ptr<Material> pMaterial)
 
     if (result.second)
     {
-        std::cout << "Material added" << std::endl;
+        // std::cout << "Material added" << std::endl;
     }
 }
 
@@ -16,7 +16,7 @@ void AssetManager::AddShader(std::shared_ptr<Shader> pShader)
 
     if (result.second)
     {
-        std::cout << "Shader added" << std::endl;
+        // std::cout << "Shader added" << std::endl;
     }
 }
 
@@ -26,7 +26,7 @@ void AssetManager::AddTexture(std::shared_ptr<Texture> pTexuture)
 
     if (result.second)
     {
-        std::cout << "Texture added" << std::endl;
+        // std::cout << "Texture added" << std::endl;
     }
 }
 

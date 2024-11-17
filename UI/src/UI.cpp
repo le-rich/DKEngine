@@ -5,7 +5,7 @@
 #include <GLFW/glfw3.h>
 
 UI::UI(Scene* scene) {
-   std::cout << "UI PROJECT" << std::endl;
+   // std::cout << "UI PROJECT" << std::endl;
 
    this->scene = scene;
 
@@ -54,7 +54,7 @@ UI::UI(Scene* scene) {
 
 void UI::Update(float deltaTime) {
    // Update Loop logic here
-   std::cout << "UI Update" << std::endl;
+   // std::cout << "UI Update" << std::endl;
    //while (!glfwWindowShouldClose(window)) {
    glfwMakeContextCurrent(window);
       // Clear the buffer
