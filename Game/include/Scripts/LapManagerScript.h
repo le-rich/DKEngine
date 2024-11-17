@@ -2,27 +2,25 @@
 
 #include <vector>
 
-#include "LapColliderScript.h"
+#include "Script.h"
+#include "LapCheckpointScript.h"
 
 class LapManagerScript : public Script
 {
 public:
 	LapManagerScript(Entity* mEntity, int laps);
 	~LapManagerScript();
+	
+	void OnCheckpointTriggered(int checkpointIndex);
 
 	void Update(float deltaTime) override;
-
-	void RegisterCheckpoint(LapColliderScript* checkpoint);
-	bool IsCheckpointRegistered(int checkpointID);
-	void OnCheckpointTriggered(int checkpointID);
-
 	std::unique_ptr<Script> clone() const override {
 		return std::make_unique<LapManagerScript>(*this);
 	}
 private:
-	std::vector<LapColliderScript*> m_LapCheckpoints;
-	std::vector<int> m_TriggeredCheckpoints;
+	std::vector<LapCheckpointScript*> m_Checkpoints;
 	int m_CurrentLap;
 	int m_TotalLaps;
+	int m_NextCheckpointIndex;
 };
 
