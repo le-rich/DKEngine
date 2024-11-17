@@ -43,7 +43,7 @@ void LapColliderScript::Update(float deltaTime)
 		if (m_OnTrigger)
 		{
 			success = m_OnTrigger(this->m_ID);
-			if (success) { m_IsCheckpointRegistered = true; }
+			m_IsCheckpointRegistered = success;
 		}
 	}
 	else

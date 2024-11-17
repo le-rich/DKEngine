@@ -68,12 +68,25 @@ void Scene::SpawnSceneDefinition()
     lapTriggerEntity1->SetDisplayName("Lap Trigger 1");
     ScriptComponent* lapTriggerComponent1 = new ScriptComponent(lapTriggerEntity1);
     LapColliderScript* lapColliderScript1 = new LapColliderScript(lapTriggerEntity1);
+    lapTriggerComponent1->AddScript<LapColliderScript>(*lapColliderScript1);
     lapManagerScript->RegisterCheckpoint(lapColliderScript1); // Register the collider script
     lapColliderScript1->SetOther(testCar->transform);
-    lapTriggerComponent1->AddScript<LapColliderScript>(*lapColliderScript1);    
+       
     lapTriggerEntity1->addComponent(*lapTriggerComponent1);
-    lapTriggerEntity1->transform->setWorldPosition(glm::vec4(-1.5f, 0.f, 0.f, 1.0f));
+    lapTriggerEntity1->transform->setWorldPosition(glm::vec4(-0.75f, 0.f, 0.f, 1.0f));
     EntityManager::getInstance().Instantiate(lapTriggerEntity1);
+
+    // Add 2nd lap trigger entity
+    Entity* lapTriggerEntity = new Entity();
+    lapTriggerEntity->SetDisplayName("Lap Trigger 2");
+    ScriptComponent* lapTriggerComponent2 = new ScriptComponent(lapTriggerEntity);
+    LapColliderScript* lapColliderScript2 = new LapColliderScript(lapTriggerEntity);
+    lapManagerScript->RegisterCheckpoint(lapColliderScript2);
+    lapColliderScript2->SetOther(testCar->transform);
+    lapTriggerComponent2->AddScript<LapColliderScript>(*lapColliderScript2);
+    lapTriggerEntity->addComponent(*lapTriggerComponent2);
+    lapTriggerEntity->transform->setWorldPosition(glm::vec4(-2.25f, 0.f, 0.f, 1.0f));
+    EntityManager::getInstance().Instantiate(lapTriggerEntity);
 
     lapManagerComponent->AddScript<LapManagerScript>(*lapManagerScript);
     lapManagerEntity->addComponent(*lapManagerComponent);

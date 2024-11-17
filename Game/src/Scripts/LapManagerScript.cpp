@@ -15,17 +15,24 @@ void LapManagerScript::Update(float deltaTime)
 
 void LapManagerScript::RegisterCheckpoint(LapColliderScript* checkpoint)
 {
-	m_LapCheckpoints.push_back(checkpoint);
-
-	checkpoint->SetTriggerCallback([this](int checkpointID) -> bool
+	m_LapCheckpoints.emplace_back(checkpoint);
+	//auto ref = &this;
+	checkpoint->SetTriggerCallback([&](int checkpointID) -> bool
 	{
 		std::cout << "Lambda captured LapManagerScript, calling OnCheckpointTriggered." << std::endl;		
 		bool isRegistered = IsCheckpointRegistered(checkpointID);
 		if (!isRegistered)
 		{
-			int currLap = m_CurrentLap;
+			int lapBeforeCheckpointHit = m_CurrentLap;
 			OnCheckpointTriggered(checkpointID);
-			if (currLap < m_CurrentLap) { return false; } // new lap started, reset checkpoint
+			if (lapBeforeCheckpointHit < m_CurrentLap)
+			{
+				for (const auto& checkpoint : m_LapCheckpoints)
+				{
+					checkpoint->ResetRegistry();
+				}
+				return false;
+			}
 			return true;
 		}
 		return false;
