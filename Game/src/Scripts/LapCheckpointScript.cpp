@@ -2,7 +2,7 @@
 
 LapCheckpointScript::LapCheckpointScript(Entity* mEntity, LapManagerScript* lapManager,
 	TransformComponent* other, int checkpointIndex) 
-	: Script(mEntity), m_LapManager(lapManager), m_Other(other), m_Index(checkpointIndex)
+	: Script(mEntity), m_LapManager(lapManager), m_Other(other), m_Index(checkpointIndex), m_Registered(false)
 {
 	m_Self = this->entity->transform;
 }
@@ -28,9 +28,9 @@ void LapCheckpointScript::Update(float deltaTime)
 	boxMax = glm::vec3(otherPosition.x + m_BBOffset, otherPosition.y + m_BBOffset, otherPosition.z + m_BBOffset);
 	m_OtherBB = new AABB(boxMin, boxMax);
 
-	if (AABBCollision(m_SelfBB, m_OtherBB))
+	if (!m_Registered && AABBCollision(m_SelfBB, m_OtherBB))
 	{
-		// TODO call lapManager method
+		m_LapManager->OnCheckpointTriggered(m_Index);
 	}
 }
 

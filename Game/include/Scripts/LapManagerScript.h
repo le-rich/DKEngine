@@ -8,7 +8,7 @@
 class LapManagerScript : public Script
 {
 public:
-	LapManagerScript(Entity* mEntity, int laps);
+	LapManagerScript(Entity* mEntity, int laps, std::vector<LapCheckpointScript*> checkpoints);
 	~LapManagerScript();
 	
 	void OnCheckpointTriggered(int checkpointIndex);
@@ -22,5 +22,9 @@ private:
 	int m_CurrentLap;
 	int m_TotalLaps;
 	int m_NextCheckpointIndex;
+
+	void NextCheckpoint(int checkpointIndex);
+	void CompleteLap();
+	void CompleteRace();
 };
 

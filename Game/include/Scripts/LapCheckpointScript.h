@@ -19,6 +19,9 @@ public:
 
 	void SetOther(TransformComponent* transform) { m_Other = transform; }
 
+	bool GetCheckpointRegistered() { return m_Registered; }
+	void SetCheckpointRegistered(bool isRegistered) { m_Registered = isRegistered; }
+
 	void Update(float deltaTime) override;
 	std::unique_ptr<Script> clone() const override {
 		return std::make_unique<LapCheckpointScript>(*this);
@@ -32,6 +35,7 @@ private:
 	
 	LapManagerScript* m_LapManager = nullptr;
 	int m_Index;
+	bool m_Registered;
 
 	bool AABBCollision(AABB* self, AABB* other);
 };
