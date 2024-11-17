@@ -3,6 +3,7 @@
 #include "Entities/CameraEntity.h"
 #include "Entities/LightEntity.h"
 //#include "GLTFLoader.h"
+#include "SceneParser.h"
 #include "Managers/EntityManager.h"
 #include "Components/MeshComponent.h"
 #include "Components/ScriptComponent.h"
@@ -21,40 +22,42 @@ Scene::~Scene()
 
 void Scene::SpawnSceneDefinition()
 {
-    CameraEntity* cameraEntity = new CameraEntity();
-    cameraEntity->SetDisplayName("Main Camera");
-    cameraEntity->transform->setWorldPosition(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
-    EntityManager::getInstance().Instantiate(cameraEntity);
+    SceneParser::LoadScene("Scenes/TestScene.json");
 
-    LightEntity* lightEntity = new LightEntity();
-    lightEntity->SetDisplayName("Light");
-    lightEntity->transform->setLocalPosition(glm::vec3(0.f, 5.f, 0.f));
-    lightEntity->transform->setLocalOrientation(glm::quat(-0.5f, 0.5f, 0.5f, 0.f));
-    EntityManager::getInstance().Instantiate(lightEntity);
+    //CameraEntity* cameraEntity = new CameraEntity();
+    //cameraEntity->SetDisplayName("Main Camera");
+    //cameraEntity->transform->setWorldPosition(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+    //EntityManager::getInstance().Instantiate(cameraEntity);
 
-    // TODO: JSONparser for Scene entities and scripts/components.
-    // TODO: Figure out location and pathing of assets/non code files within solution
-    const std::string SOURCE_FOLDER = "TestAE2/";
-    const std::string MODEL_FILE = "ae86.gltf";
+    //LightEntity* lightEntity = new LightEntity();
+    //lightEntity->SetDisplayName("Light");
+    //lightEntity->transform->setLocalPosition(glm::vec3(0.f, 5.f, 0.f));
+    //lightEntity->transform->setLocalOrientation(glm::quat(-0.5f, 0.5f, 0.5f, 0.f));
+    //EntityManager::getInstance().Instantiate(lightEntity);
 
-    Entity* testCar = new Entity();
-    testCar->SetDisplayName("Test Car");
-    //GLTFLoader::LoadModelAsEntity(testCar, SOURCE_FOLDER, MODEL_FILE);
-    EntityManager::getInstance().Instantiate(testCar);
+    //// TODO: JSONparser for Scene entities and scripts/components.
+    //// TODO: Figure out location and pathing of assets/non code files within solution
+    //const std::string SOURCE_FOLDER = "TestAE2/";
+    //const std::string MODEL_FILE = "ae86.gltf";
 
-    // Example of using findFirstEntityByDisplayName() for adding additional components
-    auto* entityManager = &(EntityManager::getInstance());
-    Entity* cameraEnt = entityManager->findFirstEntityByDisplayName("Main Camera");
+    //Entity* testCar = new Entity();
+    //testCar->SetDisplayName("Test Car");
+    ////GLTFLoader::LoadModelAsEntity(testCar, SOURCE_FOLDER, MODEL_FILE);
+    //EntityManager::getInstance().Instantiate(testCar);
 
-    ScriptComponent* scriptComponent = new ScriptComponent(cameraEnt);
-    cameraEnt->addComponent(*scriptComponent);
+    //// Example of using findFirstEntityByDisplayName() for adding additional components
+    //auto* entityManager = &(EntityManager::getInstance());
+    //Entity* cameraEnt = entityManager->findFirstEntityByDisplayName("Main Camera");
 
-    Entity* carEnt = entityManager->findFirstEntityByDisplayName("Test Car");
+    //ScriptComponent* scriptComponent = new ScriptComponent(cameraEnt);
+    //cameraEnt->addComponent(*scriptComponent);
 
-    OrbitScriptParams params;
-    params.m_OrbitTarget = carEnt->transform;
-    scriptComponent->CreateAndAddScript<OrbitScript>(&params);
-    // End Example
+    //Entity* carEnt = entityManager->findFirstEntityByDisplayName("Test Car");
+
+    //OrbitScriptParams params;
+    //params.m_OrbitTarget = carEnt->transform;
+    //scriptComponent->CreateAndAddScript<OrbitScript>(&params);
+    //// End Example
 
 
 }

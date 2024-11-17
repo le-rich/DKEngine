@@ -1,11 +1,12 @@
 #pragma once
 
+#include "Component.h"
+#include "Components/TransformComponent.h"
+
 //#include <stdint.h>
 #include <glm.hpp>
 #include <gtc/quaternion.hpp>
-
-#include "Component.h"
-#include "Components/TransformComponent.h"
+#include <unordered_map>
 
 enum LightType
 {
@@ -14,6 +15,14 @@ enum LightType
     DirectionalLight,
     SpotLight,
     AreaLight // Needs additional information that does not currently fit in generated matrix (reuse cutoff variables?)
+};
+
+std::unordered_map<std::string, LightType> const LightTypeMap = {
+        {"AmbientLight", LightType::AmbientLight},
+        {"PointLight", LightType::PointLight},
+        {"DirectionalLight", LightType::DirectionalLight},
+        {"SpotLight", LightType::SpotLight},
+        {"AreaLight", LightType::AreaLight},
 };
 
 struct LightParams
@@ -55,6 +64,8 @@ public:
     inline void SetCutoff(float pCutoff) { mCutoff = pCutoff; }
     inline void SetOuterCutoff(float pOuterCutoff) { mOuterCutoff = pOuterCutoff; }
     inline void SetType(LightType pType) { mType = pType; }
+
+    void SetParams(LightParams pParams);
 
     virtual Component* clone() const override;
 
