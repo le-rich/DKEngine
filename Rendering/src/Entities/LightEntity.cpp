@@ -5,7 +5,6 @@
 LightEntity::LightEntity() {
 	LightComponent* lightComponent = new LightComponent(this);
 	this->addComponent(*lightComponent);
-
 }
 
 LightEntity::~LightEntity() {

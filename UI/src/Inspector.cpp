@@ -62,7 +62,7 @@ void drawInspector() {
              ImGui::Text("Scale");
              ImGui::SameLine(75);
              if (ImGui::DragFloat3("##Scale", glm::value_ptr(scale), 0.1f)) {
-                transform->setLocalScale(position);
+                transform->setLocalScale(scale);
              }
           }
        }

@@ -7,6 +7,8 @@
 #include "Buffers/UniformBuffer.h"
 #include "Buffers/ShaderStorageBuffer.h"
 #include "Data/Shape.h"
+#include "Material.h"
+#include "Mesh.h"
 #include "Resources/Shader.h"
 #include "Resources/Primitives.h"
 #include "Window/Window.h"
@@ -18,8 +20,8 @@ static const std::string SCREEN_SHADER_PATH = "../Rendering/Shaders/screen.glsl"
 
 struct Renderable {
     TransformComponent worldTransform;
-    Mesh* mesh;
-    Material* material; //TODO: To be changed to MaterialComponent.
+    Mesh* mesh = nullptr;
+    Material* material = nullptr; // TODO: To be changed to MaterialComponent.
 };
 
 class Renderer : public System
