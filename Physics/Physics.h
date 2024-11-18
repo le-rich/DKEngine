@@ -60,7 +60,7 @@ public:
         // Update Loop logic here
 
         //std::cout << "PHYSICS - WE ARE GRABBING LOCK FOR CAR\n";
-        std::lock_guard<std::mutex> lck(CAR_TRANSFORM->mtx);
+        // std::lock_guard<std::mutex> lck(CAR_TRANSFORM->mtx);
 
         world.runPhysics(0.02);
 
@@ -76,6 +76,4 @@ public:
         CAR_TRANSFORM->setLocalOrientation(glm::quat(updatedOrientation.r, updatedOrientation.i, updatedOrientation.j, updatedOrientation.k));
         //std::cout << "PHYSICS - WE HAVE UPDATED THE TRANSFORM AND RELEASING LOCK\n";
     }
-
-
 };

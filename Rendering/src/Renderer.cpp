@@ -39,31 +39,34 @@ void Renderer::Initialize()
 
 void Renderer::Update(float deltaTime)
 {
-	// FetchRenderables();
-
-	// TODO: Create copy of Scene Graph/Entity manager to avoid race conditions with other threads
-	// TODO: Revision, change such that renderables are taken and threads are spun up to do tasks within Renderer.
 	{
 		std::lock_guard<std::mutex> lock(windowRef->mMutex);
-		windowRef->SetWindowToCurrentThread();
-		// Set FrameBuffer
-		int width, height;
-		glfwGetWindowSize(windowRef->GetWindow(), &width, &height);
-		mFrameBuffer.Resize(width, height);
+        windowRef->SetWindowToCurrentThread();
+        // FetchRenderables();
 
-		// Set FrameBuffer
-		mFrameBuffer.Bind();
-		RenderToFrame(width, height);
-		mFrameBuffer.Unbind();
+        // TODO: Create copy of Scene Graph/Entity manager to avoid race conditions with other threads
+        // TODO: Revision, change such that renderables are taken and threads are spun up to do tasks within Renderer.
+        
+        // Set FrameBuffer
+        int width, height;
+        glfwGetWindowSize(windowRef->GetWindow(), &width, &height);
+        mFrameBuffer.Resize(width, height);
 
-		//Perform Post Processing
-		//Draw Frame Buffer
-		WriteToFrameBuffer();
-		glfwMakeContextCurrent(NULL);
+        // Set FrameBuffer
+        mFrameBuffer.Bind();
+        RenderToFrame(width, height);
+        mFrameBuffer.Unbind();
+
+        //Perform Post Processing
+        //Draw Frame Buffer
+        WriteToFrameBuffer();
+        // glfwMakeContextCurrent(NULL);
 	}
+		
+	
 
-	// Swap window buffers. can be moved to post update
-	windowRef->SwapWindowBuffers();
+    // Swap window buffers. can be moved to post update
+    windowRef->SwapWindowBuffers();
 
 	for (auto ptr : renderablesThisFrame){
 		delete ptr;

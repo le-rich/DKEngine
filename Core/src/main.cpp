@@ -79,7 +79,7 @@ int run_glfw() {
 
     std::thread gameThread([&]()
     {
-	    auto previousTime = std::chrono::high_resolution_clock::now();
+        auto previousTime = std::chrono::high_resolution_clock::now();
         while (running) 
         {
             auto currentTime = std::chrono::high_resolution_clock::now();
@@ -88,6 +88,7 @@ int run_glfw() {
             previousTime = currentTime;
 
             game->Update(deltaTimeFloatSeconds);
+            std::this_thread::sleep_for(std::chrono::microseconds(1));
         }
     });
     
@@ -108,6 +109,7 @@ int run_glfw() {
                 physics->FixedUpdate();
                 fixedUpdateBuffer -= FIXED_UPDATE_INTERVAL;
             }
+            std::this_thread::sleep_for(std::chrono::microseconds(1));
         }
     });
 
@@ -122,18 +124,7 @@ int run_glfw() {
             previousTime = currentTime;
 
             renderer->Update(deltaTimeFloatSeconds);      
-        }
-    });
-
-    std::thread uiThread([&]() 
-    {
-        auto previousTime = std::chrono::high_resolution_clock::now();
-        while (running) {
-            auto currentTime = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<float> deltaTime = currentTime - previousTime;
-            deltaTimeFloatSeconds = deltaTime.count();
-            previousTime = currentTime;
-            ui->Update(deltaTimeFloatSeconds);
+            std::this_thread::sleep_for(std::chrono::microseconds(10));
         }
     });
 
@@ -145,27 +136,23 @@ int run_glfw() {
     auto glfwWindow = window.GetWindow();
     while (!glfwWindowShouldClose(glfwWindow))
     {
-		auto currentTime = std::chrono::high_resolution_clock::now();
-		std::chrono::duration<float> deltaTime = currentTime - previousTime;
-		deltaTimeFloatSeconds = deltaTime.count();
-		previousTime = currentTime;
-		fixedUpdateBuffer += std::chrono::duration_cast<std::chrono::milliseconds>(deltaTime).count();
+        auto currentTime = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<float> deltaTime = currentTime - previousTime; 
+        deltaTimeFloatSeconds = deltaTime.count();
+        previousTime = currentTime;
 
         window.PollEvents();
         Input::RunInputListener(physics->body);
-		//while (fixedUpdateBuffer >= FIXED_UPDATE_INTERVAL)
-		//{
-		//	physics->FixedUpdate();
-		//	fixedUpdateBuffer -= FIXED_UPDATE_INTERVAL;
-		//}
+        
+        ui->Update(deltaTimeFloatSeconds);
 	}
 
 	// TEARDOWN ==================================================
 	running = false;
     
     if (gameThread.joinable())      { gameThread.join(); }
+    if (physicsThread.joinable())   { physicsThread.join(); }
     if (rendererThread.joinable())  { rendererThread.join(); }
-    if (uiThread.joinable())        { uiThread.join(); }
 
 	for (auto sys : systems)
 	{

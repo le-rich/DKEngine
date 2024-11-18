@@ -44,9 +44,13 @@ public:
             if (event.action == PRESS)
             {
                 if (event.key == GLFW_KEY_W)
-                    rigidBody->addForce(AE86::Vector3(-1.0, 0.0, 0.0));
-                else if (event.key == GLFW_KEY_S)
-                    rigidBody->addForce(AE86::Vector3(1.0, 0.0, 0.0));
+                {
+                    std::cout << "W key pressed" << std::endl;
+                }
+                else if (event.key == GLFW_KEY_S) 
+                {
+                    std::cout << "S key pressed" << std::endl;
+                }
                 else if (event.key == GLFW_KEY_A)
                     std::cout << "A key pressed" << std::endl;
                 else if (event.key == GLFW_KEY_D)
@@ -58,8 +62,16 @@ public:
             }
             else if (event.action == HOLD)
             {
-                if (event.key == GLFW_KEY_W)
+                if (event.key == GLFW_KEY_W) 
+                {
+                    rigidBody->addForce(AE86::Vector3(-5.0, 0.0, 0.0));
                     std::cout << "holding W key" << std::endl;
+                }
+                else if (event.key == GLFW_KEY_S) 
+                {
+                    rigidBody->addForce(AE86::Vector3(5.0, 0.0, 0.0));
+                    std::cout << "holding S key" << std::endl; 
+                }
                 else if (event.key == GLFW_KEY_A)
                     std::cout << "holding A key" << std::endl;
                 else if (event.key == GLFW_KEY_D)

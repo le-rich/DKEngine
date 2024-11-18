@@ -29,7 +29,6 @@ void Game::Update(float deltaTime) {
             }
          }
     }
-
 }
 
 void Game::FixedUpdate() 
