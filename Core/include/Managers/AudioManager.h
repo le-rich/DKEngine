@@ -20,9 +20,7 @@ public:
 		return "AudioManager";
 	};
 
-	void FixedUpdate() override {
-		// @Richard & @Sepehr: Not sure what we want here, maybe nothing
-	};
+	void FixedUpdate() override;
 
 	FMOD::System* getSystem();
 

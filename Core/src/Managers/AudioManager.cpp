@@ -7,11 +7,6 @@ AudioManager::AudioManager()
 
 }
 
-void AudioManager::Initialize()
-{
-    fmodSystem->init(512, FMOD_INIT_3D_RIGHTHANDED, nullptr);
-}
-
 AudioManager::~AudioManager()
 {
     for (auto& pair : soundCache)
@@ -19,6 +14,11 @@ AudioManager::~AudioManager()
         pair.second->release();
     }
     fmodSystem->release();
+}
+
+void AudioManager::Initialize()
+{
+    fmodSystem->init(512, FMOD_INIT_3D_RIGHTHANDED, nullptr);
 }
 
 void AudioManager::Update()
@@ -29,6 +29,10 @@ void AudioManager::Update()
 FMOD::System* AudioManager::getSystem() {
     return fmodSystem;
 }
+
+void FixedUpdate() {
+    // @Richard & @Sepehr: Not sure what we want here, maybe nothing
+};
 
 FMOD::Sound* AudioManager::loadSound(const std::string& filePath) {
     auto it = soundCache.find(filePath);
