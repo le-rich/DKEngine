@@ -14,24 +14,16 @@ void LapCheckpointScript::Init(LapManagerScript* lapManager, TransformComponent*
 	this->m_LapManager = lapManager;
 	this->m_Other = other;
 	this->m_Index = checkpointIndex;
+	this->m_OtherBB = SetBB(m_Other->getWorldPosition());
 }
 
 void LapCheckpointScript::Update(float deltaTime)
 {
 	if (!m_Self || !m_Other) { return; }
+	// Sets BB correctly even after setWorldPosition is used on Entity in Scene
+	if (!m_SelfBB) { m_SelfBB = SetBB(m_Self->getWorldPosition()); }
 
-	glm::vec3 selfPosition = m_Self->getWorldPosition();
-	glm::vec3 otherPosition = m_Other->getWorldPosition();
-
-	// make bounding box for this entity
-	glm::vec3 boxMin = glm::vec3(selfPosition.x - m_BBOffset, selfPosition.y - m_BBOffset, selfPosition.z - m_BBOffset);
-	glm::vec3 boxMax = glm::vec3(selfPosition.x + m_BBOffset, selfPosition.y + m_BBOffset, selfPosition.z + m_BBOffset);
-	m_SelfBB = new AABB(boxMin, boxMax);
-
-	// make bounding box for car entity
-	boxMin = glm::vec3(otherPosition.x - m_BBOffset, otherPosition.y - m_BBOffset, otherPosition.z - m_BBOffset);
-	boxMax = glm::vec3(otherPosition.x + m_BBOffset, otherPosition.y + m_BBOffset, otherPosition.z + m_BBOffset);
-	m_OtherBB = new AABB(boxMin, boxMax);
+	UpdateBB(m_Other->getWorldPosition(), m_OtherBB);
 
 	if (!m_Registered && AABBCollision(m_SelfBB, m_OtherBB))
 	{
@@ -54,4 +46,21 @@ bool LapCheckpointScript::AABBCollision(AABB* self, AABB* other)
 		return false;
 
 	return true;
+}
+
+AABB* LapCheckpointScript::SetBB(const glm::vec3 position)
+{
+	glm::vec3 boxMin = glm::vec3(position.x - m_BBOffset, position.y - m_BBOffset, position.z - m_BBOffset);
+	glm::vec3 boxMax = glm::vec3(position.x + m_BBOffset, position.y + m_BBOffset, position.z + m_BBOffset);
+	return new AABB(boxMin, boxMax);
+}
+
+void LapCheckpointScript::UpdateBB(const glm::vec3 position, AABB* BB) const
+{
+	BB->min.x = position.x - m_BBOffset;
+	BB->min.y = position.y - m_BBOffset;
+	BB->min.z = position.z - m_BBOffset;
+	BB->max.x = position.x + m_BBOffset;
+	BB->max.y = position.y + m_BBOffset;
+	BB->max.z = position.z + m_BBOffset;
 }

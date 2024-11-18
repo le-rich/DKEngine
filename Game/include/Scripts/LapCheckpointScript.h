@@ -37,5 +37,7 @@ private:
 	bool m_Registered;
 
 	bool AABBCollision(AABB* self, AABB* other);
+	AABB* SetBB(const glm::vec3 position);
+	void UpdateBB(const glm::vec3 position, AABB* BB) const;
 };
 
