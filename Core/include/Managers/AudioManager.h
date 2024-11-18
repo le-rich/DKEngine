@@ -1,5 +1,4 @@
 ﻿#ifndef AUDIO_MGR_H
-#define AUDIO_MGR_H
 
 #include "System.h"
 #include "FMOD/inc/fmod.hpp"
@@ -8,37 +7,37 @@
 
 class AudioManager : public System {
 public:
-	AudioManager();
-	~AudioManager();
+    AudioManager();
+    ~AudioManager();
 
-	void Update();
+    void Update() override;
 
-	const char* GetName() const override {
-		return "AudioManager";
-	}
+    const char* GetName() const override {
+        return "AudioManager";
+    }
 
-	void FixedUpdate() override {
-		// @Richard & @Sepehr: Not sure what we want here, maybe nothing
-	}
+    void FixedUpdate() override {
+        // @Richard & @Sepehr: Not sure what we want here, maybe nothing
+    }
 
-	FMOD::System* getSystem();
+    FMOD::System* getSystem();
 
-	FMOD::Sound* loadSound(const std::string& filePath);
+    FMOD::Sound* loadSound(const std::string& filePath);
 
-	// IMPL fmodSystem->set3DListenerAttributes(0, &position, nullptr, &forward, &up);
-	// OR we have a private variable representing the current listener and forward
-	// to the same position as 0, not sure.
-	// Get velocity of listener so we can use it to have doppler.
-	// forward and up necessary for automated spatial audio.
-	void setListenerAttributes(const FMOD_VECTOR& position, const FMOD_VECTOR& forward, const FMOD_VECTOR& up);
+    // IMPL fmodSystem->set3DListenerAttributes(0, &position, nullptr, &forward, &up);
+    // OR we have a private variable representing the current listener and forward
+    // to the same position as 0, not sure.
+    // Get velocity of listener so we can use it to have doppler.
+    // forward and up necessary for automated spatial audio.
+    void setListenerAttributes(const FMOD_VECTOR& position, const FMOD_VECTOR& forward, const FMOD_VECTOR& up);
 
-	void setMasterVolume(float volume);
+    void setMasterVolume(float volume);
 
-	void playSound(const std::string& soundName);
+    void playSound(const std::string& soundName);
 
 private:
-	FMOD::System* fmodSystem = nullptr;
-	std::unordered_map<std::string, FMOD::Sound*> soundCache;
+    FMOD::System* fmodSystem = nullptr;
+    std::unordered_map<std::string, FMOD::Sound*> soundCache;
 };
 
 // Convert this kind of structure to ECS Components
@@ -68,4 +67,4 @@ private:
 //
 
 
-#endif // AUDIO_MGR_H
+#endif
