@@ -90,6 +90,26 @@ int run_glfw() {
             game->Update(deltaTimeFloatSeconds);
         }
     });
+    
+    std::thread physicsThread([&]() 
+    {
+        double fixedUpdateBuffer = 0.0;
+        double FIXED_UPDATE_INTERVAL = 20; // in milliseconds
+        auto previousTime = std::chrono::high_resolution_clock::now();
+        while(running) 
+        {
+            auto currentTime = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<float> deltaTime = currentTime - previousTime;
+            deltaTimeFloatSeconds = deltaTime.count();
+            previousTime = currentTime;
+            fixedUpdateBuffer += std::chrono::duration_cast<std::chrono::milliseconds>(deltaTime).count();
+
+            if (fixedUpdateBuffer >= FIXED_UPDATE_INTERVAL) {
+                physics->FixedUpdate();
+                fixedUpdateBuffer -= FIXED_UPDATE_INTERVAL;
+            }
+        }
+    });
 
     std::thread rendererThread([&]() 
     {
@@ -133,12 +153,11 @@ int run_glfw() {
 
         window.PollEvents();
         Input::RunInputListener(physics->body);
-
-		while (fixedUpdateBuffer >= FIXED_UPDATE_INTERVAL)
-		{
-			physics->FixedUpdate();
-			fixedUpdateBuffer -= FIXED_UPDATE_INTERVAL;
-		}
+		//while (fixedUpdateBuffer >= FIXED_UPDATE_INTERVAL)
+		//{
+		//	physics->FixedUpdate();
+		//	fixedUpdateBuffer -= FIXED_UPDATE_INTERVAL;
+		//}
 	}
 
 	// TEARDOWN ==================================================

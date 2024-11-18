@@ -35,22 +35,6 @@ void Renderer::Initialize()
 		std::cin.get();
 		std::exit(EXIT_FAILURE);  // Terminate program with failure status
 	}
-	
-	//// This should be moved to Main? Avoid calling lamdba, make it a function callable.
-	//updateThread = new std::thread(	[&]()
-	//{
-	//	auto previousTime = std::chrono::high_resolution_clock::now();
-	//	auto window = windowRef->GetWindow();
-
-	//	while (!glfwWindowShouldClose(window))
-	//	{
-	//		auto currentTime = std::chrono::high_resolution_clock::now();
-	//		std::chrono::duration<float> deltaTime = currentTime - previousTime;
-	//		auto deltaTimeFloatSeconds = deltaTime.count();
-	//		previousTime = currentTime;
-	//		Update(deltaTimeFloatSeconds);
-	//	}
-	//});
 }
 
 void Renderer::Update(float deltaTime)
