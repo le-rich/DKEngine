@@ -24,7 +24,7 @@ namespace AE86 {
 
 	void World::runPhysics(real duration) {
 		// TODO: add force registry code here.
-		std::cout << "updating physics bodies\n";
+		// std::cout << "updating physics bodies\n";
 		integrate(duration);
 	}
 

@@ -303,7 +303,7 @@ namespace GLTFLoader
             return {};
         }
         // return the processed model
-        printf("Loaded '%s'\n", pFilePath.c_str());
+        // printf("Loaded '%s'\n", pFilePath.c_str());
         return gltfModel;
     }
 

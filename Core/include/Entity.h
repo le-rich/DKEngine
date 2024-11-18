@@ -127,6 +127,9 @@ public:
         this->transform = new TransformComponent(this);
     }
 
+    // Copy constructor
+    Entity(const Entity& other);
+
     // default destructor
     ~Entity()
     {

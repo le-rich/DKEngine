@@ -1,5 +1,8 @@
 #include "MeshComponent.h"
 
+#include "Component.h"
+#include "Entity.h"
+
 MeshComponent::MeshComponent(Entity *mEntity) : Component(mEntity)
 {
     this->componentType = ComponentType::Mesh;
@@ -24,4 +27,15 @@ MeshComponent::MeshComponent(const MeshComponent& other)
 
 Component* MeshComponent::clone() const {
     return new MeshComponent(*this);
+}
+
+MeshComponent& MeshComponent::operator=(MeshComponent& const other)
+{
+	if (this == &other)
+	{
+		return *this;
+	}
+
+	this->mesh = other.mesh;
+	this->entity->GetEntityID() == other.entity->GetEntityID();
 }
