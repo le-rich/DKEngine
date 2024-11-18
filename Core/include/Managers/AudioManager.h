@@ -2,7 +2,11 @@
 #define AUDIO_MGR_H
 
 #include "System.h"
+<<<<<<< Updated upstream
 #include "FMOD/inc/fmod.hpp"
+=======
+#include "fmod.hpp"
+>>>>>>> Stashed changes
 #include <string>
 #include <unordered_map>
 
@@ -11,10 +15,15 @@ public:
 	AudioManager();
 	~AudioManager();
 
+<<<<<<< Updated upstream
 	void Initialize() override;
 
 	void Update(float deltaTime) override;
 	
+=======
+	void Update();
+
+>>>>>>> Stashed changes
 	const char* GetName() const override {
 		return "AudioManager";
 	}
