@@ -23,8 +23,9 @@ Scene::~Scene()
 
 void Scene::SpawnSceneDefinition()
 {
-    SceneParser::LoadScene("Scenes/TestScene.json");
-
+    SceneParser::LoadScene(SCENE_FILE);
+    //createGameManager();
+    
     //CameraEntity* cameraEntity = new CameraEntity();
     //cameraEntity->SetDisplayName("Main Camera");
     //cameraEntity->transform->setWorldPosition(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
@@ -46,32 +47,43 @@ void Scene::SpawnSceneDefinition()
     ////GLTFLoader::LoadModelAsEntity(testCar, SOURCE_FOLDER, MODEL_FILE);
     //EntityManager::getInstance().Instantiate(testCar);
 
-    Entity* gameManager = new Entity();
-    gameManager->SetDisplayName("Game Manager");
-    EntityManager::getInstance().Instantiate(gameManager);
+    //Entity* gameManager = new Entity();
+    //gameManager->SetDisplayName("Game Manager");
+    //EntityManager::getInstance().Instantiate(gameManager);
 
     // Example of using findFirstEntityByDisplayName() for adding additional components
-    auto* entityManager = &(EntityManager::getInstance());
+    //auto* entityManager = &(EntityManager::getInstance());
     //auto cameraID = entityManager->findFirstEntityByDisplayName("Main Camera");
     //auto cameraEnt = entityManager->getEntity(cameraID);
 
     //ScriptComponent* scriptComponent = new ScriptComponent(cameraEnt);
     //cameraEnt->addComponent(*scriptComponent);
 
-    Entity* carEnt = entityManager->findFirstEntityByDisplayName("Test Car");
+    //Entity* carEnt = entityManager->findFirstEntityByDisplayName("Test Car");
 
     //OrbitScriptParams params;
     //params.m_OrbitTarget = carEnt->transform;
     //scriptComponent->CreateAndAddScript<OrbitScript>(&params);
     //// End Example
 
-    auto gameManagerEnt = entityManager->findFirstEntityByDisplayName("Game Manager");
+    //auto gameManagerEnt = entityManager->findFirstEntityByDisplayName("Game Manager");
     //auto gameManagerEnt = entityManager->getEntity(gameManagerID);
+}
+
+void Scene::createGameManager()
+{
+    Entity* gameManager = new Entity();
+    gameManager->SetDisplayName("GameManager");
+    EntityManager::getInstance().Instantiate(gameManager);
+
+    auto* entityManager = &(EntityManager::getInstance());
+    auto gameManagerEnt = entityManager->findFirstEntityByDisplayName("GameManager");
 
     ScriptComponent* timerScriptComponent = new ScriptComponent(gameManagerEnt);
     gameManagerEnt->addComponent(*timerScriptComponent);
 
     TimerScriptParams timerParams;
+    auto carEnt = entityManager->findFirstEntityByDisplayName("Test Car");
     timerParams.m_TimerTarget = carEnt->transform;
     timerParams.m_OriginalPosition = carEnt->transform->getWorldPosition();
     timerScriptComponent->CreateAndAddScript<TimerScript>(&timerParams);

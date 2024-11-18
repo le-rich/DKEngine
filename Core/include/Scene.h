@@ -16,4 +16,7 @@ public:
 
     // TODO: This function loads and structures the scene graph. This should be made virtual only.
     void SpawnSceneDefinition();
+private:
+    std::string SCENE_FILE = "Scenes/TestScene.json";
+    virtual void createGameManager();
 };

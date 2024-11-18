@@ -6,6 +6,7 @@
 #include "Components/ScriptComponent.h"
 #include "Managers/EntityManager.h"
 #include "Scripts/OrbitScript.h"
+#include "Scripts/TimerScript.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -14,7 +15,7 @@
 #include <iostream>
 #include <unordered_map>
 
-#define REQUIRED_EXCEPTION_HANDLER(object) catch (std::exception& e) { std::cout << "ERROR: " << e.what() << '\n'; std::cout << object << '\n'; return;}
+#define REQUIRED_EXCEPTION_HANDLER(object) catch (std::exception& e) { std::cout << "ERROR: " << e.what() << '\n'; std::cout << "Parsing error at line " << __LINE__ << " in file " << __FILE__ << '\n'; std::cout << object << '\n'; return;}
 #define DEFAULT_EXCEPTION_HANDLER catch (std::exception& e) { std::cout << "WARNING: " << e.what() << '\n'; std::cout << "Verify naming of keys is correct \n";}
 #define OPTIONAL_EXCEPTION_HANDLER catch (std::exception& e) {}
 
@@ -29,6 +30,7 @@ namespace SceneParser
 
     static const std::string ASSET_KEY = "assets";
     static const std::string ENTITY_KEY = "entities";
+    static const std::string GAMEMANAGER_KEY = "gamemanager";
 
     std::unordered_map<std::string, SceneElement> const ElementMap = {
         {ASSET_KEY, SceneElement::ASSETS},
@@ -212,6 +214,26 @@ namespace SceneParser
                         scriptComponent->CreateAndAddScript<OrbitScript>(&params);
                         break;
                     }
+                    case ScriptType::TimerScript:
+                    {
+                        TimerScriptParams params;
+                        try
+                        {
+                            std::string target = scriptParams.at("target").template get<std::string>();
+                            Entity* targetEntity = EntityManager::getInstance().findFirstEntityByDisplayName(target);
+                            params.m_TimerTarget = targetEntity->transform;
+                        }
+                        OPTIONAL_EXCEPTION_HANDLER;
+
+                        try
+                        {
+
+                        }
+                        OPTIONAL_EXCEPTION_HANDLER;
+
+                        scriptComponent->CreateAndAddScript<TimerScript>(&params);
+                        break;
+                    }
                     default:
                         break;
                 }
@@ -268,12 +290,15 @@ namespace SceneParser
             try
             {
                 const std::string path = asset.at("path").template get<std::string>();
-                const std::string file = asset.at("file").template get<std::string>();
+                auto files = asset.at("file").template get<std::vector<std::string>>();
 
-                Entity* entity = new Entity();
+                for (const std::string file : files)
+                {
+                    Entity* entity = new Entity();
 
-                GLTFLoader::LoadModelAsEntity(entity, path, file);
-                EntityManager::getInstance().Instantiate(entity);
+                    GLTFLoader::LoadModelAsEntity(entity, path, file);
+                    EntityManager::getInstance().Instantiate(entity);
+                }
             }
             DEFAULT_EXCEPTION_HANDLER;
         }
@@ -303,6 +328,40 @@ namespace SceneParser
                 json transformObject = entityElement.at("transform");
                 ParseTransform(entity, transformObject);
 
+            }
+            OPTIONAL_EXCEPTION_HANDLER;
+
+            // Parse Parent
+            try
+            {
+                std::string parentName = entityElement.at("parent").template get<std::string>();
+                Entity* parentEntity = EntityManager::getInstance().findFirstEntityByDisplayName(parentName);
+                if (parentEntity == nullptr)
+                {
+                    parentEntity = new Entity(parentName);
+                    EntityManager::getInstance().Instantiate(parentEntity);
+                }
+                entity->setParent(parentEntity);
+                parentEntity->addChild(entity);
+
+            }
+            OPTIONAL_EXCEPTION_HANDLER;
+
+            // Parse Children
+            try
+            {
+                auto children = entityElement.at("children").template get<std::vector<std::string>>();
+                for (std::string& childName : children)
+                {
+                    Entity* childEntity = EntityManager::getInstance().findFirstEntityByDisplayName(childName);
+                    if (childEntity == nullptr)
+                    {
+                        childEntity = new Entity(childName);
+                        EntityManager::getInstance().Instantiate(childEntity);
+                    }
+                    childEntity->setParent(entity);
+                    entity->addChild(childEntity);
+                }
             }
             OPTIONAL_EXCEPTION_HANDLER;
 

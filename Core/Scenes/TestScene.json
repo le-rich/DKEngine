@@ -2,7 +2,7 @@
   "assets": [
     {
       "path": "TestAE2/",
-      "file": "ae86.gltf"
+      "file": [ "ae86.gltf" ]
     }
   ],
   "entities": [
@@ -64,15 +64,33 @@
       ]
     },
     {
-      "name": "Test Car",
+      "name": "GameManager",
+      "components": [
+        {
+          "type": "Script",
+          "params": {
+            "scripts": [
+              {
+                "script": "TimerScript",
+                "params": {
+                  "target": "Test Car"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Test OBJECT",
       "transform": {
         "localPosition": [],
         "localOrientation": [],
         "localScale": []
       },
-      "components": {
-
-      }
+      "components": {},
+      "parent": "JSON TEST PARENT",
+      "children": [ "JSON Test Child" ]
     }
   ]
 }
