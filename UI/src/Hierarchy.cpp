@@ -60,7 +60,7 @@ void drawHierarchyLine(Entity* entity) {
         }
 
         if (ImGui::MenuItem("Duplicate")) {
-           Entity* duplicate = EntityManager::getInstance().duplicateEntity(entity);
+           EntityManager::getInstance().duplicateEntity(entity);
         }
 
         if (ImGui::MenuItem("Delete GameObject")) {
@@ -105,8 +105,8 @@ void drawHierarchyLine(Entity* entity) {
 
     // Draw children recursively if the node is open
     if (nodeOpen) {
-        for (auto* child : entity->getChildren()) {
-            drawHierarchyLine(child);  // Use .get() to pass the raw pointer to drawHierarchyLine
+       for (int i = 0; i < entity->getChildren().size(); i++) {
+            drawHierarchyLine(entity->getChildren()[i]);  // Use .get() to pass the raw pointer to drawHierarchyLine
         }
         ImGui::TreePop();
     }
