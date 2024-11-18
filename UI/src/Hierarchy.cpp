@@ -2,6 +2,7 @@
 #include "../include/Console.h"
 #include "Scene.h"
 #include "Entity.h"
+#include "Managers/EntityManager.h"
 #include <set> // Include for std::set
 #include <iostream>
 using namespace std;
@@ -56,6 +57,10 @@ void drawHierarchyLine(Entity* entity) {
             renamingEntity = entity; // Set the GameObject to be renamed
             strncpy_s(renamingBuffer, entity->GetDisplayName().c_str(), sizeof(renamingBuffer)); // Copy name to buffer
             renamingBuffer[sizeof(renamingBuffer) - 1] = '\0'; // Ensure null-termination
+        }
+
+        if (ImGui::MenuItem("Duplicate")) {
+           Entity* duplicate = EntityManager::getInstance().duplicateEntity(entity);
         }
 
         if (ImGui::MenuItem("Delete GameObject")) {
