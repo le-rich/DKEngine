@@ -124,7 +124,7 @@ int run_glfw() {
             previousTime = currentTime;
 
             renderer->Update(deltaTimeFloatSeconds);      
-            std::this_thread::sleep_for(std::chrono::microseconds(10));
+            std::this_thread::sleep_for(std::chrono::microseconds(1));
         }
     });
 

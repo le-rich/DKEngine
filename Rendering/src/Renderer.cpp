@@ -39,10 +39,12 @@ void Renderer::Initialize()
 
 void Renderer::Update(float deltaTime)
 {
+	// TODO: Collect set of renderables here and use it.
+	FetchRenderables();
+
 	{
 		std::lock_guard<std::mutex> lock(windowRef->mMutex);
         windowRef->SetWindowToCurrentThread();
-        // FetchRenderables();
 
         // TODO: Create copy of Scene Graph/Entity manager to avoid race conditions with other threads
         // TODO: Revision, change such that renderables are taken and threads are spun up to do tasks within Renderer.
@@ -60,10 +62,7 @@ void Renderer::Update(float deltaTime)
         //Perform Post Processing
         //Draw Frame Buffer
         WriteToFrameBuffer();
-        // glfwMakeContextCurrent(NULL);
 	}
-		
-	
 
     // Swap window buffers. can be moved to post update
     windowRef->SwapWindowBuffers();
@@ -184,7 +183,10 @@ void Renderer::FetchRenderables()
 		Material* materialComponent = nullptr;
 
 		Renderable* renderable = new Renderable(transformComponent);
-		renderable->mesh = meshComponent->getMesh();
+		if (meshComponent != nullptr && meshComponent->getMesh() != nullptr) 
+		{
+			renderable->mesh = meshComponent->getMesh();
+		}
 
 		renderablesThisFrame.push_back(renderable);
 	}
