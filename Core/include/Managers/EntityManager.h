@@ -230,10 +230,13 @@ public:
         }
 
         // recursive duplicate children
-        for (auto* child : originalEntity->getChildren()) {
-            Entity* childDuplicate = duplicateEntity(child);
+        for(int i = 0; i < originalEntity->getChildren().size(); i++){
+            Entity* childDuplicate = duplicateEntity(originalEntity->getChildren()[i]);
+            childDuplicate->setParent(duplicate);
             duplicate->addChild(childDuplicate);
         }
+
+        duplicate->setParent(originalEntity->getParent());
 
         addEntityToMap(*duplicate);
 
