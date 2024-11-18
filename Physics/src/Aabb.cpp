@@ -4,6 +4,14 @@ AE86::Aabb::Aabb(glm::vec3 min, glm::vec3 max) : m_Min(min), m_Max(max), m_BBOff
 {
 }
 
+AE86::Aabb::Aabb(const glm::vec3 position, const float offset) : m_BBOffset(offset)
+{
+	glm::vec3 boxMin = glm::vec3(position.x - offset, position.y - offset, position.z - offset);
+	glm::vec3 boxMax = glm::vec3(position.x + offset, position.y + offset, position.z + offset);
+	this->m_Min = boxMin;
+	this->m_Max = boxMax;
+}
+
 AE86::Aabb::~Aabb()
 {
 }

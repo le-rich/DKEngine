@@ -2,14 +2,7 @@
 
 #include "Script.h"
 #include "LapManagerScript.h"
-
-struct AABB
-{
-	glm::vec3 min;
-	glm::vec3 max;
-
-	AABB(glm::vec3 min, glm::vec3 max) : min(min), max(max) {}
-};
+#include "../../../Physics/include/Aabb.h"
 
 class LapCheckpointScript : public Script
 {
@@ -28,16 +21,12 @@ public:
 private:
 	TransformComponent* m_Self = nullptr;
 	TransformComponent* m_Other = nullptr;
-	AABB* m_SelfBB = nullptr;
-	AABB* m_OtherBB = nullptr;
+	AE86::Aabb* m_SelfBB = nullptr;
+	AE86::Aabb* m_OtherBB = nullptr;
 	float m_BBOffset = 0.25f;
 	
 	LapManagerScript* m_LapManager = nullptr;
 	int m_Index;
 	bool m_Registered;
-
-	bool AABBCollision(AABB* self, AABB* other);
-	AABB* SetBB(const glm::vec3 position);
-	void UpdateBB(const glm::vec3 position, AABB* BB) const;
 };
 

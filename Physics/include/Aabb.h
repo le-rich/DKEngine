@@ -10,6 +10,7 @@ namespace AE86 {
 	{
 	public:
 		Aabb(const glm::vec3 min, const glm::vec3 max);
+		Aabb(const glm::vec3 position, const float offset);
 		~Aabb();
 
 		glm::vec3 GetMinBound() { return m_Min; }
