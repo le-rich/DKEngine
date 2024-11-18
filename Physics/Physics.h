@@ -59,24 +59,21 @@ public:
     void FixedUpdate() override {
         // Update Loop logic here
 
-        std::cout << "PHYSICS - WE ARE GRABBING LOCK FOR CAR\n";
-        std::lock_guard<std::mutex> lck(CAR_TRANSFORM->mtx);
+        //std::cout << "PHYSICS - WE ARE GRABBING LOCK FOR CAR\n";
+        // std::lock_guard<std::mutex> lck(CAR_TRANSFORM->mtx);
 
         world.runPhysics(0.02);
 
-        std::cout << "PHYSICS - WE HAVE DONE A PHYSICS TIME-STEP\n";
+        //std::cout << "PHYSICS - WE HAVE DONE A PHYSICS TIME-STEP\n";
 
         AE86::Vector3 updatedPosition = body->getPosition();
         AE86::Quaternion updatedOrientation = body->getOrientation();
 
-        std::cout << "PHYSICS - RB POSITION: " << updatedPosition.x << ", " << updatedPosition.y << ", " << updatedPosition.z << "\n";
+        //std::cout << "PHYSICS - RB POSITION: " << updatedPosition.x << ", " << updatedPosition.y << ", " << updatedPosition.z << "\n";
 
 
         CAR_TRANSFORM->setLocalPosition(glm::vec3(updatedPosition.x, updatedPosition.y, updatedPosition.z));
         CAR_TRANSFORM->setLocalOrientation(glm::quat(updatedOrientation.r, updatedOrientation.i, updatedOrientation.j, updatedOrientation.k));
-        CAR_TRANSFORM->updateTransformMatrix();
-        std::cout << "PHYSICS - WE HAVE UPDATED THE TRANSFORM AND RELEASING LOCK\n";
+        //std::cout << "PHYSICS - WE HAVE UPDATED THE TRANSFORM AND RELEASING LOCK\n";
     }
-
-
 };

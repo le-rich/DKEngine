@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
+      <Filter Include="Source Files">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
@@ -16,6 +16,16 @@
     <Filter Include="Source Files\Components">
       <UniqueIdentifier>{ff52a99b-0e73-4db2-8d0f-e118b23d472b}</UniqueIdentifier>
     </Filter>
+    <ClCompile Include="src\Component.cpp" />
+    <ClCompile Include="src\Core.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Managers\AssetManager.cpp" />
+    <ClCompile Include="src\Scene.cpp" />
+    <ClCompile Include="src\Utils\IDUtils.cpp" />
+    <ClCompile Include="src\Window\Window.cpp" />
+    <ClCompile Include="src\Components\RigidBodyComponent.cpp" />
+    <ClCompile Include="src\Components\TransformComponent.cpp" />
+    <ClCompile Include="src\Entity.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -23,9 +33,6 @@
     </ClCompile>
     <ClCompile Include="src\Component.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Components\TransformComponent.cpp">
-      <Filter>Source Files\Components</Filter>
     </ClCompile>
     <ClCompile Include="src\Scene.cpp">
       <Filter>Source Files</Filter>
@@ -51,9 +58,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Entity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Managers\ComponentManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Managers\EntityManager.h">
@@ -83,13 +87,13 @@
     <ClInclude Include="include\Core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RigidBodyComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Managers\AssetManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Window\Window.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Components\RigidBodyComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

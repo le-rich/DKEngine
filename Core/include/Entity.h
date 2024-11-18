@@ -127,6 +127,9 @@ public:
         this->transform = new TransformComponent(this);
     }
 
+    // Copy constructor
+    Entity(const Entity& other);
+
     // default destructor
     ~Entity()
     {
@@ -148,6 +151,11 @@ public:
         {
             parentEntity->addChild(this);
         }
+        // TODO: After updating transform matrix, locals should be updated to reflect positioning relative to parent.
+        // ie. Update locals such that the object doesn't change world position
+        // Execption: Model loading
+        // The transforms in the models are already relative to the parent
+        // As such this should only effect reparenting of entities AFTER they've been loaded into the scene.
     }
 
     // retrieve parent entity

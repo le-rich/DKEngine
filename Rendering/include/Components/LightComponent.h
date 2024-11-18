@@ -16,10 +16,23 @@ enum LightType
     AreaLight // Needs additional information that does not currently fit in generated matrix (reuse cutoff variables?)
 };
 
+struct LightParams
+{
+    glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+    float intensity = 1.f;
+    float constant = 0.0f;
+    float linear = 0.0f;
+    float quadratic = 1.0f;
+    float cutoff = 12.0f;
+    float outercutoff = 15.0f;
+    LightType type = AmbientLight;
+};
+
 class LightComponent : public Component
 {
 public:
     LightComponent(Entity* pEntity);
+    LightComponent(Entity* pEntity, LightParams params);
     LightComponent(const LightComponent& other);
 
     // Return single 4x4 matrix representing all LightComponent information
@@ -43,7 +56,7 @@ public:
     inline void SetOuterCutoff(float pOuterCutoff) { mOuterCutoff = pOuterCutoff; }
     inline void SetType(LightType pType) { mType = pType; }
 
-    virtual Component* clone() const override;
+    Component* clone() const override;
 
 
 private:

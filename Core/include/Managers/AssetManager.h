@@ -7,6 +7,7 @@
 #include "Resources/Texture.h"
 
 static const std::string DEFAULT_SHADER_PATH = "../Rendering/Shaders/default.glsl";
+static const std::string DEFAULT_ASSET_FOLDER = "Assets/";
 
 class AssetManager
 {
@@ -44,7 +45,7 @@ private:
     AssetManager()
     {
         mShaderMap.insert({ DEFAULT_SHADER->GetAssetID(), DEFAULT_SHADER });
-        std::cout << "Asset Manager created" << std::endl;
+        // std::cout << "Asset Manager created" << std::endl;
     }
 
 public:

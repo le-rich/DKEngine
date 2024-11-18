@@ -9,9 +9,10 @@ class Entity;
 class Transform;
 
 // An Enum registry of Components. Annoying to have to keep track, but necessary for querying the entity tree.
-enum class ComponentType : uint8_t {
+enum class ComponentType : uint8_t
+{
     None = 0,
-    Transform, 
+    Transform,
     Camera,
     Light,
     Mesh,
@@ -28,7 +29,7 @@ class Component
 public:
     Component(Entity* mEntity);
     virtual ~Component() = default;
-
+   
     Entity* entity;
 
     UUIDv4::UUID componentID;
@@ -58,8 +59,9 @@ public:
 
     bool operator==(const Component& other) const;
 
+    // Polymorphic copy constructor
     virtual Component* clone() const = 0;
 
 private:
-    
+
 };
