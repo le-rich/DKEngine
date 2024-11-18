@@ -4,13 +4,11 @@
 AudioManager::AudioManager()
 {
     FMOD::System_Create(&fmodSystem);
-<<<<<<< Updated upstream
+
 }
 
 void AudioManager::Initialize()
 {
-=======
->>>>>>> Stashed changes
     fmodSystem->init(512, FMOD_INIT_3D_RIGHTHANDED, nullptr);
 }
 
@@ -23,11 +21,7 @@ AudioManager::~AudioManager()
     fmodSystem->release();
 }
 
-<<<<<<< Updated upstream
-void AudioManager::Update(float deltaTime)
-=======
 void AudioManager::Update()
->>>>>>> Stashed changes
 {
     fmodSystem->update();
 }

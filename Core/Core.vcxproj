@@ -140,11 +140,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-<<<<<<< Updated upstream
-      <AdditionalIncludeDirectories>$(SolutionDir)External\glm\gtc;$(SolutionDir)External\;$(SolutionDir)External\GLFW\x64\include;$(SolutionDir)External\glad\include;$(SolutionDir)External\tinygltf;$(SolutionDir)Core\include\;$(SolutionDir)UI\include;$(SolutionDir)Rendering\;$(SolutionDir)Physics\;$(SolutionDir)External\glm;$(SolutionDir)External\stb;$(SolutionDir)External\imgui\include;$(SolutionDir)Game\include;$(SolutionDir)Game\include\Scripts\;$(SolutionDir)External\FMOD\inc\;$(SolutionDir)Core\include\Managers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-=======
       <AdditionalIncludeDirectories>$(SolutionDir)External\glm\gtc;$(SolutionDir)External\;$(SolutionDir)External\GLFW\x64\include;$(SolutionDir)External\glad\include;$(SolutionDir)External\tinygltf;$(SolutionDir)Core\include\;$(SolutionDir)UI\include;$(SolutionDir)Rendering\;$(SolutionDir)Physics\;$(SolutionDir)External\glm;$(SolutionDir)External\stb;$(SolutionDir)External\imgui\include;$(SolutionDir)Game\include;$(SolutionDir)Game\include\Scripts\;%(AdditionalIncludeDirectories);$(SolutionDir)External\FMOD</AdditionalIncludeDirectories>
->>>>>>> Stashed changes
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -264,17 +260,13 @@
     <ClInclude Include="include\Input.h" />
     <ClInclude Include="include\Managers\AssetManager.h" />
     <ClInclude Include="include\Managers\AudioManager.h" />
-<<<<<<< Updated upstream
-=======
     <ClInclude Include="include\Managers\ComponentManager.h" />
->>>>>>> Stashed changes
     <ClInclude Include="include\Managers\EntityManager.h" />
     <ClInclude Include="include\Scene.h" />
     <ClInclude Include="include\System.h" />
     <ClInclude Include="include\Utils\IDUtils.h" />
     <ClInclude Include="include\Utils\uuid_v4.h" />
     <ClInclude Include="include\Window\Window.h" />
-    <ClCompile Include="src\Managers\AudioManager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
