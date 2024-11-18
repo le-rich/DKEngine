@@ -45,7 +45,7 @@ private:
     AssetManager()
     {
         mShaderMap.insert({ DEFAULT_SHADER->GetAssetID(), DEFAULT_SHADER });
-        std::cout << "Asset Manager created" << std::endl;
+        // std::cout << "Asset Manager created" << std::endl;
     }
 
 public:

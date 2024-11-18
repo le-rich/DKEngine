@@ -39,7 +39,7 @@ class Component
 public:
     Component(Entity* mEntity);
     virtual ~Component() = default;
-
+   
     Entity* entity;
 
     UUIDv4::UUID componentID;
@@ -69,6 +69,7 @@ public:
 
     bool operator==(const Component& other) const;
 
+    // Polymorphic copy constructor
     virtual Component* clone() const = 0;
 
 private:

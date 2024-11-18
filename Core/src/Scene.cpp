@@ -88,3 +88,9 @@ void Scene::createGameManager()
     timerParams.m_OriginalPosition = carEnt->transform->getWorldPosition();
     timerScriptComponent->CreateAndAddScript<TimerScript>(&timerParams);
 }
+
+Entity* Scene::GetSceneCopy()
+{
+    Entity* cur = new Entity(*sceneRoot);
+    return cur;
+}
