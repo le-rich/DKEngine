@@ -3,14 +3,16 @@
 #include <vector>
 
 #include "Script.h"
-#include "LapCheckpointScript.h"
+
+class LapCheckpointScript;
 
 class LapManagerScript : public Script
 {
 public:
-	LapManagerScript(Entity* mEntity, int laps, std::vector<LapCheckpointScript*> checkpoints);
+	LapManagerScript(Entity* mEntity, int laps);
 	~LapManagerScript();
 	
+	void SetCheckpoints(std::vector<LapCheckpointScript*> checkpoints) { m_Checkpoints = checkpoints; }
 	void OnCheckpointTriggered(int checkpointIndex);
 
 	void Update(float deltaTime) override;

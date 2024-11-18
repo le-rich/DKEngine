@@ -1,7 +1,8 @@
 #include "Scripts/LapManagerScript.h"
+#include "Scripts/LapCheckpointScript.h"
 
-LapManagerScript::LapManagerScript(Entity* mEntity, int laps, std::vector<LapCheckpointScript*> checkpoints) 
-	: Script(mEntity), m_CurrentLap(1), m_TotalLaps(laps), m_NextCheckpointIndex(1), m_Checkpoints(checkpoints)
+LapManagerScript::LapManagerScript(Entity* mEntity, int laps) 
+	: Script(mEntity), m_CurrentLap(1), m_TotalLaps(laps), m_NextCheckpointIndex(1)
 {
 }
 
@@ -14,7 +15,7 @@ void LapManagerScript::OnCheckpointTriggered(int checkpointIndex)
 	if (checkpointIndex == m_NextCheckpointIndex)
 	{
 		NextCheckpoint(checkpointIndex);
-		if (m_NextCheckpointIndex >= m_Checkpoints.size()) { CompleteLap(); }
+		if (m_NextCheckpointIndex > m_Checkpoints.size()) { CompleteLap(); }
 		if (m_CurrentLap > m_TotalLaps) { CompleteRace(); }
 	}
 }

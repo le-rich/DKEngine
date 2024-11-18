@@ -1,3 +1,5 @@
+#include <vector>
+
 #include "Scene.h"
 
 #include "Entities/CameraEntity.h"
@@ -9,6 +11,7 @@
 #include "OrbitScript.h"
 #include "TimerScript.h"
 #include "LapManagerScript.h"
+#include "LapCheckpointScript.h"
 
 Scene::Scene()
 {
@@ -62,10 +65,36 @@ void Scene::SpawnSceneDefinition()
     ScriptComponent* lapManagerComponent = new ScriptComponent(lapManagerEntity);
     LapManagerScript* lapManagerScript = new LapManagerScript(lapManagerEntity, 2);
 
+    // Create 1st checkpoint
+    Entity* lapCheckpointEntity1 = new Entity();
+    lapCheckpointEntity1->SetDisplayName("Lap Checkpoint 1");
+    ScriptComponent* lapCheckpointComponent1 = new ScriptComponent(lapCheckpointEntity1);
+    LapCheckpointScript* lapCheckpointScript1 = new LapCheckpointScript(lapCheckpointEntity1);
+    lapCheckpointScript1->Init(lapManagerScript, testCar->transform, 1);
+    lapCheckpointComponent1->AddScript<LapCheckpointScript>(*lapCheckpointScript1);
+    lapCheckpointEntity1->addComponent(*lapCheckpointComponent1);
+    lapCheckpointEntity1->transform->setWorldPosition(glm::vec4(-0.75f, 0.f, 0.f, 1.0f));
+
+    // Create 2nd checkpoint
+    Entity* lapCheckpointEntity2 = new Entity();
+    lapCheckpointEntity2->SetDisplayName("Lap Checkpoint 2");
+    ScriptComponent* lapCheckpointComponent2 = new ScriptComponent(lapCheckpointEntity2);
+    LapCheckpointScript* lapCheckpointScript2 = new LapCheckpointScript(lapCheckpointEntity2);
+    lapCheckpointScript2->Init(lapManagerScript, testCar->transform, 2);
+    lapCheckpointComponent2->AddScript<LapCheckpointScript>(*lapCheckpointScript2);
+    lapCheckpointEntity2->addComponent(*lapCheckpointComponent2);
+    lapCheckpointEntity2->transform->setWorldPosition(glm::vec4(-1.75f, 0.f, 0.f, 1.0f));
+
+    // Set checkpoints
+    std::vector<LapCheckpointScript*> checkpoints = { lapCheckpointScript1, lapCheckpointScript2 };
+    lapManagerScript->SetCheckpoints(checkpoints);
+
+    // Init Lap Manager after checkpoints are created
     lapManagerComponent->AddScript<LapManagerScript>(*lapManagerScript);
     lapManagerEntity->addComponent(*lapManagerComponent);
 
-    // Init Lap Manager after checkpoints entities are created and assigned
+    EntityManager::getInstance().Instantiate(lapCheckpointEntity1);
+    EntityManager::getInstance().Instantiate(lapCheckpointEntity2);
     EntityManager::getInstance().Instantiate(lapManagerEntity);
 
     auto carID = entityManager->findFirstEntityByDisplayName("Test Car");

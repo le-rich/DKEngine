@@ -14,12 +14,11 @@ struct AABB
 class LapCheckpointScript : public Script
 {
 public:
-	LapCheckpointScript(Entity* mEntity, LapManagerScript* lapManager, TransformComponent* other, int checkpointIndex);
+	LapCheckpointScript(Entity* mEntity);
 	~LapCheckpointScript();
 
-	void SetOther(TransformComponent* transform) { m_Other = transform; }
-
-	bool GetCheckpointRegistered() { return m_Registered; }
+	void Init(LapManagerScript* lapManager, TransformComponent* other, int checkpointIndex);
+	bool GetCheckpointRegistered() const { return m_Registered; }
 	void SetCheckpointRegistered(bool isRegistered) { m_Registered = isRegistered; }
 
 	void Update(float deltaTime) override;

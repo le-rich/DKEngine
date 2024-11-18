@@ -1,14 +1,19 @@
 #include "Scripts/LapCheckpointScript.h"
 
-LapCheckpointScript::LapCheckpointScript(Entity* mEntity, LapManagerScript* lapManager,
-	TransformComponent* other, int checkpointIndex) 
-	: Script(mEntity), m_LapManager(lapManager), m_Other(other), m_Index(checkpointIndex), m_Registered(false)
+LapCheckpointScript::LapCheckpointScript(Entity* mEntity) : Script(mEntity), m_Index(0), m_Registered(false)
 {
 	m_Self = this->entity->transform;
 }
 
 LapCheckpointScript::~LapCheckpointScript()
 {
+}
+
+void LapCheckpointScript::Init(LapManagerScript* lapManager, TransformComponent* other, int checkpointIndex)
+{
+	this->m_LapManager = lapManager;
+	this->m_Other = other;
+	this->m_Index = checkpointIndex;
 }
 
 void LapCheckpointScript::Update(float deltaTime)
