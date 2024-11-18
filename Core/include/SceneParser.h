@@ -19,6 +19,10 @@
 #define DEFAULT_EXCEPTION_HANDLER catch (std::exception& e) { std::cout << "WARNING: " << e.what() << '\n'; std::cout << "Verify naming of keys is correct \n";}
 #define OPTIONAL_EXCEPTION_HANDLER catch (std::exception& e) {}
 
+#define IF_COMPONENT_TYPE_NOT_FOUND if (componentMapIt == ComponentMap.end()) { std::cout << "ERROR: " << typeString << " not valid known Component" << std::endl; std::cout << "Check if the component is a valid listed component or is missing from component types" << std::endl; continue; }
+#define IF_SCRIPT_TYPE_NOT_FOUND if (scriptTypeIt == ScriptMap.end()) { std::cout << "ERROR: " << typeString << " not valid known Script" << std::endl; std::cout << "Check if the script is a valid listed script or is missing from script types" << std::endl; continue; }
+#define IF_SCENE_FILE_NOT_FOUND if (!inputStream.is_open()) { std::cout << "ERROR: " << pSceneFilePath << " does not exist!" << '\n'; return; }
+
 namespace SceneParser
 {
     using json = nlohmann::json;
@@ -45,24 +49,21 @@ namespace SceneParser
             std::vector<float> localPosition;
             transformObject.at("localPosition").get_to(localPosition);
             transform.localPosition = (localPosition.size() > 0) ? glm::vec3(localPosition[0], localPosition[1], localPosition[2]) : glm::vec3();
-        }
-        OPTIONAL_EXCEPTION_HANDLER;
+        } OPTIONAL_EXCEPTION_HANDLER;
 
         try
         {
             std::vector<float> localOrientation;
             transformObject.at("localOrientation").get_to(localOrientation);
             transform.localOrientation = (localOrientation.size() > 0) ? glm::quat(localOrientation[0], localOrientation[1], localOrientation[2], localOrientation[3]) : glm::quat(1.f, 0, 0, 0);
-        }
-        OPTIONAL_EXCEPTION_HANDLER;
+        } OPTIONAL_EXCEPTION_HANDLER;
 
         try
         {
             std::vector<float> localScale;
             transformObject.at("localScale").get_to(localScale);
             transform.localScale = (localScale.size() > 0) ? glm::vec3(localScale[0], localScale[1], localScale[2]) : glm::vec3(1.f);
-        }
-        OPTIONAL_EXCEPTION_HANDLER;
+        } OPTIONAL_EXCEPTION_HANDLER;
 
         pEntity->transform->setTransform(transform);
     }
@@ -71,21 +72,21 @@ namespace SceneParser
     {
         CameraComponent* cameraComponent = new CameraComponent(pEntity);
         pEntity->addComponent(*cameraComponent);
+
         try
         {
             pCameraParams.at("fieldOfView").get_to(cameraComponent->fieldOfView);
-        }
-        OPTIONAL_EXCEPTION_HANDLER;
+        } OPTIONAL_EXCEPTION_HANDLER;
+
         try
         {
             pCameraParams.at("farClipPlane").get_to(cameraComponent->farClipPlane);
-        }
-        OPTIONAL_EXCEPTION_HANDLER;
+        } OPTIONAL_EXCEPTION_HANDLER;
+
         try
         {
             pCameraParams.at("nearClipPlane").get_to(cameraComponent->nearClipPlane);
-        }
-        OPTIONAL_EXCEPTION_HANDLER;
+        } OPTIONAL_EXCEPTION_HANDLER;
     }
 
     void ParseLight(Entity* pEntity, json pLightParams)
@@ -99,8 +100,7 @@ namespace SceneParser
             std::vector<float> color;
             pLightParams.at("color").get_to(color);
             lightParams.color = (color.size() > 0) ? glm::vec4(color[0], color[1], color[2], color[3]) : glm::vec4(1.f);
-        }
-        OPTIONAL_EXCEPTION_HANDLER;
+        } OPTIONAL_EXCEPTION_HANDLER;
 
         std::string lightTypeString;
         try
@@ -115,44 +115,37 @@ namespace SceneParser
             {
                 std::cout << "ERROR: " << lightTypeString << " not valid LightType" << std::endl;
             }
-        }
-        OPTIONAL_EXCEPTION_HANDLER;
+        } OPTIONAL_EXCEPTION_HANDLER;
 
         try
         {
             pLightParams.at("intensity").get_to(lightParams.intensity);
-        }
-        OPTIONAL_EXCEPTION_HANDLER;
+        } OPTIONAL_EXCEPTION_HANDLER;
 
         try
         {
             pLightParams.at("constant").get_to(lightParams.constant);
-        }
-        OPTIONAL_EXCEPTION_HANDLER;
+        } OPTIONAL_EXCEPTION_HANDLER;
 
         try
         {
             pLightParams.at("linear").get_to(lightParams.linear);
-        }
-        OPTIONAL_EXCEPTION_HANDLER;
+        } OPTIONAL_EXCEPTION_HANDLER;
 
         try
         {
             pLightParams.at("quadratic").get_to(lightParams.quadratic);
-        }
-        OPTIONAL_EXCEPTION_HANDLER;
+        } OPTIONAL_EXCEPTION_HANDLER;
 
         try
         {
             pLightParams.at("cutoff").get_to(lightParams.cutoff);
-        }
-        OPTIONAL_EXCEPTION_HANDLER;
+        } OPTIONAL_EXCEPTION_HANDLER;
 
         try
         {
             pLightParams.at("outercutoff").get_to(lightParams.outercutoff);
-        }
-        OPTIONAL_EXCEPTION_HANDLER;
+        } OPTIONAL_EXCEPTION_HANDLER;
 
         lightComponent->SetParams(lightParams);
     }
@@ -165,8 +158,7 @@ namespace SceneParser
         try
         {
             scripts = pScriptParams.at("scripts");
-        }
-        DEFAULT_EXCEPTION_HANDLER;
+        } DEFAULT_EXCEPTION_HANDLER;
 
         for (auto& script : scripts.items())
         {
@@ -174,12 +166,8 @@ namespace SceneParser
             {
                 const std::string typeString = script.value().at("script").template get<std::string>();
                 auto scriptTypeIt = ScriptMap.find(typeString);
-                if (scriptTypeIt == ScriptMap.end())
-                {
-                    std::cout << "ERROR: " << typeString << " not valid known Script" << std::endl;
-                    std::cout << "Check if the script is a valid listed script or is missing from script types" << std::endl;
-                    continue;
-                }
+                IF_SCRIPT_TYPE_NOT_FOUND;
+
                 json scriptParams = script.value().at("params");
                 switch (scriptTypeIt->second)
                 {
@@ -192,24 +180,20 @@ namespace SceneParser
                             std::string target = scriptParams.at("target").template get<std::string>();
                             Entity* targetEntity = EntityManager::getInstance().findFirstEntityByDisplayName(target);
                             params.m_OrbitTarget = targetEntity->transform;
-                        }
-                        OPTIONAL_EXCEPTION_HANDLER;
+                        } OPTIONAL_EXCEPTION_HANDLER;
 
                         try
                         {
                             scriptParams.at("radius").get_to(params.m_Radius);
-                        }
-                        OPTIONAL_EXCEPTION_HANDLER;
+                        } OPTIONAL_EXCEPTION_HANDLER;
                         try
                         {
                             scriptParams.at("speed").get_to(params.m_Speed);
-                        }
-                        OPTIONAL_EXCEPTION_HANDLER;
+                        } OPTIONAL_EXCEPTION_HANDLER;
                         try
                         {
                             scriptParams.at("currentAngle").get_to(params.currentAngle);
-                        }
-                        OPTIONAL_EXCEPTION_HANDLER;
+                        } OPTIONAL_EXCEPTION_HANDLER;
 
                         scriptComponent->CreateAndAddScript<OrbitScript>(&params);
                         break;
@@ -222,14 +206,7 @@ namespace SceneParser
                             std::string target = scriptParams.at("target").template get<std::string>();
                             Entity* targetEntity = EntityManager::getInstance().findFirstEntityByDisplayName(target);
                             params.m_TimerTarget = targetEntity->transform;
-                        }
-                        OPTIONAL_EXCEPTION_HANDLER;
-
-                        try
-                        {
-
-                        }
-                        OPTIONAL_EXCEPTION_HANDLER;
+                        } OPTIONAL_EXCEPTION_HANDLER;
 
                         scriptComponent->CreateAndAddScript<TimerScript>(&params);
                         break;
@@ -253,17 +230,12 @@ namespace SceneParser
             {
                 componentObject.value().at("type").get_to(typeString);
                 params = componentObject.value().at("params");
-                std::cout << typeString << " : " << params << std::endl;
             }
             REQUIRED_EXCEPTION_HANDLER(componentObject);
 
             auto componentMapIt = ComponentMap.find(typeString);
-            if (componentMapIt == ComponentMap.end())
-            {
-                std::cout << "ERROR: " << typeString << " not valid known Component" << std::endl;
-                std::cout << "Check if the component is a valid listed component or is missing from component types" << std::endl;
-                continue;
-            }
+            IF_COMPONENT_TYPE_NOT_FOUND;
+
 
             switch (componentMapIt->second)
             {
@@ -322,7 +294,6 @@ namespace SceneParser
             }
             REQUIRED_EXCEPTION_HANDLER(entityElement);
 
-            // Parse Transform
             try
             {
                 json transformObject = entityElement.at("transform");
@@ -331,7 +302,6 @@ namespace SceneParser
             }
             OPTIONAL_EXCEPTION_HANDLER;
 
-            // Parse Parent
             try
             {
                 std::string parentName = entityElement.at("parent").template get<std::string>();
@@ -347,7 +317,6 @@ namespace SceneParser
             }
             OPTIONAL_EXCEPTION_HANDLER;
 
-            // Parse Children
             try
             {
                 auto children = entityElement.at("children").template get<std::vector<std::string>>();
@@ -365,7 +334,6 @@ namespace SceneParser
             }
             OPTIONAL_EXCEPTION_HANDLER;
 
-            // Parse Components
             try
             {
                 json components = entityElement.at("components");
@@ -379,11 +347,7 @@ namespace SceneParser
     {
         std::ifstream inputStream;
         inputStream.open(pSceneFilePath);
-        if (!inputStream.is_open())
-        {
-            std::cout << "ERROR: " << pSceneFilePath << " does not exist!" << '\n';
-            return;
-        }
+        IF_SCENE_FILE_NOT_FOUND;
 
         json sceneJSON;
         inputStream >> sceneJSON;
