@@ -2,6 +2,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <queue>
+#include <unordered_set>
 #include <iostream>
 
 #include "include/Body.h"
@@ -16,23 +17,74 @@ public:
         ActionType action;
     };
 
-    // Queue to store input events
-    static std::queue<InputEvent> eventQueue;
+    // singleton instance
+    static Input& GetInstance() {
+        static Input instance;
+        return instance;
+    }
 
     // Key callback functions for GLFW
     static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
     {
         ActionType actionType = (action == GLFW_PRESS) ? PRESS : (action == GLFW_RELEASE ? RELEASE : HOLD);
-        eventQueue.push({ key, actionType });
+        //eventQueue.push({ key, actionType });
+        GetInstance().ProcessKeyEvent(key, actionType);
     }
 
     // Mouse callback for GLFW 
     static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
     {
         ActionType actionType = (action == GLFW_PRESS) ? PRESS : (action == GLFW_RELEASE ? RELEASE : HOLD);
-        eventQueue.push({ button, actionType });
+        //eventQueue.push({ button, actionType });
+        GetInstance().ProcessMouseEvent(button, actionType);
+    }
+
+    void Update() {
+        while (!eventQueue.empty()) {
+            InputEvent event = eventQueue.front();
+            eventQueue.pop();
+
+            if (event.action == RELEASE) {
+                activeKeys.erase(event.key);
+            }
+            else if (event.action == PRESS) {
+                activeKeys.insert(event.key);
+            }
+        }
     }
     
+    bool IsKeyPressed(int key) const {
+        return activeKeys.count(key);
+    }
+
+    bool IsKeyHeld(int key) const {
+        return activeKeys.count(key);
+    }
+
+    bool IsMouseButtonPressed(int button) const {
+        return activeKeys.count(button);
+    }
+
+private:
+    Input() = default;
+    ~Input() = default;
+
+    Input(const Input&) = delete;
+    Input& operator=(const Input&) = delete;
+
+    void ProcessKeyEvent(int key, ActionType action) {
+        eventQueue.push({ key, action });
+    }
+
+    void ProcessMouseEvent(int button, ActionType action) {
+        eventQueue.push({ button, action });
+    }
+
+    // Queue to store input events
+    std::queue<InputEvent> eventQueue;
+    std::unordered_set<int> activeKeys;
+
+    /*
     static void RunInputListener(AE86::RigidBody* rigidBody)
     {
         while (!eventQueue.empty())
@@ -77,6 +129,5 @@ public:
             }
         }
     }
+    */
 };
-
-std::queue<Input::InputEvent> Input::eventQueue;

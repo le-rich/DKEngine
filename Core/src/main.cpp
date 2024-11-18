@@ -104,7 +104,8 @@ int run_glfw()
         // Have them be updated by GLFW callback. This works because glfwpollevents() is a synchronous method that runs all callbacks
         // As long as all components are called after glfwpollevents, behavior should be fine.
         window.PollEvents();
-        Input::RunInputListener(physx->body);
+        //Input::RunInputListener(physx->body);
+        Input::GetInstance().Update();
 
         // Rendering related calls, we can move these to the loop of the rendering thread
         renderer->Update(deltaTimeFloatSeconds); // draw tri or square
