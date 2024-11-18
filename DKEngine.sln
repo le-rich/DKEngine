@@ -560,6 +560,31 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B50EAB63-4A3
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game", "Game\Game.vcxproj", "{C1F31546-8124-4CF0-9E35-E3D8A67B44BF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FMOD", "FMOD", "{FCCBB1E3-759B-4B39-B523-630C3F55840D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "inc", "inc", "{A39C008A-BA10-4415-A8D8-00597F9FDBCE}"
+	ProjectSection(SolutionItems) = preProject
+		External\FMOD\inc\fmod.cs = External\FMOD\inc\fmod.cs
+		External\FMOD\inc\fmod.h = External\FMOD\inc\fmod.h
+		External\FMOD\inc\fmod.hpp = External\FMOD\inc\fmod.hpp
+		External\FMOD\inc\fmod_codec.h = External\FMOD\inc\fmod_codec.h
+		External\FMOD\inc\fmod_common.h = External\FMOD\inc\fmod_common.h
+		External\FMOD\inc\fmod_dsp.cs = External\FMOD\inc\fmod_dsp.cs
+		External\FMOD\inc\fmod_dsp.h = External\FMOD\inc\fmod_dsp.h
+		External\FMOD\inc\fmod_dsp_effects.h = External\FMOD\inc\fmod_dsp_effects.h
+		External\FMOD\inc\fmod_errors.cs = External\FMOD\inc\fmod_errors.cs
+		External\FMOD\inc\fmod_errors.h = External\FMOD\inc\fmod_errors.h
+		External\FMOD\inc\fmod_output.h = External\FMOD\inc\fmod_output.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{EA239493-BCEB-42A1-8F49-7C78036FEF7A}"
+	ProjectSection(SolutionItems) = preProject
+		External\FMOD\lib\fmod.dll = External\FMOD\lib\fmod.dll
+		External\FMOD\lib\fmodL.dll = External\FMOD\lib\fmodL.dll
+		External\FMOD\lib\fmodL_vc.lib = External\FMOD\lib\fmodL_vc.lib
+		External\FMOD\lib\fmod_vc.lib = External\FMOD\lib\fmod_vc.lib
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -636,6 +661,9 @@ Global
 		{278C44F6-3DDF-4932-944E-BA0A3CB77278} = {686626F8-3F9F-495E-A323-8787ED7222C6}
 		{4AB2EA99-6B12-4E94-BEFA-B2DC29C0C98E} = {1A9BD20B-6AA5-4C93-AF6F-36205BDCC049}
 		{B50EAB63-4A30-4B26-97ED-43FAC77C08DB} = {1A9BD20B-6AA5-4C93-AF6F-36205BDCC049}
+		{FCCBB1E3-759B-4B39-B523-630C3F55840D} = {686626F8-3F9F-495E-A323-8787ED7222C6}
+		{A39C008A-BA10-4415-A8D8-00597F9FDBCE} = {FCCBB1E3-759B-4B39-B523-630C3F55840D}
+		{EA239493-BCEB-42A1-8F49-7C78036FEF7A} = {FCCBB1E3-759B-4B39-B523-630C3F55840D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B539A217-C268-4BB2-B1E8-624C71DE29E3}
