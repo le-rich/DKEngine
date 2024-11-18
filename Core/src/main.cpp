@@ -12,7 +12,8 @@
 #include "UI.h"
 #include "Utils/IDUtils.h"
 #include "Window/Window.h"
-#include "AudioManager.h"
+#include "Managers/AudioManager.h"
+
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -65,12 +66,13 @@ int run_glfw()
     Physics* physx = new Physics(CAR_TRANSFORM);
     Renderer* renderer = new Renderer(&window);
     Game* game = new Game();
-    AudioManager* audio = new AudioManager();
+    AudioManager* audioManager = new AudioManager();
 
     Core::getInstance().AddSystem(ui);
     Core::getInstance().AddSystem(physx);
     Core::getInstance().AddSystem(renderer);
     Core::getInstance().AddSystem(game);
+    Core::getInstance().AddSystem(audioManager);
 
     ui->Initialize();
     physx->Initialize();
