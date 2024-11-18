@@ -4,7 +4,6 @@
 AudioManager::AudioManager()
 {
     FMOD::System_Create(&fmodSystem);
-
 }
 
 AudioManager::~AudioManager()
@@ -18,10 +17,11 @@ AudioManager::~AudioManager()
 
 void AudioManager::Initialize()
 {
+    System::Initialize();
     fmodSystem->init(512, FMOD_INIT_3D_RIGHTHANDED, nullptr);
 }
 
-void AudioManager::Update()
+void AudioManager::Update(float deltaTime)
 {
     fmodSystem->update();
 }
@@ -30,7 +30,7 @@ FMOD::System* AudioManager::getSystem() {
     return fmodSystem;
 }
 
-void FixedUpdate() {
+void AudioManager::FixedUpdate() {
     // @Richard & @Sepehr: Not sure what we want here, maybe nothing
 };
 

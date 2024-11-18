@@ -14,7 +14,7 @@ public:
 
 	void Initialize() override;
 
-	void Update();
+	void Update(float deltaTime);
 
 	const char* GetName() const override {
 		return "AudioManager";
