@@ -161,18 +161,6 @@ int run_glfw() {
         window.PollEvents();
         input.Update();
 
-
-        // Rendering related calls, we can move these to the loop of the rendering thread
-        renderer->Update(deltaTimeFloatSeconds); // draw tri or square
-
-        while (fixedUpdateBuffer >= FIXED_UPDATE_INTERVAL)
-        {
-            physx->FixedUpdate();
-            fixedUpdateBuffer -= FIXED_UPDATE_INTERVAL;
-        }
-        game->Update(deltaTimeFloatSeconds);
-
-        //@TODO: REMOVE THIS LATER. Above loops are never getting entered so UI update was never getting called. Remove this line below when fixed.
         ui->Update(deltaTimeFloatSeconds);
 	}
 
