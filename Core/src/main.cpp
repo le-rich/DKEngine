@@ -33,6 +33,23 @@ int run_glfw()
         glfwTerminate();
     }
 
+    Input& input = Input::GetInstance();
+    input.SetWindow(window.GetWindow());
+
+    // the following is how you can call register a callback THIS IS JUST EXAMPLE CODE FOR PEOPLE TO USE
+    input.RegisterKeyCallback(GLFW_KEY_W, [](Input::ActionType action) {
+        if (action == Input::HOLD) {
+            std::cout << "W KEY HELD" << std::endl;
+        }
+        else if (action == Input::RELEASE) {
+            std::cout << "W KEY RELEASED" << std::endl;
+        }
+        else if (action == Input::PRESS) {
+            std::cout << "W KEY PRESESD" << std::endl;
+        }
+        });
+    
+
     window.SetWindowToCurrentThread();
     window.SetKeyCallback(Input::KeyCallback);
     window.SetMouseButtonCallback(Input::MouseButtonCallback);
@@ -105,7 +122,8 @@ int run_glfw()
         // As long as all components are called after glfwpollevents, behavior should be fine.
         window.PollEvents();
         //Input::RunInputListener(physx->body);
-        Input::GetInstance().Update();
+        input.Update();
+
 
         // Rendering related calls, we can move these to the loop of the rendering thread
         renderer->Update(deltaTimeFloatSeconds); // draw tri or square
