@@ -109,20 +109,21 @@ void Scene::SpawnSceneDefinition()
     checkpointParams2.m_LapManager = nullptr; // might as well be nullptr
     checkpointComponent2->AddScriptToComponent<LapCheckpointScript>(&checkpointParams2);
     checkpointEntity2->addComponent(*checkpointComponent2);
-
+    
     // Set LapManagerScript parameters & add to component
-    auto checkpointPointerFromScript = dynamic_cast<LapCheckpointScript*>(checkpointComponent1->scripts[0].get());
-    auto checkpointPointerFromScript2 = dynamic_cast<LapCheckpointScript*>(checkpointComponent2->scripts[0].get());
+    LapCheckpointScript* checkpointPointerFromScript = checkpointComponent1->GetComponent<LapCheckpointScript>();
+    LapCheckpointScript* checkpointPointerFromScript2 = checkpointComponent2->GetComponent<LapCheckpointScript>();
     LapManagerScriptParams lapManagerParams;
     std::vector<LapCheckpointScript*> checkpoints = { checkpointPointerFromScript, checkpointPointerFromScript2 };
     lapManagerParams.m_Checkpoints = checkpoints;
     lapManagerComponent->AddScriptToComponent<LapManagerScript>(&lapManagerParams);
     lapManagerEntity->addComponent(*lapManagerComponent);
     // Set LapManager vars of checkpoints
-    auto lapManagerPointerFromScript = dynamic_cast<LapManagerScript*>(lapManagerComponent->scripts[0].get());
+    LapManagerScript* lapManagerPointerFromScript = lapManagerComponent->GetComponent<LapManagerScript>();
     checkpointPointerFromScript->SetLapManager(lapManagerPointerFromScript);
     checkpointPointerFromScript2->SetLapManager(lapManagerPointerFromScript);
 
+    // Instantiate entities for lap system
     EntityManager::getInstance().Instantiate(checkpointEntity1);
     EntityManager::getInstance().Instantiate(checkpointEntity2);
     EntityManager::getInstance().Instantiate(lapManagerEntity);
