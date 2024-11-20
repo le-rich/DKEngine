@@ -1,34 +1,28 @@
-﻿#pragma once
-
-#include "Component.h"  // Include the base class Component
-#include "FMOD/inc/fmod.hpp"  // Include FMOD for sound management
-#include <string>
-
-class AudioComponent : public Component
-{
-public:
-    AudioComponent(Entity* mEntity);
-    
-    virtual ~AudioComponent();
-
-    AudioComponent(Entity* mEntity, const std::string& filePath);
-
-
-    void LoadSound(const std::string& filePath);
-
-    void PlaySound();
-
-    void StopSound();
-
-    void Update();
-
-    Component* clone() const override;
-
-    bool IsPlaying() const;
-
-private:
-    std::string audioFilePath;  // File path to the audio file
-    FMOD::Sound* sound;         // FMOD sound object
-    FMOD::Channel* channel;     // FMOD channel for playback control
-    bool isPlaying;             // Whether the sound is currently playing
-};
+﻿// #pragma once
+//
+// #include "Entity.h"
+// #include "Component.h"
+// #include "FMOD/inc/fmod.hpp"
+// #include <cstring>  // For handling char* operations
+//
+// class AudioComponent : public Component
+// {
+// public:
+//     AudioComponent(Entity* entity, const char* audioFilePath);  // Constructor with Entity* and char* for the file path
+//
+//     virtual ~AudioComponent();  // Destructor
+//
+//     void LoadSound(const char* filePath);  // Load a sound file
+//     void PlaySound();  // Play the loaded sound
+//     void StopSound();  // Stop the sound
+//     void Update();  // Update the audio component
+//     Component* clone() const override;  // Clone the component
+//
+//     bool IsPlaying() const;  // Check if the sound is currently playing
+//
+//     private:
+//     char* audioFilePath;  // File path to the audio file as char*
+//     FMOD::Sound* sound;   // FMOD sound object
+//     FMOD::Channel* channel; // FMOD channel to control playback
+//     bool isPlaying;        // Whether the sound is currently playing
+// };

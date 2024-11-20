@@ -68,16 +68,27 @@ int run_glfw()
     Game* game = new Game();
     AudioManager* audioManager = new AudioManager();
 
+    FMOD::Sound* backgroundMusic = audioManager->LoadSound("Assets/Audio/yippee.mp3");
+
+    if (backgroundMusic) {
+        static FMOD::Channel* channel = nullptr;
+        if (!channel) {
+            audioManager->GetSystem()->playSound(backgroundMusic, nullptr, true, &channel);
+            channel->setVolume(0.5f); // Set volume
+            channel->setPaused(false); // Start playback
+        }
+    }
+
     Core::getInstance().AddSystem(ui);
     Core::getInstance().AddSystem(physx);
     Core::getInstance().AddSystem(renderer);
     Core::getInstance().AddSystem(game);
-    Core::getInstance().AddSystem(audioManager);
 
     ui->Initialize();
     physx->Initialize();
     renderer->Initialize();
     game->Initialize();
+
 
     // Timing
     double fixedUpdateBuffer = 0.0;
@@ -89,7 +100,8 @@ int run_glfw()
     auto glfwWindow = window.GetWindow();
     while (!glfwWindowShouldClose(glfwWindow))
     {
-
+        
+        
         auto currentTime = std::chrono::high_resolution_clock::now();
         std::chrono::duration<float> deltaTime = currentTime - previousTime;
         auto deltaTimeFloatSeconds = deltaTime.count();

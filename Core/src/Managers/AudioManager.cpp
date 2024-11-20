@@ -4,6 +4,7 @@
 AudioManager::AudioManager()
 {
     FMOD::System_Create(&fmodSystem);
+    fmodSystem->init(512, FMOD_INIT_3D_RIGHTHANDED, nullptr);
 }
 
 AudioManager::~AudioManager()
@@ -15,26 +16,21 @@ AudioManager::~AudioManager()
     fmodSystem->release();
 }
 
-void AudioManager::Initialize()
-{
-    System::Initialize();
-    fmodSystem->init(512, FMOD_INIT_3D_RIGHTHANDED, nullptr);
-}
-
 void AudioManager::Update(float deltaTime)
 {
     fmodSystem->update();
 }
 
-FMOD::System* AudioManager::getSystem() {
+void AudioManager::FixedUpdate()
+{
+    fmodSystem->update();
+}
+
+FMOD::System* AudioManager::GetSystem() {
     return fmodSystem;
 }
 
-void AudioManager::FixedUpdate() {
-    // @Richard & @Sepehr: Not sure what we want here, maybe nothing
-};
-
-FMOD::Sound* AudioManager::loadSound(const std::string& filePath) {
+FMOD::Sound* AudioManager::LoadSound(const std::string& filePath) {
     auto it = soundCache.find(filePath);
     if (it != soundCache.end()) {
         return it->second;
@@ -46,17 +42,17 @@ FMOD::Sound* AudioManager::loadSound(const std::string& filePath) {
     return newSound;
 }
 
-void AudioManager::setListenerAttributes(const FMOD_VECTOR& position, const FMOD_VECTOR& forward, const FMOD_VECTOR& up) {
+void AudioManager::SetListenerAttributes(const FMOD_VECTOR& position, const FMOD_VECTOR& forward, const FMOD_VECTOR& up) {
     FMOD_VECTOR velocity = { 0.0f, 0.0f, 0.0f }; // TODO: get velocity for doppler
     fmodSystem->set3DListenerAttributes(0, &position, &velocity, &forward, &up);
 }
 
-void AudioManager::setMasterVolume(float volume) {
+void AudioManager::SetMasterVolume(float volume) {
     fmodSystem->setSoftwareFormat(0, FMOD_SPEAKERMODE_STEREO, 0);
     fmodSystem->setSoftwareChannels(100);
 }
 
-void AudioManager::playSound(const std::string& soundName) {
+void AudioManager::PlaySound(const std::string& soundName) {
 
 	
     auto it = soundCache.find(soundName);

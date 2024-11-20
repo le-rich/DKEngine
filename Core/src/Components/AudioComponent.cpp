@@ -1,85 +1,75 @@
-﻿#pragma once
-
-#include "Component.h"
-#include "FMOD/inc/fmod.hpp" // Include FMOD for sound management
-#include <string>
-
+﻿#include "AudioComponent.h"
 #include "AudioManager.h"
-#include "System.h"
+#include <iostream>
+#include "Entity.h"
 
-class AudioComponent : public Component
+AudioComponent::AudioComponent(Entity* entity, const char* filePath)
+    : Component(entity), sound(nullptr), channel(nullptr), isPlaying(false), audioFilePath(nullptr)
 {
-public:
-    AudioComponent(Entity* mEntity) : Component(mEntity), sound(nullptr), channel(nullptr), isPlaying(false)
-    {
-        componentType = ComponentType::Audio;
+    componentType = ComponentType::Audio;  // Adjust component type
+    LoadSound(filePath);  // Load the sound file
+}
+
+
+AudioComponent::~AudioComponent()
+{
+    if (audioFilePath) {
+        delete[] audioFilePath;  // Free the memory if it was allocated
+    }
+    if (sound) {
+        sound->release();  // Release FMOD sound object
+    }
+}
+
+void AudioComponent::LoadSound(const char* filePath)
+{
+    // If a file path was previously assigned, free it
+    if (audioFilePath) {
+        delete[] audioFilePath;
     }
 
-    AudioComponent(Entity* mEntity, const std::string& filePath)
-        : Component(mEntity), sound(nullptr), channel(nullptr), isPlaying(false), audioFilePath(filePath)
-    {
-        componentType = ComponentType::Audio;  // Adjust to the appropriate type
-        LoadSound(filePath);
+    // Allocate memory for the new file path and copy it
+    audioFilePath = new char[strlen(filePath) + 1];
+    strcpy(audioFilePath, filePath);
+
+    if (sound) {
+        sound->release();  // Release any previously loaded sound
     }
 
-    virtual ~AudioComponent()
-    {
-        if (sound) {
-            sound->release();
-        }
-    }
+    FMOD::System* system = AudioManager::getInstance()->getSystem();
+    system->createSound(filePath, FMOD_DEFAULT, nullptr, &sound);
+}
 
-    void LoadSound(const std::string& filePath)
-    {
-        audioFilePath = filePath;
-        if (sound) {
-            sound->release();  // Release the previous sound if it exists
-        }
-        
+void AudioComponent::PlaySound()
+{
+    if (sound) {
         FMOD::System* system = AudioManager::getInstance()->getSystem();
-        system->createSound(filePath.c_str(), FMOD_DEFAULT, nullptr, &sound);
+        system->playSound(sound, nullptr, false, &channel);
+        isPlaying = true;
     }
+}
 
-    void PlaySound()
-    {
-        if (sound) {
-            FMOD::System* system = AudioManager::getInstance()->getSystem();
-            system->playSound(sound, nullptr, false, &channel);
-            isPlaying = true;
-        }
+void AudioComponent::StopSound()
+{
+    if (channel) {
+        channel->stop();
+        isPlaying = false;
     }
+}
 
-    // Stop the sound if it is playing
-    void StopSound()
-    {
-        if (channel) {
-            channel->stop();
-            isPlaying = false;
-        }
+void AudioComponent::Update()
+{
+    if (channel) {
+        channel->isPlaying(&isPlaying);  // Update isPlaying status
     }
+}
 
-    void Update()
-    {
-        if (channel) {
-            channel->isPlaying(&isPlaying); // Check if the sound is still playing
-        }
-    }
+Component* AudioComponent::clone() const
+{
+    return new AudioComponent(entity, audioFilePath);  // Clone the component
+}
 
-    Component* clone() const override
-    {
-        AudioComponent* newAudioComp = new AudioComponent(entity, audioFilePath);
-        return newAudioComp;
-    }
-
-    // Getter for isPlaying
-    bool IsPlaying() const
-    {
-        return isPlaying;
-    }
-
-private:
-    std::string audioFilePath;  // File path to the sound file
-    FMOD::Sound* sound;         // FMOD sound object
-    FMOD::Channel* channel;     // FMOD channel to control playback
-    bool isPlaying;             // Is the sound currently playing
-};
+bool AudioComponent::IsPlaying() const
+{
+    return isPlaying;  // Return whether the sound is playing
+}

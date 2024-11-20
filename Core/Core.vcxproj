@@ -177,6 +177,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Component.h" />
+    <ClInclude Include="include\Components\AudioSource.h" />
     <ClInclude Include="include\Components\RigidBodyComponent.h" />
     <ClInclude Include="include\Components\TransformComponent.h" />
     <ClInclude Include="include\Core.h" />
