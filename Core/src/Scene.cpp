@@ -100,7 +100,7 @@ void Scene::SpawnSceneDefinition()
     // Create 2nd checkpoint
     Entity* checkpointEntity2 = new Entity();
     checkpointEntity2->SetDisplayName("Checkpoint 2");
-    checkpointEntity2->transform->setWorldPosition(glm::vec4(-1.0f, 0.f, 0.f, 1.0f));
+    checkpointEntity2->transform->setWorldPosition(glm::vec4(-1.25f, 0.f, 0.f, 1.0f));
     ScriptComponent* checkpointComponent2 = new ScriptComponent(checkpointEntity2);
     // Set LapCheckpointScript parameters & add to component
     LapCheckpointScriptParams checkpointParams2;
@@ -111,15 +111,15 @@ void Scene::SpawnSceneDefinition()
     checkpointEntity2->addComponent(*checkpointComponent2);
     
     // Set LapManagerScript parameters & add to component
-    LapCheckpointScript* checkpointPointerFromScript = checkpointComponent1->GetComponent<LapCheckpointScript>();
-    LapCheckpointScript* checkpointPointerFromScript2 = checkpointComponent2->GetComponent<LapCheckpointScript>();
+    LapCheckpointScript* checkpointPointerFromScript = checkpointComponent1->GetScript<LapCheckpointScript>();
+    LapCheckpointScript* checkpointPointerFromScript2 = checkpointComponent2->GetScript<LapCheckpointScript>();
     LapManagerScriptParams lapManagerParams;
     std::vector<LapCheckpointScript*> checkpoints = { checkpointPointerFromScript, checkpointPointerFromScript2 };
     lapManagerParams.m_Checkpoints = checkpoints;
     lapManagerComponent->AddScriptToComponent<LapManagerScript>(&lapManagerParams);
     lapManagerEntity->addComponent(*lapManagerComponent);
     // Set LapManager vars of checkpoints
-    LapManagerScript* lapManagerPointerFromScript = lapManagerComponent->GetComponent<LapManagerScript>();
+    LapManagerScript* lapManagerPointerFromScript = lapManagerComponent->GetScript<LapManagerScript>();
     checkpointPointerFromScript->SetLapManager(lapManagerPointerFromScript);
     checkpointPointerFromScript2->SetLapManager(lapManagerPointerFromScript);
 
