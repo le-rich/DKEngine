@@ -10,7 +10,7 @@ namespace AE86 {
 		Aabb(const glm::vec3 position, const float offset);
 		~Aabb();
 
-		glm::vec3 GetMinBound() { return m_Min; }
+		glm::vec3 GetMinBound() const { return m_Min; }
 		void SetMinBound(const glm::vec3 newMin) { m_Min = newMin; }
 		glm::vec3 GetMaxBound() const { return m_Max; }
 		void SetMaxBound(const glm::vec3 newMax) { m_Max = newMax; }
