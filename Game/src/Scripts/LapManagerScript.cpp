@@ -46,5 +46,5 @@ void LapManagerScript::CompleteLap()
 void LapManagerScript::CompleteRace()
 {
 	// TODO: Go back to car selection after race completion
-	std::cout << "All laps completed! Exiting Program." << std::endl;
+	std::cout << "All laps completed!" << std::endl;
 }
