@@ -1,7 +1,4 @@
 #pragma once
-#ifndef BODY_HEADER
-
-#define BODY_HEADER
 
 #include <glm.hpp>
 
@@ -28,5 +25,3 @@ namespace AE86 {
 
 	};
 }
-
-#endif

@@ -1,33 +1,40 @@
 #include "Scripts/LapCheckpointScript.h"
 
-LapCheckpointScript::LapCheckpointScript(Entity* mEntity) : Script(mEntity), m_Index(0), m_Registered(false)
+LapCheckpointScript::LapCheckpointScript(Entity* mEntity) : Script(mEntity)
 {
-	m_Self = this->entity->transform;
+	mParams.m_Self = this->entity->transform;
 }
 
 LapCheckpointScript::~LapCheckpointScript()
 {
 }
 
-void LapCheckpointScript::Init(LapManagerScript* lapManager, TransformComponent* other, int checkpointIndex)
+void LapCheckpointScript::SetLapManager(LapManagerScript* lapManager)
 {
-	this->m_LapManager = lapManager;
-	this->m_Other = other;
-	this->m_Index = checkpointIndex;
-	glm::vec3 otherPosition = glm::vec3(this->m_Other->getWorldPosition());
-	this->m_OtherBB = new AE86::Aabb(otherPosition, m_BBOffset);
+	mParams.m_LapManager = lapManager;
 }
 
 void LapCheckpointScript::Update(float deltaTime)
 {
-	if (!m_Self || !m_Other) { return; }
-	// Sets BB correctly even after setWorldPosition is used on Entity in Scene
-	if (!m_SelfBB) { m_SelfBB = new AE86::Aabb(glm::vec3(this->m_Self->getWorldPosition()), m_BBOffset); }
+	//if (!mParams.m_Self || !mParams.m_Other) { return; }
+	//// Sets BB correctly even after setWorldPosition is used on Entity in Scene
+	//if (!mParams.m_SelfBB) { mParams.m_SelfBB = new AE86::Aabb(glm::vec3(mParams.m_Self->getWorldPosition()), mParams.m_BBOffset); }
 
-	m_OtherBB->UpdateBounds(m_Other->getWorldPosition());
+	mParams.m_OtherBB->UpdateBounds(mParams.m_Other->getWorldPosition());
 
-	if (!m_Registered && m_SelfBB->CheckCollision(*m_OtherBB))
+	if (!mParams.m_Registered && mParams.m_SelfBB->CheckCollision(*mParams.m_OtherBB))
 	{
-		m_LapManager->OnCheckpointTriggered(m_Index);
+		mParams.m_LapManager->OnCheckpointTriggered(mParams.m_Index);
+		//m_OnCheckpointCallback(mParams.m_Index);
 	}
+}
+
+void LapCheckpointScript::SetParameters(ScriptParams* pScriptParameters)
+{
+	mParams = *static_cast<LapCheckpointScriptParams*>(pScriptParameters);
+	mParams.m_Self = this->entity->transform;
+	mParams.m_SelfBB = new AE86::Aabb(glm::vec3(mParams.m_Self->getWorldPosition()), mParams.m_BBOffset);
+	
+	glm::vec3 otherPosition = glm::vec3(mParams.m_Other->getWorldPosition());
+	mParams.m_OtherBB = new AE86::Aabb(otherPosition, mParams.m_BBOffset);
 }

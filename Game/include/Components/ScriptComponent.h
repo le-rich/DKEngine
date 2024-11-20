@@ -41,7 +41,8 @@ public:
     }
 
     ScriptComponent& operator=(ScriptComponent& const other);
+    std::vector<std::shared_ptr<Script>> scripts;
 
 private:
-    std::vector<std::shared_ptr<Script>> scripts;
+    //std::vector<std::shared_ptr<Script>> scripts;
 };
