@@ -16,6 +16,8 @@ public:
     void setMesh(Mesh* mesh);
     Mesh* getMesh();
 
+    MeshComponent& operator=(MeshComponent& const other);
+
 private:
     Mesh* mesh = nullptr;
 

@@ -56,7 +56,7 @@ public:
     inline void SetOuterCutoff(float pOuterCutoff) { mOuterCutoff = pOuterCutoff; }
     inline void SetType(LightType pType) { mType = pType; }
 
-    virtual Component* clone() const override;
+    Component* clone() const override;
 
 
 private:

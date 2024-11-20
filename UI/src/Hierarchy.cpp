@@ -2,6 +2,7 @@
 #include "../include/Console.h"
 #include "Scene.h"
 #include "Entity.h"
+#include "Managers/EntityManager.h"
 #include <set> // Include for std::set
 #include <iostream>
 using namespace std;
@@ -58,6 +59,10 @@ void drawHierarchyLine(Entity* entity) {
             renamingBuffer[sizeof(renamingBuffer) - 1] = '\0'; // Ensure null-termination
         }
 
+        if (ImGui::MenuItem("Duplicate")) {
+           EntityManager::getInstance().duplicateEntity(entity);
+        }
+
         if (ImGui::MenuItem("Delete GameObject")) {
             if (selectedEntity) {
                 consoleLog("Attempting to delete selected GameObject: " + selectedEntity->GetDisplayName());
@@ -100,8 +105,8 @@ void drawHierarchyLine(Entity* entity) {
 
     // Draw children recursively if the node is open
     if (nodeOpen) {
-        for (auto* child : entity->getChildren()) {
-            drawHierarchyLine(child);  // Use .get() to pass the raw pointer to drawHierarchyLine
+       for (int i = 0; i < entity->getChildren().size(); i++) {
+            drawHierarchyLine(entity->getChildren()[i]);  // Use .get() to pass the raw pointer to drawHierarchyLine
         }
         ImGui::TreePop();
     }

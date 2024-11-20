@@ -9,11 +9,11 @@ class System;
 class Core {
 private:
 	std::vector<System*> systems;
-	Scene* currentScene;
+	Scene* currentScene = nullptr;
 
 	// Private constructor as this should be a singleton.
     Core(){
-        std::cout << "Core" << std::endl;
+
     }
 
 

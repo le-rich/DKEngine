@@ -74,3 +74,9 @@ void Scene::SpawnSceneDefinition()
     timerParams.m_OriginalPosition = carEnt->transform->getWorldPosition();
     timerScriptComponent->AddScriptToComponent<TimerScript>(&timerParams);
 }
+
+Entity* Scene::GetSceneCopy()
+{
+    Entity* cur = new Entity(*sceneRoot);
+    return cur;
+}

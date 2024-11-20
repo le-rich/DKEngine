@@ -18,7 +18,7 @@ protected:
     // Private constructor as this should be a singleton.
     EntityManager()
     {
-        std::cout << "Entity Manager created" << std::endl;
+
     }
 
 public:
@@ -78,7 +78,7 @@ public:
 
         if (result.second)
         {
-            std::cout << "Entity added" << std::endl;
+            // std::cout << "Entity added" << std::endl;
         }
         else {
             // check if the entity with the same UUID is actually the same entity
@@ -133,15 +133,32 @@ public:
         for (auto it = entityMap.begin(); it != entityMap.end(); ++it)
         {
             UUIDv4::UUID uuid = it->first;
-            Entity entity = *it->second;
+            Entity* entity = it->second;
 
-            if (entity.GetDisplayName() == displayName)
+            if (entity->GetDisplayName() == displayName)
             {
                 return uuid;
             }
         }
 
         return nullptr;
+    }
+
+    std::vector<Entity*> findEntitiesByComponentMask(ComponentMask componentMask) 
+    {
+        std::vector<Entity*> result;
+        for (auto it = entityMap.begin(); it != entityMap.end(); ++it)
+        {
+            UUIDv4::UUID uuid = it->first;
+            Entity* entity = it->second;
+
+            if (entity->GetComponentMask() == componentMask)
+            {
+                result.push_back(entity);
+            }
+        }
+
+        return result;
     }
 
     // clean and remove entity from the tree
@@ -213,10 +230,13 @@ public:
         }
 
         // recursive duplicate children
-        for (auto* child : originalEntity->getChildren()) {
-            Entity* childDuplicate = duplicateEntity(child);
+        for(int i = 0; i < originalEntity->getChildren().size(); i++){
+            Entity* childDuplicate = duplicateEntity(originalEntity->getChildren()[i]);
+            childDuplicate->setParent(duplicate);
             duplicate->addChild(childDuplicate);
         }
+
+        duplicate->setParent(originalEntity->getParent());
 
         addEntityToMap(*duplicate);
 
