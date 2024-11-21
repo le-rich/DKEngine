@@ -32,6 +32,20 @@ public:
         this->AddScript<T>(*script);
     }
 
+    template <typename T>
+    T* GetScript()
+    {
+        for (const auto& script : scripts)
+        {
+            T* subScript = dynamic_cast<T*>(script.get());
+            if (subScript != nullptr)
+            {
+                return subScript;
+            }
+        }
+        return nullptr;
+    }
+
     void UpdateScripts(float deltaTime)
     {
         for (auto& script : scripts)
