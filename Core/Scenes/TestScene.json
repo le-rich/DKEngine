@@ -64,16 +64,22 @@
       ]
     },
     {
-      "name": "GameManager",
+      "name": "Checkpoint 1",
+      "transform": {
+        "localPosition": [],
+        "localOrientation": [],
+        "localScale": []
+      },
       "components": [
         {
           "type": "Script",
           "params": {
             "scripts": [
               {
-                "script": "TimerScript",
+                "script": "LapCheckpointScript",
                 "params": {
-                  "target": "Test Car"
+                  "other": "Test Car",
+                  "index": 1
                 }
               }
             ]
@@ -81,6 +87,31 @@
         }
       ]
     },
+    {
+      "name": "Checkpoint 2",
+      "transform": {
+        "localPosition": [ -1.25, 0, 0 ],
+        "localOrientation": [],
+        "localScale": []
+      },
+      "components": [
+        {
+          "type": "Script",
+          "params": {
+            "scripts": [
+              {
+                "script": "LapCheckpointScript",
+                "params": {
+                  "other": "Test Car",
+                  "index": 2
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+
     {
       "name": "Test OBJECT",
       "transform": {
@@ -92,5 +123,28 @@
       "parent": "JSON TEST PARENT",
       "children": [ "JSON Test Child" ]
     }
-  ]
+  ],
+  "gamemanager": {
+    "components": [
+      {
+        "type": "Script",
+        "params": {
+          "scripts": [
+            {
+              "script": "TimerScript",
+              "params": {
+                "target": "Test Car"
+              }
+            },
+            {
+              "script": "LapManagerScript",
+              "params": {
+                "checkpoints": ["Checkpoint 1", "Checkpoint 2"]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
 }

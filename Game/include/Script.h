@@ -14,7 +14,9 @@ enum class ScriptType
 
 std::unordered_map<std::string, ScriptType> const ScriptMap = {
     {"OrbitScript", ScriptType::OrbitScript},
-    {"TimerScript", ScriptType::TimerScript}
+    {"TimerScript", ScriptType::TimerScript},
+    {"LapCheckpointScript", ScriptType::LapCheckpointScript},
+    {"LapManagerScript", ScriptType::LapManagerScript}
 };
 
 class Script

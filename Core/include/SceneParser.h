@@ -7,6 +7,8 @@
 #include "Managers/EntityManager.h"
 #include "Scripts/OrbitScript.h"
 #include "Scripts/TimerScript.h"
+#include "Scripts/LapCheckpointScript.h"
+#include "Scripts/LapManagerScript.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -29,7 +31,8 @@ namespace SceneParser
     enum SceneElement
     {
         ASSETS = 0,
-        ENTITIES
+        ENTITIES,
+        GAMEMANAGER
     };
 
     static const std::string ASSET_KEY = "assets";
@@ -38,7 +41,8 @@ namespace SceneParser
 
     std::unordered_map<std::string, SceneElement> const ElementMap = {
         {ASSET_KEY, SceneElement::ASSETS},
-        {ENTITY_KEY, SceneElement::ENTITIES}
+        {ENTITY_KEY, SceneElement::ENTITIES},
+        {GAMEMANAGER_KEY, SceneElement::GAMEMANAGER}
     };
 
     void ParseTransform(Entity* pEntity, json& transformObject)
@@ -211,6 +215,64 @@ namespace SceneParser
                         scriptComponent->CreateAndAddScript<TimerScript>(&params);
                         break;
                     }
+                    case ScriptType::LapCheckpointScript:
+                    {
+                        LapCheckpointScriptParams params;
+                        try
+                        {
+                            std::string target = scriptParams.at("other").template get<std::string>();
+                            Entity* targetEntity = EntityManager::getInstance().findFirstEntityByDisplayName(target);
+                            params.m_Other = targetEntity->transform;
+                        } OPTIONAL_EXCEPTION_HANDLER;
+                        
+                        try
+                        {
+                            int index = scriptParams.at("index").template get<int>();
+                            params.m_Index = index;
+                        } OPTIONAL_EXCEPTION_HANDLER;
+
+                        scriptComponent->CreateAndAddScript<LapCheckpointScript>(&params);
+                        break;
+                    }
+                    case ScriptType::LapManagerScript:
+                    {
+                        LapManagerScriptParams params;
+                        LapManagerScript* lapManagerScript = new LapManagerScript(pEntity);
+                        try
+                        {
+                            std::vector<std::string> checkpoints = scriptParams.at("checkpoints").template get<std::vector<std::string>>();
+                            for (std::string checkpoint : checkpoints)
+                            {
+                                Entity* entity = EntityManager::getInstance().findFirstEntityByDisplayName(checkpoint);
+                                ScriptComponent* checkpointScriptComponent = dynamic_cast<ScriptComponent*>(entity->getComponent(ComponentType::Script));
+                                LapCheckpointScript* checkpointScript = checkpointScriptComponent->GetScript<LapCheckpointScript>();
+                                checkpointScript->SetLapManager(lapManagerScript);
+                                params.m_Checkpoints.push_back(checkpointScript);
+                            }
+                        }OPTIONAL_EXCEPTION_HANDLER;
+
+                        try
+                        {
+                            int totallaps = scriptParams.at("totallaps").template get<int>();
+                            params.m_TotalLaps = totallaps;
+                        }OPTIONAL_EXCEPTION_HANDLER;
+                        
+                        try
+                        {
+                            int currentlap = scriptParams.at("currentlap").template get<int>();
+                            params.m_CurrentLap = currentlap;
+                        }OPTIONAL_EXCEPTION_HANDLER;
+                        
+                        try
+                        {
+                            int nextcheckpointindex = scriptParams.at("nextcheckpointindex").template get<int>();
+                            params.m_NextCheckpointIndex = nextcheckpointindex;
+                        }OPTIONAL_EXCEPTION_HANDLER;
+
+                        lapManagerScript->SetParameters(&params);
+                        scriptComponent->AddScript<LapManagerScript>(*lapManagerScript);
+                        break;
+                    }
                     default:
                         break;
                 }
@@ -343,6 +405,24 @@ namespace SceneParser
         }
     }
 
+    void ParseGameManager(json& pEntityObjects)
+    {
+        std::string name = "GameMangaer";
+        Entity* entity = EntityManager::getInstance().findFirstEntityByDisplayName(name);
+        if (entity == nullptr)
+        {
+            entity = new Entity(name);
+            EntityManager::getInstance().Instantiate(entity);
+        }
+
+        try
+        {
+            json components = pEntityObjects.at("components");
+            ParseComponents(entity, components);
+        }
+        OPTIONAL_EXCEPTION_HANDLER;
+    }
+
     static void LoadScene(std::string pSceneFilePath)
     {
         std::ifstream inputStream;
@@ -362,6 +442,13 @@ namespace SceneParser
         {
             json entitiesObject = sceneJSON.at(ENTITY_KEY);
             ParseEntities(entitiesObject);
+        }
+        DEFAULT_EXCEPTION_HANDLER;
+
+        try
+        {
+            json gameManagerObject = sceneJSON.at(GAMEMANAGER_KEY);
+            ParseGameManager(gameManagerObject);
         }
         DEFAULT_EXCEPTION_HANDLER;
     }
