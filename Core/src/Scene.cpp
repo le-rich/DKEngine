@@ -12,6 +12,7 @@
 #include "TimerScript.h"
 #include "LapManagerScript.h"
 #include "LapCheckpointScript.h"
+#include "Input.h"
 
 Scene::Scene()
 {
@@ -37,15 +38,25 @@ void Scene::SpawnSceneDefinition()
     lightEntity->transform->setLocalOrientation(glm::quat(-0.5f, 0.5f, 0.5f, 0.f));
     EntityManager::getInstance().Instantiate(lightEntity);
 
+    Input& input = Input::GetInstance();
+
     // TODO: JSONparser for Scene entities and scripts/components.
     // TODO: Figure out location and pathing of assets/non code files within solution
     const std::string SOURCE_FOLDER = "TestAE2/";
     const std::string MODEL_FILE = "ae86.gltf";
+    const std::string CAR_2_SOURCE_FOLDER = "Car2Test/";
+    const std::string CAR_2_MODEL_FILE = "sportcar.017.gltf";
 
     Entity* testCar = new Entity();
     testCar->SetDisplayName("Test Car");
     GLTFLoader::LoadModelAsEntity(testCar, SOURCE_FOLDER, MODEL_FILE);
     EntityManager::getInstance().Instantiate(testCar);
+
+    // making a 2nd car
+    Entity* testCar2 = new Entity();
+    testCar2->SetDisplayName("Test Car 2");
+    GLTFLoader::LoadModelAsEntity(testCar2, CAR_2_SOURCE_FOLDER, CAR_2_MODEL_FILE);
+    EntityManager::getInstance().Instantiate(testCar2);
 
     Entity* gameManager = new Entity();
     gameManager->SetDisplayName("Game Manager");
@@ -62,9 +73,47 @@ void Scene::SpawnSceneDefinition()
     auto carID = entityManager->findFirstEntityByDisplayName("Test Car");
     auto carEnt = entityManager->getEntity(carID);
 
+    // making a 2nd car
+    auto car2ID = entityManager->findFirstEntityByDisplayName("Body");
+    auto carEnt2 = entityManager->getEntity(car2ID);
+    carEnt2->transform->setLocalPosition(glm::vec3(1.5f, 0.0f, 0.0f));
+    carEnt2->transform->setLocalScale(glm::vec3(0.3f, 0.3f, 0.3f));
+    
+
     OrbitScriptParams orbitParams;
     orbitParams.m_OrbitTarget = carEnt->transform;
     cameraScriptComponent->AddScriptToComponent<OrbitScript>(&orbitParams);
+
+    input.RegisterKeyCallback(GLFW_KEY_SPACE, [&orbitParams, &carEnt, &carEnt2](Input::ActionType action) {
+        if (action == Input::PRESS) {
+            static bool target1 = true;
+            if (target1) {
+                if (carEnt) {
+                    //orbitParams.m_OrbitTarget = carEnt->transform;
+                    std::cout << "carEnt is fine" << std::endl;
+                }
+                
+                if (carEnt->transform) {
+                    std::cout << "transform is fine" << std::endl;
+                }
+                
+                //std::cout << "Target is Car 1" << std::endl;
+            }
+            else {
+                if (carEnt2) {
+                    //orbitParams.m_OrbitTarget = carEnt->transform;
+                    std::cout << "carEnt2 is fine" << std::endl;
+                }
+
+                if (carEnt2->transform) {
+                    std::cout << "transform2 is fine" << std::endl;
+                }
+                //orbitParams.m_OrbitTarget = carEnt2->transform;
+                //std::cout << "Target is Car 2" << std::endl;
+            }
+            target1 = !target1;
+        }
+        });
     // End Example
 
     auto gameManagerID = entityManager->findFirstEntityByDisplayName("Game Manager");
