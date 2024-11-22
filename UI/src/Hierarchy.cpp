@@ -21,6 +21,10 @@ void drawHierarchyLine(Entity* entity) {
         nodeFlags |= ImGuiTreeNodeFlags_Selected;
     }
 
+    if (entity->getChildren().size() == 0) {
+       nodeFlags |= ImGuiTreeNodeFlags_Leaf;
+    }
+
     // Create a unique ID using the name and the memory address of the GameObject
     ImGui::PushID(entity->GetEntityID().str().c_str()); // Push the GameObject pointer to the ID stack
     bool nodeOpen = ImGui::TreeNodeEx(entity->GetDisplayName().c_str(), nodeFlags);
