@@ -3,12 +3,18 @@
 
 RigidBodyComponent::RigidBodyComponent(Entity* mEntity, std::shared_ptr<AE86::RigidBody> rigidBody, float mass)
 	: Component(mEntity), rb(rigidBody) {
+	this->componentType = ComponentType::RigidBody;
 	rb->setMass(mass);
 }
 
 RigidBodyComponent::~RigidBodyComponent() {}
 
+
 // getters and setter definitions
+
+std::shared_ptr<AE86::RigidBody> RigidBodyComponent::getRigidBody() {
+	return rb;
+}
 
 float RigidBodyComponent::getMass() const {
 	return rb->getMass();
@@ -49,7 +55,7 @@ void RigidBodyComponent::applyForceAtPoint(const glm::vec3& force, const glm::ve
 // other funcs
 
 void RigidBodyComponent::update() {
-	//TODO: actual update logic
+	
 }
 
 // overloaded equality

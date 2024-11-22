@@ -17,6 +17,7 @@ enum class ComponentType : uint8_t
     Light,
     Mesh,
     Script,
+    RigidBody,
     Count, // This needs to be last. It represents how many components there are for bitmask.
 };
 

@@ -23,6 +23,8 @@ public:
 	const glm::vec3 getVelocity() const;
 	void setVelocity(const glm::vec3& velocity);
 
+	std::shared_ptr<AE86::RigidBody> getRigidBody();
+
 	/** 
 	 *  The current force applied to the object across the 3 cardinal
 	 *  axes in Newtons. Once a physics world simulation occurs,
