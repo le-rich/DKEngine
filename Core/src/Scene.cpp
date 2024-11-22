@@ -82,38 +82,16 @@ void Scene::SpawnSceneDefinition()
 
     OrbitScriptParams orbitParams;
     orbitParams.m_OrbitTarget = carEnt->transform;
+    orbitParams.m_OrbitTarget2 = carEnt2->transform;
     cameraScriptComponent->AddScriptToComponent<OrbitScript>(&orbitParams);
+    OrbitScript* orbitScript = cameraScriptComponent->GetScript<OrbitScript>();
 
-    input.RegisterKeyCallback(GLFW_KEY_SPACE, [&orbitParams, &carEnt, &carEnt2](Input::ActionType action) {
+    input.RegisterKeyCallback(GLFW_KEY_SPACE, [orbitScript](Input::ActionType action) {
         if (action == Input::PRESS) {
-            static bool target1 = true;
-            if (target1) {
-                if (carEnt) {
-                    //orbitParams.m_OrbitTarget = carEnt->transform;
-                    std::cout << "carEnt is fine" << std::endl;
-                }
-                
-                if (carEnt->transform) {
-                    std::cout << "transform is fine" << std::endl;
-                }
-                
-                //std::cout << "Target is Car 1" << std::endl;
-            }
-            else {
-                if (carEnt2) {
-                    //orbitParams.m_OrbitTarget = carEnt->transform;
-                    std::cout << "carEnt2 is fine" << std::endl;
-                }
-
-                if (carEnt2->transform) {
-                    std::cout << "transform2 is fine" << std::endl;
-                }
-                //orbitParams.m_OrbitTarget = carEnt2->transform;
-                //std::cout << "Target is Car 2" << std::endl;
-            }
-            target1 = !target1;
+            orbitScript->swapOrbitTargets();
         }
-        });
+    });
+
     // End Example
 
     auto gameManagerID = entityManager->findFirstEntityByDisplayName("Game Manager");

@@ -34,3 +34,9 @@ void OrbitScript::SetParameters(ScriptParams* pScriptParameters)
 {
     mParams = *static_cast<OrbitScriptParams*>(pScriptParameters);
 }
+
+void OrbitScript::swapOrbitTargets() {
+    TransformComponent* temp = mParams.m_OrbitTarget;
+    mParams.m_OrbitTarget = mParams.m_OrbitTarget2;
+    mParams.m_OrbitTarget2 = temp;
+}
