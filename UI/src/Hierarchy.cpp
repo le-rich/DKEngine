@@ -8,6 +8,7 @@
 using namespace std;
 
 Entity* selectedEntity = nullptr;
+Entity* rootEntity = nullptr;
 
 // Global variable to track the renaming state
 Entity* renamingEntity = nullptr; // Currently selected GameObject for renaming
@@ -31,7 +32,7 @@ void drawHierarchyLine(Entity* entity) {
     ImGui::PopID(); // Pop the ID from the stack
 
     // Handle left-click selection
-    if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen()) {
+    if (ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Left) && !ImGui::IsItemToggledOpen() && !ImGui::IsMouseDragging(ImGuiMouseButton_Left)) {
         selectedEntity = entity;
         consoleLog("Selected: " + entity->GetDisplayName());
 
@@ -107,6 +108,33 @@ void drawHierarchyLine(Entity* entity) {
         }
     }
 
+    if (entity != rootEntity && ImGui::BeginDragDropSource()) {
+       ImGui::SetDragDropPayload("Entity", &entity, sizeof(Entity*));
+       ImGui::Text(entity->GetDisplayName().c_str());
+       ImGui::EndDragDropSource();
+    }
+
+    if (ImGui::BeginDragDropTarget()) {
+       const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Entity");
+       if (payload != nullptr) {
+          Entity* child = *(Entity**)payload->Data;
+          Entity* parent = entity;
+          Entity* parentTree = parent;
+          while (parentTree != rootEntity && parentTree != child) { //check for parent loop
+             parentTree = parentTree->getParent();
+          }
+          if (parentTree == child) {
+             consoleLog("Error: reparenting " + child->GetDisplayName() + " to " + parent->GetDisplayName() + " would cause hierarchy loop");
+          }
+          else if (child != parent) {
+             child->setParent(parent);
+             consoleLog(child->GetDisplayName() + " parented to " + parent->GetDisplayName());
+          }
+       }
+       ImGui::EndDragDropTarget();
+    }
+
+
     // Draw children recursively if the node is open
     if (nodeOpen) {
        for (int i = 0; i < entity->getChildren().size(); i++) {
@@ -120,7 +148,7 @@ void drawHierarchyLine(Entity* entity) {
 void drawHierarchy(Scene* scene) {
     ImGui::Begin("Hierarchy");
 
-    Entity* rootEntity = scene->getRoot();
+    rootEntity = scene->getRoot();
 
     if (rootEntity) {
        drawHierarchyLine(rootEntity);
