@@ -1,8 +1,9 @@
 #pragma once
+#include "Script.h"
+
 #include <vector>
 #include <memory>
 
-#include "Script.h"
 
 class Component;
 class Entity;
@@ -24,7 +25,7 @@ public:
     }
 
     template<typename T>
-    void AddScriptToComponent(ScriptParams* pScriptParams)
+    void CreateAndAddScript(ScriptParams* pScriptParams)
     {
         T* script;
         script = new T(entity);

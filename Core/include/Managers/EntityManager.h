@@ -128,7 +128,7 @@ public:
     }
 
     // retrieve by display name
-    UUIDv4::UUID findFirstEntityByDisplayName(const std::string& displayName)
+    Entity* findFirstEntityByDisplayName(const std::string& displayName)
     {
         for (auto it = entityMap.begin(); it != entityMap.end(); ++it)
         {
@@ -137,7 +137,7 @@ public:
 
             if (entity->GetDisplayName() == displayName)
             {
-                return uuid;
+                return it->second;
             }
         }
 
