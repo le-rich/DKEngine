@@ -42,10 +42,19 @@ void Scene::SpawnSceneDefinition()
     const std::string SOURCE_FOLDER = "TestAE2/";
     const std::string MODEL_FILE = "ae86.gltf";
 
+    const std::string MAP_SOURCE_FOLDER = "TestMap/";
+    const std::string MAP_MODEL_FILE = "track.gltf";
+
     Entity* testCar = new Entity();
     testCar->SetDisplayName("Test Car");
     GLTFLoader::LoadModelAsEntity(testCar, SOURCE_FOLDER, MODEL_FILE);
     EntityManager::getInstance().Instantiate(testCar);
+
+    Entity* testMap = new Entity();
+    testMap->SetDisplayName("Test Map");
+    GLTFLoader::LoadModelAsEntity(testMap, MAP_SOURCE_FOLDER, MAP_MODEL_FILE);
+    testMap->transform->setLocalPosition(glm::vec3(0.0f, -1.3f, 0.0f));
+    EntityManager::getInstance().Instantiate(testMap);
 
     Entity* gameManager = new Entity();
     gameManager->SetDisplayName("Game Manager");

@@ -123,7 +123,7 @@ namespace GLTFLoader
             std::vector<unsigned char> bufferData;
             if (!GetAttributeVector(pGltfModel, accessorNum, bufferData))
             {
-                std::printf("Failed to get attribute data");
+                std::printf("Failed to get attribute data\n");
                 continue;
             }
 
