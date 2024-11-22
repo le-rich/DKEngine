@@ -32,6 +32,7 @@ public:
     }
 
     void swapOrbitTargets();
+    TransformComponent* getCurrentTarget();
 
 private:
     OrbitScriptParams mParams{};

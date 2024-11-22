@@ -1,3 +1,5 @@
+#pragma once
+
 #include <vector>
 
 #include "Scene.h"
@@ -8,6 +10,7 @@
 #include "Managers/EntityManager.h"
 #include "Components/MeshComponent.h"
 #include "Components/ScriptComponent.h"
+#include "GarageScript.h"
 #include "OrbitScript.h"
 #include "TimerScript.h"
 #include "LapManagerScript.h"
@@ -77,7 +80,7 @@ void Scene::SpawnSceneDefinition()
     auto car2ID = entityManager->findFirstEntityByDisplayName("Body");
     auto carEnt2 = entityManager->getEntity(car2ID);
     carEnt2->transform->setLocalPosition(glm::vec3(1.5f, 0.0f, 0.0f));
-    carEnt2->transform->setLocalScale(glm::vec3(0.3f, 0.3f, 0.3f));
+    carEnt2->transform->setLocalScale(glm::vec3(0.4f, 0.4f, 0.4f));
     
 
     OrbitScriptParams orbitParams;
@@ -85,6 +88,16 @@ void Scene::SpawnSceneDefinition()
     orbitParams.m_OrbitTarget2 = carEnt2->transform;
     cameraScriptComponent->AddScriptToComponent<OrbitScript>(&orbitParams);
     OrbitScript* orbitScript = cameraScriptComponent->GetScript<OrbitScript>();
+
+    // Garage Room
+    Entity* garageRoomController = new Entity();
+    garageRoomController->SetDisplayName("Garage Controller");
+    EntityManager::getInstance().Instantiate(garageRoomController);
+
+    auto garageRoomID = entityManager->findFirstEntityByDisplayName("Garage Controller");
+    auto garageRoomEnt = entityManager->getEntity(garageRoomID);
+    ScriptComponent* garageScriptComponent = new ScriptComponent(garageRoomEnt);
+    garageRoomEnt->addComponent(*garageScriptComponent);
 
     input.RegisterKeyCallback(GLFW_KEY_SPACE, [orbitScript](Input::ActionType action) {
         if (action == Input::PRESS) {
