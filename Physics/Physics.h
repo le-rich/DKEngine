@@ -6,6 +6,7 @@
 #include <mutex>
 #include <chrono>
 #include "Components/TransformComponent.h"
+#include <Components/RigidBodyComponent.h>
 
 
 // 120 HZ tick rate
@@ -18,13 +19,14 @@ public:
     std::chrono::duration<double> timeBuffer;
     AE86::RigidBody* body;
     TransformComponent* CAR_TRANSFORM;
+    std::mutex mtx;
     
-	Physics(TransformComponent* carTransform) {
+	Physics(TransformComponent* carTransform, AE86::RigidBody* rbody) {
         CAR_TRANSFORM = carTransform;
         world = AE86::World();
         prevTime = std::chrono::high_resolution_clock::now();
         timeBuffer = std::chrono::milliseconds(0);
-        body = new AE86::RigidBody();
+        body = rbody;
         body->setAwake(true);
         body->setInverseMass(0.95f);
         body->setLinearDamping(0.50f);
@@ -59,9 +61,21 @@ public:
     void FixedUpdate() override {
         // Update Loop logic here
 
+        // grab all rigidbody components and update internal locations to transforms.
+        // TODO: possible race conditions, need to lock scene graph here until all
+        // rb->updates are done.
+        ComponentMask rigidBodyComponentMask = rigidBodyComponentMask.set(static_cast<size_t>(ComponentType::RigidBody));
+        std::vector<Entity*> rigidBodyEntities = EntityManager::getInstance().findEntitiesByComponentMask(rigidBodyComponentMask);
+
+        for (Entity* rigidBodyEntity : rigidBodyEntities) {
+            RigidBodyComponent* rigidBodyComponent = dynamic_cast<RigidBodyComponent*>(
+                rigidBodyEntity->getComponent(ComponentType::RigidBody)
+            );
+            rigidBodyComponent->update();
+        }
+
         //std::cout << "PHYSICS - WE ARE GRABBING LOCK FOR CAR\n";
         // std::lock_guard<std::mutex> lck(CAR_TRANSFORM->mtx);
-
         world.runPhysics(0.02);
 
         //std::cout << "PHYSICS - WE HAVE DONE A PHYSICS TIME-STEP\n";

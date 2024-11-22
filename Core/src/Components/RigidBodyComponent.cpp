@@ -55,7 +55,12 @@ void RigidBodyComponent::applyForceAtPoint(const glm::vec3& force, const glm::ve
 // other funcs
 
 void RigidBodyComponent::update() {
-	
+	glm::vec3 worldPosition = entity->transform->getWorldPosition();
+	glm::quat worldOrientation = entity->transform->getWorldOrientation();
+	rb->setPosition(AE86::Vector3(worldPosition.x, worldPosition.y, worldPosition.z));
+	auto ae86Quat = AE86::Quaternion(worldOrientation.w, worldOrientation.x, worldOrientation.y,
+		worldOrientation.z);
+	rb->setOrientation(ae86Quat);
 }
 
 // overloaded equality
