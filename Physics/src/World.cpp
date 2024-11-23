@@ -4,8 +4,8 @@
 
 namespace AE86 {
 	void World::startFrame() {
-		for (RigidBodies::iterator b = bodies.begin();
-			b != bodies.end();
+		for (RigidBodies::iterator b = rigidBodyComponents.begin();
+			b != rigidBodyComponents.end();
 			++b) {
 
 			(*b)->clearAccumulators();
@@ -14,8 +14,8 @@ namespace AE86 {
 	}
 
 	void World::integrate(real duration) {
-		for (RigidBodies::iterator b = bodies.begin();
-			b != bodies.end();
+		for (RigidBodies::iterator b = rigidBodyComponents.begin();
+			b != rigidBodyComponents.end();
 			++b) {
 
 			(*b)->integrate(duration);
@@ -29,10 +29,10 @@ namespace AE86 {
 	}
 
 	World::RigidBodies World::getRigidBodies() {
-		return bodies;
+		return rigidBodyComponents;
 	}
 
 	void World::addRigidBody(RigidBody* rigidBody) {
-		bodies.emplace_back(rigidBody);
+		rigidBodyComponents.emplace_back(rigidBody);
 	}
 }

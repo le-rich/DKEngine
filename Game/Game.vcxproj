@@ -137,6 +137,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\Scripts\CarControllerScript.h" />
+    <ClInclude Include="include\Scripts\FollowCamScript.h" />
     <ClInclude Include="include\Components\ScriptComponent.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\Script.h" />
@@ -146,8 +148,10 @@
     <ClInclude Include="include\Scripts\TimerScript.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="FollowCamScript.cpp" />
     <ClCompile Include="src\Components\ScriptComponent.cpp" />
     <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\Scripts\CarControllerScript.cpp" />
     <ClCompile Include="src\Scripts\LapCheckpointScript.cpp" />
     <ClCompile Include="src\Scripts\LapManagerScript.cpp" />
     <ClCompile Include="src\Scripts\OrbitScript.cpp" />

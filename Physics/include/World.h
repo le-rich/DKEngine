@@ -16,7 +16,7 @@ namespace AE86 {
 		typedef std::vector<RigidBody*> RigidBodies;
 
 		World() {
-			bodies = std::vector<RigidBody*>();
+			rigidBodyComponents = std::vector<RigidBody*>();
 		}
 		
 		void addRigidBody(RigidBody* rigidBody);
@@ -36,7 +36,7 @@ namespace AE86 {
 
 	protected:
 		// holds the rigid bodies being simulated
-		RigidBodies bodies;
+		RigidBodies rigidBodyComponents;
 
 
 

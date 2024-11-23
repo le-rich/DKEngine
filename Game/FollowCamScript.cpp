@@ -1,0 +1,36 @@
+#include "Scripts/FollowCamScript.h"
+
+#include "Components/TransformComponent.h"
+
+FollowCamScript::FollowCamScript(Entity* mEntity) : Script(mEntity)
+{
+
+}
+
+FollowCamScript::~FollowCamScript() {}
+
+bool follow = false;
+void FollowCamScript::Update(float deltaTime)
+{
+    TransformComponent* transform = this->entity->transform;
+    if (!transform || !mParams.m_FollowTarget) {
+        return;
+    }
+    
+    transform->setLocalPosition(glm::vec3(0.0f, 1.65f, -3.25f));
+    glm::quat q = glm::quat(0, 0, -1, 0);
+    transform->setLocalOrientation(q);
+
+    
+    if (!follow) {
+        transform->setLocalPosition(mParams.m_FollowTarget->getLocalPosition() + glm::vec3(0.0f, 1.65f, -3.25f));
+        glm::quat q = mParams.m_FollowTarget->getLocalOrientation() * glm::quat(0, 0, -1, 0);
+        transform->setLocalOrientation(q);
+        follow = true;
+    }
+}
+
+void FollowCamScript::SetParameters(ScriptParams* pScriptParameters)
+{
+    mParams = *static_cast<FollowCamScriptParams*>(pScriptParameters);
+}
