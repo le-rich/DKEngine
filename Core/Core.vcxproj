@@ -181,10 +181,14 @@
     <ClInclude Include="include\Managers\AssetManager.h" />
     <ClInclude Include="include\Managers\EntityManager.h" />
     <ClInclude Include="include\Scene.h" />
+    <ClInclude Include="include\SceneParser.h" />
     <ClInclude Include="include\System.h" />
     <ClInclude Include="include\Utils\IDUtils.h" />
     <ClInclude Include="include\Utils\uuid_v4.h" />
     <ClInclude Include="include\Window\Window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scenes\TestScene.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

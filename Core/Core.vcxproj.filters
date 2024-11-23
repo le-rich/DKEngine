@@ -99,5 +99,11 @@
     <ClInclude Include="include\Components\RigidBodyComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\SceneParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scenes\TestScene.json" />
   </ItemGroup>
 </Project>

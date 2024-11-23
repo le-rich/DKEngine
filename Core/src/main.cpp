@@ -74,9 +74,7 @@ int run_glfw() {
 	Core::getInstance().SetScene(defaultScene);
 	defaultScene->SpawnSceneDefinition();
 
-
-	auto testCarUUID = EntityManager::getInstance().findFirstEntityByDisplayName("Test Car");
-	Entity* testCarEntity = EntityManager::getInstance().getEntity(testCarUUID);
+    Entity* testCarEntity = EntityManager::getInstance().findFirstEntityByDisplayName("Test Car");
 
 	TransformComponent* CAR_TRANSFORM = testCarEntity->transform;
 
