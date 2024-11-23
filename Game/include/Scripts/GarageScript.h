@@ -1,22 +1,15 @@
 #pragma once
 
+#include <glad/glad.h>
 #include "Script.h"
-#include "OrbitScript.h"
-#include "Input.h"
 
-class Input;
+class OrbitScript;
 
 struct GarageScriptParams : ScriptParams
 {
-    //TransformComponent* m_OrbitTarget = nullptr;
-    //TransformComponent* m_OrbitTarget2 = nullptr;
     OrbitScript* orbitScript = nullptr;
     bool carHasBeenSelected = false;
     Entity* selectedCar = nullptr;
-    //float m_Radius = 2;
-    //float m_Speed = 1.5f;
-    //float currentAngle = 0;
-
 };
 
 class GarageScript : public Script

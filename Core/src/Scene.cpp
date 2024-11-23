@@ -15,7 +15,7 @@
 #include "TimerScript.h"
 #include "LapManagerScript.h"
 #include "LapCheckpointScript.h"
-#include "Input.h"
+//#include "Input.h"
 
 Scene::Scene()
 {
@@ -41,7 +41,7 @@ void Scene::SpawnSceneDefinition()
     lightEntity->transform->setLocalOrientation(glm::quat(-0.5f, 0.5f, 0.5f, 0.f));
     EntityManager::getInstance().Instantiate(lightEntity);
 
-    Input& input = Input::GetInstance();
+    //Input& input = Input::GetInstance();
 
     // TODO: JSONparser for Scene entities and scripts/components.
     // TODO: Figure out location and pathing of assets/non code files within solution
@@ -99,12 +99,13 @@ void Scene::SpawnSceneDefinition()
     ScriptComponent* garageScriptComponent = new ScriptComponent(garageRoomEnt);
     garageRoomEnt->addComponent(*garageScriptComponent);
 
+    /*
     input.RegisterKeyCallback(GLFW_KEY_SPACE, [orbitScript](Input::ActionType action) {
         if (action == Input::PRESS) {
             orbitScript->swapOrbitTargets();
         }
     });
-
+    */
     // End Example
 
     auto gameManagerID = entityManager->findFirstEntityByDisplayName("Game Manager");

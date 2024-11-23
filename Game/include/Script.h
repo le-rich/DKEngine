@@ -9,7 +9,8 @@ enum class ScriptType
     OrbitScript,
     TimerScript,
     LapCheckpointScript,
-    LapManagerScript
+    LapManagerScript,
+    GarageScript
 };
 
 class Script

@@ -1,8 +1,6 @@
 #include "Scripts/OrbitScript.h"
 #include "Components/TransformComponent.h"
 
-class Input;
-
 OrbitScript::OrbitScript(Entity *mEntity) : Script(mEntity)
 {
    
