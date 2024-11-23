@@ -20,6 +20,7 @@
 #include <iostream>
 #include <mutex>
 #include <thread>
+#include <Components/RigidBodyComponent.h>
 
 int run_glfw() {
 	std::atomic<bool> running(true);
@@ -36,7 +37,7 @@ int run_glfw() {
 
     Input& input = Input::GetInstance();
     input.SetWindow(window.GetWindow());
-
+    
     // the following is how you can call register a callback THIS IS JUST EXAMPLE CODE FOR PEOPLE TO USE
     input.RegisterKeyCallback(GLFW_KEY_W, [](Input::ActionType action) {
         if (action == Input::HOLD) {
@@ -80,7 +81,23 @@ int run_glfw() {
 	TransformComponent* CAR_TRANSFORM = testCarEntity->transform;
 
     UI* ui = new UI(Core::getInstance().GetScene());
-    Physics* physics = new Physics(CAR_TRANSFORM);
+    //RigidBodyComponent* carRigidBodyComponent = dynamic_cast<RigidBodyComponent*>(
+    //    testCarEntity->getComponent(ComponentType::RigidBody)
+    //    );
+
+    //auto carRigidBody = carRigidBodyComponent->getRigidBody();
+
+    //input.RegisterKeyCallback(GLFW_KEY_W, [carRigidBody](Input::ActionType action) {
+    //    if (action == Input::HOLD || action == Input::PRESS)
+    //        carRigidBody->addForce(AE86::Vector3(0.0f, 0.0f, 5.0f));
+    //    });
+
+    //input.RegisterKeyCallback(GLFW_KEY_S, [carRigidBody](Input::ActionType action) {
+    //    if (action == Input::HOLD || action == Input::PRESS)
+    //        carRigidBody->addForce(AE86::Vector3(0.0f, 0.0f, -5.0f));
+    //    });
+    
+    Physics* physics = new Physics();
     Renderer* renderer = new Renderer(&window);
     Game* game = new Game();
 
@@ -112,7 +129,6 @@ int run_glfw() {
     std::thread physicsThread([&]() 
     {
         double fixedUpdateBuffer = 0.0;
-        double FIXED_UPDATE_INTERVAL = 20; // in milliseconds
         auto previousTime = std::chrono::high_resolution_clock::now();
         while(running) 
         {
@@ -122,9 +138,9 @@ int run_glfw() {
             previousTime = currentTime;
             fixedUpdateBuffer += std::chrono::duration_cast<std::chrono::milliseconds>(deltaTime).count();
 
-            if (fixedUpdateBuffer >= FIXED_UPDATE_INTERVAL) {
+            if (fixedUpdateBuffer >= PHYSICS_UPDATE_INTERVAL) {
                 physics->FixedUpdate();
-                fixedUpdateBuffer -= FIXED_UPDATE_INTERVAL;
+                fixedUpdateBuffer -= PHYSICS_UPDATE_INTERVAL;
             }
             std::this_thread::sleep_for(std::chrono::microseconds(1));
         }

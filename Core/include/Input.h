@@ -8,8 +8,6 @@
 #include <list>
 #include <iostream>
 
-#include "include/Body.h"
-
 class Input
 {
 public:

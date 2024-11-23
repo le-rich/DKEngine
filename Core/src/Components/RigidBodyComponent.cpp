@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Entity.h"
 #include "Components/RigidBodyComponent.h"
 
@@ -6,6 +8,7 @@ RigidBodyComponent::RigidBodyComponent(Entity* mEntity, std::shared_ptr<AE86::Ri
 	this->componentType = ComponentType::RigidBody;
 	rb->setMass(mass);
 }
+
 
 RigidBodyComponent::~RigidBodyComponent() {}
 
@@ -55,6 +58,7 @@ void RigidBodyComponent::applyForceAtPoint(const glm::vec3& force, const glm::ve
 // other funcs
 
 void RigidBodyComponent::update() {
+	// TODO: fix potential race conditions by locking scene graph
 	glm::vec3 worldPosition = entity->transform->getWorldPosition();
 	glm::quat worldOrientation = entity->transform->getWorldOrientation();
 	rb->setPosition(AE86::Vector3(worldPosition.x, worldPosition.y, worldPosition.z));
