@@ -1,5 +1,3 @@
-#pragma once
-
 #include "Scripts/GarageScript.h"
 #include "Scripts/OrbitScript.h"
 //#include "Input.h"

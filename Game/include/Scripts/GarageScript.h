@@ -2,7 +2,9 @@
 
 #include "Script.h"
 #include "OrbitScript.h"
-//#include "Input.h"
+#include "Input.h"
+
+class Input;
 
 struct GarageScriptParams : ScriptParams
 {
