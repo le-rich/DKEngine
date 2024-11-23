@@ -361,8 +361,8 @@ namespace GLTFLoader
         {
             // Add rigidbody
             std::shared_ptr<AE86::RigidBody> rb = std::make_shared<AE86::RigidBody>();
-            RigidBodyComponent rigidComponent(pEntity, rb);
-            pEntity->addComponent(rigidComponent);
+            RigidBodyComponent* rigidComponent = new RigidBodyComponent(pEntity, rb);
+            pEntity->addComponent(*rigidComponent);
         }
     }
 
