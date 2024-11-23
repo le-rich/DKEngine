@@ -73,23 +73,23 @@ void Scene::SpawnSceneDefinition()
     auto carID = entityManager->findFirstEntityByDisplayName("Test Car");
     auto carEnt = entityManager->getEntity(carID);
     
-    //RigidBodyComponent* rigidBodyComponent = new RigidBodyComponent(carEnt, 
-    //    std::shared_ptr<AE86::RigidBody>(new AE86::RigidBody()), 
-    //    1.0f);
-    //carEnt->addComponent(*rigidBodyComponent);
+    RigidBodyComponent* rigidBodyComponent = new RigidBodyComponent(carEnt, 
+        std::shared_ptr<AE86::RigidBody>(new AE86::RigidBody()), 
+       1.0f);
+    carEnt->addComponent(*rigidBodyComponent);
 
-    //ScriptComponent* carScriptComponent = new ScriptComponent(carEnt);
-    //carEnt->addComponent(*carScriptComponent);
-    //CarControllerScriptParams carParams;
-    //carParams.m_InverseMass = 0.95f;
-    //carParams.m_Height = 1.335f;
-    //carParams.m_Width = 1.625f;
-    //carParams.m_Length = 4.185f;
-    //carScriptComponent->AddScriptToComponent<CarControllerScript>(&carParams);
+    ScriptComponent* carScriptComponent = new ScriptComponent(carEnt);
+    carEnt->addComponent(*carScriptComponent);
+    CarControllerScriptParams carParams;
+    carParams.m_InverseMass = 0.95f;
+    carParams.m_Height = 1.335f;
+    carParams.m_Width = 1.625f;
+    carParams.m_Length = 4.185f;
+    carScriptComponent->AddScriptToComponent<CarControllerScript>(&carParams);
 
-  //  OrbitScriptParams orbitParams;
-  //  orbitParams.m_OrbitTarget = carEnt->transform;
-  // cameraScriptComponent->AddScriptToComponent<OrbitScript>(&orbitParams);
+    OrbitScriptParams orbitParams;
+    orbitParams.m_OrbitTarget = carEnt->transform;
+    cameraScriptComponent->AddScriptToComponent<OrbitScript>(&orbitParams);
 
 
     FollowCamScriptParams followParams;

@@ -31,8 +31,8 @@ public:
                 rigidBodyEntity->getComponent(ComponentType::RigidBody)
             );
 
-        //    AE86::RigidBody* rigidBody = rigidBodyComponent->getRigidBody().get();
-         //   addBody(rigidBodyComponent);
+            AE86::RigidBody* rigidBody = rigidBodyComponent->getRigidBody().get();
+            addBody(rigidBodyComponent);
        }
 
         world.startFrame();
