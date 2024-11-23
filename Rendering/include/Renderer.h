@@ -10,6 +10,7 @@
 #include "Buffers/ShaderStorageBuffer.h"
 #include "Data/Shape.h"
 #include "Resources/Shader.h"
+#include "Resources/Skybox.h"
 #include "Resources/Primitives.h"
 #include "Window/Window.h"
 
@@ -52,6 +53,7 @@ public:
     void RenderToFrame(int pWidth, int pHeight);
     void WriteToFrameBuffer();
     void FetchRenderables();
+    void FetchSkybox();
 
     const FrameBuffer* GetFrameBuffer() { return &mFrameBuffer; }
 
@@ -66,6 +68,7 @@ private:
     UniformBuffer mEngineUniformBuffer;
     ShaderStorageBuffer shaderStorageBufferObject;
     std::vector<Renderable*> renderablesThisFrame;
+    std::shared_ptr<Skybox> skyboxThisFrame;
 
     void IssueMeshDrawCalls();
     void SetEngineUBO(int pWidth, int pHeight);

@@ -40,7 +40,7 @@ void Renderer::Update(float deltaTime)
 {
 	// TODO: Collect set of renderables here and use it.
 	FetchRenderables();
-
+	FetchSkybox();
 	{
 		std::lock_guard<std::mutex> lock(windowRef->mMutex);
         windowRef->SetWindowToCurrentThread();
@@ -98,6 +98,14 @@ void Renderer::RenderToFrame(int pWidth, int pHeight)
 	//	Unbind Material
 	//	
 
+	//Render Skybox
+	//backgroundShader.use();
+	//backgroundShader.setMat4("view", view);
+	//glActiveTexture(GL_TEXTURE0);
+	//glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
+	//renderCube();
+	skyboxThisFrame->Bind();
+	skyboxThisFrame->Draw();
 	//shaderStorageBufferObject.Unbind();
 }
 
@@ -165,6 +173,12 @@ void Renderer::SetEngineUBO(int pWidth, int pHeight)
 			mainCameraEntity->transform->getWorldPosition()
 		);
 	}
+}
+
+void Renderer::FetchSkybox() 
+{
+	auto skyboxID = Core::getInstance().GetScene()->GetSkyboxID();
+	skyboxThisFrame = AssetManager::GetInstance().GetSkyboxByID(skyboxID);
 }
 
 void Renderer::FetchRenderables() 
