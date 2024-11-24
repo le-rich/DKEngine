@@ -1,6 +1,7 @@
 #pragma once
-#include "Asset.h"
-#include "Primitives.h"
+#include "Resources/Asset.h"
+#include "Resources/Texture.h"
+#include "Resources/Primitives.h"
 
 static const std::string DEFAULT_SKYBOX_FOLDER = "Assets/Skybox/";
 
@@ -13,6 +14,8 @@ public:
 	void Unbind();
 
 	void Draw();
+	
+	void GenerateTexture(std::shared_ptr<Texture> texture);
 
 	UUIDv4::UUID mShaderID;
 	UUIDv4::UUID mTextureID;

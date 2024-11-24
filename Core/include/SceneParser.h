@@ -331,6 +331,7 @@ namespace SceneParser
 			AssetManager::GetInstance().AddTexture(texture);
 			skybox = std::make_shared<Skybox>(imageName);
 			skybox->mTextureID = texture->GetAssetID();
+			skybox->GenerateTexture(texture);
 			skybox->mShaderID = AssetManager::GetInstance().GetSkyboxShader()->GetAssetID();
 			AssetManager::GetInstance().AddSkybox(skybox);
 		}

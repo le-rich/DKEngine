@@ -8,6 +8,7 @@
 #include "Resources/Texture.h"
 
 static const std::string DEFAULT_SHADER_PATH = "../Rendering/Shaders/default.glsl";
+static const std::string EQUIRECT_CUBEMAP_SHADER_PATH = "../Rendering/Shaders/equirectangularToCubemapShader.glsl";
 static const std::string SKYBOX_SHADER_PATH = "../Rendering/Shaders/skybox.glsl";
 static const std::string DEFAULT_ASSET_FOLDER = "Assets/";
 
@@ -22,6 +23,7 @@ public:
     }
 
     std::shared_ptr<Shader> GetDefaultShader() { return DEFAULT_SHADER; }
+    std::shared_ptr<Shader> GetEquirectShader() { return EQUIRECT_CUBEMAP_SHADER; }
     std::shared_ptr<Shader> GetSkyboxShader() { return SKYBOX_SHADER; }
 
     void AddMaterial(std::shared_ptr<Material> pMaterial);
@@ -45,6 +47,7 @@ public:
 
 private:
     std::shared_ptr<Shader> DEFAULT_SHADER = std::make_shared<Shader>(DEFAULT_SHADER_PATH, "default");
+    std::shared_ptr<Shader> EQUIRECT_CUBEMAP_SHADER = std::make_shared<Shader>(EQUIRECT_CUBEMAP_SHADER_PATH, "equirectCubemap");
     std::shared_ptr<Shader> SKYBOX_SHADER = std::make_shared<Shader>(SKYBOX_SHADER_PATH, "skybox");
 
     std::map<UUIDv4::UUID, std::shared_ptr<Material>> mMaterialMap;
