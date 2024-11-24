@@ -11,7 +11,7 @@ public:
 
     virtual ~AudioComponent();
 
-    void LoadSound(const char* filePath);
+    void AddAudioSource(const char* filePath);
     void Play();
     void Stop(); 
     void Update();
@@ -26,7 +26,7 @@ private:
     char* audioFilePath;
     FMOD::Sound* sound;
     FMOD::Channel* channel;
-    bool isPlaying;
+    bool playOnStart;
     bool isLooping;
     AudioManager* audioManager;  // Reference to the audio manager
 };

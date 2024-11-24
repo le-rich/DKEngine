@@ -6,9 +6,9 @@
 
 
 AudioComponent::AudioComponent(Entity* mEntity, bool playOnStart, bool isLooping)
-    : Component(mEntity), sound(nullptr), channel(nullptr), isPlaying(playOnStart), isLooping(isLooping)
+    : Component(mEntity), sound(nullptr), channel(nullptr), playOnStart(playOnStart), isLooping(isLooping)
 {
-    if (isPlaying)
+    if (playOnStart)
         Play();
 }
 
@@ -21,11 +21,11 @@ AudioComponent::~AudioComponent() {
 }
 
 
-void AudioComponent::LoadSound(const char* filePath) {
+void AudioComponent::AddAudioSource(const char* filePath) {
     if (sound) {
         sound->release();
     }
-    
+    AudioManager::GetInstance();
     if (audioManager) {
         sound = AudioManager::GetInstance().LoadAudio(filePath);
     } else {
@@ -36,18 +36,27 @@ void AudioComponent::LoadSound(const char* filePath) {
 
 void AudioComponent::Play() {
     if (!sound) {
-        LoadSound(audioFilePath);
+        AddAudioSource(audioFilePath);
     }
+    
     if (sound) {
         
-        audioManager->GetSystem()->playSound(sound, nullptr, isPlaying, &channel);
+        audioManager->GetSystem()->playSound(sound, nullptr, playOnStart, &channel);
         if (channel) {
-            const FMOD_VECTOR fmodPosition = GetFMODVector3(mEntity->transform->getLocalPosition());
-            channel->set3DAttributes(&fmodPosition, nullptr);
-            isPlaying = true;
+            if (isLooping)
+            {
+                sound->setMode(FMOD_LOOP_NORMAL);
+                channel->setLoopCount(-1);
+            }
+            
+            channel->setVolume(1.0f);
+            const FMOD_VECTOR audioPosition = GetFMODVector3(mEntity->transform->getLocalPosition());
+            channel->set3DAttributes(&audioPosition, nullptr);
+            channel->setPaused(false); // Start playback
+            playOnStart = true;
         }
     } else {
-        std::cerr << "AudioManager not available in entity!" << std::endl;
+        std::cerr << "AudioManager not available in manager!" << std::endl;
     }
 }
 
@@ -55,12 +64,12 @@ void AudioComponent::Stop() {
     if (channel) {
         channel->stop();
         channel = nullptr;
-        isPlaying = false;
+        playOnStart = false;
     }
 }
 
 void AudioComponent::Update() {
-    if (channel && isPlaying) {
+    if (channel && playOnStart) {
         const FMOD_VECTOR fmodPosition = GetFMODVector3(mEntity->transform->getLocalPosition());
         channel->set3DAttributes(&fmodPosition, nullptr);
     }
@@ -80,7 +89,7 @@ void AudioComponent::SetPosition(const FMOD_VECTOR& position) {
 }
 
 bool AudioComponent::IsPlaying() const {
-    return isPlaying;
+    return playOnStart;
 }
 
 Component* AudioComponent::clone() const {

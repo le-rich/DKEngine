@@ -366,8 +366,9 @@ namespace GLTFLoader
             pEntity->addComponent(rigidComponent);
         }
 
-        // AudioComponent audioComponent(pEntity, true, true);
-        // pEntity->addComponent(audioComponent);        
+        AudioComponent audioComponent(pEntity, true, true);
+        audioComponent.AddAudioSource("Assets/Audio/car-motor.mp3");
+        pEntity->addComponent(audioComponent); 
 
     }
 
