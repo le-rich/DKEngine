@@ -97,14 +97,7 @@ void Renderer::RenderToFrame(int pWidth, int pHeight)
 	//		Bind Index Buffer
 	//		DrawCall
 	//	Unbind Material
-	//	
 
-	//Render Skybox
-	//backgroundShader.use();
-	//backgroundShader.setMat4("view", view);
-	//glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
-	//renderCube();
 	skyboxThisFrame->Bind();
 	skyboxThisFrame->Draw();
 	//shaderStorageBufferObject.Unbind();

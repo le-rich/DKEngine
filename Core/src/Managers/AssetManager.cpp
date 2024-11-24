@@ -3,41 +3,21 @@
 void AssetManager::AddMaterial(std::shared_ptr<Material> pMaterial)
 {
     auto result = mMaterialMap.insert({ pMaterial->GetAssetID(), pMaterial });
-
-    if (result.second)
-    {
-        // std::cout << "Material added" << std::endl;
-    }
 }
 
 void AssetManager::AddShader(std::shared_ptr<Shader> pShader)
 {
     auto result = mShaderMap.insert({ pShader->GetAssetID(), pShader });
-
-    if (result.second)
-    {
-        // std::cout << "Shader added" << std::endl;
-    }
 }
 
 void AssetManager::AddSkybox(std::shared_ptr<Skybox> pSkybox)
 {
     auto result = mSkyboxMap.insert({ pSkybox->GetAssetID(), pSkybox });
-
-    if (result.second)
-    {
-        // std::cout << "Shader added" << std::endl;
-    }
 }
 
 void AssetManager::AddTexture(std::shared_ptr<Texture> pTexuture)
 {
     auto result = mTextureMap.insert({ pTexuture->GetAssetID(), pTexuture });
-
-    if (result.second)
-    {
-        // std::cout << "Texture added" << std::endl;
-    }
 }
 
 std::shared_ptr<Material> AssetManager::GetMaterialByID(UUIDv4::UUID& pID)

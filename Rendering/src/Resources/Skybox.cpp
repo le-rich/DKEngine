@@ -28,16 +28,12 @@ Skybox::Skybox(std::string pAssetName) : Asset(pAssetName)
 void Skybox::Bind()
 {
     AssetManager::GetInstance().GetShaderByID(mShaderID)->Use();
-    //auto equirectangularToCubemapShader = AssetManager::GetInstance().GetEquirectShader();
-    //equirectangularToCubemapShader->Use();
     AssetManager::GetInstance().GetTextureByID(mTextureID)->Bind();
-    //glBindTexture(GL_TEXTURE_CUBE_MAP, mTexture);
-    //AssetManager::GetInstance().GetTextureByID(mTexture)->Use();
 }
 
 void Skybox::Unbind()
 {
-
+    AssetManager::GetInstance().GetTextureByID(mTextureID)->Unbind();
 }
 
 void Skybox::Draw()
@@ -61,7 +57,6 @@ void Skybox::GenerateTexture(std::shared_ptr<Texture> texture)
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, captureRBO);
 
     // pbr: set up projection and view matrices for capturing data onto the 6 cubemap face directions
-    // ----------------------------------------------------------------------------------------------
     glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
     glm::mat4 captureViews[] =
     {

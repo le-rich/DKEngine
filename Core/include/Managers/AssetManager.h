@@ -60,7 +60,6 @@ private:
     {
         mShaderMap.insert({ DEFAULT_SHADER->GetAssetID(), DEFAULT_SHADER });
         mShaderMap.insert({ SKYBOX_SHADER->GetAssetID(), SKYBOX_SHADER });
-        // std::cout << "Asset Manager created" << std::endl;
     }
 
 public:
