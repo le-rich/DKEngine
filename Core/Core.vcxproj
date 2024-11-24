@@ -189,6 +189,11 @@
   <ItemGroup>
     <None Include="Scenes\TestScene.json" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\TestRoom\Textures\aged-concrete-wall.jpg" />
+    <Image Include="Assets\TestRoom\Textures\watercolor-paper-texture.jpg" />
+    <Image Include="Assets\TestRoom\Textures\white-tiles-textures-background.jpg" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
