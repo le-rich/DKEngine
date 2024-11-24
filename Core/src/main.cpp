@@ -80,21 +80,6 @@ int run_glfw() {
 	TransformComponent* CAR_TRANSFORM = testCarEntity->transform;
 
     UI* ui = new UI(Core::getInstance().GetScene());
-    //RigidBodyComponent* carRigidBodyComponent = dynamic_cast<RigidBodyComponent*>(
-    //    testCarEntity->getComponent(ComponentType::RigidBody)
-    //    );
-
-    //auto carRigidBody = carRigidBodyComponent->getRigidBody();
-
-    //input.RegisterKeyCallback(GLFW_KEY_W, [carRigidBody](Input::ActionType action) {
-    //    if (action == Input::HOLD || action == Input::PRESS)
-    //        carRigidBody->addForce(AE86::Vector3(0.0f, 0.0f, 5.0f));
-    //    });
-
-    //input.RegisterKeyCallback(GLFW_KEY_S, [carRigidBody](Input::ActionType action) {
-    //    if (action == Input::HOLD || action == Input::PRESS)
-    //        carRigidBody->addForce(AE86::Vector3(0.0f, 0.0f, -5.0f));
-    //    });
     
     Physics* physics = new Physics();
     Renderer* renderer = new Renderer(&window);

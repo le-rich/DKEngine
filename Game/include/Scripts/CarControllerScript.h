@@ -24,5 +24,6 @@ public:
 	}
 private:
 	CarControllerScriptParams mParams{};
+	void SetUpInput();
 };
 

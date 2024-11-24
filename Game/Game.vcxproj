@@ -149,7 +149,8 @@
     <ClInclude Include="include\Scripts\TimerScript.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="FollowCamScript.cpp" />
+    <ClCompile Include="src\Scripts\CarControllerScript.cpp" />
+    <ClCompile Include="src\Scripts\FollowCamScript.cpp" />
     <ClCompile Include="src\Components\ScriptComponent.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Scripts\GarageScript.cpp" />

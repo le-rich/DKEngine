@@ -26,15 +26,6 @@
           "type": "Script",
           "params": {
             "scripts": [
-              {
-                "script": "OrbitScript",
-                "params": {
-                  "target": "Test Car",
-                  "radius": 2,
-                  "speed": 1.5,
-                  "currentAngle": 0
-                }
-              }
             ]
           }
         }

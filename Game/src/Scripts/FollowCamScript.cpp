@@ -17,13 +17,8 @@ void FollowCamScript::Update(float deltaTime)
         return;
     }
     
-    transform->setLocalPosition(glm::vec3(0.0f, 1.65f, -3.25f));
-    glm::quat q = glm::quat(0, 0, -1, 0);
-    transform->setLocalOrientation(q);
-
-    
     if (!follow) {
-        transform->setLocalPosition(mParams.m_FollowTarget->getLocalPosition() + glm::vec3(0.0f, 1.65f, -3.25f));
+        transform->setLocalPosition(mParams.m_FollowTarget->getLocalPosition() + glm::vec3(0.0f, 1.5f, -4.25f));
         glm::quat q = mParams.m_FollowTarget->getLocalOrientation() * glm::quat(0, 0, -1, 0);
         transform->setLocalOrientation(q);
         follow = true;
