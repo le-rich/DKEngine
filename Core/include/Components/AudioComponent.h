@@ -7,7 +7,7 @@
 class AudioComponent : public Component
 {
 public:
-    AudioComponent(Entity* entity, const char* audioFilePath);
+    AudioComponent(Entity* entity);
 
     virtual ~AudioComponent();
 
@@ -16,6 +16,8 @@ public:
     void Stop(); 
     void Update();
     void SetPosition(const FMOD_VECTOR& position);
+    FMOD_VECTOR GetFMODVector3(glm::vec3 position);
+
     Component* clone() const override;
 
     bool IsPlaying() const;
@@ -25,5 +27,6 @@ private:
     FMOD::Sound* sound;
     FMOD::Channel* channel;
     bool isPlaying;
+    bool isLooping;
     AudioManager* audioManager;  // Reference to the audio manager
 };

@@ -66,13 +66,24 @@ int run_glfw()
     Physics* physx = new Physics(CAR_TRANSFORM);
     Renderer* renderer = new Renderer(&window);
     Game* game = new Game();
-    AudioManager* audioManager = new AudioManager();
+    AudioManager* audioManager = new AudioManager();    
+
+    Core::getInstance().AddSystem(ui);
+    Core::getInstance().AddSystem(physx);
+    Core::getInstance().AddSystem(renderer);
+    Core::getInstance().AddSystem(game);
+    Core::getInstance().AddSystem(audioManager);
+
+    
+    ui->Initialize();
+    physx->Initialize();
+    renderer->Initialize();
+    game->Initialize();
+    audioManager->Initialize();
 
     FMOD::Sound* backgroundMusic = audioManager->LoadSound("Assets/Audio/yippee.mp3");
-
-    //
     
-    if (backgroundMusic) {
+    if (audioManager->GetSound("yippee.mp3")) {
         static FMOD::Channel* channel = nullptr;
         if (!channel) {
             backgroundMusic->setMode(FMOD_LOOP_NORMAL);
@@ -88,19 +99,8 @@ int run_glfw()
             }
         }
     }
+
     
-
-    Core::getInstance().AddSystem(ui);
-    Core::getInstance().AddSystem(physx);
-    Core::getInstance().AddSystem(renderer);
-    Core::getInstance().AddSystem(game);
-
-    ui->Initialize();
-    physx->Initialize();
-    renderer->Initialize();
-    game->Initialize();
-
-
     // Timing
     double fixedUpdateBuffer = 0.0;
     double FIXED_UPDATE_INTERVAL = 20; // in milliseconds

@@ -50,12 +50,10 @@ FMOD::Sound* AudioManager::LoadSound(const std::string& filePath) {
     return newSound;
 }
 
-// void AudioManager::GetSound(const std::string& fileName)
-// {
-//     
-// } 
-
-
+FMOD::Sound* AudioManager::GetSound(const std::string& fileName)
+{
+    return soundCache[fileName];
+} 
 
 void AudioManager::SetListenerAttributes(const FMOD_VECTOR& position, const FMOD_VECTOR& forward, const FMOD_VECTOR& up) {
     FMOD_VECTOR velocity = { 0.0f, 0.0f, 0.0f }; // TODO: get velocity for doppler
@@ -68,7 +66,6 @@ void AudioManager::SetMasterVolume(float volume) {
 }
 
 void AudioManager::PlaySound(const std::string& soundName) {
-
 	
     auto it = soundCache.find(soundName);
     if (it != soundCache.end()) {

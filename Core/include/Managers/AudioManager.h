@@ -1,5 +1,7 @@
 ﻿#ifndef AUDIO_MGR_H
+#define AUDIO_MGR_H
 
+#include "vec3.hpp"
 #include "FMOD/inc/fmod.hpp"
 #include <string>
 #include <unordered_map>
@@ -7,18 +9,29 @@
 
 class AudioManager : public System {
 public:
+	
 	AudioManager();
+	
 	~AudioManager();
 
+	static AudioManager& GetInstance()
+	{
+		static AudioManager instance;
+		return instance;
+	}
+	
 	FMOD::System* GetSystem();
 
 	void Update(float deltaTime);
+
 
 	const char* GetName() const override {
 		return "AudioManager";
 	};
 
 	void FixedUpdate() override;
+
+	
 
 	FMOD::Sound* LoadSound(const std::string& filePath);
 
@@ -32,7 +45,8 @@ public:
 	void SetMasterVolume(float volume);
 
 	void PlaySound(const std::string& soundName);
-	// void AudioManager::GetSound(const std::string& fileName);
+
+	FMOD::Sound* GetSound(const std::string& fileName);
 	
 
 private:
