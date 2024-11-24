@@ -25,7 +25,7 @@ void AudioComponent::AddAudioSource(const char* filePath) {
     if (sound) {
         sound->release();
     }
-    AudioManager::GetInstance();
+    
     if (audioManager) {
         sound = AudioManager::GetInstance().LoadAudio(filePath);
     } else {
