@@ -8,9 +8,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				0,
-				1,
-				2
+				3
 			]
 		}
 	],
@@ -44,18 +42,26 @@
 			]
 		},
 		{
-			"mesh":2,
-			"name":"Studio Room",
-			"scale":[
+			"mesh": 2,
+			"name": "Studio Walls",
+			"scale": [
 				3,
 				3,
 				3
 			],
-			"translation":[
+			"translation": [
 				0,
 				3,
 				0
 			]
+		},
+		{
+			"children": [
+				0,
+				1,
+				2
+			],
+			"name": "Studio Room"
 		}
 	],
 	"materials":[
@@ -72,11 +78,7 @@
 		},
 		{
 			"doubleSided":true,
-			"name":"Platform"
-		},
-		{
-			"doubleSided":true,
-			"name":"Studio Room Walls",
+			"name":"Platform",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
 					"index":1
@@ -87,10 +89,21 @@
 		},
 		{
 			"doubleSided":true,
-			"name":"Studio Room Floor",
+			"name":"Studio Room Walls",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
 					"index":2
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.5
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"Studio Room Floor",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":3
 				},
 				"metallicFactor":0,
 				"roughnessFactor":0.5
@@ -162,23 +175,32 @@
 		{
 			"sampler":0,
 			"source":2
+		},
+		{
+			"sampler":0,
+			"source":3
 		}
 	],
 	"images":[
 		{
 			"mimeType":"image/jpeg",
 			"name":"watercolor-paper-texture",
-			"uri":"watercolor-paper-texture.jpg"
+			"uri":"textures/watercolor-paper-texture.jpg"
+		},
+		{
+			"mimeType":"image/jpeg",
+			"name":"preview",
+			"uri":"textures/preview.jpg"
 		},
 		{
 			"mimeType":"image/jpeg",
 			"name":"aged-concrete-wall",
-			"uri":"aged-concrete-wall.jpg"
+			"uri":"textures/aged-concrete-wall.jpg"
 		},
 		{
 			"mimeType":"image/jpeg",
 			"name":"white-tiles-textures-background",
-			"uri":"white-tiles-textures-background.jpg"
+			"uri":"textures/white-tiles-textures-background.jpg"
 		}
 	],
 	"accessors":[

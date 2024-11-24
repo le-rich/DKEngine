@@ -3,6 +3,10 @@
     {
       "path": "TestAE2/",
       "file": [ "ae86.gltf" ]
+    },
+    {
+      "path": "TestRoom/",
+      "file": [ "Room.gltf" ]
     }
   ],
   "entities": [
