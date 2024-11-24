@@ -366,6 +366,11 @@ namespace GLTFLoader
             pEntity->addComponent(rigidComponent);
         }
 
+        // AudioComponent* audioComponent = new AudioComponent(pEntity);
+        // pEntity->addComponent(AudioComponent);
+
+        
+
 
         // TODO: Add audio component here
         // AudioComponent* audioComponent = new AudioComponent(pEntity, "Assets/Audio/yipee.mp3");

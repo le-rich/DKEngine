@@ -38,7 +38,7 @@ const glm::mat4 TransformComponent::getLocalTransformMatrix()
 
 const glm::mat4 TransformComponent::getTransformMatrix()
 {
-    auto parent = this->entity->getParent();
+    auto parent = this->mEntity->getParent();
     if (parent)
     {
         transformMatrix = parent->transform->getTransformMatrix();
@@ -144,11 +144,11 @@ TransformComponent& TransformComponent::operator=(const TransformComponent& othe
     // DO NOT copy mutex.
 
     this->transformMatrix = other.transformMatrix;
-    this->entity->GetEntityID() == other.entity->GetEntityID();
+    this->mEntity->GetEntityID() == other.mEntity->GetEntityID();
 }
 
 TransformComponent::TransformComponent(const TransformComponent& other)
-    : Component(other.entity),
+    : Component(other.mEntity),
     mTransform(other.mTransform),
     transformMatrix(other.transformMatrix)
 {}

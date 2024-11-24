@@ -157,6 +157,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Component.cpp" />
+    <ClCompile Include="src\Components\AudioComponent.cpp" />
     <ClCompile Include="src\Components\RigidBodyComponent.cpp" />
     <ClCompile Include="src\Components\TransformComponent.cpp" />
     <ClCompile Include="src\Core.cpp" />
@@ -177,6 +178,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Component.h" />
+    <ClInclude Include="include\Components\AudioComponent.h" />
     <ClInclude Include="include\Components\AudioSource.h" />
     <ClInclude Include="include\Components\RigidBodyComponent.h" />
     <ClInclude Include="include\Components\TransformComponent.h" />

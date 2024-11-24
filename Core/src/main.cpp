@@ -70,14 +70,25 @@ int run_glfw()
 
     FMOD::Sound* backgroundMusic = audioManager->LoadSound("Assets/Audio/yippee.mp3");
 
+    //
+    
     if (backgroundMusic) {
         static FMOD::Channel* channel = nullptr;
         if (!channel) {
-            audioManager->GetSystem()->playSound(backgroundMusic, nullptr, true, &channel);
-            channel->setVolume(0.5f); // Set volume
-            channel->setPaused(false); // Start playback
+            backgroundMusic->setMode(FMOD_LOOP_NORMAL);
+
+            FMOD_RESULT result = audioManager->GetSystem()->playSound(backgroundMusic, nullptr, false, &channel);
+            if (result == FMOD_OK && channel) {
+                channel->setVolume(1.0f);
+                // channel->set3DAttributes(&enemyPosition, &velocity);
+                channel->setLoopCount(-1); // Plays audio Infinitely
+                channel->setPaused(false); // Start playback
+            } else {
+                
+            }
         }
     }
+    
 
     Core::getInstance().AddSystem(ui);
     Core::getInstance().AddSystem(physx);

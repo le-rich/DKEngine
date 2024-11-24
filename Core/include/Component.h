@@ -30,7 +30,7 @@ public:
     Component(Entity* mEntity);
     virtual ~Component() = default;
 
-    Entity* entity;
+    Entity* mEntity;
 
     UUIDv4::UUID componentID;
     std::string componentDisplayName;

@@ -32,10 +32,16 @@ public:
 	void SetMasterVolume(float volume);
 
 	void PlaySound(const std::string& soundName);
+	// void AudioManager::GetSound(const std::string& fileName);
+	
 
 private:
 	FMOD::System* fmodSystem = nullptr;
 	std::unordered_map<std::string, FMOD::Sound*> soundCache;
+	
+	// 3D sound attributes
+	FMOD_VECTOR position = { 0.0f, 0.0f, 0.0f };
+	FMOD_VECTOR velocity = { 0.0f, 0.0f, 0.0f };
 };
 
 // Convert this kind of structure to ECS Components

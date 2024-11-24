@@ -126,7 +126,7 @@ void Renderer::SetEngineUBO(int pWidth, int pHeight)
         auto entity = EntityManager::getInstance().getEntity(uuid);
         LightComponent* lightComponent = dynamic_cast<LightComponent*>(entity->getComponent(ComponentType::Light));
         if (lightComponent == nullptr) continue;
-        lightMatricies.push_back(lightComponent->GenerateMatrix(lightComponent->entity->transform));
+        lightMatricies.push_back(lightComponent->GenerateMatrix(lightComponent->mEntity->transform));
     }
 
     shaderStorageBufferObject.SendBlocks(lightMatricies.data(), lightMatricies.size() * sizeof(glm::mat4));
@@ -140,7 +140,7 @@ void Renderer::SetEngineUBO(int pWidth, int pHeight)
         // Update Aspect Ratio if the window has resized
         cameraComponent->updateAspectRatio(pWidth, pHeight);
 
-        cameraComponent->calculateViewMatrix(cameraComponent->entity->transform);
+        cameraComponent->calculateViewMatrix(cameraComponent->mEntity->transform);
         cameraComponent->calculateProjectionMatrix();
         mEngineUniformBuffer.SetCameraMatrices(
             cameraComponent->getViewMatrix(),

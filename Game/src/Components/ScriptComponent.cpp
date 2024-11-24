@@ -15,7 +15,7 @@ ScriptComponent::~ScriptComponent()
 
 // copy constructor
 ScriptComponent::ScriptComponent(const ScriptComponent& other)
-    : Component(other.entity) {
+    : Component(other.mEntity) {
     this->componentType = ComponentType::Script;
 
     // Deep copy each script using clone()

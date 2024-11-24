@@ -8,7 +8,7 @@
 Component::Component(Entity* mEntity)
 {
     this->componentID = uuidGen.getUUID();
-    this->entity = mEntity;
+    this->mEntity = mEntity;
 }
 
 bool Component::operator==(const Component& other) const

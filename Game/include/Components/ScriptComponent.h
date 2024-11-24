@@ -27,7 +27,7 @@ public:
     void AddScriptToComponent(ScriptParams* pScriptParams)
     {
         T* script;
-        script = new T(entity);
+        script = new T(mEntity);
         script->SetParameters(pScriptParams);
         this->AddScript<T>(*script);
     }

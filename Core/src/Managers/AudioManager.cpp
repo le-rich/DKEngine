@@ -1,5 +1,6 @@
 ﻿#include "Managers/AudioManager.h"
 #include "iostream"
+#include <filesystem>
 
 AudioManager::AudioManager()
 {
@@ -19,28 +20,42 @@ AudioManager::~AudioManager()
 void AudioManager::Update(float deltaTime)
 {
     fmodSystem->update();
+    // TODO: Positioning of the listener (Possibly the camera's positioning)
+    // fmodSystem->set3DListenerAttributes(0, &listenerPosition, &listenerVelocity, &listenerForward, &listenerUp);
 }
 
 void AudioManager::FixedUpdate()
 {
-    fmodSystem->update();
+    // fmodSystem->update();
 }
 
 FMOD::System* AudioManager::GetSystem() {
     return fmodSystem;
 }
 
+
 FMOD::Sound* AudioManager::LoadSound(const std::string& filePath) {
     auto it = soundCache.find(filePath);
     if (it != soundCache.end()) {
         return it->second;
     }
+    
 
     FMOD::Sound* newSound;
     fmodSystem->createSound(filePath.c_str(), FMOD_3D, nullptr, &newSound);
-    soundCache[filePath] = newSound;
+    
+    const size_t pos = filePath.find_last_of("/\\");
+    const std::string fileName = (pos == std::string::npos) ? filePath : filePath.substr(pos + 1);
+    soundCache[fileName] = newSound;
     return newSound;
 }
+
+// void AudioManager::GetSound(const std::string& fileName)
+// {
+//     
+// } 
+
+
 
 void AudioManager::SetListenerAttributes(const FMOD_VECTOR& position, const FMOD_VECTOR& forward, const FMOD_VECTOR& up) {
     FMOD_VECTOR velocity = { 0.0f, 0.0f, 0.0f }; // TODO: get velocity for doppler

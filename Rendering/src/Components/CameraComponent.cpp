@@ -36,7 +36,7 @@ glm::mat4 CameraComponent::getViewMatrix() { return m_viewMatrix; }
 glm::mat4 CameraComponent::getProjectionMatrix() { return m_projectionMatrix; }
 
 CameraComponent::CameraComponent(const CameraComponent& other)
-    : Component(other.entity),
+    : Component(other.mEntity),
     lookAtTarget(other.lookAtTarget),
     fieldOfView(other.fieldOfView),
     farClipPlane(other.farClipPlane),
