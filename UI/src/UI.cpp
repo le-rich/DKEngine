@@ -81,6 +81,12 @@ void UI::Update(float deltaTime) {
    glfwSwapBuffers(window);
    glfwPollEvents();
    //}
+   if (glfwWindowShouldClose(window)) {
+      glfwDestroyWindow(window);
+      glfwTerminate();
+
+      glfwSetWindowShouldClose(glfwWindow, 0);
+   }
 
 }
 
