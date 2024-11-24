@@ -5,17 +5,10 @@
 #include <GLFW/glfw3.h>
 
 UI::UI(Scene* scene, const FrameBuffer* framebuffer, GLFWwindow* glfwWindow) {
-   // std::cout << "UI PROJECT" << std::endl;
 
    this->scene = scene;
    this->framebuffer = framebuffer;
    this->glfwWindow = glfwWindow;
-
-   // Initialize GLFW (Already initialized in main)
-   //glfwInit();
-   //glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-   //glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-   //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
    window = glfwCreateWindow(1280, 720, "DKEngine", NULL, glfwWindow);
    if (window == NULL) {
@@ -23,15 +16,7 @@ UI::UI(Scene* scene, const FrameBuffer* framebuffer, GLFWwindow* glfwWindow) {
       glfwTerminate();
       return;
    }
-   //glfwMakeContextCurrent(window);
 
-   //// Load GLAD (Already loaded in main)
-   //if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-   //   std::cout << "Failed to initialize GLAD" << std::endl;
-   //   return;
-   //}
-
-   
    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback_UI);
 
    // Initialize ImGui
@@ -43,23 +28,13 @@ UI::UI(Scene* scene, const FrameBuffer* framebuffer, GLFWwindow* glfwWindow) {
    ImGui_ImplGlfw_InitForOpenGL(window, true);
    ImGui_ImplOpenGL3_Init("#version 130");
 
-   // Main loop
-
-
-   // Cleanup
-   //ImGui_ImplOpenGL3_Shutdown();
-   //ImGui_ImplGlfw_Shutdown();
-   //ImGui::DestroyContext();
-   //glfwTerminate();
-   //return 0;
 }
 
 void UI::Update(float deltaTime) {
    // Update Loop logic here
-   // std::cout << "UI Update" << std::endl;
-   //while (!glfwWindowShouldClose(window)) {
+
    glfwMakeContextCurrent(window);
-      // Clear the buffer
+   // Clear the buffer
    glClear(GL_COLOR_BUFFER_BIT);
 
    // Start a new ImGui frame
@@ -80,9 +55,12 @@ void UI::Update(float deltaTime) {
    // Swap buffers and poll events
    glfwSwapBuffers(window);
    glfwPollEvents();
-   //}
+
    if (glfwWindowShouldClose(window)) {
       glfwDestroyWindow(window);
+      ImGui_ImplOpenGL3_Shutdown();
+      ImGui_ImplGlfw_Shutdown();
+      ImGui::DestroyContext();
       glfwTerminate();
 
       glfwSetWindowShouldClose(glfwWindow, 0);
