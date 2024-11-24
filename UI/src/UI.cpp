@@ -4,10 +4,12 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-UI::UI(Scene* scene) {
+UI::UI(Scene* scene, const FrameBuffer* framebuffer, GLFWwindow* glfwWindow) {
    // std::cout << "UI PROJECT" << std::endl;
 
    this->scene = scene;
+   this->framebuffer = framebuffer;
+   this->glfwWindow = glfwWindow;
 
    // Initialize GLFW (Already initialized in main)
    //glfwInit();
@@ -15,7 +17,7 @@ UI::UI(Scene* scene) {
    //glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
    //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-   window = glfwCreateWindow(1280, 720, "DKEngine", NULL, NULL);
+   window = glfwCreateWindow(1280, 720, "DKEngine", NULL, glfwWindow);
    if (window == NULL) {
       std::cout << "Failed to create GLFW window" << std::endl;
       glfwTerminate();
@@ -69,7 +71,7 @@ void UI::Update(float deltaTime) {
    createMenuBar();
 
    // Create the ImGui windows
-   createImGuiWindows(this->scene);
+   createImGuiWindows(this->scene, this->framebuffer);
 
    // Render ImGui
    ImGui::Render();
