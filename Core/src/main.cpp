@@ -39,6 +39,7 @@ int run_glfw() {
     input.SetWindow(window.GetWindow());
     
     // the following is how you can call register a callback THIS IS JUST EXAMPLE CODE FOR PEOPLE TO USE
+    /*
     input.RegisterKeyCallback(GLFW_KEY_W, [](Input::ActionType action) {
         if (action == Input::HOLD) {
             std::cout << "W KEY HELD" << std::endl;
@@ -50,7 +51,7 @@ int run_glfw() {
             std::cout << "W KEY PRESESD" << std::endl;
         }
         });
-    
+    */
 
     window.SetWindowToCurrentThread();
     window.SetKeyCallback(Input::KeyCallback);
@@ -74,9 +75,7 @@ int run_glfw() {
 	Core::getInstance().SetScene(defaultScene);
 	defaultScene->SpawnSceneDefinition();
 
-
-	auto testCarUUID = EntityManager::getInstance().findFirstEntityByDisplayName("Test Car");
-	Entity* testCarEntity = EntityManager::getInstance().getEntity(testCarUUID);
+    Entity* testCarEntity = EntityManager::getInstance().findFirstEntityByDisplayName("Test Car");
 
 	TransformComponent* CAR_TRANSFORM = testCarEntity->transform;
 

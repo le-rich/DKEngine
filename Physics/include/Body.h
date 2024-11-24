@@ -1,7 +1,7 @@
 #pragma once
-#ifndef BODY_HEADER
+//#ifndef BODY_HEADER
 
-#define BODY_HEADER
+//#define BODY_HEADER
 
 #include "Core.h"
 
@@ -233,4 +233,4 @@ s		 */
 	
 }
 
-#endif
+//#endif

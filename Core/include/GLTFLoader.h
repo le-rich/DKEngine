@@ -349,7 +349,6 @@ namespace GLTFLoader
         if (meshIndex >= 0)
         {
             Mesh* mesh = GLTFLoader::LoadMesh(pGltfModel, pGltfModel.meshes[meshIndex], pMaterials);
-            //ComponentManager::AddMeshComponent(pEntity, mesh);
             MeshComponent* meshComponent = new MeshComponent(pEntity);
             meshComponent->setMesh(mesh);
             pEntity->addComponent(*meshComponent);
@@ -383,11 +382,11 @@ namespace GLTFLoader
     }
 
     // Loads given model file as an entity
-    static void LoadModelAsEntity(Entity* pEntity, std::string const pSourceFolder, std::string const pModelFile)
+    static void LoadModelAsEntity(Entity* pEntity, std::string const pSourcePath, std::string const pModelFile)
     {
         
-        tinygltf::Model gltfModel = LoadFromFile(DEFAULT_ASSET_FOLDER + pSourceFolder + pModelFile);
-        std::vector<UUIDv4::UUID> textures = LoadTextures(gltfModel, DEFAULT_ASSET_FOLDER + pSourceFolder);
+        tinygltf::Model gltfModel = LoadFromFile(DEFAULT_ASSET_FOLDER + pSourcePath + pModelFile);
+        std::vector<UUIDv4::UUID> textures = LoadTextures(gltfModel, DEFAULT_ASSET_FOLDER + pSourcePath);
         std::vector<UUIDv4::UUID> materials = LoadMaterials(gltfModel, textures);
 
         // Traverse nodes and assign entities and components to the entity for each child

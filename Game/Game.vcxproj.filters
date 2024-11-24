@@ -36,10 +36,13 @@
     <ClInclude Include="include\Scripts\LapCheckpointScript.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Scripts\FollowCamScript.h">
+    <ClInclude Include="include\Scripts\GarageScript.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Scripts\CarControllerScript.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Scripts\FollowCamScript.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -62,10 +65,10 @@
     <ClCompile Include="src\Scripts\LapCheckpointScript.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FollowCamScript.cpp">
+    <ClCompile Include="src\Scripts\GarageScript.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scripts\CarControllerScript.cpp">
+    <ClCompile Include="FollowCamScript.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

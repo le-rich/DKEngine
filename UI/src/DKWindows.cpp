@@ -50,7 +50,7 @@ void createImGuiWindows(Scene* scene) {
 
    drawViewport();
    drawHierarchy(scene);
-   drawInspector();
+   drawInspector(scene);
    drawBrowser();
    drawConsole();
 

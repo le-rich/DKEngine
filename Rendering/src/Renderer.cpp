@@ -22,19 +22,18 @@ void Renderer::Initialize()
 {
 	System::Initialize();
 
-	// Get Camera if it exists
-	auto mainCameraUUID = EntityManager::getInstance().findFirstEntityByDisplayName("Main Camera");
-	auto mainCamera = EntityManager::getInstance().getEntity(mainCameraUUID);
-	if (mainCamera != nullptr)
-	{
-		this->mainCameraEntity = mainCamera;
-	}
-	else
-	{
-		std::cerr << "Error: Main Camera not found. The program will now exit." << std::endl;
-		std::cin.get();
-		std::exit(EXIT_FAILURE);  // Terminate program with failure status
-	}
+    // Get Camera if it exists
+    Entity* mainCamera = EntityManager::getInstance().findFirstEntityByDisplayName("Main Camera");
+    if (mainCamera != nullptr)
+    {
+        this->mainCameraEntity = mainCamera;
+    }
+    else
+    {
+        std::cerr << "Error: Main Camera not found. The program will now exit." << std::endl;
+        std::cin.get();
+        std::exit(EXIT_FAILURE);  // Terminate program with failure status
+    }
 }
 
 void Renderer::Update(float deltaTime)

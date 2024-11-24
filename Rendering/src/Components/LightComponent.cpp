@@ -49,6 +49,18 @@ glm::mat4 LightComponent::GenerateMatrix(TransformComponent* pTransform)
     return result;
 }
 
+void LightComponent::SetParams(LightParams pLightParams)
+{
+    mColor = pLightParams.color;
+    mIntensity = pLightParams.intensity;
+    mConstant = pLightParams.constant;
+    mLinear = pLightParams.linear;
+    mQuadratic = pLightParams.quadratic;
+    mCutoff = pLightParams.cutoff;
+    mOuterCutoff = pLightParams.outercutoff;
+    mType = pLightParams.type;
+}
+
 Component* LightComponent::clone() const
 {
     return new LightComponent(*this);
