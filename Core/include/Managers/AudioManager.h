@@ -20,34 +20,18 @@ public:
 		return instance;
 	}
 	
-	FMOD::System* GetSystem();
-
-	void Update(float deltaTime);
-
-
 	const char* GetName() const override {
 		return "AudioManager";
 	};
-
+	
+	FMOD::System* GetSystem();
+	void Update(float deltaTime);
 	void FixedUpdate() override;
-
-	
-
-	FMOD::Sound* LoadSound(const std::string& filePath);
-
-	// IMPL fmodSystem->set3DListenerAttributes(0, &position, nullptr, &forward, &up);
-	// OR we have a private variable representing the current listener and forward
-	// to the same position as 0, not sure.
-	// Get velocity of listener so we can use it to have doppler.
-	// forward and up necessary for automated spatial audio.
+	FMOD::Sound* LoadAudio(const std::string& filePath);
 	void SetListenerAttributes(const FMOD_VECTOR& position, const FMOD_VECTOR& forward, const FMOD_VECTOR& up);
-
 	void SetMasterVolume(float volume);
-
 	void PlaySound(const std::string& soundName);
-
 	FMOD::Sound* GetSound(const std::string& fileName);
-	
 
 private:
 	FMOD::System* fmodSystem = nullptr;

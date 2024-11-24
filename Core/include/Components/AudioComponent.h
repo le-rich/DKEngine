@@ -7,7 +7,7 @@
 class AudioComponent : public Component
 {
 public:
-    AudioComponent(Entity* entity);
+    AudioComponent(Entity* entity, bool playOnStart, bool isLooping);
 
     virtual ~AudioComponent();
 

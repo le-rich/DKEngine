@@ -20,9 +20,13 @@ AudioManager::~AudioManager()
 void AudioManager::Update(float deltaTime)
 {
     fmodSystem->update();
+    
     // TODO: Positioning of the listener (Possibly the camera's positioning)
     // fmodSystem->set3DListenerAttributes(0, &listenerPosition, &listenerVelocity, &listenerForward, &listenerUp);
+    FMOD_VECTOR listenerPosition = {0.0f, 0.0f, 0.0f}; // Listener at origin
+    fmodSystem->set3DListenerAttributes(0, &listenerPosition, nullptr, nullptr, nullptr);
 }
+
 
 void AudioManager::FixedUpdate()
 {
@@ -33,13 +37,11 @@ FMOD::System* AudioManager::GetSystem() {
     return fmodSystem;
 }
 
-
-FMOD::Sound* AudioManager::LoadSound(const std::string& filePath) {
+FMOD::Sound* AudioManager::LoadAudio(const std::string& filePath) {
     auto it = soundCache.find(filePath);
     if (it != soundCache.end()) {
         return it->second;
     }
-    
 
     FMOD::Sound* newSound;
     fmodSystem->createSound(filePath.c_str(), FMOD_3D, nullptr, &newSound);
