@@ -178,106 +178,106 @@ namespace SceneParser
                 json scriptParams = script.value().at("params");
                 switch (scriptTypeIt->second)
                 {
-                case ScriptType::OrbitScript:
-                {
-                    OrbitScriptParams params;
+                    case ScriptType::OrbitScript:
+                    {
+                        OrbitScriptParams params;
 
-                    try
-                    {
-                        std::string target = scriptParams.at("target").template get<std::string>();
-                        Entity* targetEntity = EntityManager::getInstance().findFirstEntityByDisplayName(target);
-                        params.m_OrbitTarget = targetEntity->transform;
-                    } OPTIONAL_EXCEPTION_HANDLER;
-
-                    try
-                    {
-                        scriptParams.at("radius").get_to(params.m_Radius);
-                    } OPTIONAL_EXCEPTION_HANDLER;
-                    try
-                    {
-                        scriptParams.at("speed").get_to(params.m_Speed);
-                    } OPTIONAL_EXCEPTION_HANDLER;
-                    try
-                    {
-                        scriptParams.at("currentAngle").get_to(params.currentAngle);
-                    } OPTIONAL_EXCEPTION_HANDLER;
-
-                    scriptComponent->CreateAndAddScript<OrbitScript>(&params);
-                    break;
-                }
-                case ScriptType::TimerScript:
-                {
-                    TimerScriptParams params;
-                    try
-                    {
-                        std::string target = scriptParams.at("target").template get<std::string>();
-                        Entity* targetEntity = EntityManager::getInstance().findFirstEntityByDisplayName(target);
-                        params.m_TimerTarget = targetEntity->transform;
-                    } OPTIONAL_EXCEPTION_HANDLER;
-
-                    scriptComponent->CreateAndAddScript<TimerScript>(&params);
-                    break;
-                }
-                case ScriptType::LapCheckpointScript:
-                {
-                    LapCheckpointScriptParams params;
-                    try
-                    {
-                        std::string target = scriptParams.at("other").template get<std::string>();
-                        Entity* targetEntity = EntityManager::getInstance().findFirstEntityByDisplayName(target);
-                        params.m_Other = targetEntity->transform;
-                    } OPTIONAL_EXCEPTION_HANDLER;
-
-                    try
-                    {
-                        int index = scriptParams.at("index").template get<int>();
-                        params.m_Index = index;
-                    } OPTIONAL_EXCEPTION_HANDLER;
-
-                    scriptComponent->CreateAndAddScript<LapCheckpointScript>(&params);
-                    break;
-                }
-                case ScriptType::LapManagerScript:
-                {
-                    LapManagerScriptParams params;
-                    LapManagerScript* lapManagerScript = new LapManagerScript(pEntity);
-                    try
-                    {
-                        std::vector<std::string> checkpoints = scriptParams.at("checkpoints").template get<std::vector<std::string>>();
-                        for (std::string checkpoint : checkpoints)
+                        try
                         {
-                            Entity* entity = EntityManager::getInstance().findFirstEntityByDisplayName(checkpoint);
-                            ScriptComponent* checkpointScriptComponent = dynamic_cast<ScriptComponent*>(entity->getComponent(ComponentType::Script));
-                            LapCheckpointScript* checkpointScript = checkpointScriptComponent->GetScript<LapCheckpointScript>();
-                            checkpointScript->SetLapManager(lapManagerScript);
-                            params.m_Checkpoints.push_back(checkpointScript);
-                        }
-                    }OPTIONAL_EXCEPTION_HANDLER;
+                            std::string target = scriptParams.at("target").template get<std::string>();
+                            Entity* targetEntity = EntityManager::getInstance().findFirstEntityByDisplayName(target);
+                            params.m_OrbitTarget = targetEntity->transform;
+                        } OPTIONAL_EXCEPTION_HANDLER;
 
-                    try
+                        try
+                        {
+                            scriptParams.at("radius").get_to(params.m_Radius);
+                        } OPTIONAL_EXCEPTION_HANDLER;
+                        try
+                        {
+                            scriptParams.at("speed").get_to(params.m_Speed);
+                        } OPTIONAL_EXCEPTION_HANDLER;
+                        try
+                        {
+                            scriptParams.at("currentAngle").get_to(params.currentAngle);
+                        } OPTIONAL_EXCEPTION_HANDLER;
+
+                        scriptComponent->CreateAndAddScript<OrbitScript>(&params);
+                        break;
+                    }
+                    case ScriptType::TimerScript:
                     {
-                        int totallaps = scriptParams.at("totallaps").template get<int>();
-                        params.m_TotalLaps = totallaps;
-                    }OPTIONAL_EXCEPTION_HANDLER;
+                        TimerScriptParams params;
+                        try
+                        {
+                            std::string target = scriptParams.at("target").template get<std::string>();
+                            Entity* targetEntity = EntityManager::getInstance().findFirstEntityByDisplayName(target);
+                            params.m_TimerTarget = targetEntity->transform;
+                        } OPTIONAL_EXCEPTION_HANDLER;
 
-                    try
+                        scriptComponent->CreateAndAddScript<TimerScript>(&params);
+                        break;
+                    }
+                    case ScriptType::LapCheckpointScript:
                     {
-                        int currentlap = scriptParams.at("currentlap").template get<int>();
-                        params.m_CurrentLap = currentlap;
-                    }OPTIONAL_EXCEPTION_HANDLER;
+                        LapCheckpointScriptParams params;
+                        try
+                        {
+                            std::string target = scriptParams.at("other").template get<std::string>();
+                            Entity* targetEntity = EntityManager::getInstance().findFirstEntityByDisplayName(target);
+                            params.m_Other = targetEntity->transform;
+                        } OPTIONAL_EXCEPTION_HANDLER;
 
-                    try
+                        try
+                        {
+                            int index = scriptParams.at("index").template get<int>();
+                            params.m_Index = index;
+                        } OPTIONAL_EXCEPTION_HANDLER;
+
+                        scriptComponent->CreateAndAddScript<LapCheckpointScript>(&params);
+                        break;
+                    }
+                    case ScriptType::LapManagerScript:
                     {
-                        int nextcheckpointindex = scriptParams.at("nextcheckpointindex").template get<int>();
-                        params.m_NextCheckpointIndex = nextcheckpointindex;
-                    }OPTIONAL_EXCEPTION_HANDLER;
+                        LapManagerScriptParams params;
+                        LapManagerScript* lapManagerScript = new LapManagerScript(pEntity);
+                        try
+                        {
+                            std::vector<std::string> checkpoints = scriptParams.at("checkpoints").template get<std::vector<std::string>>();
+                            for (std::string checkpoint : checkpoints)
+                            {
+                                Entity* entity = EntityManager::getInstance().findFirstEntityByDisplayName(checkpoint);
+                                ScriptComponent* checkpointScriptComponent = dynamic_cast<ScriptComponent*>(entity->getComponent(ComponentType::Script));
+                                LapCheckpointScript* checkpointScript = checkpointScriptComponent->GetScript<LapCheckpointScript>();
+                                checkpointScript->SetLapManager(lapManagerScript);
+                                params.m_Checkpoints.push_back(checkpointScript);
+                            }
+                        }OPTIONAL_EXCEPTION_HANDLER;
 
-                    lapManagerScript->SetParameters(&params);
-                    scriptComponent->AddScript<LapManagerScript>(*lapManagerScript);
-                    break;
-                }
-                default:
-                    break;
+                        try
+                        {
+                            int totallaps = scriptParams.at("totallaps").template get<int>();
+                            params.m_TotalLaps = totallaps;
+                        }OPTIONAL_EXCEPTION_HANDLER;
+
+                        try
+                        {
+                            int currentlap = scriptParams.at("currentlap").template get<int>();
+                            params.m_CurrentLap = currentlap;
+                        }OPTIONAL_EXCEPTION_HANDLER;
+
+                        try
+                        {
+                            int nextcheckpointindex = scriptParams.at("nextcheckpointindex").template get<int>();
+                            params.m_NextCheckpointIndex = nextcheckpointindex;
+                        }OPTIONAL_EXCEPTION_HANDLER;
+
+                        lapManagerScript->SetParameters(&params);
+                        scriptComponent->AddScript<LapManagerScript>(*lapManagerScript);
+                        break;
+                    }
+                    default:
+                        break;
                 }
             }
             REQUIRED_EXCEPTION_HANDLER(script);
@@ -304,18 +304,18 @@ namespace SceneParser
 
             switch (componentMapIt->second)
             {
-            case ComponentType::Camera:
-                ParseCamera(pEntity, params);
-                break;
+                case ComponentType::Camera:
+                    ParseCamera(pEntity, params);
+                    break;
 
-            case ComponentType::Light:
-                ParseLight(pEntity, params);
-                break;
-            case ComponentType::Script:
-                ParseScript(pEntity, params);
-                break;
-            default:
-                break;
+                case ComponentType::Light:
+                    ParseLight(pEntity, params);
+                    break;
+                case ComponentType::Script:
+                    ParseScript(pEntity, params);
+                    break;
+                default:
+                    break;
             }
         }
     }
