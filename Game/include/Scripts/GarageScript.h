@@ -28,16 +28,15 @@ public:
         return std::make_unique<GarageScript>(*this);
     }
 
-    // transport car to track
-    void leaveGarage();
-
     // key callback bindings
     void bindOrbitKey();
     void bindSelectionKey();
 
-
+    void SelectNextCar(); // selects next car in meatspin (only one-way through list)
+    void ChooseCar(); // prompts currently selected car for race
+    void leaveGarage(); // transport car to track
 private:
     GarageScriptParams mParams{};
 
-    void SelectNextCar();
+    
 };
