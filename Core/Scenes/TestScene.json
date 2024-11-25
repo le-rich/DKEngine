@@ -57,7 +57,7 @@
     {
       "name": "Checkpoint 1",
       "transform": {
-        "localPosition": [],
+        "localPosition": [0, 0, 2.5],
         "localOrientation": [],
         "localScale": []
       },
@@ -81,7 +81,7 @@
     {
       "name": "Checkpoint 2",
       "transform": {
-        "localPosition": [ 0, 0, 5.0 ],
+        "localPosition": [ 0, 0, 8.5 ],
         "localOrientation": [],
         "localScale": []
       },
