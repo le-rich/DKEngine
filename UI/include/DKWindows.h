@@ -10,5 +10,7 @@
 #include "Inspector.h"
 #include "Viewport.h"
 #include "Scene.h"
-void createImGuiWindows(Scene* scene);
+#include "Buffers/FrameBuffer.h"
+
+void createImGuiWindows(Scene* scene, const FrameBuffer* framebuffer);
 

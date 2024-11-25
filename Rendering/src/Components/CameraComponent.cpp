@@ -1,6 +1,8 @@
 #include "Components/CameraComponent.h"
 
 #include <glad/glad.h>
+#include "Component.h"
+#include "Entity.h"
 
 CameraComponent::CameraComponent(Entity* mEntity) : Component(mEntity)
 {
@@ -31,13 +33,21 @@ void CameraComponent::updateAspectRatio(int width, int height)
    this-> aspectRatio = static_cast<float>(width) / static_cast<float>(height);
 }
 
+CameraComponent& CameraComponent::operator=(CameraComponent& const other)
+{
+    if (this == &other)
+    {
+        return *this;
+    }
+    this->entity->GetEntityID() == other.entity->GetEntityID();
+}
+
 glm::mat4 CameraComponent::getViewMatrix() { return m_viewMatrix; }
 
 glm::mat4 CameraComponent::getProjectionMatrix() { return m_projectionMatrix; }
 
 CameraComponent::CameraComponent(const CameraComponent& other)
-    : Component(other.mEntity),
-    lookAtTarget(other.lookAtTarget),
+    : Component(other.entity),
     fieldOfView(other.fieldOfView),
     farClipPlane(other.farClipPlane),
     nearClipPlane(other.nearClipPlane),

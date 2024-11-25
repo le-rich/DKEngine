@@ -13,7 +13,7 @@ TransformComponent::TransformComponent(Entity* mEntity, glm::vec4 position, glm:
     : Component(mEntity), mTransform{ position, orientation, glm::vec3(scale) }, transformMatrix(glm::mat4(1.f))
 {
 
-    // DO NOT REVERSE LINK mEntity->transform = this. This should be handled in Entity's initialization.
+	// DO NOT REVERSE LINK mEntity->transform = this. This should be handled in Entity's initialization.
 }
 
 TransformComponent::TransformComponent(Entity* mEntity, Transform transform) : Component(mEntity), mTransform(transform), transformMatrix(glm::mat4(1.f))
@@ -38,7 +38,7 @@ const glm::mat4 TransformComponent::getLocalTransformMatrix()
 
 const glm::mat4 TransformComponent::getTransformMatrix()
 {
-    auto parent = this->mEntity->getParent();
+    auto parent = this->entity->getParent();
     if (parent)
     {
         transformMatrix = parent->transform->getTransformMatrix();
@@ -50,7 +50,6 @@ const glm::mat4 TransformComponent::getTransformMatrix()
 
 void TransformComponent::lookAt(TransformComponent* target)
 {
-
 }
 
 
@@ -132,23 +131,23 @@ void TransformComponent::setLocalScale(glm::vec3 scale)
 
 TransformComponent& TransformComponent::operator=(const TransformComponent& other)
 {
-    if (this == &other)
-    {
-        return *this;
-    }
+	if (this == &other)
+	{
+		return *this;
+	}
 
     this->mTransform.localPosition = other.mTransform.localPosition;
     this->mTransform.localOrientation = other.mTransform.localOrientation;
     this->mTransform.localScale = other.mTransform.localScale;
 
-    // DO NOT copy mutex.
+	// DO NOT copy mutex.
 
-    this->transformMatrix = other.transformMatrix;
-    this->mEntity->GetEntityID() == other.mEntity->GetEntityID();
+	this->transformMatrix = other.transformMatrix;
+	this->entity->GetEntityID() == other.entity->GetEntityID();
 }
 
 TransformComponent::TransformComponent(const TransformComponent& other)
-    : Component(other.mEntity),
+    : Component(other.entity),
     mTransform(other.mTransform),
     transformMatrix(other.transformMatrix)
 {}

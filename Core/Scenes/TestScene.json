@@ -1,0 +1,262 @@
+{
+  "assets": [
+    {
+      "path": "TestAE2/",
+      "file": [ "ae86.gltf" ]
+    },
+    {
+      "path": "TestRoom/",
+      "file": [ "Room.gltf" ]
+    }
+  ],
+  "entities": [
+    {
+      "name": "Main Camera",
+      "transform": {
+        "localPosition": [ 0, 1, 0 ],
+        "localOrientation": [],
+        "localScale": []
+      },
+      "components": [
+        {
+          "type": "Camera",
+          "params": {
+            "fieldOfView": 90,
+            "farClipPlane": 1000,
+            "nearClipPlane": 0.3
+          }
+        },
+        {
+          "type": "Script",
+          "params": {
+            "scripts": [
+              {
+                "script": "OrbitScript",
+                "params": {
+                  "target": "Test Car",
+                  "radius": 2,
+                  "speed": 1.5,
+                  "currentAngle": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Light",
+      "transform": {
+        "localPosition": [ 0, 5, 0 ],
+        "localOrientation": [ -0.5, 0.5, 0.5, 0 ],
+        "localScale": []
+      },
+      "components": [
+        {
+          "type": "Light",
+          "params": {
+            "color": [ 1.0, 1.0, 1.0, 1.0 ],
+            "intensity": 1,
+            "constant": 0,
+            "linear": 0.0,
+            "quadratic": 1.0,
+            "cutoff": 12.0,
+            "outercutoff": 15.0,
+            "type": "AmbientLight"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CLight",
+      "transform": {
+        "localPosition": [
+          -1.4395184516906738,
+          1.0483073806762695,
+          1.4958281517028809
+        ],
+        "localOrientation": [
+          0,
+          0.36658474802970886,
+          0,
+          0.9303846955299377
+        ],
+        "localScale": [
+          0.04034293070435524,
+          0.04034293070435524,
+          0.04034293070435524
+        ]
+      },
+      "components": [
+        {
+          "type": "Light",
+          "params": {
+            "color": [ 1.0, 1.0, 1.0, 1.0 ],
+            "intensity": 1,
+            "constant": 0,
+            "linear": 0.0,
+            "quadratic": 1.0,
+            "cutoff": 6.0,
+            "outercutoff": 10.0,
+            "type": "PointLight"
+          }
+        }
+      ]
+    },
+    {
+      "name": "BLight",
+      "transform": {
+        "localPosition": [
+          1.56620192527771,
+          1.0483073806762695,
+          -2.0260465145111084
+        ],
+        "localOrientation": [
+          0,
+          -0.9219974875450134,
+          0,
+          0.387195885181427
+        ],
+        "localScale": [
+          0.04034293070435524,
+          0.04034293070435524,
+          0.04034293070435524
+        ]
+      },
+      "components": [
+        {
+          "type": "Light",
+          "params": {
+            "color": [ 1.0, 1.0, 1.0, 1.0 ],
+            "intensity": 0.25,
+            "constant": 0,
+            "linear": 0.0,
+            "quadratic": 1.0,
+            "cutoff": 6.0,
+            "outercutoff": 10.0,
+            "type": "PointLight"
+          }
+        }
+      ]
+    },
+    {
+      "name": "FLight",
+      "transform": {
+        "localPosition": [
+          -1.4395184516906738,
+          1.0483073806762695,
+          -2.0260465145111084
+        ],
+        "localOrientation": [
+          0,
+          -0.4058533310890198,
+          0,
+          0.9139382243156433
+        ],
+        "localScale": [
+          0.04034293070435524,
+          0.04034293070435524,
+          0.04034293070435524
+        ]
+      },
+      "components": [
+        {
+          "type": "Light",
+          "params": {
+            "color": [ 1.0, 1.0, 1.0, 1.0 ],
+            "intensity": 0.5,
+            "constant": 0,
+            "linear": 0.0,
+            "quadratic": 1.0,
+            "cutoff": 6.0,
+            "outercutoff": 10.0,
+            "type": "PointLight"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Checkpoint 1",
+      "transform": {
+        "localPosition": [],
+        "localOrientation": [],
+        "localScale": []
+      },
+      "components": [
+        {
+          "type": "Script",
+          "params": {
+            "scripts": [
+              {
+                "script": "LapCheckpointScript",
+                "params": {
+                  "other": "Test Car",
+                  "index": 1
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Checkpoint 2",
+      "transform": {
+        "localPosition": [ -1.25, 0, 0 ],
+        "localOrientation": [],
+        "localScale": []
+      },
+      "components": [
+        {
+          "type": "Script",
+          "params": {
+            "scripts": [
+              {
+                "script": "LapCheckpointScript",
+                "params": {
+                  "other": "Test Car",
+                  "index": 2
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Test OBJECT",
+      "transform": {
+        "localPosition": [],
+        "localOrientation": [],
+        "localScale": []
+      },
+      "components": {},
+      "parent": "JSON TEST PARENT",
+      "children": [ "JSON Test Child" ]
+    }
+  ],
+  "gamemanager": {
+    "components": [
+      {
+        "type": "Script",
+        "params": {
+          "scripts": [
+            {
+              "script": "TimerScript",
+              "params": {
+                "target": "Test Car"
+              }
+            },
+            {
+              "script": "LapManagerScript",
+              "params": {
+                "checkpoints": ["Checkpoint 1", "Checkpoint 2"]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

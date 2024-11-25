@@ -18,17 +18,17 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <atomic>
 #include <iostream>
 #include <mutex>
 #include <thread>
 
-#include "Components/AudioComponent.h"
 
-// Theres some experimentation we'll need to do regarding updating objects on the main thread and rendering on the render thread.
-// That can wait for the time being.
-int run_glfw()
-{
+int run_glfw() {
+	std::atomic<bool> running(true);
+	float deltaTimeFloatSeconds;
 
+	// WINDOW ================================================== 
     Window::InitWindow();
     Window window;
     if (window.GetWindow() == NULL)
@@ -37,140 +37,176 @@ int run_glfw()
         glfwTerminate();
     }
 
+    Input& input = Input::GetInstance();
+    input.SetWindow(window.GetWindow());
+
+    // the following is how you can call register a callback THIS IS JUST EXAMPLE CODE FOR PEOPLE TO USE
+    input.RegisterKeyCallback(GLFW_KEY_W, [](Input::ActionType action) {
+        if (action == Input::HOLD) {
+            std::cout << "W KEY HELD" << std::endl;
+        }
+        else if (action == Input::RELEASE) {
+            std::cout << "W KEY RELEASED" << std::endl;
+        }
+        else if (action == Input::PRESS) {
+            std::cout << "W KEY PRESESD" << std::endl;
+        }
+        });
+    
+
     window.SetWindowToCurrentThread();
     window.SetKeyCallback(Input::KeyCallback);
-    window.SetMouseButtonCallback(Input::MouseButtonCallback);
+    window.SetMouseButtonCallback(Input::MouseButtonCallback);    
+	
+	// Load GLAD
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	{
+		std::cout << "Failed to initialize GLAD" << std::endl;
+		return -1;
+	}
 
-    // Load GLAD
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        std::cout << "Failed to initialize GLAD" << std::endl;
-        return -1;
-    }
-
-    // Set size of framebuffer
+	// Set size of framebuffer
     glViewport(0, 0, window.GetWidth(), window.GetHeight());
     window.SetFramebufferSizeCallback();
 
+	// ECS ======================================================
     std::vector<System*> systems;
     Scene* defaultScene = new Scene();
 
-    Core::getInstance().SetScene(defaultScene);
-    defaultScene->SpawnSceneDefinition();
+	Core::getInstance().SetScene(defaultScene);
+	defaultScene->SpawnSceneDefinition();
 
+    Entity* testCarEntity = EntityManager::getInstance().findFirstEntityByDisplayName("Test Car");
 
-    auto testCarUUID = EntityManager::getInstance().findFirstEntityByDisplayName("Test Car");
-    Entity* testCarEntity = EntityManager::getInstance().getEntity(testCarUUID);
+	TransformComponent* CAR_TRANSFORM = testCarEntity->transform;
+   auto glfwWindow = window.GetWindow();
 
-    TransformComponent* CAR_TRANSFORM = testCarEntity->transform;
-
-    UI* ui = new UI(Core::getInstance().GetScene());
-    Physics* physx = new Physics(CAR_TRANSFORM);
+    Physics* physics = new Physics(CAR_TRANSFORM);
     Renderer* renderer = new Renderer(&window);
+    UI* ui = new UI(Core::getInstance().GetScene(), renderer->GetFrameBuffer(), glfwWindow);
     Game* game = new Game();
     AudioManager* audioManager = new AudioManager();    
+	
+	
+	Core::getInstance().AddSystem(ui);
+	Core::getInstance().AddSystem(physics);
+	Core::getInstance().AddSystem(renderer);
+	Core::getInstance().AddSystem(game);
 
-    Core::getInstance().AddSystem(ui);
-    Core::getInstance().AddSystem(physx);
-    Core::getInstance().AddSystem(renderer);
-    Core::getInstance().AddSystem(game);
-    Core::getInstance().AddSystem(audioManager);
+	ui->Initialize();
+	physics->Initialize();
+	renderer->Initialize();
+	game->Initialize();
 
+	FMOD::Sound* backgroundMusic = audioManager->LoadAudio("Assets/Audio/car-motor.mp3");
     
-    ui->Initialize();
-    physx->Initialize();
-    renderer->Initialize();
-    game->Initialize();
-    audioManager->Initialize();
-
-    FMOD::Sound* backgroundMusic = audioManager->LoadAudio("Assets/Audio/car-motor.mp3");
-    
-    if (backgroundMusic) {
-        static FMOD::Channel* channel = nullptr;
-        if (!channel) {
+	if (backgroundMusic) {
+		static FMOD::Channel* channel = nullptr;
+		if (!channel) {
             
-            backgroundMusic->setMode(FMOD_LOOP_NORMAL);
-            FMOD_RESULT result = audioManager->GetSystem()->playSound(backgroundMusic, nullptr, false, &channel);
-            if (result == FMOD_OK && channel) {
-                channel->setVolume(1.0f);
-                FMOD_VECTOR soundPosition = {0.0f, 0.0f, 0.0f};
-                channel->set3DAttributes(&soundPosition, nullptr);
-                channel->setLoopCount(-1);
-                channel->setPaused(false); // Start playback
-            } else {
+			backgroundMusic->setMode(FMOD_LOOP_NORMAL);
+			FMOD_RESULT result = audioManager->GetSystem()->playSound(backgroundMusic, nullptr, false, &channel);
+			if (result == FMOD_OK && channel) {
+				channel->setVolume(1.0f);
+				FMOD_VECTOR soundPosition = {0.0f, 0.0f, 0.0f};
+				channel->set3DAttributes(&soundPosition, nullptr);
+				channel->setLoopCount(-1);
+				channel->setPaused(false); // Start playback
+			} else {
                 
-            }
+			}
+		}
+	}
+
+    std::thread gameThread([&]()
+    {
+        auto previousTime = std::chrono::high_resolution_clock::now();
+        while (running) 
+        {
+            auto currentTime = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<float> deltaTime = currentTime - previousTime;
+            deltaTimeFloatSeconds = deltaTime.count();
+            previousTime = currentTime;
+
+            game->Update(deltaTimeFloatSeconds);
+            std::this_thread::sleep_for(std::chrono::microseconds(1));
         }
-    }
-
-
+    });
     
-    // Timing
-    double fixedUpdateBuffer = 0.0;
-    double FIXED_UPDATE_INTERVAL = 20; // in milliseconds
-    auto previousTime = std::chrono::high_resolution_clock::now();
+    std::thread physicsThread([&]() 
+    {
+        double fixedUpdateBuffer = 0.0;
+        double FIXED_UPDATE_INTERVAL = 20; // in milliseconds
+        auto previousTime = std::chrono::high_resolution_clock::now();
+        while(running) 
+        {
+            auto currentTime = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<float> deltaTime = currentTime - previousTime;
+            deltaTimeFloatSeconds = deltaTime.count();
+            previousTime = currentTime;
+            fixedUpdateBuffer += std::chrono::duration_cast<std::chrono::milliseconds>(deltaTime).count();
 
-    // We want some check like this visible to the other threads
-    // That way those threads will stop once the window closes. ### Has to be conditional for main thread ###
-    auto glfwWindow = window.GetWindow();
+            if (fixedUpdateBuffer >= FIXED_UPDATE_INTERVAL) {
+                physics->FixedUpdate();
+                fixedUpdateBuffer -= FIXED_UPDATE_INTERVAL;
+            }
+            std::this_thread::sleep_for(std::chrono::microseconds(1));
+        }
+    });
+
+    std::thread rendererThread([&]() 
+    {
+	    auto previousTime = std::chrono::high_resolution_clock::now();
+        while(running) 
+        {
+            auto currentTime = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<float> deltaTime = currentTime - previousTime;
+            deltaTimeFloatSeconds = deltaTime.count();
+            previousTime = currentTime;
+
+            renderer->Update(deltaTimeFloatSeconds);      
+            std::this_thread::sleep_for(std::chrono::microseconds(1));
+        }
+    });
+
+	// RUN =======================================================
+	double fixedUpdateBuffer = 0.0;
+	double FIXED_UPDATE_INTERVAL = 20; // in milliseconds
+	auto previousTime = std::chrono::high_resolution_clock::now();
+	
     while (!glfwWindowShouldClose(glfwWindow))
     {
-        
-        
         auto currentTime = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<float> deltaTime = currentTime - previousTime;
-        auto deltaTimeFloatSeconds = deltaTime.count();
-        // audioManager->Update(0.0);
-
+        std::chrono::duration<float> deltaTime = currentTime - previousTime; 
+        deltaTimeFloatSeconds = deltaTime.count();
         previousTime = currentTime;
 
-        fixedUpdateBuffer += std::chrono::duration_cast<std::chrono::milliseconds>(deltaTime).count();
-        std::cout << "COUNT: " << fixedUpdateBuffer << "\n"; // Commenting this line causes the Fixed update loop to stutter.
-
-
-        // Callbacks on all the keys that sets key-codes Or prsssdown to true or false.
-        // Potential Mouse inputs; May have to figure out how it can work when extracting
-        // Scrollwheels
-        
-        // TODO: Create extractions/enums for key presses on whether they would be pressed-down or not,
-        // Have them be updated by GLFW callback. This works because glfwpollevents() is a synchronous method that runs all callbacks
-        // As long as all components are called after glfwpollevents, behavior should be fine.
         window.PollEvents();
-        Input::RunInputListener(physx->body);
+        input.Update();
 
-        // Rendering related calls, we can move these to the loop of the rendering thread
-        renderer->Update(deltaTimeFloatSeconds); // draw tri or square
-
-        while (fixedUpdateBuffer >= FIXED_UPDATE_INTERVAL)
-        {
-            physx->FixedUpdate();
-            fixedUpdateBuffer -= FIXED_UPDATE_INTERVAL;
-        }
-        game->Update(deltaTimeFloatSeconds);
-
-        //@TODO: REMOVE THIS LATER. Above loops are never getting entered so UI update was never getting called. Remove this line below when fixed.
         ui->Update(deltaTimeFloatSeconds);
-    }
+	}
 
-    // Destroys library, may cause race condition if it gets destroyed while other threads are using it.
-    glfwTerminate();
+	// TEARDOWN ==================================================
+	running = false;
+    
+    if (gameThread.joinable())      { gameThread.join(); }
+    if (physicsThread.joinable())   { physicsThread.join(); }
+    if (rendererThread.joinable())  { rendererThread.join(); }
 
-    // Destroy all systems upon closing window
-    for (auto sys : systems)
-    {
-        sys->Kill();
-    }
+	for (auto sys : systems)
+	{
+		sys->Kill();
+	}
 
+	glfwTerminate();
 }
 
-
-// TODO: Make core class static or singleton
 int main(int argc, char* argv[])
 {
     // Nobody dare touch this... I'm watching you... ?_?
     std::cout << "Do you know what DK Stands for? Donkey Kong? Nah. Drift King." << std::endl;
 
-    // Currently has its own while loop blocking main
     run_glfw();
 
     return 0;

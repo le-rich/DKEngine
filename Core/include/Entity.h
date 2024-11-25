@@ -3,6 +3,7 @@
 #include "Utils/IDUtils.h"
 #include "Component.h"
 #include "Components/TransformComponent.h"
+#include "Core.h"
 
 #include <algorithm>
 #include <memory>
@@ -126,6 +127,9 @@ public:
         this->entityID = uuidGen.getUUID();
         this->transform = new TransformComponent(this);
     }
+
+    // Copy constructor
+    Entity(const Entity& other);
 
     // default destructor
     ~Entity()

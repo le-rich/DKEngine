@@ -3,14 +3,29 @@
 #include "Component.h"
 #include "Entity.h"
 
-ScriptComponent::ScriptComponent(Entity *mEntity) : Component(mEntity)
+ScriptComponent::ScriptComponent(Entity* mEntity) : Component(mEntity)
 {
-    this->componentType = ComponentType::Script;
+	this->componentType = ComponentType::Script;
 }
 
 ScriptComponent::~ScriptComponent()
 {
 
+}
+
+Component* ScriptComponent::clone() const
+{
+	return (new ScriptComponent(*this));
+}
+
+ScriptComponent& ScriptComponent::operator=(ScriptComponent& const other) 
+{
+	if (this == &other)
+	{
+		return *this;
+	}
+	this->scripts = other.scripts;
+	this->entity->GetEntityID() == other.entity->GetEntityID();
 }
 
 // copy constructor
@@ -22,9 +37,4 @@ ScriptComponent::ScriptComponent(const ScriptComponent& other)
     for (const auto& script : other.scripts) {
         scripts.push_back(script->clone());
     }
-}
-
-// overridden clone
-Component* ScriptComponent::clone() const {
-    return new ScriptComponent(*this);
 }

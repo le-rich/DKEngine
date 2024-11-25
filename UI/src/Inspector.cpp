@@ -6,8 +6,9 @@
 #include <glm.hpp>
 #include <gtc/type_ptr.hpp>
 #include <gtc/quaternion.hpp>
+#include "Core.h"
 
-void drawInspector() {
+void drawInspector(Scene* scene) {
    //Get object information and display
    ImGui::Begin("Inspector");
    Entity* selectedEntity = getSelectedEntity();  // Use the new function
@@ -28,48 +29,142 @@ void drawInspector() {
            ImGui::Text("Parent: ");
            ImGui::SameLine(75);
            if (selectedEntity->getParent() != nullptr) {
-               ImGui::Text("%s", selectedEntity->getParent()->GetDisplayName().c_str());
+               ImGui::Selectable(selectedEntity->getParent()->GetDisplayName().c_str());
            }
            else {
-               ImGui::Text("Root");
+               ImGui::Selectable("None");
            }
+
+           if (selectedEntity != scene->getRoot() && ImGui::BeginDragDropTarget()) {
+              const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Entity");
+              if (payload != nullptr) {
+                 Entity* parent = *(Entity**)payload->Data;
+                 Entity* child = selectedEntity;
+                 Entity* parentTree = parent;
+                 while (parentTree != scene->getRoot() && parentTree != child) { //check for parent loop
+                    parentTree = parentTree->getParent();
+                 }
+                 if (parentTree == child) {
+                    consoleLog("Error: reparenting " + child->GetDisplayName() + " to " + parent->GetDisplayName() + " would cause hierarchy loop");
+                 }
+                 else if (child != parent) {
+                    child->setParent(parent);
+                    consoleLog(child->GetDisplayName() + " parented to " + parent->GetDisplayName());
+                 }
+              }
+              ImGui::EndDragDropTarget();
+           }
+
        }
-       //ImGui::Text("Selected Object: %s", selected->getName().c_str());
 
-       if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
-          TransformComponent* transform = selectedEntity->transform;
-          if (transform != nullptr) {
+       drawTransformComponent();
 
-             // Position
-             glm::vec3 position = transform->getLocalPosition();
-             ImGui::Text("Position");
-             ImGui::SameLine(75); // Adjust the value (100) to set appropriate spacing for label alignment
-             if(ImGui::DragFloat3("##Position", glm::value_ptr(position), 0.1f)) {
-                  transform->setLocalPosition(position);
-             }
-
-             // Rotation
-             glm::vec3 rotation = glm::degrees(glm::eulerAngles(transform->getLocalOrientation()));
-             ImGui::Text("Rotation");
-             ImGui::SameLine(75);
-             if (ImGui::DragFloat3("##Rotation", glm::value_ptr(rotation), 0.1f)) {
-
-                 transform->setLocalOrientation(glm::quat(glm::radians(rotation)));
-             }
-
-             // Scale
-             glm::vec3 scale = transform->getLocalScale();
-             ImGui::Text("Scale");
-             ImGui::SameLine(75);
-             if (ImGui::DragFloat3("##Scale", glm::value_ptr(scale), 0.1f)) {
-                transform->setLocalScale(scale);
-             }
+       for (auto component : selectedEntity->getComponents()) {
+          switch (component->componentType) {
+          case ComponentType::Light:
+             drawLightComponent(component);
+             break;
+          default:
+             break;
           }
        }
+       //TODO: Check for which components an entity has and call the approprite function to draw
+       
    }
    else {
-       ImGui::Text("No Game Object Selected");
+       ImGui::Text("No Entity Selected");
    }
    ImGui::End();
 }
 
+void drawTransformComponent() {
+   if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
+      TransformComponent* transform = getSelectedEntity()->transform;
+      if (transform != nullptr) {
+
+         // Position
+         glm::vec3 position = transform->getLocalPosition();
+         ImGui::Text("Position");
+         ImGui::SameLine(75); // Adjust the value (100) to set appropriate spacing for label alignment
+         if (ImGui::DragFloat3("##Position", glm::value_ptr(position), 0.1f)) {
+            transform->setLocalPosition(position);
+         }
+
+         // Rotation
+         glm::vec3 rotation = glm::degrees(glm::eulerAngles(transform->getLocalOrientation()));
+         ImGui::Text("Rotation");
+         ImGui::SameLine(75);
+         if (ImGui::DragFloat3("##Rotation", glm::value_ptr(rotation), 0.1f)) {
+
+            transform->setLocalOrientation(glm::quat(glm::radians(rotation)));
+         }
+
+         // Scale
+         glm::vec3 scale = transform->getLocalScale();
+         ImGui::Text("Scale");
+         ImGui::SameLine(75);
+         if (ImGui::DragFloat3("##Scale", glm::value_ptr(scale), 0.1f)) {
+            transform->setLocalScale(scale);
+         }
+      }
+   }
+}
+
+void drawLightComponent(Component* component) {
+   if (ImGui::CollapsingHeader("Light", ImGuiTreeNodeFlags_DefaultOpen)) {
+      LightComponent* light = static_cast<LightComponent*>(component);
+
+      const char* types[] = { "Ambient", "Point", "Directional", "Spot", "Area" };
+      LightType lightType = light->GetType();
+      int index = static_cast<int>(lightType);
+      ImGui::Text("Type");
+      ImGui::SameLine(100);
+      if (ImGui::Combo("##Type", &index, types, 5)) {
+         light->SetType(static_cast<LightType>(index));
+      }
+
+      float intensity = light->GetIntensity();
+      ImGui::Text("Intensity");
+      ImGui::SameLine(100);
+      if (ImGui::DragFloat("##Intensity", &intensity, 0.1f, 0.0f)) {
+         light->SetIntensity(intensity);
+      }
+
+      float constant = light->GetConstant();
+      ImGui::Text("Constant");
+      ImGui::SameLine(100);
+      if (ImGui::DragFloat("##Constant", &constant, 0.1f)) {
+         light->SetConstant(constant);
+      }
+
+      float linear = light->GetLinear();
+      ImGui::Text("Linear");
+      ImGui::SameLine(100);
+      if (ImGui::DragFloat("##Linear", &linear, 0.1f)) {
+         light->SetLinear(linear);
+      }
+
+      float quadratic = light->GetQuadratic();
+      ImGui::Text("Quadratic");
+      ImGui::SameLine(100);
+      if (ImGui::DragFloat("##Quadratic", &quadratic, 0.1f)) {
+         light->SetQuadratic(quadratic);
+      }
+
+      float cutoff = light->GetCutoff();
+      ImGui::Text("Cutoff");
+      ImGui::SameLine(100);
+      if (ImGui::DragFloat("##Cutoff", &cutoff, 0.1f)) {
+         light->SetCutoff(cutoff);
+      }
+
+      float outerCutoff = light->GetOuterCutoff();
+      ImGui::Text("Outer Cutoff");
+      ImGui::SameLine(100);
+      if (ImGui::DragFloat("##OuterCutoff", &outerCutoff, 0.1f)) {
+         light->SetOuterCutoff(outerCutoff);
+      }
+
+
+   }
+}

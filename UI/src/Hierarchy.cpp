@@ -2,11 +2,13 @@
 #include "../include/Console.h"
 #include "Scene.h"
 #include "Entity.h"
+#include "Managers/EntityManager.h"
 #include <set> // Include for std::set
 #include <iostream>
 using namespace std;
 
 Entity* selectedEntity = nullptr;
+Entity* rootEntity = nullptr;
 
 // Global variable to track the renaming state
 Entity* renamingEntity = nullptr; // Currently selected GameObject for renaming
@@ -20,13 +22,17 @@ void drawHierarchyLine(Entity* entity) {
         nodeFlags |= ImGuiTreeNodeFlags_Selected;
     }
 
+    if (entity->getChildren().size() == 0) {
+       nodeFlags |= ImGuiTreeNodeFlags_Leaf;
+    }
+
     // Create a unique ID using the name and the memory address of the GameObject
     ImGui::PushID(entity->GetEntityID().str().c_str()); // Push the GameObject pointer to the ID stack
     bool nodeOpen = ImGui::TreeNodeEx(entity->GetDisplayName().c_str(), nodeFlags);
     ImGui::PopID(); // Pop the ID from the stack
 
     // Handle left-click selection
-    if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen()) {
+    if (ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Left) && !ImGui::IsItemToggledOpen() && !ImGui::IsMouseDragging(ImGuiMouseButton_Left)) {
         selectedEntity = entity;
         consoleLog("Selected: " + entity->GetDisplayName());
 
@@ -56,6 +62,10 @@ void drawHierarchyLine(Entity* entity) {
             renamingEntity = entity; // Set the GameObject to be renamed
             strncpy_s(renamingBuffer, entity->GetDisplayName().c_str(), sizeof(renamingBuffer)); // Copy name to buffer
             renamingBuffer[sizeof(renamingBuffer) - 1] = '\0'; // Ensure null-termination
+        }
+
+        if (ImGui::MenuItem("Duplicate")) {
+           EntityManager::getInstance().duplicateEntity(entity);
         }
 
         if (ImGui::MenuItem("Delete GameObject")) {
@@ -98,10 +108,37 @@ void drawHierarchyLine(Entity* entity) {
         }
     }
 
+    if (entity != rootEntity && ImGui::BeginDragDropSource()) {
+       ImGui::SetDragDropPayload("Entity", &entity, sizeof(Entity*));
+       ImGui::Text(entity->GetDisplayName().c_str());
+       ImGui::EndDragDropSource();
+    }
+
+    if (ImGui::BeginDragDropTarget()) {
+       const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Entity");
+       if (payload != nullptr) {
+          Entity* child = *(Entity**)payload->Data;
+          Entity* parent = entity;
+          Entity* parentTree = parent;
+          while (parentTree != rootEntity && parentTree != child) { //check for parent loop
+             parentTree = parentTree->getParent();
+          }
+          if (parentTree == child) {
+             consoleLog("Error: reparenting " + child->GetDisplayName() + " to " + parent->GetDisplayName() + " would cause hierarchy loop");
+          }
+          else if (child != parent) {
+             child->setParent(parent);
+             consoleLog(child->GetDisplayName() + " parented to " + parent->GetDisplayName());
+          }
+       }
+       ImGui::EndDragDropTarget();
+    }
+
+
     // Draw children recursively if the node is open
     if (nodeOpen) {
-        for (auto* child : entity->getChildren()) {
-            drawHierarchyLine(child);  // Use .get() to pass the raw pointer to drawHierarchyLine
+       for (int i = 0; i < entity->getChildren().size(); i++) {
+            drawHierarchyLine(entity->getChildren()[i]);  // Use .get() to pass the raw pointer to drawHierarchyLine
         }
         ImGui::TreePop();
     }
@@ -111,7 +148,7 @@ void drawHierarchyLine(Entity* entity) {
 void drawHierarchy(Scene* scene) {
     ImGui::Begin("Hierarchy");
 
-    Entity* rootEntity = scene->getRoot();
+    rootEntity = scene->getRoot();
 
     if (rootEntity) {
        drawHierarchyLine(rootEntity);

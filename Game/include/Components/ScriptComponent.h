@@ -1,8 +1,9 @@
 #pragma once
+#include "Script.h"
+
 #include <vector>
 #include <memory>
 
-#include "Script.h"
 
 class Component;
 class Entity;
@@ -24,12 +25,26 @@ public:
     }
 
     template<typename T>
-    void AddScriptToComponent(ScriptParams* pScriptParams)
+    void CreateAndAddScript(ScriptParams* pScriptParams)
     {
         T* script;
         script = new T(mEntity);
         script->SetParameters(pScriptParams);
         this->AddScript<T>(*script);
+    }
+
+    template <typename T>
+    T* GetScript()
+    {
+        for (const auto& script : scripts)
+        {
+            T* subScript = dynamic_cast<T*>(script.get());
+            if (subScript != nullptr)
+            {
+                return subScript;
+            }
+        }
+        return nullptr;
     }
 
     void UpdateScripts(float deltaTime)
@@ -40,6 +55,8 @@ public:
         }
     }
 
+    ScriptComponent& operator=(ScriptComponent& const other);
+
 private:
-    std::vector<std::unique_ptr<Script>> scripts;
+    std::vector<std::shared_ptr<Script>> scripts;
 };
