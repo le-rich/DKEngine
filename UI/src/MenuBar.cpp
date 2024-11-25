@@ -3,6 +3,10 @@
 
 void createMenuBar() {
    if (ImGui::BeginMainMenuBar()) {
+      bool notSelected = getSelectedEntity() == nullptr;
+      if (notSelected) {
+         ImGui::BeginDisabled();
+      }
       if (ImGui::BeginMenu("Add Component")) {
          if (ImGui::MenuItem("Light Component") && getSelectedEntity()->getComponent(ComponentType::Light) == nullptr) {
             Component* light = new LightComponent(getSelectedEntity());
@@ -12,9 +16,9 @@ void createMenuBar() {
             Component* mesh = new MeshComponent(getSelectedEntity());
             getSelectedEntity()->addComponent(*mesh);
          }
-         if (ImGui::MenuItem("RigidBody Component (Does not have default constructor, and not in the componentType enum)") /* && getSelectedEntity()->getComponent(ComponentType::RigidBody) == nullptr*/) {
-            //Component* rigidBody = new RigidBodyComponent(getSelectedEntity());
-            //getSelectedEntity()->addComponent(*rigidBody);
+         if (ImGui::MenuItem("RigidBody Component") && getSelectedEntity()->getComponent(ComponentType::RigidBody) == nullptr) {
+            Component* rigidBody = new RigidBodyComponent(getSelectedEntity());
+            getSelectedEntity()->addComponent(*rigidBody);
          }
          if (ImGui::MenuItem("Camera Component") && getSelectedEntity()->getComponent(ComponentType::Camera) == nullptr) {
             Component* camera = new CameraComponent(getSelectedEntity());
@@ -24,9 +28,15 @@ void createMenuBar() {
             Component* script = new ScriptComponent(getSelectedEntity());
             getSelectedEntity()->addComponent(*script);
          }
-         ImGui::EndMenu();
-      }
+         if (notSelected) {
 
+         }
+         ImGui::EndMenu();
+
+      }
+      if (notSelected) {
+         ImGui::EndDisabled();
+      }
       ImGui::EndMainMenuBar();
    }
 }

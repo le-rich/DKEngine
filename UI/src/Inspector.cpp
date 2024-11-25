@@ -188,7 +188,7 @@ void drawMeshComponent(Component* component) {
 void drawRigidBodyComponent(Component* component)
 {
    if (ImGui::CollapsingHeader("Rigid Body", ImGuiTreeNodeFlags_DefaultOpen)) {
-      //RigidBodyComponent* rb = static_cast<RigidBodyComponent*>(component);
+      RigidBodyComponent* rb = static_cast<RigidBodyComponent*>(component);
    }
 }
 
