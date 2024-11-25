@@ -9,6 +9,7 @@
       "file": [ "Room.gltf" ]
     }
   ],
+  "skybox": "skybox_to_equirect_2.png",
   "entities": [
     {
       "name": "Main Camera",
@@ -251,7 +252,7 @@
             {
               "script": "LapManagerScript",
               "params": {
-                "checkpoints": ["Checkpoint 1", "Checkpoint 2"]
+                "checkpoints": [ "Checkpoint 1", "Checkpoint 2" ]
               }
             }
           ]

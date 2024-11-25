@@ -81,6 +81,9 @@
     <ClInclude Include="include\Data\Shape.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Resources\Skybox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Buffers\IndexBuffer.cpp">
@@ -137,8 +140,8 @@
     <ClCompile Include="src\Entities\LightEntity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Shaders\screen.glsl" />
+    <ClCompile Include="src\Resources\Skybox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

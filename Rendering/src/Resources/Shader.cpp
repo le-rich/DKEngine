@@ -32,6 +32,11 @@ void Shader::CleanUp()
     GLCall(glDeleteShader(mShaderID));
 }
 
+void Shader::setMat4(const std::string& name, const glm::mat4& mat) const
+{
+    glUniformMatrix4fv(glGetUniformLocation(mShaderID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+}
+
 // Returns a ID of the compiled shader program on the GPU.
 unsigned int Shader::CompileShader(unsigned int type, const std::string& source)
 {
