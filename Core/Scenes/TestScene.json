@@ -47,8 +47,8 @@
     {
       "name": "Light",
       "transform": {
-        "localPosition": [ 0, 5, 0 ],
-        "localOrientation": [ -0.5, 0.5, 0.5, 0 ],
+        "localPosition": [],
+        "localOrientation": [],
         "localScale": []
       },
       "components": [
@@ -62,7 +62,7 @@
             "quadratic": 1.0,
             "cutoff": 12.0,
             "outercutoff": 15.0,
-            "type": "DirectionalLight"
+            "type": "Ambient"
           }
         }
       ]
@@ -75,12 +75,7 @@
           2.15,
           2.7
         ],
-        "localOrientation": [
-          0,
-          0.36658474802970886,
-          0,
-          0.9303846955299377
-        ],
+        "localOrientation": [],
         "localScale": [
           0.04034293070435524,
           0.04034293070435524,
@@ -111,12 +106,7 @@
           1.15,
           -1.2
         ],
-        "localOrientation": [
-          0,
-          -0.9219974875450134,
-          0,
-          0.387195885181427
-        ],
+        "localOrientation": [],
         "localScale": [
           0.04034293070435524,
           0.04034293070435524,
@@ -165,12 +155,12 @@
           "params": {
             "color": [ 1.0, 1.0, 1.0, 1.0 ],
             "intensity": 0.5,
-            "constant": 0,
-            "linear": 0.0,
-            "quadratic": 1.0,
+            "constant": 1,
+            "linear": 0.09,
+            "quadratic": 0.032,
             "cutoff": 6.0,
             "outercutoff": 10.0,
-            "type": "PointLight"
+            "type": "SpotLight"
           }
         }
       ]

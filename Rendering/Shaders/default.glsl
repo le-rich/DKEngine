@@ -2,6 +2,7 @@
 #version 460 core
 
 layout(location = 0) in vec3 position;
+layout(location = 1) in vec3 normal;
 layout(location = 2) in vec2 texCoord;
 
 /* Global information sent by the engine */
@@ -14,10 +15,13 @@ layout (std140, binding = 0) uniform EngineUBO
 };
 
 out vec2 v_TexCoord;
+out vec3 v_Normal;
 out vec3 v_WorldPos;
 
 void main()
 {
+    v_Normal = normal;
+
     vec4 worldPosition = ubo_Model * vec4(position, 1.0);
     v_WorldPos = worldPosition.xyz;
 
@@ -29,11 +33,20 @@ void main()
 #version 460 core
 
 in vec2 v_TexCoord;
+in vec3 v_Normal;
 in vec3 v_WorldPos;
 
 layout(std140, binding = 0) buffer LightSSBO
 {
     mat4 ssboLights[];
+};
+
+layout (std140, binding = 0) uniform EngineUBO
+{
+    mat4    ubo_Model;
+    mat4    ubo_View;
+    mat4    ubo_Projection;
+    vec3    ubo_ViewPos;
 };
 
 uniform sampler2D uDiffuseMap;
@@ -43,7 +56,7 @@ uniform vec4 uDiffuse    = vec4(1.0, 1.0, 1.0, 1.0);
 uniform float uShininess = 100.0;
 
 // Globals
-vec3 gNormal = vec3(1.0f, 0.5f, 0.5f);
+vec3 gNormal;
 vec2 gTexCoords;
 vec3 gViewDir;
 vec4 gDiffuseTexel;
@@ -78,9 +91,9 @@ float LuminosityFromAttenuation(mat4 pLight)
 
 vec3 BlinnPhong(vec3 plightDir, vec3 plightColor, float pluminosity)
 {
-    const vec3 lightDir             = normalize(plightDir);
+    const vec3 lightDir             = plightDir;
     const vec3 halfwayDir           = normalize(plightDir + gViewDir);
-    const float diffuseCoefficient  = max(dot(lightDir, gNormal), 0.0);
+    const float diffuseCoefficient  = max(dot(gNormal, -lightDir), 0.0);
     const float specularCoefficient = pow(max(dot(halfwayDir, gNormal), 0.0), uShininess * 2.0);
 
     vec3 diffuse  = gDiffuseTexel.rgb * diffuseCoefficient * plightColor * pluminosity;
@@ -91,7 +104,7 @@ vec3 BlinnPhong(vec3 plightDir, vec3 plightColor, float pluminosity)
 
 vec3 CalculateDirectionalLight(mat4 plight)
 {
-    return BlinnPhong(-plight[1].rgb, UnPackColor(plight[2][0]), plight[3][3]);
+    return BlinnPhong(plight[1].rgb, UnPackColor(plight[2][0]), plight[3][3]);
 }
 
 vec3 CalcPointLight(mat4 pLight)
@@ -100,8 +113,23 @@ vec3 CalcPointLight(mat4 pLight)
     const vec3 lightColor     = UnPackColor(pLight[2][0]);
     const float intensity     = pLight[3][3];
 
-    const vec3  lightDirection  = normalize(lightPosition - v_WorldPos);
+    const vec3  lightDirection  = normalize(v_WorldPos - lightPosition);
     const float luminosity      = LuminosityFromAttenuation(pLight);
+
+    return BlinnPhong(lightDirection, lightColor, intensity * luminosity);
+}
+
+vec3 CalculateSpotLight(mat4 pLight)
+{
+    const vec3 lightPosition  = pLight[0].rgb;
+    const vec3 lightColor     = UnPackColor(pLight[2][0]);
+
+    const vec3  lightDirection  = normalize(v_WorldPos - lightPosition);
+    const float luminosity      = LuminosityFromAttenuation(pLight);
+
+    float theta = dot(lightDirection, normalize(-pLight[1].rgb)); 
+    const float epsilon = (pLight[3][1] -  pLight[3][2]);
+    const float intensity = clamp((theta - pLight[3][2]) / epsilon, 0.0, 1.0);
 
     return BlinnPhong(lightDirection, lightColor, intensity * luminosity);
 }
@@ -114,6 +142,7 @@ vec3 CalculateLightSum()
         switch(int(ssboLights[i][3][0]))
         {
             case 0: // Ambient Light
+                lightSum += gDiffuseTexel.rgb * UnPackColor(ssboLights[i][2][0]) * ssboLights[i][3][3];
                 break;
             case 1: // Point Light
                 lightSum += CalcPointLight(ssboLights[i]); 
@@ -122,6 +151,7 @@ vec3 CalculateLightSum()
                 lightSum += CalculateDirectionalLight(ssboLights[i]);  
                 break;
             case 3: // Spot Light
+                lightSum += CalculateSpotLight(ssboLights[i]);  
                 break;
             case 4: // Area Light
                 break;
@@ -135,15 +165,11 @@ vec3 CalculateLightSum()
 
 void main()
 {
-    gNormal = normalize(gNormal);
+    gNormal = normalize(v_Normal);
     gTexCoords = vec2(v_TexCoord);
-    gViewDir = normalize(v_WorldPos);
+    gViewDir = normalize(ubo_ViewPos - v_WorldPos);
     gDiffuseTexel  = texture(uDiffuseMap,  gTexCoords) * uDiffuse;
-    vec3 lightSum = vec3(0.0);
-    for (int i = 0; i < ssboLights.length(); ++i)
-    {
-        lightSum += CalculateLightSum();
-    }
+    vec3 lightSum = CalculateLightSum();
 
     FragColor = vec4(lightSum, gDiffuseTexel.a);
 }

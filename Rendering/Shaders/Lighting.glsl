@@ -97,6 +97,25 @@ vec3 CalculateAmbientLight(mat4 plight)
     return BlinnPhong(-plight[1].rgb, UnPackColor(plight[2][0]), plight[3][3]);
 }
 
+vec3 CalculateSpotLight(mat4 pLight)
+{
+    const vec3 lightPosition  = pLight[0].rgb;
+    const vec3 lightColor     = UnPackColor(pLight[2][0]);
+//    const float intensity     = pLight[3][3];
+
+//    const float cuttoff         = pLight[3][1]; 
+//    const float outerCutoff     = pLight[3][2]; 
+
+    const vec3  lightDirection  = normalize(lightPosition - fsin.FragPos);
+    const float luminosity      = LuminosityFromAttenuation(pLight);
+
+    float theta = dot(lightDirection, normalize(-pLight[1].rgb)); 
+    const float epsilon = (pLight[3][1] -  pLight[3][2]);
+    const float intensity = clamp((theta - pLight[3][2]) / epsilon, 0.0, 1.0);
+
+    return BlinnPhong(lightDirection, lightColor, intensity * luminosity);
+}
+
 vec3 CalcPointLight(mat4 pLight)
 {
     const vec3 lightPosition  = pLight[0].rgb;
@@ -130,6 +149,7 @@ vec3 CalculateLightSum()
                 lightSum += CalculateDirectionalLight(ssboLights[i]);  
                 break;
             case 3: // Spot Light
+                lightSum += CalculateSpotLight(ssboLights[i]);
                 break;
             case 4: // Area Light
                 break;
