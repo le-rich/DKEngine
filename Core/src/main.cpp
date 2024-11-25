@@ -79,7 +79,7 @@ int run_glfw() {
 	TransformComponent* CAR_TRANSFORM = testCarEntity->transform;
 
     UI* ui = new UI(Core::getInstance().GetScene());
-    Physics* physics = new Physics(CAR_TRANSFORM);
+    Physics* physics = new Physics();
     Renderer* renderer = new Renderer(&window);
     Game* game = new Game();
 
