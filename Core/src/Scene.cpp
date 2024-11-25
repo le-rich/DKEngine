@@ -79,7 +79,10 @@ void Scene::SpawnSceneDefinition()
     ScriptComponent* garageScriptComponent = new ScriptComponent(garageRoomEnt);
     GarageScriptParams garageParams;
     garageParams.orbitScript = orbScript;
-    //garageScriptComponent->AddScript<GarageScript>(&garageParams);
+    garageParams.cars.push_back(entityManager->findFirstEntityByDisplayName("Test Car"));
+    garageParams.cars.push_back(entityManager->findFirstEntityByDisplayName("TestCar2"));
+
+    garageScriptComponent->CreateAndAddScript<GarageScript>(&garageParams);
     garageRoomEnt->addComponent(*garageScriptComponent);
 
 

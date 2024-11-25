@@ -10,6 +10,7 @@ struct GarageScriptParams : ScriptParams
     OrbitScript* orbitScript = nullptr;
     bool carHasBeenSelected = false;
     TransformComponent* selectedTarget = nullptr;
+    std::vector<Entity*> cars = std::vector<Entity*>();
 };
 
 class GarageScript : public Script
