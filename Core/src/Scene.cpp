@@ -85,6 +85,9 @@ void Scene::SpawnSceneDefinition()
 
     garageScriptComponent->CreateAndAddScript<GarageScript>(&garageParams);
     garageRoomEnt->addComponent(*garageScriptComponent);
+    auto foo = garageScriptComponent->GetScript<GarageScript>();
+    foo->bindOrbitKey();
+    foo->bindSelectionKey();
 }
 
 void Scene::createGameManager()

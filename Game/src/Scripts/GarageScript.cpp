@@ -14,12 +14,6 @@ GarageScript::~GarageScript() {}
 
 void GarageScript::Update(float deltaTime)
 {
-    // TODO: loop to check if a car has been selected yet
-    /*if (mParams.carHasBeenSelected)
-    {
-        mParams.selectedTarget = mParams.orbitScript->getCurrentTarget();
-        leaveGarage();
-    }*/
 }
 
 void GarageScript::SetParameters(ScriptParams* pScriptParameters)
@@ -33,10 +27,9 @@ void GarageScript::bindOrbitKey()
     
     input.RegisterKeyCallback(GLFW_KEY_SPACE, [&](Input::ActionType action) {
         if (action == Input::PRESS) {
-            SelectNextCar();
+            this->SelectNextCar();
         }
         });
-    
 }
 
 void GarageScript::bindSelectionKey() 
@@ -46,8 +39,8 @@ void GarageScript::bindSelectionKey()
 
     input.RegisterKeyCallback(GLFW_KEY_ENTER, [&](Input::ActionType action) {
         if (action == Input::PRESS) {
-            ChooseCar();
-            if (mParams.selectedTarget) { leaveGarage(); }
+            this->ChooseCar();
+            if (mParams.selectedTarget) { this->leaveGarage(); }
         }
         });
 }
