@@ -55,7 +55,7 @@ vec3 UnPackColor(float pTarget)
 
 vec3 BlinnPhong(vec3 plightDir, vec3 plightColor, float pluminosity)
 {
-    const vec3 lightDir             = normalize(plightDir);
+    const vec3 lightDir             = plightDir;
     const vec3 halfwayDir           = normalize(plightDir + gViewDir);
     const float diffuseCoefficient  = max(dot(lightDir, gNormal), 0.0);
     const float specularCoefficient = pow(max(dot(halfwayDir, gNormal), 0.0), uShininess * 2.0);
@@ -68,7 +68,7 @@ vec3 BlinnPhong(vec3 plightDir, vec3 plightColor, float pluminosity)
 
 vec3 Phong(vec3 plightDir, vec3 plightColor, float pluminosity)
 {
-    const vec3 lightDir             = normalize(plightDir);
+    const vec3 lightDir             = plightDir;
     const vec3 reflectDir           = reflect(-lightDir, gNormal);
     const float diffuseCoefficient  = max(dot(lightDir, gNormal), 0.0);
     const float specularCoefficient = pow(max(dot(reflectDir, gViewDir), 0.0), uShininess);
@@ -92,28 +92,22 @@ float LuminosityFromAttenuation(mat4 pLight)
     return 1.0 / attenuation;
 }
 
-vec3 CalculateAmbientLight(mat4 plight)
-{
-    return BlinnPhong(-plight[1].rgb, UnPackColor(plight[2][0]), plight[3][3]);
-}
-
 vec3 CalculateSpotLight(mat4 pLight)
 {
     const vec3 lightPosition  = pLight[0].rgb;
     const vec3 lightColor     = UnPackColor(pLight[2][0]);
-//    const float intensity     = pLight[3][3];
+    const float intensity     = pLight[3][3];
 
-//    const float cuttoff         = pLight[3][1]; 
-//    const float outerCutoff     = pLight[3][2]; 
-
-    const vec3  lightDirection  = normalize(lightPosition - fsin.FragPos);
+    const vec3  lightDirection  = normalize(fsin.FragPos - lightPosition);
     const float luminosity      = LuminosityFromAttenuation(pLight);
 
-    float theta = dot(lightDirection, normalize(-pLight[1].rgb)); 
-    const float epsilon = (pLight[3][1] -  pLight[3][2]);
-    const float intensity = clamp((theta - pLight[3][2]) / epsilon, 0.0, 1.0);
+    vec3 lightsum = BlinnPhong(lightDirection, lightColor, intensity * luminosity);
 
-    return BlinnPhong(lightDirection, lightColor, intensity * luminosity);
+    float theta = dot(lightDirection, -pLight[1].rgb); 
+    const float epsilon = (pLight[3][1] -  pLight[3][2]);
+    const float spotIntensity = clamp((theta - pLight[3][2]) / epsilon, 0.0, 1.0);
+
+    return lightsum * spotIntensity;
 }
 
 vec3 CalcPointLight(mat4 pLight)
@@ -141,6 +135,7 @@ vec3 CalculateLightSum()
         switch(int(ssboLights[i][3][0]))
         {
             case 0: // Ambient Light
+                lightSum += gDiffuseTexel.rgb * UnPackColor(ssboLights[i][2][0]) * ssboLights[i][3][3];
                 break;
             case 1: // Point Light
                 lightSum += CalcPointLight(ssboLights[i]); 

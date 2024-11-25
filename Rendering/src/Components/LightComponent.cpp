@@ -38,8 +38,8 @@ glm::mat4 LightComponent::GenerateMatrix(TransformComponent* pTransform)
             )));
 
     result[3][0] = mType;
-    result[3][1] = mCutoff;
-    result[3][2] = mOuterCutoff;
+    result[3][1] = glm::cos(glm::radians(mCutoff));
+    result[3][2] = glm::cos(glm::radians(mOuterCutoff));
 
     result[0][3] = mConstant;
     result[1][3] = mLinear;

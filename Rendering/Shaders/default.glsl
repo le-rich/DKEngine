@@ -84,7 +84,7 @@ float LuminosityFromAttenuation(mat4 pLight)
     const float linear          = pLight[1][3];
     const float quadratic       = pLight[2][3];
 
-    const float distanceToLight = length(lightPosition - v_WorldPos);
+    const float distanceToLight = length(v_WorldPos - lightPosition);
     const float attenuation     = (constant + linear * distanceToLight + quadratic * (distanceToLight * distanceToLight));
     return 1.0 / attenuation;
 }
@@ -104,7 +104,7 @@ vec3 BlinnPhong(vec3 plightDir, vec3 plightColor, float pluminosity)
 
 vec3 CalculateDirectionalLight(mat4 plight)
 {
-    return BlinnPhong(plight[1].rgb, UnPackColor(plight[2][0]), plight[3][3]);
+    return BlinnPhong(-plight[1].rgb, UnPackColor(plight[2][0]), plight[3][3]);
 }
 
 vec3 CalcPointLight(mat4 pLight)
@@ -123,15 +123,18 @@ vec3 CalculateSpotLight(mat4 pLight)
 {
     const vec3 lightPosition  = pLight[0].rgb;
     const vec3 lightColor     = UnPackColor(pLight[2][0]);
+    const float intensity     = pLight[3][3];
 
     const vec3  lightDirection  = normalize(v_WorldPos - lightPosition);
     const float luminosity      = LuminosityFromAttenuation(pLight);
 
-    float theta = dot(lightDirection, normalize(-pLight[1].rgb)); 
-    const float epsilon = (pLight[3][1] -  pLight[3][2]);
-    const float intensity = clamp((theta - pLight[3][2]) / epsilon, 0.0, 1.0);
+    vec3 lightsum = BlinnPhong(lightDirection, lightColor, intensity * luminosity);
 
-    return BlinnPhong(lightDirection, lightColor, intensity * luminosity);
+    float theta = dot(lightDirection, -pLight[1].rgb); 
+    const float epsilon = (pLight[3][1] -  pLight[3][2]);
+    const float spotIntensity = clamp((theta - pLight[3][2]) / epsilon, 0.0, 1.0);
+
+    return lightsum * spotIntensity;
 }
 
 vec3 CalculateLightSum()
@@ -169,7 +172,6 @@ void main()
     gTexCoords = vec2(v_TexCoord);
     gViewDir = normalize(ubo_ViewPos - v_WorldPos);
     gDiffuseTexel  = texture(uDiffuseMap,  gTexCoords) * uDiffuse;
-    vec3 lightSum = CalculateLightSum();
 
-    FragColor = vec4(lightSum, gDiffuseTexel.a);
+    FragColor = vec4(CalculateLightSum(), gDiffuseTexel.a);
 }
