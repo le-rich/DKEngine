@@ -7,16 +7,66 @@
 
 const static float AIR_DENSITY = 1.29f; // kg/m^3
 const static float TRANSMISSION_EFFICIENCY = 0.7f;
+const static float MAX_STEERING = (2 * M_PI / 45.0f);
+
+std::chrono::high_resolution_clock::time_point lastUpdateTime;
 
 CarControllerScript::CarControllerScript(Entity* mEntity) : Script(mEntity)
 {
+    lastUpdateTime = std::chrono::high_resolution_clock::now();
+    std::vector<Entity*> children = mEntity->getChildren()[0]->getChildren();
+    for (Entity* child : children) {
+        if (child->GetDisplayName() == "FrontWheel_L") {
+            leftFrontTire = child;
+        }
+        if (child->GetDisplayName() == "FrontWheel_R") {
+            rightFrontTire = child;
+        }
+    }
 }
 
 CarControllerScript::~CarControllerScript()
 {
 }
 
-void CarControllerScript::Update(float deltaTime)
+double timeAccumulator = 0.0;
+const double FIXED_TIME_STEP = 0.008; // 8 milliseconds in seconds
+
+AE86::Vector3 calculateTireForce(AE86::RigidBody* carRigidBody, Entity* tire, float deltaTime) {
+    glm::vec3 tireWorldPos = tire->transform->getWorldPosition();
+    glm::vec3 steeringDir = tire->transform->getRight();
+    AE86::Vector3 tireVel = carRigidBody->getVelocityAtWorldPoint(
+        AE86::Vector3(tireWorldPos.x, tireWorldPos.y, tireWorldPos.z)
+    );
+
+    float steeringVel = glm::dot(steeringDir, glm::vec3(tireVel.x, tireVel.y, tireVel.z));
+
+    float desiredVelChange = -steeringVel * 0.5f;
+
+    float desiredAcceleration = desiredVelChange / deltaTime;
+
+    AE86::Vector3 finalLatForce = AE86::Vector3(steeringDir.x, steeringDir.y, steeringDir.z)
+        * 75.0f * desiredAcceleration;
+
+    return finalLatForce;
+}
+
+
+void CarControllerScript::Update(float deltaTime) {
+    // Record the current time
+    auto currentTime = std::chrono::high_resolution_clock::now();
+    double elapsedTime = std::chrono::duration<double>(currentTime - lastUpdateTime).count();
+    lastUpdateTime = currentTime;
+
+    timeAccumulator += elapsedTime;
+
+    while (timeAccumulator >= FIXED_TIME_STEP) {
+        FixedUpdate(FIXED_TIME_STEP);
+        timeAccumulator -= FIXED_TIME_STEP;
+    }
+}
+
+void CarControllerScript::FixedUpdate(float deltaTime)
 {
     std::cout << "STEERING ANGLE: " << steerAngle << "\n";
     std::cout << "THROTTLE: " << throttle << "\n";
@@ -38,8 +88,6 @@ void CarControllerScript::Update(float deltaTime)
         carRigidBody->getOrientation().k);
 
     velocity = carRotation * velocity;
-
-    //velocity *= 2.6 * 60;
 
     double dragForce = 0.5 * mParams.m_FrictionCoeff * mParams.m_FrontalArea * AIR_DENSITY *
         glm::length(velocity) * glm::length(velocity);
@@ -78,6 +126,10 @@ void CarControllerScript::Update(float deltaTime)
         / mParams.m_WheelRadius;
 
 
+    double brakeForce = brake * mParams.m_BrakeForce * (velocity.z > 0) - (velocity.z < 0);
+
+    driveForce -= brakeForce;
+
     double tractionTorque = driveForce * mParams.m_WheelRadius;
 
     double totalTorque = driveTorque + (-2 * tractionTorque);
@@ -87,21 +139,38 @@ void CarControllerScript::Update(float deltaTime)
 
     std::cout << "ANGULAR VEL: " << rearAxleAngularVelocity << "\n";
     //std::cout << "DRIVE FORCE: " << dragForce << "\n";
+    leftFrontTire->transform->setLocalOrientation(glm::angleAxis(-steerAngle, glm::vec3(0, 1, 0)));
+    rightFrontTire->transform->setLocalOrientation(glm::angleAxis(steerAngle, glm::vec3(0, 1, 0)));
+    
+    glm::vec3 finalLongForce = carRotation * glm::vec3(0.0f, 0.0f, driveForce - dragForce - rollResistanceForce);
 
-    carRigidBody->addForce(AE86::Vector3(0.0f, 0.0f, driveForce - dragForce - rollResistanceForce - brake * mParams.m_BrakeForce));
+
+    AE86::Vector3 frontRightTirePosition =
+        AE86::Vector3((mParams.m_Width / 2.0f), 0.0f, mParams.m_CGToFrontAxleDistance);
+    AE86::Vector3 frontRightTireLatForce = calculateTireForce(carRigidBody.get(), rightFrontTire, deltaTime);
+
+    AE86::Vector3 frontLeftTirePosition =
+        AE86::Vector3((mParams.m_Width / 2.0f), 0.0f, -mParams.m_CGToFrontAxleDistance);
+    AE86::Vector3 frontLeftTireLatForce = calculateTireForce(carRigidBody.get(), leftFrontTire, deltaTime);
+
+    carRigidBody->addForce(AE86::Vector3(finalLongForce.x, finalLongForce.y, finalLongForce.z));
+    carRigidBody->addForceAtBodyPoint(frontLeftTireLatForce, frontLeftTirePosition);
+    carRigidBody->addForceAtBodyPoint(frontRightTireLatForce, frontRightTirePosition);
 
 }
+
 
 // static test torque curve, ideally an mParam look-up
 float CarControllerScript::lookUpTorqueCurve(float rpm) {
     if (rpm >= 4400)
-        return 400.0f;
+        return 50.0f;
 
     if (rpm >= 3000)
-        return 250.0f;
+        return 30.0f;
 
-    return 100.0f;
+    return 15.0f;
 }
+
 
 void CarControllerScript::SetParameters(ScriptParams* pScriptParameters)
 {
@@ -110,8 +179,8 @@ void CarControllerScript::SetParameters(ScriptParams* pScriptParameters)
     std::shared_ptr<AE86::RigidBody> carRigidBody = rigidBodyComponent->getRigidBody();
     carRigidBody->setAwake(true);
     carRigidBody->setInverseMass(mParams.m_InverseMass);
-    carRigidBody->setLinearDamping(1.0f);
-    carRigidBody->setAngularDamping(1.0f);
+    carRigidBody->setLinearDamping(0.5f);
+    carRigidBody->setAngularDamping(0.5f);
 
     glm::quat initOrientation = entity->transform->getLocalOrientation();
     glm::vec3 initPosition = entity->transform->getLocalPosition();
@@ -137,17 +206,9 @@ void CarControllerScript::SetUpInput() {
     gearRatio = 2.66f;
     Input& input = Input::GetInstance();
 
-    RigidBodyComponent* carRigidBodyComponent = dynamic_cast<RigidBodyComponent*>(
-        entity->getComponent(ComponentType::RigidBody)
-        );
-
-
-    auto carRigidBody = carRigidBodyComponent->getRigidBody();
-
-    input.RegisterKeyCallback(GLFW_KEY_W, [carRigidBody, this](Input::ActionType action) {
+    input.RegisterKeyCallback(GLFW_KEY_W, [&](Input::ActionType action) {
         if (action == Input::HOLD || action == Input::PRESS) {
             throttle += throttle < 100.0f ? 10.0f : 0.0;
-            //carRigidBody->addForce(AE86::Vector3(0.0f, 0.0f, 5000.0f));
         }
 
         if (action == Input::RELEASE) {
@@ -155,22 +216,27 @@ void CarControllerScript::SetUpInput() {
         }
     });
 
-    input.RegisterKeyCallback(GLFW_KEY_S, [carRigidBody, this](Input::ActionType action) {
+    input.RegisterKeyCallback(GLFW_KEY_S, [&](Input::ActionType action) {
         if (action == Input::HOLD || action == Input::PRESS) {
             throttle -= throttle >= 10 ? 10.0f : 0.0;
-           // carRigidBody->addForce(AE86::Vector3(0.0f, 0.0f, -5000.0f));
         }
     });
 
-    input.RegisterKeyCallback(GLFW_KEY_A, [&](Input::ActionType action) {
+    input.RegisterKeyCallback(GLFW_KEY_D, [&](Input::ActionType action) {
         if (action == Input::HOLD || action == Input::PRESS)
-            steerAngle -= steerAngle > (-M_PI / 4.0f) ? M_PI / 32.0f : 0;
+            steerAngle -= steerAngle > -MAX_STEERING ? M_PI / 40.0f : 0;
+
+        if (action == Input::RELEASE)
+            steerAngle = 0.0f;
      });
 
-    input.RegisterKeyCallback(GLFW_KEY_D, [&](Input::ActionType action) {
-        if (action == Input::HOLD || action == Input::PRESS) {
-            steerAngle += steerAngle < (M_PI / 4.0f) ? M_PI / 32.0f : 0;
-        }
+    input.RegisterKeyCallback(GLFW_KEY_A, [&](Input::ActionType action) {
+        if (action == Input::HOLD || action == Input::PRESS)
+            steerAngle += steerAngle < MAX_STEERING ? M_PI / 40.0f : 0;
+        
+        if (action == Input::RELEASE)
+            steerAngle = 0.0f;
+
       });
 
     input.RegisterKeyCallback(GLFW_KEY_SPACE, [&](Input::ActionType action) {

@@ -2,14 +2,14 @@
 #include <cassert>
 
 namespace AE86 {
-	
-	/**
-	 * A function that creates a transform matrix
-	 * from a position and orientation.
-	 */
-	static inline void _calculateTransformMatrix(
-		Matrix4 &transformMatrix, const Vector3 &position,
-		Quaternion &orientation) {
+
+    /**
+     * A function that creates a transform matrix
+     * from a position and orientation.
+     */
+    static inline void _calculateTransformMatrix(
+        Matrix4& transformMatrix, const Vector3& position,
+        Quaternion& orientation) {
 
         transformMatrix.data[0] = 1 - 2 * orientation.j * orientation.j -
             2 * orientation.k * orientation.k;
@@ -34,7 +34,7 @@ namespace AE86 {
         transformMatrix.data[10] = 1 - 2 * orientation.i * orientation.i -
             2 * orientation.j * orientation.j;
         transformMatrix.data[11] = position.z;
-	}
+    }
 
 
     /**
@@ -133,7 +133,7 @@ namespace AE86 {
     void RigidBody::setInertiaTensor(const Matrix3& inertiaTensor) {
         inverseInertiaTensor.setInverse(inertiaTensor);
     }
-    
+
     Vector3 RigidBody::getPointInLocalSpace(const Vector3& point) const {
         return transformMatrix.transformInverse(point);
     }
@@ -159,7 +159,7 @@ namespace AE86 {
 
     void RigidBody::addForceAtPoint(const Vector3& force,
         const Vector3& point) {
-        
+
         // vector from force-applied coord to centre of mass
         Vector3 pt = point - position;
 
@@ -295,17 +295,34 @@ namespace AE86 {
         return velocity;
     }
 
+    Vector3 RigidBody::getVelocityAtWorldPoint(Vector3 point) {
+        Vector3 relativePosition = point - position;
+        Vector3 velocityAtPoint = velocity + (rotation % relativePosition);
+        return velocityAtPoint;
+    }
+
     void RigidBody::setRotation(const Vector3& rotation)
     {
         RigidBody::rotation = rotation;
+    }
+
+    void RigidBody::setRotation(real x, real y, real z)
+    {
+        RigidBody::rotation.x = x;
+        RigidBody::rotation.y = y;
+        RigidBody::rotation.z = z;
     }
 
     Vector3 RigidBody::getRotation() const
     {
         return rotation;
     }
-    
+
     Vector3 RigidBody::getForceAccum() const {
         return forceAccum;
+    }
+
+    Vector3 RigidBody::getLastFrameAcceleration() const {
+        return lastFrameAcceleration;
     }
 }
