@@ -25,13 +25,14 @@ public:
 	void Initialize() override;
 	FMOD::System* GetSystem();
 	FMOD::Sound* LoadAudio(const std::string& filePath);
-	void PlaySound(FMOD::Sound* sound, bool isLooping, FMOD::Channel*& channel, const glm::vec3& position);
+	void PlaySound(FMOD::Sound* sound, bool isLooping, const glm::vec3& position);
 	void UpdateChannelPosition(FMOD::Channel* channel, const glm::vec3& position);
 	void Update(float deltaTime) override;
 	void FixedUpdate() override;
 	
 private:
 	FMOD_VECTOR GetFMODVector(const glm::vec3& position);
+	FMOD::Channel* channel = nullptr;
 	FMOD::System* fmodSystem;
 	std::unordered_map<std::string, FMOD::Sound*> soundCache;
 };

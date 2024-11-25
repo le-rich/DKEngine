@@ -36,10 +36,10 @@ FMOD::Sound* AudioManager::LoadAudio(const std::string& filePath) {
 
 void AudioManager::FixedUpdate() {}
 
-
-void AudioManager::PlaySound(FMOD::Sound* sound, bool isLooping, FMOD::Channel*& channel, const glm::vec3& position) {
+void AudioManager::PlaySound(FMOD::Sound* sound, bool isLooping, const glm::vec3& position) {
+    
     if (!sound) return;
-
+    
     FMOD_RESULT result = fmodSystem->playSound(sound, nullptr, false, &channel);
     if (result == FMOD_OK && channel) {
         if (isLooping) {
@@ -50,9 +50,9 @@ void AudioManager::PlaySound(FMOD::Sound* sound, bool isLooping, FMOD::Channel*&
         FMOD_VECTOR audioPosition = GetFMODVector(position);
         channel->set3DAttributes(&audioPosition, nullptr);
         channel->setPaused(false);
-        // UpdateChannelPosition(channel, position);
     }
 }
+
 
 void AudioManager::UpdateChannelPosition(FMOD::Channel* channel, const glm::vec3& position) {
     if (!channel) return;
@@ -65,10 +65,13 @@ FMOD_VECTOR AudioManager::GetFMODVector(const glm::vec3& position) {
     return { position.x, position.y, position.z };
 }
 
+// TODO: Positioning of Camera , glm::vec3 cameraPosition, glm::vec3& carPosition
 void AudioManager::Update(float deltaTime) {
     fmodSystem->update();
-    FMOD_VECTOR listenerPosition = {0.0f, 0.0f, 0.0f}; // Listener at origin
-    fmodSystem->set3DListenerAttributes(0, &listenerPosition, nullptr, nullptr, nullptr);
+    
+    // FMOD_VECTOR listenerPosition = GetFMODVector(cameraPosition);
+    // fmodSystem->set3DListenerAttributes(0, &listenerPosition, nullptr, nullptr, nullptr);
+    // channel->set3DAttributes(&GetFMODVector(cameraPosition), nullptr);
 }
 
 FMOD::System* AudioManager::GetSystem() {
