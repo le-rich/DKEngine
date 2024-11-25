@@ -22,6 +22,9 @@ CarControllerScript::CarControllerScript(Entity* mEntity) : Script(mEntity)
         if (child->GetDisplayName() == "FrontWheel_R") {
             rightFrontTire = child;
         }
+        if (child->GetDisplayName() == "RearWheels") {
+            rearAxle = child;
+        }
     }
 }
 
@@ -146,16 +149,28 @@ void CarControllerScript::FixedUpdate(float deltaTime)
 
 
     AE86::Vector3 frontRightTirePosition =
-        AE86::Vector3((mParams.m_Width / 2.0f), 0.0f, mParams.m_CGToFrontAxleDistance);
+        AE86::Vector3(-(mParams.m_Width / 2.0f), 0.0f, mParams.m_CGToFrontAxleDistance);
     AE86::Vector3 frontRightTireLatForce = calculateTireForce(carRigidBody.get(), rightFrontTire, deltaTime);
 
     AE86::Vector3 frontLeftTirePosition =
         AE86::Vector3((mParams.m_Width / 2.0f), 0.0f, -mParams.m_CGToFrontAxleDistance);
     AE86::Vector3 frontLeftTireLatForce = calculateTireForce(carRigidBody.get(), leftFrontTire, deltaTime);
 
+    AE86::Vector3 backLeftTirePosition =
+        AE86::Vector3(-(mParams.m_Width / 2.0f), 0.0f, mParams.m_CGToRearAxleDistance);
+    AE86::Vector3 backLeftTireLatForce = calculateTireForce(carRigidBody.get(), rearAxle, deltaTime);
+
+    AE86::Vector3 backRightTirePosition =
+        AE86::Vector3((mParams.m_Width / 2.0f), 0.0f, -mParams.m_CGToRearAxleDistance);
+    AE86::Vector3 backRightTireLatForce = calculateTireForce(carRigidBody.get(), rearAxle, deltaTime);
+
+
     carRigidBody->addForce(AE86::Vector3(finalLongForce.x, finalLongForce.y, finalLongForce.z));
     carRigidBody->addForceAtBodyPoint(frontLeftTireLatForce, frontLeftTirePosition);
     carRigidBody->addForceAtBodyPoint(frontRightTireLatForce, frontRightTirePosition);
+    carRigidBody->addForceAtBodyPoint(backRightTireLatForce, backRightTirePosition);
+    carRigidBody->addForceAtBodyPoint(backLeftTireLatForce, backLeftTirePosition);
+
 
 }
 

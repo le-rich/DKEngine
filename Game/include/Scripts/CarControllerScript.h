@@ -53,5 +53,6 @@ private:
 	float eulerAngle;
 	Entity* leftFrontTire;
 	Entity* rightFrontTire;
+	Entity* rearAxle;
 };
 
