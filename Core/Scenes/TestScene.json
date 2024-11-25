@@ -56,13 +56,13 @@
           "type": "Light",
           "params": {
             "color": [ 1.0, 1.0, 1.0, 1.0 ],
-            "intensity": 1,
+            "intensity": 0.4,
             "constant": 0,
             "linear": 0.0,
             "quadratic": 1.0,
             "cutoff": 12.0,
             "outercutoff": 15.0,
-            "type": "AmbientLight"
+            "type": "DirectionalLight"
           }
         }
       ]
@@ -71,9 +71,9 @@
       "name": "CLight",
       "transform": {
         "localPosition": [
-          -1.4395184516906738,
-          1.0483073806762695,
-          1.4958281517028809
+          -0.04,
+          2.15,
+          2.7
         ],
         "localOrientation": [
           0,
@@ -92,7 +92,7 @@
           "type": "Light",
           "params": {
             "color": [ 1.0, 1.0, 1.0, 1.0 ],
-            "intensity": 1,
+            "intensity": 1.0,
             "constant": 0,
             "linear": 0.0,
             "quadratic": 1.0,
@@ -107,9 +107,9 @@
       "name": "BLight",
       "transform": {
         "localPosition": [
-          1.56620192527771,
-          1.0483073806762695,
-          -2.0260465145111084
+          2,
+          1.15,
+          -1.2
         ],
         "localOrientation": [
           0,
@@ -128,7 +128,7 @@
           "type": "Light",
           "params": {
             "color": [ 1.0, 1.0, 1.0, 1.0 ],
-            "intensity": 0.25,
+            "intensity": 0.55,
             "constant": 0,
             "linear": 0.0,
             "quadratic": 1.0,
@@ -143,9 +143,9 @@
       "name": "FLight",
       "transform": {
         "localPosition": [
-          -1.4395184516906738,
-          1.0483073806762695,
-          -2.0260465145111084
+          -0.85,
+          1.5,
+          -0.8
         ],
         "localOrientation": [
           0,

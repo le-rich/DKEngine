@@ -63,6 +63,19 @@ vec3 UnPackColor(float pTarget)
     );
 }
 
+/* Calculate luminosity from attenuation values in Light matrix */
+float LuminosityFromAttenuation(mat4 pLight)
+{
+    const vec3  lightPosition   = pLight[0].rgb;
+    const float constant        = pLight[0][3];
+    const float linear          = pLight[1][3];
+    const float quadratic       = pLight[2][3];
+
+    const float distanceToLight = length(lightPosition - v_WorldPos);
+    const float attenuation     = (constant + linear * distanceToLight + quadratic * (distanceToLight * distanceToLight));
+    return 1.0 / attenuation;
+}
+
 vec3 BlinnPhong(vec3 plightDir, vec3 plightColor, float pluminosity)
 {
     const vec3 lightDir             = normalize(plightDir);
@@ -81,6 +94,45 @@ vec3 CalculateDirectionalLight(mat4 plight)
     return BlinnPhong(-plight[1].rgb, UnPackColor(plight[2][0]), plight[3][3]);
 }
 
+vec3 CalcPointLight(mat4 pLight)
+{
+    const vec3 lightPosition  = pLight[0].rgb;
+    const vec3 lightColor     = UnPackColor(pLight[2][0]);
+    const float intensity     = pLight[3][3];
+
+    const vec3  lightDirection  = normalize(lightPosition - v_WorldPos);
+    const float luminosity      = LuminosityFromAttenuation(pLight);
+
+    return BlinnPhong(lightDirection, lightColor, intensity * luminosity);
+}
+
+vec3 CalculateLightSum()
+{
+    vec3 lightSum = vec3(0.0);
+    for (int i = 0; i < ssboLights.length(); ++i)
+    {
+        switch(int(ssboLights[i][3][0]))
+        {
+            case 0: // Ambient Light
+                break;
+            case 1: // Point Light
+                lightSum += CalcPointLight(ssboLights[i]); 
+                break;
+            case 2: // Directional Light
+                lightSum += CalculateDirectionalLight(ssboLights[i]);  
+                break;
+            case 3: // Spot Light
+                break;
+            case 4: // Area Light
+                break;
+            default: // No Light
+                lightSum += vec3(gDiffuseTexel.rgb * UnPackColor(ssboLights[i][2][0]) * 0.1); 
+      }
+  }
+    return lightSum;
+}
+
+
 void main()
 {
     gNormal = normalize(gNormal);
@@ -90,7 +142,7 @@ void main()
     vec3 lightSum = vec3(0.0);
     for (int i = 0; i < ssboLights.length(); ++i)
     {
-        lightSum += CalculateDirectionalLight(ssboLights[i]);
+        lightSum += CalculateLightSum();
     }
 
     FragColor = vec4(lightSum, gDiffuseTexel.a);
