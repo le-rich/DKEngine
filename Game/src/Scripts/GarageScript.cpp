@@ -23,15 +23,10 @@ void GarageScript::SetParameters(ScriptParams* pScriptParameters)
 void GarageScript::bindOrbitKey()
 {
     Input& input = Input::GetInstance();
-    OrbitScript* morbitScript = mParams.orbitScript;
-    std::vector<Entity*> cars = mParams.cars;
     
     input.RegisterKeyCallback(GLFW_KEY_SPACE, [&](Input::ActionType action) {
         if (action == Input::PRESS) {
             SelectNextCar();
-            //morbitScript->swapOrbitTargets();
-            //morbitScript->setOrbitTarget()
-            //morbitScript->setOrbitTarget(cars[1]->transform);
             mParams.orbitScript->setOrbitTarget(mParams.cars[mParams.currSelectIndex]->transform);
         }
         });
