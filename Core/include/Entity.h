@@ -3,6 +3,7 @@
 #include "Utils/IDUtils.h"
 #include "Component.h"
 #include "Components/TransformComponent.h"
+#include "Core.h"
 
 #include <algorithm>
 #include <memory>
