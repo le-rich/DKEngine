@@ -64,6 +64,19 @@ void drawInspector(Scene* scene) {
           case ComponentType::Light:
              drawLightComponent(component);
              break;
+          case ComponentType::Mesh:
+             drawMeshComponent(component);
+             break;
+          //UNCOMMENT WHEN RIGIDBODY COMPONENT IS ADDED
+          //case ComponentType::RigidBody:
+          //   drawRigidBodyComponent(component);
+          //   break;
+          case ComponentType::Camera:
+             drawCameraComponent(component);
+             break;
+          case ComponentType::Script:
+             drawScriptComponent(component);
+             break;
           default:
              break;
           }
@@ -164,7 +177,31 @@ void drawLightComponent(Component* component) {
       if (ImGui::DragFloat("##OuterCutoff", &outerCutoff, 0.1f)) {
          light->SetOuterCutoff(outerCutoff);
       }
+   }
+}
+void drawMeshComponent(Component* component) {
+   if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen)) {
+      MeshComponent* mesh = static_cast<MeshComponent*>(component);
+   }
+}
 
+void drawRigidBodyComponent(Component* component)
+{
+   if (ImGui::CollapsingHeader("Rigid Body", ImGuiTreeNodeFlags_DefaultOpen)) {
+      //RigidBodyComponent* rb = static_cast<RigidBodyComponent*>(component);
+   }
+}
 
+void drawCameraComponent(Component* component)
+{
+   if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen)) {
+      CameraComponent* camera = static_cast<CameraComponent*>(component);
+   }
+}
+
+void drawScriptComponent(Component* component)
+{
+   if (ImGui::CollapsingHeader("Script", ImGuiTreeNodeFlags_DefaultOpen)) {
+      ScriptComponent* script = static_cast<ScriptComponent*>(component);
    }
 }

@@ -3,7 +3,7 @@
 #include "Component.h"
 #include "../Physics/include/body.h"
 
-#include <glm/glm.hpp>
+#include <glm.hpp>
 #include <string>
 
 class RigidBodyComponent : public Component {

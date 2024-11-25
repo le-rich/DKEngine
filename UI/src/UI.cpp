@@ -32,38 +32,37 @@ UI::UI(Scene* scene, const FrameBuffer* framebuffer, GLFWwindow* glfwWindow) {
 
 void UI::Update(float deltaTime) {
    // Update Loop logic here
+   if (!glfwWindowShouldClose(window)) {
+      glfwMakeContextCurrent(window);
+      // Clear the buffer
+      glClear(GL_COLOR_BUFFER_BIT);
 
-   glfwMakeContextCurrent(window);
-   // Clear the buffer
-   glClear(GL_COLOR_BUFFER_BIT);
+      // Start a new ImGui frame
+      ImGui_ImplOpenGL3_NewFrame();
+      ImGui_ImplGlfw_NewFrame();
+      ImGui::NewFrame();
 
-   // Start a new ImGui frame
-   ImGui_ImplOpenGL3_NewFrame();
-   ImGui_ImplGlfw_NewFrame();
-   ImGui::NewFrame();
+      // Create the menu bar
+      createMenuBar();
 
-   // Create the menu bar
-   createMenuBar();
+      // Create the ImGui windows
+      createImGuiWindows(this->scene, this->framebuffer);
 
-   // Create the ImGui windows
-   createImGuiWindows(this->scene, this->framebuffer);
+      // Render ImGui
+      ImGui::Render();
+      ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-   // Render ImGui
-   ImGui::Render();
-   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+      // Swap buffers and poll events
+      glfwSwapBuffers(window);
+      glfwPollEvents();
+   }else if(glfwWindowShouldClose(window)){
 
-   // Swap buffers and poll events
-   glfwSwapBuffers(window);
-   glfwPollEvents();
-
-   if (glfwWindowShouldClose(window)) {
       glfwDestroyWindow(window);
       ImGui_ImplOpenGL3_Shutdown();
       ImGui_ImplGlfw_Shutdown();
       ImGui::DestroyContext();
-      glfwTerminate();
 
-      glfwSetWindowShouldClose(glfwWindow, 0);
+      glfwSetWindowShouldClose(glfwWindow, 1);
    }
 
 }
