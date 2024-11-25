@@ -14,6 +14,9 @@ protected:
 public:
 	// init to a default mass like unity?
 	RigidBodyComponent(Entity* mEntity, std::shared_ptr<AE86::RigidBody> rigidBody, float mass = 1.0f);
+	
+	// constructor that creates an empty rigidbody
+	RigidBodyComponent(Entity* mEntity);
 	~RigidBodyComponent();
 
 	// getters and setters
