@@ -50,7 +50,7 @@ void Scene::SpawnSceneDefinition()
 
     const std::string MAP_SOURCE_FOLDER = "TestMap/";
     const std::string MAP_MODEL_FILE = "track.gltf";
-    
+
     Entity* raceTrackEnt = new Entity();
     raceTrackEnt->SetDisplayName("Race Track");
     GLTFLoader::LoadModelAsEntity(raceTrackEnt, MAP_SOURCE_FOLDER, MAP_MODEL_FILE);
@@ -92,6 +92,26 @@ void Scene::SpawnSceneDefinition()
     FollowCamScriptParams followCamScriptParams;
     followCamScriptParams.m_FollowTarget = carEnt->transform;
     cameraScriptComponent->CreateAndAddScript<FollowCamScript>(&followCamScriptParams);
+
+
+    const std::string CUBE_SOURCE_FOLDER = "TestCube2/";
+    const std::string CUBE_MODEL_FILE = "testcube.gltf";
+
+    Entity* cubeEntity = new Entity();
+    GLTFLoader::LoadModelAsEntity(cubeEntity, CUBE_SOURCE_FOLDER, CUBE_MODEL_FILE);
+    EntityManager::getInstance().Instantiate(cubeEntity);
+    Entity* checkpoint1 = EntityManager::getInstance().findFirstEntityByDisplayName("Checkpoint 1");
+    checkpoint1->addChild(cubeEntity);
+    cubeEntity->setParent(checkpoint1);
+    EntityManager::getInstance().addEntityToMap(*cubeEntity);
+
+    Entity* checkpoint2 = EntityManager::getInstance().findFirstEntityByDisplayName("Checkpoint 2");
+    cubeEntity = new Entity();
+    GLTFLoader::LoadModelAsEntity(cubeEntity, CUBE_SOURCE_FOLDER, CUBE_MODEL_FILE);
+    EntityManager::getInstance().Instantiate(cubeEntity);
+    checkpoint2->addChild(cubeEntity);
+    cubeEntity->setParent(checkpoint2);
+    EntityManager::getInstance().addEntityToMap(*cubeEntity);
 
 
     // making a 2nd car

@@ -44,7 +44,7 @@ AE86::Vector3 calculateTireForce(AE86::RigidBody* carRigidBody, Entity* tire, fl
 
     float steeringVel = glm::dot(steeringDir, glm::vec3(tireVel.x, tireVel.y, tireVel.z));
 
-    float desiredVelChange = -steeringVel * 0.5f;
+    float desiredVelChange = -steeringVel * 1.0f;
 
     float desiredAcceleration = desiredVelChange / deltaTime;
 
@@ -71,10 +71,6 @@ void CarControllerScript::Update(float deltaTime) {
 
 void CarControllerScript::FixedUpdate(float deltaTime)
 {
-    std::cout << "STEERING ANGLE: " << steerAngle << "\n";
-    std::cout << "THROTTLE: " << throttle << "\n";
-    std::cout << "BRAKING:: " << brake << "\n";
-
     RigidBodyComponent* carRigidBodyComponent = dynamic_cast<RigidBodyComponent*>(
         entity->getComponent(ComponentType::RigidBody)
         );
@@ -94,8 +90,6 @@ void CarControllerScript::FixedUpdate(float deltaTime)
 
     double dragForce = 0.5 * mParams.m_FrictionCoeff * mParams.m_FrontalArea * AIR_DENSITY *
         glm::length(velocity) * glm::length(velocity);
-
-    std::cout << "VELOCITY (X, Y, Z): (" << velocity.x << "," << velocity.y << "," << velocity.z << ")\n";
 
     double rollResistanceForce = 30.0f * dragForce; // 30.0f from paper
     double mass = carRigidBody->getMass();
@@ -140,8 +134,6 @@ void CarControllerScript::FixedUpdate(float deltaTime)
     // equation of a cylinder's inertia
     double rearAxleInertia = 75.0 * mParams.m_WheelRadius * mParams.m_WheelRadius;
 
-    std::cout << "ANGULAR VEL: " << rearAxleAngularVelocity << "\n";
-    //std::cout << "DRIVE FORCE: " << dragForce << "\n";
     leftFrontTire->transform->setLocalOrientation(glm::angleAxis(-steerAngle, glm::vec3(0, 1, 0)));
     rightFrontTire->transform->setLocalOrientation(glm::angleAxis(steerAngle, glm::vec3(0, 1, 0)));
     

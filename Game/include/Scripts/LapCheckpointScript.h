@@ -29,6 +29,8 @@ public:
 	bool GetCheckpointRegistered() const { return mParams.m_Registered; }
 	void SetCheckpointRegistered(bool isRegistered) { mParams.m_Registered = isRegistered; }
 
+	void addVisualIndicator(Entity* checkpointVisualEnt);
+
 	void Update(float deltaTime) override;
 	void SetParameters(ScriptParams* pScriptParameters) override;
 	std::unique_ptr<Script> clone() const override {

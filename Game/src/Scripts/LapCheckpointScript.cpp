@@ -1,4 +1,5 @@
 #include "Scripts/LapCheckpointScript.h"
+#include "../../../Core/include/Managers/EntityManager.h"
 
 LapCheckpointScript::LapCheckpointScript(Entity* mEntity) : Script(mEntity)
 {
@@ -24,6 +25,10 @@ void LapCheckpointScript::Update(float deltaTime)
 		mParams.m_LapManager->OnCheckpointTriggered(mParams.m_Index);
 	}
 }
+
+void LapCheckpointScript::addVisualIndicator(Entity* checkpointVisualEnt) {
+}
+
 
 void LapCheckpointScript::SetParameters(ScriptParams* pScriptParameters)
 {
