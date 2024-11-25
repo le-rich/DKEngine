@@ -1,4 +1,5 @@
 #pragma once
+#include <glm.hpp>
 #include "Resources/Asset.h"
 
 class Shader : public Asset
@@ -21,6 +22,9 @@ public:
 
     void Use();
     void CleanUp();
+
+    void setMat4(const std::string& name, const glm::mat4& mat) const;
+    
 
     Shader& operator=(const Shader& other);
 

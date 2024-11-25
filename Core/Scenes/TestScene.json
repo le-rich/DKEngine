@@ -9,6 +9,7 @@
       "file": [ "Room.gltf" ]
     }
   ],
+  "skybox": "skybox_to_equirect_2.png",
   "entities": [
     {
       "name": "Main Camera",

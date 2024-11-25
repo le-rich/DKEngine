@@ -14,27 +14,33 @@ layout (std140, binding = 0) uniform EngineUBO
     vec3    ubo_ViewPos;
 };
 
-out vec2 v_TexCoord;
-out vec3 v_Normal;
-out vec3 v_WorldPos;
+out VS_OUT
+{
+    vec3 v_WorldPos;
+    vec3 v_Normal;
+    vec2 v_TexCoord;
+}vs_out;
 
 void main()
 {
-    v_Normal = normal;
+    vs_out.v_Normal = normal;
 
     vec4 worldPosition = ubo_Model * vec4(position, 1.0);
-    v_WorldPos = worldPosition.xyz;
+    vs_out.v_WorldPos = worldPosition.xyz;
 
     gl_Position = ubo_Projection * ubo_View * worldPosition;
-    v_TexCoord = texCoord;
+    vs_out.v_TexCoord = texCoord;
 }
 
 #shader fragment
 #version 460 core
 
-in vec2 v_TexCoord;
-in vec3 v_Normal;
-in vec3 v_WorldPos;
+in VS_OUT
+{
+    vec3 v_WorldPos;
+    vec3 v_Normal;
+    vec2 v_TexCoord;
+}fs_in;
 
 layout(std140, binding = 0) buffer LightSSBO
 {
@@ -60,6 +66,7 @@ vec3 gNormal;
 vec2 gTexCoords;
 vec3 gViewDir;
 vec4 gDiffuseTexel;
+//vec4 gSpecularTexel;
 
 layout (location = 0) out vec4 FragColor;
 
@@ -84,7 +91,7 @@ float LuminosityFromAttenuation(mat4 pLight)
     const float linear          = pLight[1][3];
     const float quadratic       = pLight[2][3];
 
-    const float distanceToLight = length(v_WorldPos - lightPosition);
+    const float distanceToLight = length(fs_in.v_WorldPos - lightPosition);
     const float attenuation     = (constant + linear * distanceToLight + quadratic * (distanceToLight * distanceToLight));
     return 1.0 / attenuation;
 }
@@ -113,7 +120,7 @@ vec3 CalcPointLight(mat4 pLight)
     const vec3 lightColor     = UnPackColor(pLight[2][0]);
     const float intensity     = pLight[3][3];
 
-    const vec3  lightDirection  = normalize(v_WorldPos - lightPosition);
+    const vec3  lightDirection  = normalize(fs_in.v_WorldPos - lightPosition);
     const float luminosity      = LuminosityFromAttenuation(pLight);
 
     return BlinnPhong(lightDirection, lightColor, intensity * luminosity);
@@ -125,7 +132,7 @@ vec3 CalculateSpotLight(mat4 pLight)
     const vec3 lightColor     = UnPackColor(pLight[2][0]);
     const float intensity     = pLight[3][3];
 
-    const vec3  lightDirection  = normalize(v_WorldPos - lightPosition);
+    const vec3  lightDirection  = normalize(fs_in.v_WorldPos - lightPosition);
     const float luminosity      = LuminosityFromAttenuation(pLight);
 
     vec3 lightsum = BlinnPhong(lightDirection, lightColor, intensity * luminosity);
@@ -168,9 +175,9 @@ vec3 CalculateLightSum()
 
 void main()
 {
-    gNormal = normalize(v_Normal);
-    gTexCoords = vec2(v_TexCoord);
-    gViewDir = normalize(ubo_ViewPos - v_WorldPos);
+    gNormal = normalize(fs_in.v_Normal);
+    gTexCoords = vec2(fs_in.v_TexCoord);
+    gViewDir = normalize(ubo_ViewPos - fs_in.v_WorldPos);
     gDiffuseTexel  = texture(uDiffuseMap,  gTexCoords) * uDiffuse;
 
     FragColor = vec4(CalculateLightSum(), gDiffuseTexel.a);

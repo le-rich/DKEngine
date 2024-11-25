@@ -41,7 +41,7 @@ Texture::Texture(const std::string& pPath)
 }
 
 Texture::Texture(const std::string& pPath, const std::string& pFileName) 
-    : Texture(pPath)
+    : Texture(pPath + pFileName)
 {
     this->assetDisplayName = pFileName;
 }
