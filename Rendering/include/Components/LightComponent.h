@@ -54,7 +54,7 @@ public:
     inline float GetQuadratic() const { return mQuadratic; }
     inline float GetCutoff() const { return mCutoff; }
     inline float GetOuterCutoff() const { return mOuterCutoff; }
-    inline float GetType() const { return mType; }
+    inline LightType GetType() const { return mType; }
 
     inline void SetColor(glm::vec4 pColor) { mColor = pColor; }
     inline void SetIntensity(float pIntensity) { mIntensity = pIntensity; }
