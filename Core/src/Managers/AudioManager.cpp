@@ -1,40 +1,20 @@
 ﻿#include "Managers/AudioManager.h"
-#include "iostream"
-#include <filesystem>
+#include <iostream>
 
-AudioManager::AudioManager()
-{
+AudioManager::AudioManager() {
     FMOD::System_Create(&fmodSystem);
+}
+
+void AudioManager::Initialize()
+{
     fmodSystem->init(512, FMOD_INIT_3D_RIGHTHANDED, nullptr);
 }
 
-AudioManager::~AudioManager()
-{
-    for (auto& pair : soundCache)
-    {
+AudioManager::~AudioManager() {
+    for (auto& pair : soundCache) {
         pair.second->release();
     }
     fmodSystem->release();
-}
-
-void AudioManager::Update(float deltaTime)
-{
-    fmodSystem->update();
-    
-    // TODO: Positioning of the listener (Possibly the camera's positioning)
-    // fmodSystem->set3DListenerAttributes(0, &listenerPosition, &listenerVelocity, &listenerForward, &listenerUp);
-    FMOD_VECTOR listenerPosition = {0.0f, 0.0f, 0.0f}; // Listener at origin
-    fmodSystem->set3DListenerAttributes(0, &listenerPosition, nullptr, nullptr, nullptr);
-}
-
-
-void AudioManager::FixedUpdate()
-{
-    // fmodSystem->update();
-}
-
-FMOD::System* AudioManager::GetSystem() {
-    return fmodSystem;
 }
 
 FMOD::Sound* AudioManager::LoadAudio(const std::string& filePath) {
@@ -44,36 +24,53 @@ FMOD::Sound* AudioManager::LoadAudio(const std::string& filePath) {
     }
 
     FMOD::Sound* newSound;
-    fmodSystem->createSound(filePath.c_str(), FMOD_3D, nullptr, &newSound);
-    
-    const size_t pos = filePath.find_last_of("/\\");
-    const std::string fileName = (pos == std::string::npos) ? filePath : filePath.substr(pos + 1);
-    soundCache[fileName] = newSound;
+    FMOD_RESULT result = fmodSystem->createSound(filePath.c_str(), FMOD_3D, nullptr, &newSound);
+    if (result != FMOD_OK) {
+        std::cerr << "Failed to load sound: " << filePath << std::endl;
+        return nullptr;
+    }
+
+    soundCache[filePath] = newSound;
     return newSound;
 }
 
-FMOD::Sound* AudioManager::GetSound(const std::string& fileName)
-{
-    return soundCache[fileName];
-} 
+void AudioManager::FixedUpdate() {}
 
-void AudioManager::SetListenerAttributes(const FMOD_VECTOR& position, const FMOD_VECTOR& forward, const FMOD_VECTOR& up) {
-    FMOD_VECTOR velocity = { 0.0f, 0.0f, 0.0f }; // TODO: get velocity for doppler
-    fmodSystem->set3DListenerAttributes(0, &position, &velocity, &forward, &up);
-}
 
-void AudioManager::SetMasterVolume(float volume) {
-    fmodSystem->setSoftwareFormat(0, FMOD_SPEAKERMODE_STEREO, 0);
-    fmodSystem->setSoftwareChannels(100);
-}
+void AudioManager::PlaySound(FMOD::Sound* sound, bool isLooping, FMOD::Channel*& channel, const glm::vec3& position) {
+    if (!sound) return;
 
-void AudioManager::PlaySound(const std::string& soundName) {
-	
-    auto it = soundCache.find(soundName);
-    if (it != soundCache.end()) {
-        FMOD::Channel* newChannel = nullptr;
-        fmodSystem->playSound(it->second, nullptr, false, &newChannel);
-    } else {
-        std::cerr << "Sound not found: " << soundName << std::endl;
+    FMOD_RESULT result = fmodSystem->playSound(sound, nullptr, false, &channel);
+    if (result == FMOD_OK && channel) {
+        if (isLooping) {
+            sound->setMode(FMOD_LOOP_NORMAL);
+            channel->setLoopCount(-1);
+        }
+        channel->setVolume(1.0f);
+        FMOD_VECTOR audioPosition = GetFMODVector(position);
+        channel->set3DAttributes(&audioPosition, nullptr);
+        channel->setPaused(false);
+        // UpdateChannelPosition(channel, position);
     }
+}
+
+void AudioManager::UpdateChannelPosition(FMOD::Channel* channel, const glm::vec3& position) {
+    if (!channel) return;
+
+    FMOD_VECTOR fmodPosition = GetFMODVector(position);
+    channel->set3DAttributes(&fmodPosition, nullptr);
+}
+
+FMOD_VECTOR AudioManager::GetFMODVector(const glm::vec3& position) {
+    return { position.x, position.y, position.z };
+}
+
+void AudioManager::Update(float deltaTime) {
+    fmodSystem->update();
+    FMOD_VECTOR listenerPosition = {0.0f, 0.0f, 0.0f}; // Listener at origin
+    fmodSystem->set3DListenerAttributes(0, &listenerPosition, nullptr, nullptr, nullptr);
+}
+
+FMOD::System* AudioManager::GetSystem() {
+    return fmodSystem;
 }

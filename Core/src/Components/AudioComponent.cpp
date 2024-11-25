@@ -4,12 +4,13 @@
 #include "Managers/AudioManager.h"
 #include "Entity.h"
 
-
-AudioComponent::AudioComponent(Entity* mEntity, bool playOnStart, bool isLooping)
-    : Component(mEntity), sound(nullptr), channel(nullptr), playOnStart(playOnStart), isLooping(isLooping)
-{
-    if (playOnStart)
+AudioComponent::AudioComponent(Entity* entity, const std::string& audioFilePath)
+    : Component(entity), sound(nullptr), channel(nullptr), filePath(audioFilePath), playOnAwake(false), isLooping(false) {
+    audioManager = &AudioManager::GetInstance();
+    LoadAudio();
+    if (playOnAwake) {
         Play();
+    }
 }
 
 AudioComponent::~AudioComponent() {
@@ -17,46 +18,40 @@ AudioComponent::~AudioComponent() {
     if (sound) {
         sound->release();
     }
-    delete[] audioFilePath;
 }
 
-
-void AudioComponent::AddAudioSource(const char* filePath) {
-    if (sound) {
-        sound->release();
-    }
-    
-    if (audioManager) {
-        sound = AudioManager::GetInstance().LoadAudio(filePath);
-    } else {
-        std::cerr << "AudioManager not available in entity!" << std::endl;
-    }
+void AudioComponent::SetLooping(bool looping)
+{
+    isLooping = looping;
 }
 
+void AudioComponent::PlayOnAwake(bool play)
+{
+    playOnAwake = play;
+}
+
+void PlayOnAwake(bool playOnAwake);
+
+void AudioComponent::LoadAudio() {
+    if (!audioManager) {
+        std::cerr << "AudioManager not available!" << std::endl;
+        return;
+    }
+
+    sound = audioManager->LoadAudio(filePath);
+    if (!sound) {
+        std::cerr << "Failed to load audio: " << filePath << std::endl;
+    }
+}
 
 void AudioComponent::Play() {
     if (!sound) {
-        AddAudioSource(audioFilePath);
+        LoadAudio();
     }
-    
+
     if (sound) {
-        
-        audioManager->GetSystem()->playSound(sound, nullptr, playOnStart, &channel);
-        if (channel) {
-            if (isLooping)
-            {
-                sound->setMode(FMOD_LOOP_NORMAL);
-                channel->setLoopCount(-1);
-            }
-            
-            channel->setVolume(1.0f);
-            const FMOD_VECTOR audioPosition = GetFMODVector3(mEntity->transform->getLocalPosition());
-            channel->set3DAttributes(&audioPosition, nullptr);
-            channel->setPaused(false); // Start playback
-            playOnStart = true;
-        }
-    } else {
-        std::cerr << "AudioManager not available in manager!" << std::endl;
+        audioManager->PlaySound(sound, isLooping, channel, mEntity->transform->getLocalPosition());
+        playOnAwake = true;
     }
 }
 
@@ -64,32 +59,18 @@ void AudioComponent::Stop() {
     if (channel) {
         channel->stop();
         channel = nullptr;
-        playOnStart = false;
+        playOnAwake = false;
     }
 }
 
 void AudioComponent::Update() {
-    if (channel && playOnStart) {
-        const FMOD_VECTOR fmodPosition = GetFMODVector3(mEntity->transform->getLocalPosition());
-        channel->set3DAttributes(&fmodPosition, nullptr);
-    }
-}
-
-FMOD_VECTOR AudioComponent::GetFMODVector3(glm::vec3 position)
-{
-    return { position.x, position.y, position.z };
-}
-
-
-void AudioComponent::SetPosition(const FMOD_VECTOR& position) {
     if (channel) {
-        const FMOD_VECTOR fmodPosition = GetFMODVector3(mEntity->transform->getLocalPosition());
-        channel->set3DAttributes(&fmodPosition, nullptr);
+        audioManager->UpdateChannelPosition(channel, mEntity->transform->getLocalPosition());
     }
 }
 
 bool AudioComponent::IsPlaying() const {
-    return playOnStart;
+    return playOnAwake;
 }
 
 Component* AudioComponent::clone() const {

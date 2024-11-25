@@ -1,32 +1,34 @@
-﻿#pragma once
+﻿#ifndef AUDIOCOMPONENT_H
+#define AUDIOCOMPONENT_H
 
-#include "Component.h"
-#include "FMOD/inc/fmod.hpp"
 #include "Managers/AudioManager.h"
+#include "Entity.h"
+#include <string>
 
-class AudioComponent : public Component
-{
+class AudioComponent : public Component {
 public:
-    AudioComponent(Entity* entity, bool playOnStart, bool isLooping);
+    AudioComponent(Entity* entity, const std::string& audioFilePath);
+    ~AudioComponent();
 
-    virtual ~AudioComponent();
-
-    void AddAudioSource(const char* filePath);
     void Play();
-    void Stop(); 
+    void Stop();
     void Update();
-    void SetPosition(const FMOD_VECTOR& position);
-    FMOD_VECTOR GetFMODVector3(glm::vec3 position);
+    void SetLooping(bool looping);
+    void PlayOnAwake(bool play);
+    bool IsPlaying() const;
+    
 
     Component* clone() const override;
 
-    bool IsPlaying() const;
-
 private:
-    char* audioFilePath;
+    void LoadAudio();
+
+    AudioManager* audioManager;
     FMOD::Sound* sound;
     FMOD::Channel* channel;
-    bool playOnStart;
+    std::string filePath;
+    bool playOnAwake;
     bool isLooping;
-    AudioManager* audioManager;  // Reference to the audio manager
 };
+
+#endif // AUDIOCOMPONENT_H

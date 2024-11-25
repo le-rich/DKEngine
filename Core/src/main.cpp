@@ -22,6 +22,8 @@
 #include <mutex>
 #include <thread>
 
+#include "Components/AudioComponent.h"
+
 // Theres some experimentation we'll need to do regarding updating objects on the main thread and rendering on the render thread.
 // That can wait for the time being.
 int run_glfw()
@@ -81,25 +83,25 @@ int run_glfw()
     game->Initialize();
     audioManager->Initialize();
 
-    // FMOD::Sound* backgroundMusic = audioManager->LoadAudio("Assets/Audio/car-motor.mp3");
-    //
-    // if (backgroundMusic) {
-    //     static FMOD::Channel* channel = nullptr;
-    //     if (!channel) {
-    //         
-    //         backgroundMusic->setMode(FMOD_LOOP_NORMAL);
-    //         FMOD_RESULT result = audioManager->GetSystem()->playSound(backgroundMusic, nullptr, false, &channel);
-    //         if (result == FMOD_OK && channel) {
-    //             channel->setVolume(1.0f);
-    //             FMOD_VECTOR soundPosition = {0.0f, 0.0f, 0.0f};
-    //             channel->set3DAttributes(&soundPosition, nullptr);
-    //             channel->setLoopCount(-1);
-    //             channel->setPaused(false); // Start playback
-    //         } else {
-    //             
-    //         }
-    //     }
-    // }
+    FMOD::Sound* backgroundMusic = audioManager->LoadAudio("Assets/Audio/car-motor.mp3");
+    
+    if (backgroundMusic) {
+        static FMOD::Channel* channel = nullptr;
+        if (!channel) {
+            
+            backgroundMusic->setMode(FMOD_LOOP_NORMAL);
+            FMOD_RESULT result = audioManager->GetSystem()->playSound(backgroundMusic, nullptr, false, &channel);
+            if (result == FMOD_OK && channel) {
+                channel->setVolume(1.0f);
+                FMOD_VECTOR soundPosition = {0.0f, 0.0f, 0.0f};
+                channel->set3DAttributes(&soundPosition, nullptr);
+                channel->setLoopCount(-1);
+                channel->setPaused(false); // Start playback
+            } else {
+                
+            }
+        }
+    }
 
 
     
@@ -118,7 +120,7 @@ int run_glfw()
         auto currentTime = std::chrono::high_resolution_clock::now();
         std::chrono::duration<float> deltaTime = currentTime - previousTime;
         auto deltaTimeFloatSeconds = deltaTime.count();
-        audioManager->Update(0.0);
+        // audioManager->Update(0.0);
 
         previousTime = currentTime;
 

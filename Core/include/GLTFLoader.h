@@ -366,10 +366,6 @@ namespace GLTFLoader
             pEntity->addComponent(rigidComponent);
         }
 
-        AudioComponent audioComponent(pEntity, true, true);
-        audioComponent.AddAudioSource("Assets/Audio/car-motor.mp3");
-        pEntity->addComponent(audioComponent); 
-
     }
 
     static void LoadChildEntities(Entity* pParentEntity, tinygltf::Model& const pGltfModel, std::vector<UUIDv4::UUID>& pMaterials, std::vector<int>& const pChildIndexes)
