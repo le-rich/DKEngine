@@ -24,10 +24,15 @@ void GarageScript::bindOrbitKey()
 {
     Input& input = Input::GetInstance();
     OrbitScript* morbitScript = mParams.orbitScript;
+    std::vector<Entity*> cars = mParams.cars;
     
-    input.RegisterKeyCallback(GLFW_KEY_SPACE, [morbitScript](Input::ActionType action) {
+    input.RegisterKeyCallback(GLFW_KEY_SPACE, [&](Input::ActionType action) {
         if (action == Input::PRESS) {
-            morbitScript->swapOrbitTargets();
+            SelectNextCar();
+            //morbitScript->swapOrbitTargets();
+            //morbitScript->setOrbitTarget()
+            //morbitScript->setOrbitTarget(cars[1]->transform);
+            mParams.orbitScript->setOrbitTarget(mParams.cars[mParams.currSelectIndex]->transform);
         }
         });
     
@@ -36,6 +41,15 @@ void GarageScript::bindOrbitKey()
 void GarageScript::bindSelectionKey() 
 {
     // TODO: bind enter to selected the target
+}
+
+void GarageScript::SelectNextCar()
+{
+    ++mParams.currSelectIndex;
+    if (mParams.currSelectIndex > (mParams.cars.size() - 1))
+    {
+        mParams.currSelectIndex = 0;
+    }
 }
 
 void GarageScript::leaveGarage()

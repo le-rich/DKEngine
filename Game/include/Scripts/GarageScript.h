@@ -11,6 +11,7 @@ struct GarageScriptParams : ScriptParams
     bool carHasBeenSelected = false;
     TransformComponent* selectedTarget = nullptr;
     std::vector<Entity*> cars = std::vector<Entity*>();
+    int currSelectIndex = 0;
 };
 
 class GarageScript : public Script
@@ -37,4 +38,6 @@ public:
 
 private:
     GarageScriptParams mParams{};
+
+    void SelectNextCar();
 };
