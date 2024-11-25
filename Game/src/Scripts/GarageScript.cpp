@@ -15,6 +15,11 @@ GarageScript::~GarageScript() {}
 void GarageScript::Update(float deltaTime)
 {
     // TODO: loop to check if a car has been selected yet
+    /*if (mParams.carHasBeenSelected)
+    {
+        mParams.selectedTarget = mParams.orbitScript->getCurrentTarget();
+        leaveGarage();
+    }*/
 }
 
 void GarageScript::SetParameters(ScriptParams* pScriptParameters)
