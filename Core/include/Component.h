@@ -39,7 +39,6 @@ class Component
 public:
     Component(Entity* mEntity);
     virtual ~Component() = default;
-   
     Entity* entity;
 
     UUIDv4::UUID componentID;

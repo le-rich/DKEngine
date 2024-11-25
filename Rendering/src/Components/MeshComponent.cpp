@@ -20,7 +20,7 @@ Mesh* MeshComponent::getMesh() {
 }
 
 MeshComponent::MeshComponent(const MeshComponent& other)
-    : Component(other.mEntity), mesh(other.mesh) 
+    : Component(other.entity), mesh(other.mesh) 
 {
     this->componentType = ComponentType::Mesh;
 }

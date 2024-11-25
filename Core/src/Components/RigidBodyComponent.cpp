@@ -59,7 +59,7 @@ bool RigidBodyComponent::operator==(const RigidBodyComponent& other) const {
 }
 
 RigidBodyComponent::RigidBodyComponent(const RigidBodyComponent& other)
-	: Component(other.mEntity),
+	: Component(other.entity),
 	rb(std::make_shared<AE86::RigidBody>(*other.rb))
 {}
 

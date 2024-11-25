@@ -564,26 +564,26 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FMOD", "FMOD", "{9F90B99C-0
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "inc", "inc", "{8FB39C06-F6B3-4BD4-9E23-F872573753B7}"
 	ProjectSection(SolutionItems) = preProject
-		FMOD\inc\fmod.cs = FMOD\inc\fmod.cs
-		FMOD\inc\fmod.h = FMOD\inc\fmod.h
-		FMOD\inc\fmod.hpp = FMOD\inc\fmod.hpp
-		FMOD\inc\fmod_codec.h = FMOD\inc\fmod_codec.h
-		FMOD\inc\fmod_common.h = FMOD\inc\fmod_common.h
-		FMOD\inc\fmod_dsp.cs = FMOD\inc\fmod_dsp.cs
-		FMOD\inc\fmod_dsp.h = FMOD\inc\fmod_dsp.h
-		FMOD\inc\fmod_dsp_effects.h = FMOD\inc\fmod_dsp_effects.h
-		FMOD\inc\fmod_errors.cs = FMOD\inc\fmod_errors.cs
-		FMOD\inc\fmod_errors.h = FMOD\inc\fmod_errors.h
-		FMOD\inc\fmod_output.h = FMOD\inc\fmod_output.h
+		External\FMOD\inc\fmod.cs = External\FMOD\inc\fmod.cs
+		External\FMOD\inc\fmod.h = External\FMOD\inc\fmod.h
+		External\FMOD\inc\fmod.hpp = External\FMOD\inc\fmod.hpp
+		External\FMOD\inc\fmod_codec.h = External\FMOD\inc\fmod_codec.h
+		External\FMOD\inc\fmod_common.h = External\FMOD\inc\fmod_common.h
+		External\FMOD\inc\fmod_dsp.cs = External\FMOD\inc\fmod_dsp.cs
+		External\FMOD\inc\fmod_dsp.h = External\FMOD\inc\fmod_dsp.h
+		External\FMOD\inc\fmod_dsp_effects.h = External\FMOD\inc\fmod_dsp_effects.h
+		External\FMOD\inc\fmod_errors.cs = External\FMOD\inc\fmod_errors.cs
+		External\FMOD\inc\fmod_errors.h = External\FMOD\inc\fmod_errors.h
+		External\FMOD\inc\fmod_output.h = External\FMOD\inc\fmod_output.h
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{10DDDC1A-40A2-43EE-A17E-60F1279162F8}"
 	ProjectSection(SolutionItems) = preProject
-		FMOD\lib\fmod.dll = FMOD\lib\fmod.dll
-		FMOD\lib\fmodL.dll = FMOD\lib\fmodL.dll
-		FMOD\lib\fmodL_vc.lib = FMOD\lib\fmodL_vc.lib
-		FMOD\lib\fmod_vc.lib = FMOD\lib\fmod_vc.lib
-EndProjectSection
+		External\FMOD\lib\fmod.dll = External\FMOD\lib\fmod.dll
+		External\FMOD\lib\fmodL.dll = External\FMOD\lib\fmodL.dll
+		External\FMOD\lib\fmodL_vc.lib = External\FMOD\lib\fmodL_vc.lib
+		External\FMOD\lib\fmod_vc.lib = External\FMOD\lib\fmod_vc.lib
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

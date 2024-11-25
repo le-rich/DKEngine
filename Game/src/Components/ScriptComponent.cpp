@@ -3,7 +3,7 @@
 #include "Component.h"
 #include "Entity.h"
 
-ScriptComponent::ScriptComponent(Entity* mEntity) : Component(mEntity)
+ScriptComponent::ScriptComponent(Entity* entity) : Component(entity)
 {
 	this->componentType = ComponentType::Script;
 }
@@ -30,7 +30,7 @@ ScriptComponent& ScriptComponent::operator=(ScriptComponent& const other)
 
 // copy constructor
 ScriptComponent::ScriptComponent(const ScriptComponent& other)
-    : Component(other.mEntity) {
+    : Component(other.entity) {
     this->componentType = ComponentType::Script;
 
     // Deep copy each script using clone()

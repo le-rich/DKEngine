@@ -50,7 +50,7 @@ void AudioComponent::Play() {
     }
 
     if (sound) {
-        audioManager->PlaySound(sound, isLooping, channel, mEntity->transform->getLocalPosition());
+        audioManager->PlaySound(sound, isLooping, channel, entity->transform->getLocalPosition());
         playOnAwake = true;
     }
 }
@@ -65,7 +65,7 @@ void AudioComponent::Stop() {
 
 void AudioComponent::Update() {
     if (channel) {
-        audioManager->UpdateChannelPosition(channel, mEntity->transform->getLocalPosition());
+        audioManager->UpdateChannelPosition(channel, entity->transform->getLocalPosition());
     }
 }
 

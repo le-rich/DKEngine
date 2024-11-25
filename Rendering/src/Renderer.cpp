@@ -155,8 +155,7 @@ void Renderer::SetEngineUBO(int pWidth, int pHeight)
 	if (cameraComponent != nullptr)
 	{
 		// Update Aspect Ratio if the window has resized
-		cameraComponent->updateAspectRatio(pWidth, pHeight);
-
+		cameraComponent->updateAspectRatio(pWidth, pHeight);		
 		cameraComponent->calculateViewMatrix(cameraComponent->entity->transform);
 		cameraComponent->calculateProjectionMatrix();
 		mEngineUniformBuffer.SetCameraMatrices(

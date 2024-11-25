@@ -22,7 +22,7 @@
 #include <iostream>
 #include <mutex>
 #include <thread>
-
+#include "Components/AudioComponent.h"
 
 int run_glfw() {
 	std::atomic<bool> running(true);
@@ -92,18 +92,20 @@ int run_glfw() {
 	Core::getInstance().AddSystem(physics);
 	Core::getInstance().AddSystem(renderer);
 	Core::getInstance().AddSystem(game);
+	Core::getInstance().AddSystem(audioManager);
 
 	ui->Initialize();
 	physics->Initialize();
 	renderer->Initialize();
 	game->Initialize();
-
+	audioManager->Initialize();
+	
 	FMOD::Sound* backgroundMusic = audioManager->LoadAudio("Assets/Audio/car-motor.mp3");
     
 	if (backgroundMusic) {
 		static FMOD::Channel* channel = nullptr;
 		if (!channel) {
-            
+			
 			backgroundMusic->setMode(FMOD_LOOP_NORMAL);
 			FMOD_RESULT result = audioManager->GetSystem()->playSound(backgroundMusic, nullptr, false, &channel);
 			if (result == FMOD_OK && channel) {

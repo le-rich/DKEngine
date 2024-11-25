@@ -12,7 +12,7 @@ class ScriptComponent : public Component
 {
 public:
 
-    ScriptComponent(Entity* mEntity);
+    ScriptComponent(Entity* entity);
     ~ScriptComponent();
     ScriptComponent(const ScriptComponent& other);
 
@@ -28,7 +28,7 @@ public:
     void CreateAndAddScript(ScriptParams* pScriptParams)
     {
         T* script;
-        script = new T(mEntity);
+        script = new T(entity);
         script->SetParameters(pScriptParams);
         this->AddScript<T>(*script);
     }
