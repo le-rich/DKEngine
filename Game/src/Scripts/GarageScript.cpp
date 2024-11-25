@@ -27,7 +27,6 @@ void GarageScript::bindOrbitKey()
     input.RegisterKeyCallback(GLFW_KEY_SPACE, [&](Input::ActionType action) {
         if (action == Input::PRESS) {
             SelectNextCar();
-            mParams.orbitScript->setOrbitTarget(mParams.cars[mParams.currSelectIndex]->transform);
         }
         });
     
@@ -45,6 +44,7 @@ void GarageScript::SelectNextCar()
     {
         mParams.currSelectIndex = 0;
     }
+    mParams.orbitScript->setOrbitTarget(mParams.cars[mParams.currSelectIndex]->transform);
 }
 
 void GarageScript::leaveGarage()
