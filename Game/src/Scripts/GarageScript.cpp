@@ -17,25 +17,25 @@ void GarageScript::Update(float deltaTime)
 
 void GarageScript::SetParameters(ScriptParams* pScriptParameters)
 {
-    mParams = *static_cast<GarageScriptParams*>(pScriptParameters);
+    mParams = *static_cast<GarageScriptParams*>(pScriptParameters);  
 }
 
 void GarageScript::bindOrbitKey()
 {
-    //Input& input = Input::GetInstance();
-    //OrbitScript* morbitScript = mParams.orbitScript;
-    /*
-    input.RegisterKeyCallback(GLFW_KEY_SPACE, [mParams](Input::ActionType action) {
+    Input& input = Input::GetInstance();
+    OrbitScript* morbitScript = mParams.orbitScript;
+    
+    input.RegisterKeyCallback(GLFW_KEY_SPACE, [morbitScript](Input::ActionType action) {
         if (action == Input::PRESS) {
-            mParams.orbitScript->swapOrbitTargets();
+            morbitScript->swapOrbitTargets();
         }
         });
-    */
+    
 }
 
 void GarageScript::bindSelectionKey() 
 {
-    // TODO: bind enter to selecting currently orbited target
+    // TODO: bind enter to selected the target
 }
 
 void GarageScript::leaveGarage()

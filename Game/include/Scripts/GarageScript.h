@@ -9,7 +9,7 @@ struct GarageScriptParams : ScriptParams
 {
     OrbitScript* orbitScript = nullptr;
     bool carHasBeenSelected = false;
-    Entity* selectedCar = nullptr;
+    TransformComponent* selectedTarget = nullptr;
 };
 
 class GarageScript : public Script
