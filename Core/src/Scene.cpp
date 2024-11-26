@@ -32,36 +32,6 @@ Scene::~Scene()
 void Scene::SpawnSceneDefinition()
 {
     SceneParser::LoadScene(SCENE_FILE);
-    //createGameManager(); // GameManager currently setup via SceneJSON
-    /*
-    LightEntity* lightEntity = new LightEntity();
-    lightEntity->SetDisplayName("Light");
-    lightEntity->transform->setLocalPosition(glm::vec3(0.f, 5.f, 0.f));
-    lightEntity->transform->setLocalOrientation(glm::quat(-0.5f, 0.5f, 0.5f, 0.f));
-    EntityManager::getInstance().Instantiate(lightEntity);
-
-    //Input& input = Input::GetInstance();
-
-    // TODO: JSONparser for Scene entities and scripts/components.
-    // TODO: Figure out location and pathing of assets/non code files within solution
-    const std::string SOURCE_FOLDER = "TestAE2/";
-    const std::string MODEL_FILE = "ae86.gltf";
-
-    Entity* testCar = new Entity();
-    testCar->SetDisplayName("Test Car");
-    GLTFLoader::LoadModelAsEntity(testCar, SOURCE_FOLDER, MODEL_FILE);
-    EntityManager::getInstance().Instantiate(testCar);
-    */
-
-    // making a 2nd car
-    /*
-    const std::string CAR_2_SOURCE_FOLDER = "Car2Test/";
-    const std::string CAR_2_MODEL_FILE = "sportcar.017.gltf";
-    Entity* testCar2 = new Entity();
-    testCar2->SetDisplayName("Test Car 2");
-    GLTFLoader::LoadModelAsEntity(testCar2, CAR_2_SOURCE_FOLDER, CAR_2_MODEL_FILE);
-    EntityManager::getInstance().Instantiate(testCar2);
-    */
 
     auto* entityManager = &(EntityManager::getInstance());
 
@@ -85,9 +55,9 @@ void Scene::SpawnSceneDefinition()
 
     garageScriptComponent->CreateAndAddScript<GarageScript>(&garageParams);
     garageRoomEnt->addComponent(*garageScriptComponent);
-    auto foo = garageScriptComponent->GetScript<GarageScript>();
-    foo->BindSelectKey();
-    foo->BindChooseKey();
+    auto garageScript = garageScriptComponent->GetScript<GarageScript>();
+    garageScript->BindSelectKey();
+    garageScript->BindChooseKey();
 }
 
 void Scene::createGameManager()
@@ -103,39 +73,11 @@ void Scene::createGameManager()
     gameManagerEnt->addComponent(*gameManagerScriptComponent);
 
     auto carEnt = entityManager->findFirstEntityByDisplayName("Test Car");
-    //auto carEnt = entityManager->getEntity(carID);
-
-    // making a 2nd car
-    auto carEnt2 = entityManager->findFirstEntityByDisplayName("TestCar2");
-    //auto carEnt2 = entityManager->getEntity(car2ID);
-    carEnt2->transform->setLocalPosition(glm::vec3(1.5f, 0.0f, 0.0f));
-    carEnt2->transform->setLocalScale(glm::vec3(0.4f, 0.4f, 0.4f));
-    
-    /*
-    OrbitScriptParams orbitParams;
-    orbitParams.m_OrbitTarget = carEnt->transform;
-    orbitParams.m_OrbitTarget2 = carEnt2->transform;
-    cameraScriptComponent->AddScriptToComponent<OrbitScript>(&orbitParams);
-    OrbitScript* orbitScript = cameraScriptComponent->GetScript<OrbitScript>();
-    */
-
-    /*
-    input.RegisterKeyCallback(GLFW_KEY_SPACE, [orbitScript](Input::ActionType action) {
-        if (action == Input::PRESS) {
-            orbitScript->swapOrbitTargets();
-        }
-    });
-    */
-    // End Example
-
-    //auto gameManagerEnt = entityManager->findFirstEntityByDisplayName("Game Manager");
-    //auto gameManagerEnt = entityManager->getEntity(gameManagerID);
 
     ScriptComponent* timerScriptComponent = new ScriptComponent(gameManagerEnt);
     gameManagerEnt->addComponent(*timerScriptComponent);
 
     TimerScriptParams timerParams;
-    //auto carEnt = entityManager->findFirstEntityByDisplayName("Test Car");
     timerParams.m_TimerTarget = carEnt->transform;
     timerParams.m_OriginalPosition = carEnt->transform->getWorldPosition();
     gameManagerScriptComponent->CreateAndAddScript<TimerScript>(&timerParams);
