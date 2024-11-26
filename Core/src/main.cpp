@@ -79,9 +79,10 @@ int run_glfw() {
 	defaultScene->SpawnSceneDefinition();
 
     Entity* testCarEntity = EntityManager::getInstance().findFirstEntityByDisplayName("Test Car");
+    Entity* cameraEnt = EntityManager::getInstance().findFirstEntityByDisplayName("Main Camera");
 
 	TransformComponent* CAR_TRANSFORM = testCarEntity->transform;
-   auto glfwWindow = window.GetWindow();
+    auto glfwWindow = window.GetWindow();
     
     Physics* physics = new Physics();
     Renderer* renderer = new Renderer(&window);
@@ -103,7 +104,9 @@ int run_glfw() {
 	audioManager->Initialize();
 	
 	FMOD::Sound* backgroundMusic = audioManager->LoadAudio("Assets/Audio/car-motor.mp3");
-	audioManager->PlaySound(backgroundMusic, true, {0, 0, 0});
+    FMOD::Sound* audienceSound = audioManager->LoadAudio("Assets/Audio/audience.mp3");
+	audioManager->PlayDynamicSound(backgroundMusic, true, {0, 50.0f, 0});
+    audioManager->PlayStaticSound(audienceSound, true, { 0, 0.0f, 0 });
 
     std::thread gameThread([&]()
     {
@@ -120,24 +123,26 @@ int run_glfw() {
         }
     });
     
-    std::thread physicsThread([&]() 
-    {
-        double fixedUpdateBuffer = 0.0;
-        auto previousTime = std::chrono::high_resolution_clock::now();
-        while(running) 
+    std::thread physicsThread([&]()
         {
-            auto currentTime = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<float> deltaTime = currentTime - previousTime;
-            deltaTimeFloatSeconds = deltaTime.count();
-            previousTime = currentTime;
-            fixedUpdateBuffer += std::chrono::duration_cast<std::chrono::milliseconds>(deltaTime).count();
+            double fixedUpdateBuffer = 0.0;
+            auto previousTime = std::chrono::high_resolution_clock::now();
+            while (running)
+            {
+                auto currentTime = std::chrono::high_resolution_clock::now();
+                std::chrono::duration<float> deltaTime = currentTime - previousTime;
+                deltaTimeFloatSeconds = deltaTime.count();
+                previousTime = currentTime;
+                fixedUpdateBuffer += std::chrono::duration_cast<std::chrono::milliseconds>(deltaTime).count();
 
-            if (fixedUpdateBuffer >= PHYSICS_UPDATE_INTERVAL) {
-                physics->FixedUpdate();
-                fixedUpdateBuffer -= PHYSICS_UPDATE_INTERVAL;
-            }
-            std::this_thread::sleep_for(std::chrono::microseconds(1));
-        	audioManager->Update(0.0);
+                if (fixedUpdateBuffer >= PHYSICS_UPDATE_INTERVAL) {
+                    physics->FixedUpdate();
+                    fixedUpdateBuffer -= PHYSICS_UPDATE_INTERVAL;
+                }
+                std::this_thread::sleep_for(std::chrono::microseconds(1));
+                audioManager->updateListenerPosition(cameraEnt->transform->getWorldPosition());
+                audioManager->updateSoundPosition(testCarEntity->transform->getWorldPosition());
+                audioManager->Update(0.0);
         }
     });
 
