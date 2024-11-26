@@ -54,12 +54,12 @@ void AudioManager::PlaySound(FMOD::Sound* sound, bool isLooping, const glm::vec3
 }
 
 
-void AudioManager::UpdateChannelPosition(FMOD::Channel* channel, const glm::vec3& position) {
-    if (!channel) return;
-
-    FMOD_VECTOR fmodPosition = GetFMODVector(position);
-    channel->set3DAttributes(&fmodPosition, nullptr);
-}
+// void AudioManager::UpdateChannelPosition(FMOD::Channel* channel, const glm::vec3& position) {
+//     if (!channel) return;
+//
+//     FMOD_VECTOR fmodPosition = GetFMODVector(position);
+//     channel->set3DAttributes(&fmodPosition, nullptr);
+// }
 
 FMOD_VECTOR AudioManager::GetFMODVector(const glm::vec3& position) {
     return { position.x, position.y, position.z };
@@ -69,9 +69,10 @@ FMOD_VECTOR AudioManager::GetFMODVector(const glm::vec3& position) {
 void AudioManager::Update(float deltaTime) {
     fmodSystem->update();
     
-    // FMOD_VECTOR listenerPosition = GetFMODVector(cameraPosition);
-    // fmodSystem->set3DListenerAttributes(0, &listenerPosition, nullptr, nullptr, nullptr);
-    // channel->set3DAttributes(&GetFMODVector(cameraPosition), nullptr);
+
+    FMOD_VECTOR listenerPosition = {0.0f, 0.0f, 0.0f}; // Listener at origin
+    fmodSystem->set3DListenerAttributes(0, &listenerPosition, nullptr, nullptr, nullptr);
+
 }
 
 FMOD::System* AudioManager::GetSystem() {
