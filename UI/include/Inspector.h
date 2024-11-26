@@ -4,8 +4,10 @@
 
 #include <imgui.h>
 #include "Scene.h"
+#include "Components/LightComponent.h"
+#include "Core.h"
 
 void drawInspector(Scene* scene);
-void drawTransform();
-
+void drawTransformComponent();
+void drawLightComponent(Component* component);
 #endif

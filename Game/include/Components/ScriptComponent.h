@@ -12,7 +12,7 @@ class ScriptComponent : public Component
 {
 public:
 
-    ScriptComponent(Entity* mEntity);
+    ScriptComponent(Entity* entity);
     ~ScriptComponent();
     ScriptComponent(const ScriptComponent& other);
 

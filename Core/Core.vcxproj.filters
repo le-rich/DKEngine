@@ -55,6 +55,9 @@
     <ClCompile Include="src\Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Managers\AudioManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Component.h">
@@ -102,6 +105,15 @@
     <ClInclude Include="include\SceneParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\SceneParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Managers\AudioManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scenes\TestScene.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scenes\TestScene.json" />

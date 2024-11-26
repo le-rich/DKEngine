@@ -12,6 +12,8 @@
 #include "UI.h"
 #include "Utils/IDUtils.h"
 #include "Window/Window.h"
+#include "Managers/AudioManager.h"
+
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -21,6 +23,7 @@
 #include <mutex>
 #include <thread>
 #include <Components/RigidBodyComponent.h>
+#include "Components/AudioComponent.h"
 
 int run_glfw() {
 	std::atomic<bool> running(true);
@@ -78,22 +81,48 @@ int run_glfw() {
     Entity* testCarEntity = EntityManager::getInstance().findFirstEntityByDisplayName("Test Car");
 
 	TransformComponent* CAR_TRANSFORM = testCarEntity->transform;
-
-    UI* ui = new UI(Core::getInstance().GetScene());
+   auto glfwWindow = window.GetWindow();
     
     Physics* physics = new Physics();
     Renderer* renderer = new Renderer(&window);
+    UI* ui = new UI(Core::getInstance().GetScene(), renderer->GetFrameBuffer(), glfwWindow);
     Game* game = new Game();
-
+    AudioManager* audioManager = new AudioManager();    
+	
+	
 	Core::getInstance().AddSystem(ui);
 	Core::getInstance().AddSystem(physics);
 	Core::getInstance().AddSystem(renderer);
 	Core::getInstance().AddSystem(game);
+	Core::getInstance().AddSystem(audioManager);
 
 	ui->Initialize();
 	physics->Initialize();
 	renderer->Initialize();
 	game->Initialize();
+	audioManager->Initialize();
+	
+	FMOD::Sound* backgroundMusic = audioManager->LoadAudio("Assets/Audio/car-motor.mp3");
+	audioManager->PlaySound(backgroundMusic, true, {0, 0, 0});
+	
+    
+	// if (backgroundMusic) {
+	// 	static FMOD::Channel* channel = nullptr;
+	// 	if (!channel) {
+	// 		
+	// 		backgroundMusic->setMode(FMOD_LOOP_NORMAL);
+	// 		FMOD_RESULT result = audioManager->GetSystem()->playSound(backgroundMusic, nullptr, false, &channel);
+	// 		if (result == FMOD_OK && channel) {
+	// 			channel->setVolume(1.0f);
+	// 			FMOD_VECTOR soundPosition = {0.0f, 0.0f, 0.0f};
+	// 			channel->set3DAttributes(&soundPosition, nullptr);
+	// 			channel->setLoopCount(-1);
+	// 			channel->setPaused(false); // Start playback
+	// 		} else {
+ //                
+	// 		}
+	// 	}
+	// }
 
     std::thread gameThread([&]()
     {
@@ -149,8 +178,7 @@ int run_glfw() {
 	double fixedUpdateBuffer = 0.0;
 	double FIXED_UPDATE_INTERVAL = 20; // in milliseconds
 	auto previousTime = std::chrono::high_resolution_clock::now();
-
-    auto glfwWindow = window.GetWindow();
+	
     while (!glfwWindowShouldClose(glfwWindow))
     {
         auto currentTime = std::chrono::high_resolution_clock::now();

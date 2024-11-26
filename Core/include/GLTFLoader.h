@@ -1,5 +1,6 @@
 #pragma once
 #include "Components/MeshComponent.h"
+#include "Components/AudioComponent.h"
 #include "Components/RigidbodyComponent.h"
 #include "Managers/AssetManager.h"
 #include "Resources/Mesh.h"
@@ -363,6 +364,7 @@ namespace GLTFLoader
             RigidBodyComponent* rigidComponent = new RigidBodyComponent(pEntity, rb);
             pEntity->addComponent(*rigidComponent);
         }
+
     }
 
     static void LoadChildEntities(Entity* pParentEntity, tinygltf::Model& const pGltfModel, std::vector<UUIDv4::UUID>& pMaterials, std::vector<int>& const pChildIndexes)

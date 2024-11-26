@@ -162,7 +162,6 @@ TransformComponent& TransformComponent::operator=(const TransformComponent& othe
     this->mTransform.localScale = other.mTransform.localScale;
 
 	// DO NOT copy mutex.
-
 	this->transformMatrix = other.transformMatrix;
 	this->entity->GetEntityID() == other.entity->GetEntityID();
 }
