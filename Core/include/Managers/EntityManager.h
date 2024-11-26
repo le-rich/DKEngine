@@ -144,6 +144,7 @@ public:
         return nullptr;
     }
 
+    // Returns entities explicitly matching the component mask
     std::vector<Entity*> findEntitiesByComponentMask(ComponentMask componentMask) 
     {
         std::vector<Entity*> result;
@@ -153,6 +154,24 @@ public:
             Entity* entity = it->second;
 
             if (entity->GetComponentMask() == componentMask)
+            {
+                result.push_back(entity);
+            }
+        }
+
+        return result;
+    }
+
+    // Returns entities that contain the component mask
+    std::vector<Entity*> findEntitiesContainingComponentMask(ComponentMask componentMask)
+    {
+        std::vector<Entity*> result;
+        for (auto it = entityMap.begin(); it != entityMap.end(); ++it)
+        {
+            UUIDv4::UUID uuid = it->first;
+            Entity* entity = it->second;
+
+            if ((entity->GetComponentMask() & componentMask) == componentMask)
             {
                 result.push_back(entity);
             }

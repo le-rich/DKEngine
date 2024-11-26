@@ -48,7 +48,7 @@
     {
       "name": "Light",
       "transform": {
-        "localPosition": [],
+        "localPosition": [ 0, 10, 0 ],
         "localOrientation": [],
         "localScale": []
       },
@@ -63,6 +63,7 @@
             "quadratic": 1.0,
             "cutoff": 12.0,
             "outercutoff": 15.0,
+            "createsShadows": true,
             "type": "DirectionalLight"
           }
         }

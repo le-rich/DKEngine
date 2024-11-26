@@ -40,10 +40,13 @@ void Renderer::Update(float deltaTime)
 {
     // TODO: Collect set of renderables here and use it.
     FetchRenderables();
+    FetchLights();
     FetchSkybox();
     {
         std::lock_guard<std::mutex> lock(windowRef->mMutex);
         windowRef->SetWindowToCurrentThread();
+        //Generate ShadowMaps
+        GenerateShadowMaps();
 
         // TODO: Create copy of Scene Graph/Entity manager to avoid race conditions with other threads
         // TODO: Revision, change such that renderables are taken and threads are spun up to do tasks within Renderer.
@@ -69,8 +72,8 @@ void Renderer::Update(float deltaTime)
     for (auto ptr : renderablesThisFrame){
         delete ptr;
     }
-
     renderablesThisFrame.clear();
+    lightsThisFrame.clear();
 }
 
 void Renderer::FixedUpdate() {}
@@ -130,7 +133,7 @@ void Renderer::IssueMeshDrawCalls()
             // TODO: Bug Physics/Core on way to get modelMatrix directly from transform
             glm::mat4 modelMatrix = entity->transform->getTransformMatrix();
             mEngineUniformBuffer.SetSubData(modelMatrix, 0);
-            meshComponent->getMesh()->Draw();
+            meshComponent->getMesh()->DrawWithOwnMaterial();
         }
     }
 }
@@ -138,12 +141,8 @@ void Renderer::IssueMeshDrawCalls()
 void Renderer::SetEngineUBO(int pWidth, int pHeight)
 {
     std::vector<glm::mat4> lightMatricies;
-    auto lightComponentUUIDs = EntityManager::getInstance().findEntitiesByComponent(ComponentType::Light);
-    for (auto& uuid : lightComponentUUIDs)
+    for (auto lightComponent : lightsThisFrame)
     {
-        auto entity = EntityManager::getInstance().getEntity(uuid);
-        LightComponent* lightComponent = dynamic_cast<LightComponent*>(entity->getComponent(ComponentType::Light));
-        if (lightComponent == nullptr) continue;
         lightMatricies.push_back(lightComponent->GenerateMatrix(lightComponent->entity->transform));
     }
 
@@ -168,6 +167,52 @@ void Renderer::SetEngineUBO(int pWidth, int pHeight)
     }
 }
 
+void Renderer::GenerateShadowMaps()
+{
+    for (auto lightComponent : lightsThisFrame)
+    {
+        if (!lightComponent->GetCreatesShadows()) continue;
+
+        lightComponent->BindShadowMap();
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glEnable(GL_CULL_FACE);
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
+        glCullFace(GL_BACK);
+
+        mShadowMapShader->Use();
+        lightComponent->entity->transform->getWorldPosition();
+        mEngineUniformBuffer.SetCameraMatrices(
+            glm::lookAt(glm::vec3(0.5f, 2, 2), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)),
+            glm::ortho<float>(-10, 10, -10, 10, -10, 20),
+            lightComponent->entity->transform->getWorldPosition()
+        );
+
+        for (auto renderable : renderablesThisFrame)
+        {
+            glm::mat4 modelMatrix = renderable->worldTransform->getTransformMatrix();
+
+            mEngineUniformBuffer.SetSubData(modelMatrix, 0);
+            renderable->mesh->Draw();
+        }
+    }
+}
+
+void Renderer::FetchLights()
+{
+    std::vector<glm::mat4> lightMatricies;
+    auto lightComponentUUIDs = EntityManager::getInstance().findEntitiesByComponent(ComponentType::Light);
+    for (auto& uuid : lightComponentUUIDs)
+    {
+        auto entity = EntityManager::getInstance().getEntity(uuid);
+        LightComponent* lightComponent = dynamic_cast<LightComponent*>(entity->getComponent(ComponentType::Light));
+        if (lightComponent == nullptr) continue;
+        lightsThisFrame.push_back(lightComponent);
+    }
+
+}
+
 void Renderer::FetchSkybox() 
 {
     auto skyboxID = Core::getInstance().GetScene()->GetSkyboxID();
@@ -178,8 +223,11 @@ void Renderer::FetchRenderables()
 {
     ComponentMask renderableComponentMask;
     // TODO: Add Materials to this.
-    renderableComponentMask |= renderableComponentMask.set(static_cast<size_t>(ComponentType::Mesh) | static_cast<size_t>(ComponentType::Transform));
-    auto renderableEntities = EntityManager::getInstance().findEntitiesByComponentMask(renderableComponentMask);
+    size_t mask = static_cast<size_t>(ComponentType::Mesh) | static_cast<size_t>(ComponentType::Transform);
+    //renderableComponentMask |= renderableComponentMask.set(mask);
+    renderableComponentMask.set(static_cast<size_t>(ComponentType::Mesh));
+    renderableComponentMask.set(static_cast<size_t>(ComponentType::Transform));
+    auto renderableEntities = EntityManager::getInstance().findEntitiesContainingComponentMask(renderableComponentMask);
 
     for (auto renderEntity : renderableEntities)
     {
