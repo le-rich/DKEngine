@@ -79,7 +79,6 @@ int run_glfw() {
 	TransformComponent* CAR_TRANSFORM = testCarEntity->transform;
    auto glfwWindow = window.GetWindow();
 
-    UI* ui = new UI(Core::getInstance().GetScene());
     Physics* physics = new Physics();
     Renderer* renderer = new Renderer(&window);
     UI* ui = new UI(Core::getInstance().GetScene(), renderer->GetFrameBuffer(), glfwWindow);
