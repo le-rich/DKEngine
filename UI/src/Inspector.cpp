@@ -67,10 +67,9 @@ void drawInspector(Scene* scene) {
           case ComponentType::Mesh:
              drawMeshComponent(component);
              break;
-          //UNCOMMENT WHEN RIGIDBODY COMPONENT IS ADDED
-          //case ComponentType::RigidBody:
-          //   drawRigidBodyComponent(component);
-          //   break;
+          case ComponentType::RigidBody:
+             drawRigidBodyComponent(component);
+             break;
           case ComponentType::Camera:
              drawCameraComponent(component);
              break;
@@ -211,6 +210,25 @@ void drawRigidBodyComponent(Component* component)
 {
    if (ImGui::CollapsingHeader("Rigid Body", ImGuiTreeNodeFlags_DefaultOpen)) {
       RigidBodyComponent* rb = static_cast<RigidBodyComponent*>(component);
+      int sectionWidth = 100;
+
+      ImGui::SetNextItemWidth(sectionWidth);
+      float mass = rb->getMass();
+      ImGui::Text("Mass");
+      ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - sectionWidth);
+      ImGui::SameLine(sectionWidth);
+      if (ImGui::DragFloat("##Mass", &mass, 0.1f)) {
+         rb->setMass(mass);
+      }
+
+      ImGui::SetNextItemWidth(sectionWidth);
+      glm::vec3 velocity = rb->getVelocity();
+      ImGui::Text("Velocity");
+      ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - sectionWidth);
+      ImGui::SameLine(sectionWidth);
+      if (ImGui::DragFloat3("##velocity", glm::value_ptr(velocity), 0.1f)) {
+         rb->setVelocity(velocity);
+      }
    }
 }
 
