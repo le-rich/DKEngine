@@ -64,7 +64,7 @@ public:
               removeEntity(*child);
               child->getParent()->removeChild(child);
            }
-
+           it->second->getParent()->removeChild(it->second);
             entityMap.erase(it);
         }
         else {
