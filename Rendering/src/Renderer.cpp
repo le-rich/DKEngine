@@ -42,7 +42,7 @@ void Renderer::Initialize()
     glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    
+
 }
 
 void Renderer::Update(float deltaTime)
@@ -193,17 +193,26 @@ void Renderer::GenerateShadowMaps()
         glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0), -lightPosition);
 
         glm::mat4 viewMatrix = rotationMatrix * translationMatrix;
+        glm::mat4 projectionMatrix;
+        if (lightComponent->GetType() == LightType::DirectionalLight)
+        {
+            projectionMatrix = glm::ortho<float>(-10, 10, -10, 10, 1.f, 7.5f); // ortho projection
+        }
+        else
+        {
+            projectionMatrix = glm::perspective(glm::radians(45.0f), (GLfloat)1024 / (GLfloat)1024, 1.f, 7.5f); // ortho projection
+        }
+
         mEngineUniformBuffer.SetCameraMatrices(
-            //glm::lookAt(lightComponent->entity->transform->getWorldPosition(), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)),
             viewMatrix,
-            glm::ortho<float>(-10, 10, -10, 10, -10, 20), // ortho projection
+            projectionMatrix,
             lightComponent->entity->transform->getWorldPosition()
         );
 
 
         lightEnabled[i] = glm::mat4(lightComponent->GetCreatesShadows());
         if (!lightEnabled[i][0][0]) continue;
-        lightViewMatricies[i] = glm::ortho<float>(-10, 10, -10, 10, -10, 20) * viewMatrix;// glm::lookAt(lightComponent->entity->transform->getWorldPosition(), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+        lightViewMatricies[i] = projectionMatrix * viewMatrix;// glm::lookAt(lightComponent->entity->transform->getWorldPosition(), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
         lightComponent->BindShadowFrameBuffer();
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -226,11 +235,11 @@ void Renderer::GenerateShadowMaps()
             shadowMapTextureArray, GL_TEXTURE_2D_ARRAY, 0, 0, 0, i,
             1024, 1024, 1);
     }
-    
+
     mLightMatriciesSSBO.SendBlocks(lightMatricies.data(), lightMatricies.size() * sizeof(glm::mat4));
     mLightViewsSSBO.SendBlocks(lightViewMatricies.data(), lightViewMatricies.size() * sizeof(glm::mat4));
     mLightsEnabledSSBO.SendBlocks(lightEnabled.data(), lightEnabled.size() * sizeof(glm::mat4));
-    
+
     mLightMatriciesSSBO.Bind(0);
     mLightViewsSSBO.Bind(1);
     mLightsEnabledSSBO.Bind(2);
