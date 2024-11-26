@@ -49,7 +49,7 @@ public:
         auto it = entityMap.find(eID);
         if (it != entityMap.end())
         {
-            entityMap.erase(it);
+           removeEntity(*(it->second));
         }
     }
 
@@ -59,6 +59,12 @@ public:
         auto it = entityMap.find(eID);
 
         if (it != entityMap.end()) {
+           while (it->second->getChildren().size() != 0) {
+              Entity* child = it->second->getChildren()[0];
+              removeEntity(*child);
+              child->getParent()->removeChild(child);
+           }
+           it->second->getParent()->removeChild(it->second);
             entityMap.erase(it);
         }
         else {
@@ -242,6 +248,8 @@ public:
 
         // create a new entity with a copy name
         Entity* duplicate = new Entity(originalEntity->GetDisplayName() + "_copy");
+
+        duplicate->transform = dynamic_cast<TransformComponent*>(originalEntity->transform->clone());
 
         // duplicate components
         for (const auto& comp : originalEntity->getComponents()) {

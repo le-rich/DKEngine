@@ -24,6 +24,16 @@ public:
     glm::mat4 getViewMatrix();
     glm::mat4 getProjectionMatrix();
 
+    float getFieldOfView() { return fieldOfView; }
+    float getFarClipPlane() { return farClipPlane; }
+    float getNearClipPlane() { return nearClipPlane; }
+    float getAspectRatio() { return aspectRatio; }
+
+    void setFieldOfView(float fov) { fieldOfView = fov; }
+    void setFarClipPlane(float fcp) { farClipPlane = fcp; }
+    void setNearClipPlane(float ncp) { nearClipPlane = ncp; }
+    void setAspectRatio(float ar) { aspectRatio = ar; }
+
     CameraComponent& operator=(CameraComponent& const other);
 private:
     glm::mat4 m_viewMatrix{};
