@@ -182,9 +182,16 @@ void Renderer::GenerateShadowMaps()
         glCullFace(GL_BACK);
 
         mShadowMapShader->Use();
-        lightComponent->entity->transform->getWorldPosition();
+        glm::vec3 lightPosition = lightComponent->entity->transform->getWorldPosition();
+        glm::quat lightOrientation = lightComponent->entity->transform->getWorldOrientation();
+
+        glm::mat4 rotationMatrix = glm::mat4_cast(glm::conjugate(lightOrientation));
+        glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0), -lightPosition);
+
+        glm::mat4 viewMatrix = rotationMatrix * translationMatrix;
         mEngineUniformBuffer.SetCameraMatrices(
-            glm::lookAt(glm::vec3(0.5f, 2, 2), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)),
+            //glm::lookAt(glm::vec3(0.5f, 2, 2), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)),
+            viewMatrix,
             glm::ortho<float>(-10, 10, -10, 10, -10, 20),
             lightComponent->entity->transform->getWorldPosition()
         );

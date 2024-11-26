@@ -48,8 +48,8 @@
     {
       "name": "Light",
       "transform": {
-        "localPosition": [ 0, 10, 0 ],
-        "localOrientation": [],
+        "localPosition": [ 0, 5, 0 ],
+        "localOrientation": [ 0.831, -0.529, 0.146, -0.093 ],
         "localScale": []
       },
       "components": [
