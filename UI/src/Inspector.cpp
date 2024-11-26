@@ -6,6 +6,7 @@
 #include <glm.hpp>
 #include <gtc/type_ptr.hpp>
 #include <gtc/quaternion.hpp>
+#include "Core.h"
 
 void drawInspector(Scene* scene) {
    //Get object information and display
@@ -56,7 +57,30 @@ void drawInspector(Scene* scene) {
 
        }
 
-       drawTransform();
+       drawTransformComponent();
+
+       for (auto component : selectedEntity->getComponents()) {
+          switch (component->componentType) {
+          case ComponentType::Light:
+             drawLightComponent(component);
+             break;
+          case ComponentType::Mesh:
+             drawMeshComponent(component);
+             break;
+          //UNCOMMENT WHEN RIGIDBODY COMPONENT IS ADDED
+          //case ComponentType::RigidBody:
+          //   drawRigidBodyComponent(component);
+          //   break;
+          case ComponentType::Camera:
+             drawCameraComponent(component);
+             break;
+          case ComponentType::Script:
+             drawScriptComponent(component);
+             break;
+          default:
+             break;
+          }
+       }
        //TODO: Check for which components an entity has and call the approprite function to draw
        
    }
@@ -66,7 +90,7 @@ void drawInspector(Scene* scene) {
    ImGui::End();
 }
 
-void drawTransform() {
+void drawTransformComponent() {
    if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
       TransformComponent* transform = getSelectedEntity()->transform;
       if (transform != nullptr) {
@@ -96,5 +120,88 @@ void drawTransform() {
             transform->setLocalScale(scale);
          }
       }
+   }
+}
+
+void drawLightComponent(Component* component) {
+   if (ImGui::CollapsingHeader("Light", ImGuiTreeNodeFlags_DefaultOpen)) {
+      LightComponent* light = static_cast<LightComponent*>(component);
+
+      const char* types[] = { "Ambient", "Point", "Directional", "Spot", "Area" };
+      LightType lightType = light->GetType();
+      int index = static_cast<int>(lightType);
+      ImGui::Text("Type");
+      ImGui::SameLine(100);
+      if (ImGui::Combo("##Type", &index, types, 5)) {
+         light->SetType(static_cast<LightType>(index));
+      }
+
+      float intensity = light->GetIntensity();
+      ImGui::Text("Intensity");
+      ImGui::SameLine(100);
+      if (ImGui::DragFloat("##Intensity", &intensity, 0.1f, 0.0f)) {
+         light->SetIntensity(intensity);
+      }
+
+      float constant = light->GetConstant();
+      ImGui::Text("Constant");
+      ImGui::SameLine(100);
+      if (ImGui::DragFloat("##Constant", &constant, 0.1f)) {
+         light->SetConstant(constant);
+      }
+
+      float linear = light->GetLinear();
+      ImGui::Text("Linear");
+      ImGui::SameLine(100);
+      if (ImGui::DragFloat("##Linear", &linear, 0.1f)) {
+         light->SetLinear(linear);
+      }
+
+      float quadratic = light->GetQuadratic();
+      ImGui::Text("Quadratic");
+      ImGui::SameLine(100);
+      if (ImGui::DragFloat("##Quadratic", &quadratic, 0.1f)) {
+         light->SetQuadratic(quadratic);
+      }
+
+      float cutoff = light->GetCutoff();
+      ImGui::Text("Cutoff");
+      ImGui::SameLine(100);
+      if (ImGui::DragFloat("##Cutoff", &cutoff, 0.1f)) {
+         light->SetCutoff(cutoff);
+      }
+
+      float outerCutoff = light->GetOuterCutoff();
+      ImGui::Text("Outer Cutoff");
+      ImGui::SameLine(100);
+      if (ImGui::DragFloat("##OuterCutoff", &outerCutoff, 0.1f)) {
+         light->SetOuterCutoff(outerCutoff);
+      }
+   }
+}
+void drawMeshComponent(Component* component) {
+   if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen)) {
+      MeshComponent* mesh = static_cast<MeshComponent*>(component);
+   }
+}
+
+void drawRigidBodyComponent(Component* component)
+{
+   if (ImGui::CollapsingHeader("Rigid Body", ImGuiTreeNodeFlags_DefaultOpen)) {
+      RigidBodyComponent* rb = static_cast<RigidBodyComponent*>(component);
+   }
+}
+
+void drawCameraComponent(Component* component)
+{
+   if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen)) {
+      CameraComponent* camera = static_cast<CameraComponent*>(component);
+   }
+}
+
+void drawScriptComponent(Component* component)
+{
+   if (ImGui::CollapsingHeader("Script", ImGuiTreeNodeFlags_DefaultOpen)) {
+      ScriptComponent* script = static_cast<ScriptComponent*>(component);
    }
 }

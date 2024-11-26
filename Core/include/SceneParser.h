@@ -31,16 +31,19 @@ namespace SceneParser
     enum SceneElement
     {
         ASSETS = 0,
+        SKYBOX,
         ENTITIES,
         GAMEMANAGER
     };
 
     static const std::string ASSET_KEY = "assets";
+    static const std::string SKYBOX_KEY = "skybox";
     static const std::string ENTITY_KEY = "entities";
     static const std::string GAMEMANAGER_KEY = "gamemanager";
 
     std::unordered_map<std::string, SceneElement> const ElementMap = {
         {ASSET_KEY, SceneElement::ASSETS},
+        {SKYBOX_KEY, SceneElement::SKYBOX},
         {ENTITY_KEY, SceneElement::ENTITIES},
         {GAMEMANAGER_KEY, SceneElement::GAMEMANAGER}
     };
@@ -224,7 +227,7 @@ namespace SceneParser
                             Entity* targetEntity = EntityManager::getInstance().findFirstEntityByDisplayName(target);
                             params.m_Other = targetEntity->transform;
                         } OPTIONAL_EXCEPTION_HANDLER;
-                        
+
                         try
                         {
                             int index = scriptParams.at("index").template get<int>();
@@ -256,13 +259,13 @@ namespace SceneParser
                             int totallaps = scriptParams.at("totallaps").template get<int>();
                             params.m_TotalLaps = totallaps;
                         }OPTIONAL_EXCEPTION_HANDLER;
-                        
+
                         try
                         {
                             int currentlap = scriptParams.at("currentlap").template get<int>();
                             params.m_CurrentLap = currentlap;
                         }OPTIONAL_EXCEPTION_HANDLER;
-                        
+
                         try
                         {
                             int nextcheckpointindex = scriptParams.at("nextcheckpointindex").template get<int>();
@@ -315,6 +318,25 @@ namespace SceneParser
                     break;
             }
         }
+    }
+
+    void ParseSkybox(json& pSkyboxObject)
+    {
+        // Create Skybox object if not exist
+        std::string imageName = pSkyboxObject.template get<std::string>();
+        std::shared_ptr<Skybox> skybox = AssetManager::GetInstance().GetSkyboxByName(imageName);
+        if (!skybox)
+        {
+            std::shared_ptr<Texture> texture = std::make_shared<Texture>(DEFAULT_SKYBOX_FOLDER, imageName);
+            AssetManager::GetInstance().AddTexture(texture);
+            skybox = std::make_shared<Skybox>(imageName);
+            skybox->mTextureID = texture->GetAssetID();
+            skybox->GenerateTexture(texture);
+            skybox->mShaderID = AssetManager::GetInstance().GetSkyboxShader()->GetAssetID();
+            AssetManager::GetInstance().AddSkybox(skybox);
+        }
+        // Assign Skybox to Scene
+        Core::getInstance().GetScene()->SetSkyboxID(skybox->GetAssetID());
     }
 
     void ParseAssets(json& pAssetObjects)
@@ -437,6 +459,12 @@ namespace SceneParser
             ParseAssets(assetObjects);
         }
         DEFAULT_EXCEPTION_HANDLER;
+
+        try
+        {
+            json skyboxObject = sceneJSON.at(SKYBOX_KEY);
+            ParseSkybox(skyboxObject);
+        }DEFAULT_EXCEPTION_HANDLER;
 
         try
         {

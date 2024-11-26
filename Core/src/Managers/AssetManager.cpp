@@ -3,31 +3,21 @@
 void AssetManager::AddMaterial(std::shared_ptr<Material> pMaterial)
 {
     auto result = mMaterialMap.insert({ pMaterial->GetAssetID(), pMaterial });
-
-    if (result.second)
-    {
-        // std::cout << "Material added" << std::endl;
-    }
 }
 
 void AssetManager::AddShader(std::shared_ptr<Shader> pShader)
 {
     auto result = mShaderMap.insert({ pShader->GetAssetID(), pShader });
+}
 
-    if (result.second)
-    {
-        // std::cout << "Shader added" << std::endl;
-    }
+void AssetManager::AddSkybox(std::shared_ptr<Skybox> pSkybox)
+{
+    auto result = mSkyboxMap.insert({ pSkybox->GetAssetID(), pSkybox });
 }
 
 void AssetManager::AddTexture(std::shared_ptr<Texture> pTexuture)
 {
     auto result = mTextureMap.insert({ pTexuture->GetAssetID(), pTexuture });
-
-    if (result.second)
-    {
-        // std::cout << "Texture added" << std::endl;
-    }
 }
 
 std::shared_ptr<Material> AssetManager::GetMaterialByID(UUIDv4::UUID& pID)
@@ -56,6 +46,19 @@ std::shared_ptr<Shader> AssetManager::GetShaderByID(UUIDv4::UUID& pID)
     return nullptr;
 }
 
+std::shared_ptr<Skybox> AssetManager::GetSkyboxByID(UUIDv4::UUID& pID)
+{
+    auto result = mSkyboxMap.find(pID);
+
+    if (result != mSkyboxMap.end())
+    {
+        return result->second;
+    }
+
+    std::cerr << "Error: Skybox with UUID " << pID << " not found in the map." << std::endl;
+    return nullptr;
+}
+
 std::shared_ptr<Texture> AssetManager::GetTextureByID(const UUIDv4::UUID& pID)
 {
     auto result = mTextureMap.find(pID);
@@ -66,6 +69,22 @@ std::shared_ptr<Texture> AssetManager::GetTextureByID(const UUIDv4::UUID& pID)
     }
 
     std::cerr << "Error: Texture with UUID " << pID << " not found in the map." << std::endl;
+    return nullptr;
+}
+
+std::shared_ptr<Skybox> AssetManager::GetSkyboxByName(std::string pName)
+{
+    for (auto it = mSkyboxMap.begin(); it != mSkyboxMap.end(); ++it)
+    {
+        UUIDv4::UUID uuid = it->first;
+        std::shared_ptr<Skybox> skybox = it->second;
+
+        if (skybox->GetDisplayName() == pName)
+        {
+            return it->second;
+        }
+    }
+
     return nullptr;
 }
 
@@ -84,6 +103,15 @@ void AssetManager::RemoveShaderByID(UUIDv4::UUID& pID)
     if (it != mShaderMap.end())
     {
         mShaderMap.erase(it);
+    }
+}
+
+void AssetManager::RemoveSkyboxByID(UUIDv4::UUID& pID)
+{
+    auto it = mSkyboxMap.find(pID);
+    if (it != mSkyboxMap.end())
+    {
+        mSkyboxMap.erase(it);
     }
 }
 

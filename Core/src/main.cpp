@@ -77,10 +77,12 @@ int run_glfw() {
     Entity* testCarEntity = EntityManager::getInstance().findFirstEntityByDisplayName("Test Car");
 
 	TransformComponent* CAR_TRANSFORM = testCarEntity->transform;
+   auto glfwWindow = window.GetWindow();
 
     UI* ui = new UI(Core::getInstance().GetScene());
     Physics* physics = new Physics();
     Renderer* renderer = new Renderer(&window);
+    UI* ui = new UI(Core::getInstance().GetScene(), renderer->GetFrameBuffer(), glfwWindow);
     Game* game = new Game();
 
 	Core::getInstance().AddSystem(ui);
@@ -149,7 +151,7 @@ int run_glfw() {
 	double FIXED_UPDATE_INTERVAL = 20; // in milliseconds
 	auto previousTime = std::chrono::high_resolution_clock::now();
 
-    auto glfwWindow = window.GetWindow();
+
     while (!glfwWindowShouldClose(glfwWindow))
     {
         auto currentTime = std::chrono::high_resolution_clock::now();
