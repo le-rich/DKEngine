@@ -151,16 +151,6 @@ void Renderer::IssueMeshDrawCalls()
 
 void Renderer::SetEngineUBO(int pWidth, int pHeight)
 {
-    std::vector<glm::mat4> lightMatricies;
-    
-    for (auto lightComponent : lightsThisFrame)
-    {
-        lightMatricies.push_back(lightComponent->GenerateMatrix(lightComponent->entity->transform));
-    }
-
-    mLightMatriciesSSBO.SendBlocks(lightMatricies.data(), lightMatricies.size() * sizeof(glm::mat4));
-    mLightMatriciesSSBO.Bind(0);
-
     // CAMERA =====================
     CameraComponent* cameraComponent = dynamic_cast<CameraComponent*>(mainCameraEntity->getComponent(ComponentType::Camera));
 
@@ -183,14 +173,18 @@ void Renderer::SetEngineUBO(int pWidth, int pHeight)
 
 void Renderer::GenerateShadowMaps()
 {
-    std::vector<glm::mat4> lightViewMatricies(lightsThisFrame.size());
-    std::vector<char> lightEnabled(lightsThisFrame.size());
+    int numOfLights = lightsThisFrame.size();
+
+    std::vector<glm::mat4> lightMatricies(numOfLights);
+    std::vector<glm::mat4> lightViewMatricies(numOfLights);
+    std::vector<glm::mat4> lightEnabled(numOfLights);
 
     glBindTexture(GL_TEXTURE_2D_ARRAY, shadowMapTextureArray);
-    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_DEPTH_COMPONENT16, 1024, 1024, lightsThisFrame.size());
-    for (int i = 0; i < lightsThisFrame.size(); ++i)
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_DEPTH_COMPONENT16, 1024, 1024, numOfLights);
+    for (int i = 0; i < numOfLights; ++i)
     {
         auto lightComponent = lightsThisFrame[i];
+        lightMatricies[i] = lightComponent->GenerateMatrix(lightComponent->entity->transform);
 
         glm::vec3 lightPosition = lightComponent->entity->transform->getWorldPosition();
         glm::quat lightOrientation = lightComponent->entity->transform->getWorldOrientation();
@@ -207,10 +201,9 @@ void Renderer::GenerateShadowMaps()
         );
 
 
-        if (!lightComponent->GetCreatesShadows()) continue;
-        lightViewMatricies[0] = glm::ortho<float>(-10, 10, -10, 10, -10, 20) * viewMatrix;// glm::lookAt(lightComponent->entity->transform->getWorldPosition(), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-        lightEnabled[i] = 1;
-        
+        lightEnabled[i] = glm::mat4(lightComponent->GetCreatesShadows());
+        if (!lightEnabled[i][0][0]) continue;
+        lightViewMatricies[i] = glm::ortho<float>(-10, 10, -10, 10, -10, 20) * viewMatrix;// glm::lookAt(lightComponent->entity->transform->getWorldPosition(), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
         lightComponent->BindShadowFrameBuffer();
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -230,11 +223,15 @@ void Renderer::GenerateShadowMaps()
 
         glCopyImageSubData(
             lightComponent->GetShadowMapID(), GL_TEXTURE_2D, 0, 0, 0, 0,
-            shadowMapTextureArray, GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0,
+            shadowMapTextureArray, GL_TEXTURE_2D_ARRAY, 0, 0, 0, i,
             1024, 1024, 1);
     }
+    
+    mLightMatriciesSSBO.SendBlocks(lightMatricies.data(), lightMatricies.size() * sizeof(glm::mat4));
     mLightViewsSSBO.SendBlocks(lightViewMatricies.data(), lightViewMatricies.size() * sizeof(glm::mat4));
-    mLightsEnabledSSBO.SendBlocks(lightEnabled.data(), lightEnabled.size() * sizeof(bool));
+    mLightsEnabledSSBO.SendBlocks(lightEnabled.data(), lightEnabled.size() * sizeof(glm::mat4));
+    
+    mLightMatriciesSSBO.Bind(0);
     mLightViewsSSBO.Bind(1);
     mLightsEnabledSSBO.Bind(2);
 }

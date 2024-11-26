@@ -57,7 +57,7 @@ layout(std140, binding = 1) buffer LightViewSSBO
 
 layout(std140, binding = 2) buffer LightEnabledSSBO
 {
-    bool lightsEnable[];
+    mat4 lightsEnable[];
 };
 
 layout (std140, binding = 0) uniform EngineUBO
@@ -158,19 +158,19 @@ vec3 CalculateSpotLight(mat4 pLight, float shadow)
     return lightsum * spotIntensity;
 }
 
-float ShadowCalculation(int i)
+float ShadowCalculation(int i, float bias)
 {
-    vec4 fragPosLightSpace = lightSpaceMatricies[0] * vec4(fs_in.v_WorldPos, 1.0);
+    vec4 fragPosLightSpace = lightSpaceMatricies[i] * vec4(fs_in.v_WorldPos, 1.0);
     // perform perspective divide
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     // transform to [0,1] range
     projCoords = projCoords * 0.5 + 0.5;
     // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
-    float closestDepth = texture(uShadowsMap, vec3(projCoords.xy, 0)).r; 
+    float closestDepth = texture(uShadowsMap, vec3(projCoords.xy, i)).r; 
     // get depth of current fragment from light's perspective
     float currentDepth = projCoords.z;
     // check whether current frag pos is in shadow
-    float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
+    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;  
 
     return 1 - shadow;
 }
@@ -182,9 +182,11 @@ vec3 CalculateLightSum()
     for (int i = 0; i < ssboLights.length(); ++i)
     {
         float shadow = 1;
-        if(lightsEnable[i])
+        if(lightsEnable[i][0].x == 1)
         {
-            shadow = ShadowCalculation(i);
+            const vec3  lightDirection  = normalize(ssboLights[i][0].rgb - fs_in.v_WorldPos);
+            float bias = max(0.05 * (1.0 - dot(gNormal, lightDirection)), 0.005);  
+            shadow = ShadowCalculation(i, bias);
         }
         switch(int(ssboLights[i][3][0]))
         {

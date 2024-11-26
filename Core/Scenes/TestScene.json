@@ -158,6 +158,7 @@
             "quadratic": 0.032,
             "cutoff": 25.0,
             "outercutoff": 30.0,
+            "createsShadows": true,
             "type": "SpotLight"
           }
         }
