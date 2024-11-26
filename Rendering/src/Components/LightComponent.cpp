@@ -86,10 +86,15 @@ void LightComponent::SetParams(LightParams pLightParams)
     mType = pLightParams.type;
 }
 
-void LightComponent::BindShadowMap()
+void LightComponent::BindShadowFrameBuffer()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, mShadowFrameBuffer);
     glViewport(0, 0, SHADOWMAP_SIZE, SHADOWMAP_SIZE);
+}
+
+void LightComponent::BindShadowMap()
+{
+    glBindTexture(GL_TEXTURE_2D, mDepthTexture);
 }
 
 Component* LightComponent::clone() const

@@ -8,6 +8,7 @@
 #include "Managers/AssetManager.h"
 #include "Managers/EntityManager.h"
 #include "Resources/Mesh.h"
+#include "Utils/Logger.h"
 
 #include <glm.hpp>
 
@@ -34,6 +35,14 @@ void Renderer::Initialize()
         std::cin.get();
         std::exit(EXIT_FAILURE);  // Terminate program with failure status
     }
+    glGenTextures(1, &shadowMapTextureArray);
+    glBindTexture(GL_TEXTURE_2D_ARRAY, shadowMapTextureArray);
+    // Always set reasonable texture parameters
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    
 }
 
 void Renderer::Update(float deltaTime)
@@ -50,7 +59,7 @@ void Renderer::Update(float deltaTime)
 
         // TODO: Create copy of Scene Graph/Entity manager to avoid race conditions with other threads
         // TODO: Revision, change such that renderables are taken and threads are spun up to do tasks within Renderer.
-        
+
         // Set FrameBuffer
         int width, height;
         glfwGetWindowSize(windowRef->GetWindow(), &width, &height);
@@ -64,12 +73,13 @@ void Renderer::Update(float deltaTime)
         //Perform Post Processing
         //Draw Frame Buffer
         WriteToFrameBuffer();
+        // Swap window buffers. can be moved to post update
+        windowRef->SwapWindowBuffers();
     }
 
-    // Swap window buffers. can be moved to post update
-    windowRef->SwapWindowBuffers();
 
-    for (auto ptr : renderablesThisFrame){
+    for (auto ptr : renderablesThisFrame)
+    {
         delete ptr;
     }
     renderablesThisFrame.clear();
@@ -83,6 +93,7 @@ void Renderer::RenderToFrame(int pWidth, int pHeight)
     // Clear color and depth buffers for set Framebuffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
 
@@ -141,13 +152,14 @@ void Renderer::IssueMeshDrawCalls()
 void Renderer::SetEngineUBO(int pWidth, int pHeight)
 {
     std::vector<glm::mat4> lightMatricies;
+    
     for (auto lightComponent : lightsThisFrame)
     {
         lightMatricies.push_back(lightComponent->GenerateMatrix(lightComponent->entity->transform));
     }
 
-    shaderStorageBufferObject.SendBlocks(lightMatricies.data(), lightMatricies.size() * sizeof(glm::mat4));
-    shaderStorageBufferObject.Bind(0);
+    mLightMatriciesSSBO.SendBlocks(lightMatricies.data(), lightMatricies.size() * sizeof(glm::mat4));
+    mLightMatriciesSSBO.Bind(0);
 
     // CAMERA =====================
     CameraComponent* cameraComponent = dynamic_cast<CameraComponent*>(mainCameraEntity->getComponent(ComponentType::Camera));
@@ -165,23 +177,21 @@ void Renderer::SetEngineUBO(int pWidth, int pHeight)
             mainCameraEntity->transform->getWorldPosition()
         );
     }
+
+    BindShadowMaps();
 }
 
 void Renderer::GenerateShadowMaps()
 {
-    for (auto lightComponent : lightsThisFrame)
+    std::vector<glm::mat4> lightViewMatricies(lightsThisFrame.size());
+    std::vector<char> lightEnabled(lightsThisFrame.size());
+
+    glBindTexture(GL_TEXTURE_2D_ARRAY, shadowMapTextureArray);
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_DEPTH_COMPONENT16, 1024, 1024, lightsThisFrame.size());
+    for (int i = 0; i < lightsThisFrame.size(); ++i)
     {
-        if (!lightComponent->GetCreatesShadows()) continue;
+        auto lightComponent = lightsThisFrame[i];
 
-        lightComponent->BindShadowMap();
-
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glEnable(GL_CULL_FACE);
-        glEnable(GL_DEPTH_TEST);
-        glDepthFunc(GL_LESS);
-        glCullFace(GL_BACK);
-
-        mShadowMapShader->Use();
         glm::vec3 lightPosition = lightComponent->entity->transform->getWorldPosition();
         glm::quat lightOrientation = lightComponent->entity->transform->getWorldOrientation();
 
@@ -190,12 +200,26 @@ void Renderer::GenerateShadowMaps()
 
         glm::mat4 viewMatrix = rotationMatrix * translationMatrix;
         mEngineUniformBuffer.SetCameraMatrices(
-            //glm::lookAt(glm::vec3(0.5f, 2, 2), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)),
+            //glm::lookAt(lightComponent->entity->transform->getWorldPosition(), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)),
             viewMatrix,
-            glm::ortho<float>(-10, 10, -10, 10, -10, 20),
+            glm::ortho<float>(-10, 10, -10, 10, -10, 20), // ortho projection
             lightComponent->entity->transform->getWorldPosition()
         );
 
+
+        if (!lightComponent->GetCreatesShadows()) continue;
+        lightViewMatricies[0] = glm::ortho<float>(-10, 10, -10, 10, -10, 20) * viewMatrix;// glm::lookAt(lightComponent->entity->transform->getWorldPosition(), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+        lightEnabled[i] = 1;
+        
+        lightComponent->BindShadowFrameBuffer();
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glEnable(GL_CULL_FACE);
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
+        glCullFace(GL_FRONT);
+
+        mShadowMapShader->Use();
         for (auto renderable : renderablesThisFrame)
         {
             glm::mat4 modelMatrix = renderable->worldTransform->getTransformMatrix();
@@ -203,7 +227,22 @@ void Renderer::GenerateShadowMaps()
             mEngineUniformBuffer.SetSubData(modelMatrix, 0);
             renderable->mesh->Draw();
         }
+
+        glCopyImageSubData(
+            lightComponent->GetShadowMapID(), GL_TEXTURE_2D, 0, 0, 0, 0,
+            shadowMapTextureArray, GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0,
+            1024, 1024, 1);
     }
+    mLightViewsSSBO.SendBlocks(lightViewMatricies.data(), lightViewMatricies.size() * sizeof(glm::mat4));
+    mLightsEnabledSSBO.SendBlocks(lightEnabled.data(), lightEnabled.size() * sizeof(bool));
+    mLightViewsSSBO.Bind(1);
+    mLightsEnabledSSBO.Bind(2);
+}
+
+void Renderer::BindShadowMaps()
+{
+    glActiveTexture(GL_TEXTURE31);
+    glBindTexture(GL_TEXTURE_2D_ARRAY, shadowMapTextureArray);
 }
 
 void Renderer::FetchLights()
@@ -220,13 +259,13 @@ void Renderer::FetchLights()
 
 }
 
-void Renderer::FetchSkybox() 
+void Renderer::FetchSkybox()
 {
     auto skyboxID = Core::getInstance().GetScene()->GetSkyboxID();
     skyboxThisFrame = AssetManager::GetInstance().GetSkyboxByID(skyboxID);
 }
 
-void Renderer::FetchRenderables() 
+void Renderer::FetchRenderables()
 {
     ComponentMask renderableComponentMask;
     // TODO: Add Materials to this.
@@ -244,7 +283,7 @@ void Renderer::FetchRenderables()
         Material* materialComponent = nullptr;
 
         Renderable* renderable = new Renderable(transformComponent);
-        if (meshComponent != nullptr && meshComponent->getMesh() != nullptr) 
+        if (meshComponent != nullptr && meshComponent->getMesh() != nullptr)
         {
             renderable->mesh = meshComponent->getMesh();
         }

@@ -73,7 +73,10 @@ private:
     FrameBuffer mFrameBuffer;
 
     UniformBuffer mEngineUniformBuffer;
-    ShaderStorageBuffer shaderStorageBufferObject;
+    ShaderStorageBuffer mLightMatriciesSSBO;
+    ShaderStorageBuffer mLightViewsSSBO;
+    ShaderStorageBuffer mLightsEnabledSSBO;
+    GLuint shadowMapTextureArray;
 
     std::vector<LightComponent*> lightsThisFrame;
     std::vector<Renderable*> renderablesThisFrame;
@@ -82,4 +85,5 @@ private:
     void IssueMeshDrawCalls();
     void SetEngineUBO(int pWidth, int pHeight);
     void GenerateShadowMaps();
+    void BindShadowMaps();
 };

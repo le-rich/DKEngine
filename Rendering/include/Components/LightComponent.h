@@ -56,8 +56,10 @@ public:
     inline float GetQuadratic() const { return mQuadratic; }
     inline float GetCutoff() const { return mCutoff; }
     inline float GetOuterCutoff() const { return mOuterCutoff; }
-    inline float GetCreatesShadows() const { return mCreatesShadows; }
+    inline bool GetCreatesShadows() const { return mCreatesShadows; }
     inline LightType GetType() const { return mType; }
+
+    inline GLuint GetShadowMapID() const { return mDepthTexture; }
 
     inline void SetColor(glm::vec4 pColor) { mColor = pColor; }
     inline void SetIntensity(float pIntensity) { mIntensity = pIntensity; }
@@ -69,6 +71,7 @@ public:
     inline void SetType(LightType pType) { mType = pType; }
 
     void SetParams(LightParams pParams);
+    void BindShadowFrameBuffer();
     void BindShadowMap();
 
     virtual Component* clone() const override;
