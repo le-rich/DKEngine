@@ -9,14 +9,14 @@ class OrbitScript;
 
 struct GarageScriptParams : ScriptParams
 {
-    OrbitScript* orbitScript = nullptr;
-    bool carHasBeenSelected = false;
-    TransformComponent* selectedTarget = nullptr;
-    std::vector<Entity*> cars = std::vector<Entity*>();
+    OrbitScript* mOrbitScript = nullptr;
+    bool mIsCarSelected = false;
+    TransformComponent* mChosenTarget = nullptr;
+    std::vector<Entity*> mCars = std::vector<Entity*>();
     int currSelectIndex = 0;
 
-    std::function<void(Input::ActionType)> orbitKeyCallback;
-    std::function<void(Input::ActionType)> selectionKeyCallback;
+    std::function<void(Input::ActionType)> mSelectCallback;
+    std::function<void(Input::ActionType)> mChooseCallback;
 };
 
 class GarageScript : public Script
@@ -34,9 +34,9 @@ public:
     }
 
     // key callback bindings
-    void bindOrbitKey();
-    void bindSelectionKey();
-    void unbindAllControls();
+    void BindSelectKey();
+    void BindChooseKey();
+    void UnbindAllControls();
 
     void SelectNextCar(); // selects next car in meatspin (only one-way through list)
     void ChooseCar(); // prompts currently selected car for race
