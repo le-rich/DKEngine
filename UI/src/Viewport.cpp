@@ -1,8 +1,14 @@
 #include "../include/Viewport.h"
 #include "Renderer.h"
+#include "../include/UI.h"
 
 void drawViewport(const FrameBuffer* framebuffer) {
    ImGui::Begin("Viewport");
+
+   bool play = !UI::isPaused();
+   if (ImGui::Checkbox("Play", &play)) {
+      UI::setPaused(!play);
+   }
 
    ImVec2 availableSize = ImGui::GetContentRegionAvail();
    float aspectRatio = (float)framebuffer->getBufferWidth() / (float)framebuffer->getBufferHeight();
