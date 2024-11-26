@@ -12,6 +12,8 @@ protected:
 	std::shared_ptr<AE86::RigidBody> rb;
 
 public:
+	std::shared_ptr<AE86::RigidBody> getRigidBody();
+
 	// init to a default mass like unity?
 	RigidBodyComponent(Entity* mEntity, std::shared_ptr<AE86::RigidBody> rigidBody, float mass = 1.0f);
 	

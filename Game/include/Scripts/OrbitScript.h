@@ -11,6 +11,7 @@ struct OrbitScriptParams : ScriptParams
     float m_Radius = 2;
     float m_Speed = 1.5f;
     float currentAngle = 0;
+    
 };
 
 class OrbitScript : public Script
@@ -28,6 +29,8 @@ public:
     {
         return std::make_unique<OrbitScript>(*this);
     }
+
+    TransformComponent* getCurrentTarget();
 
 private:
     OrbitScriptParams mParams{};

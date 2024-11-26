@@ -36,6 +36,9 @@
     <ClInclude Include="include\Scripts\LapCheckpointScript.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Scripts\GarageScript.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Scripts\OrbitScript.cpp">
@@ -54,6 +57,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Scripts\LapCheckpointScript.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scripts\GarageScript.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
