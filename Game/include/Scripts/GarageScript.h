@@ -43,6 +43,6 @@ public:
     void leaveGarage(); // transport car to track
 private:
     GarageScriptParams mParams{};
-
+    float unSelectedPosX = -10.0f; // remove later
     
 };

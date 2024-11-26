@@ -243,7 +243,7 @@
     {
       "name": "TestCar2",
       "transform": {
-        "localPosition": [ -2, 0, 0 ],
+        "localPosition": [ -8, 0, 0 ],
         "localOrientation": [],
         "localScale": [ 0.4, 0.4, 0.4 ]
       },

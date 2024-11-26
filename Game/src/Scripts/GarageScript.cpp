@@ -62,11 +62,20 @@ void GarageScript::UnbindAllControls()
 
 void GarageScript::SelectNextCar()
 {
+    int previousIndex = mParams.currSelectIndex;
     ++mParams.currSelectIndex;
     if (mParams.currSelectIndex > (mParams.mCars.size() - 1))
     {
         mParams.currSelectIndex = 0;
     }
+    
+    // TODO: Unity-like behaviour with enabling/disabling entities instead of moving
+    
+    // move prev car out pedestal
+    mParams.mCars[previousIndex]->transform->setWorldPosition(glm::vec4(unSelectedPosX, 0.f, 0.f, 0.f));
+    // move new curr car to pedestal
+    mParams.mCars[mParams.currSelectIndex]->transform->setWorldPosition(glm::vec4(0.f, 0.f, 0.f, 0.f));
+    // set orbit target to new curr car
     mParams.mOrbitScript->setOrbitTarget(mParams.mCars[mParams.currSelectIndex]->transform);
 }
 
