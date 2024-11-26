@@ -35,7 +35,7 @@ public:
 	// This may or may not need to be thread safe. There's conflicting information about it.
 	inline void SwapWindowBuffers()
 	{
-		//std::lock_guard<std::mutex> lock(mMutex);
+		std::lock_guard<std::mutex> lock(mMutex);
 		SetWindowToCurrentThread();
 		glfwSwapBuffers(mWindow);
 		glfwMakeContextCurrent(NULL);

@@ -8,7 +8,6 @@
 #include "Managers/AssetManager.h"
 #include "Managers/EntityManager.h"
 #include "Resources/Mesh.h"
-#include "Utils/Logger.h"
 
 #include <glm.hpp>
 
@@ -48,17 +47,16 @@ void Renderer::Initialize()
 void Renderer::Update(float deltaTime)
 {
     // TODO: Collect set of renderables here and use it.
+    // TODO: Lock Enttiies while grabbing
     FetchRenderables();
     FetchLights();
     FetchSkybox();
     {
         std::lock_guard<std::mutex> lock(windowRef->mMutex);
         windowRef->SetWindowToCurrentThread();
-        //Generate ShadowMaps
-        GenerateShadowMaps();
 
-        // TODO: Create copy of Scene Graph/Entity manager to avoid race conditions with other threads
         // TODO: Revision, change such that renderables are taken and threads are spun up to do tasks within Renderer.
+        GenerateShadowMaps();
 
         // Set FrameBuffer
         int width, height;
@@ -73,10 +71,9 @@ void Renderer::Update(float deltaTime)
         //Perform Post Processing
         //Draw Frame Buffer
         WriteToFrameBuffer();
-        // Swap window buffers. can be moved to post update
-        windowRef->SwapWindowBuffers();
     }
 
+    windowRef->SwapWindowBuffers();
 
     for (auto ptr : renderablesThisFrame)
     {
@@ -143,7 +140,6 @@ void Renderer::IssueMeshDrawCalls()
 
             if (meshComponent != nullptr)
             {
-                // TODO: Bug Physics/Core on way to get modelMatrix directly from transform
                 glm::mat4 modelMatrix = entity->transform->getTransformMatrix();
                 mEngineUniformBuffer.SetSubData(modelMatrix, 0);
                 meshComponent->getMesh()->DrawWithOwnMaterial();
@@ -180,7 +176,7 @@ void Renderer::GenerateShadowMaps()
 
     std::vector<glm::mat4> lightMatricies(numOfLights);
     std::vector<glm::mat4> lightViewMatricies(numOfLights);
-    std::vector<glm::mat4> lightEnabled(numOfLights);
+    std::vector<glm::mat4> lightEnabled(numOfLights); // I also hate this but the SSBO fields not generated properly with bool, int, or vec2 types
 
     glBindTexture(GL_TEXTURE_2D_ARRAY, shadowMapTextureArray);
     glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_DEPTH_COMPONENT16, 1024, 1024, numOfLights);
@@ -199,11 +195,11 @@ void Renderer::GenerateShadowMaps()
         glm::mat4 projectionMatrix;
         if (lightComponent->GetType() == LightType::DirectionalLight)
         {
-            projectionMatrix = glm::ortho<float>(-10, 10, -10, 10, 1.f, 7.5f); // ortho projection
+            projectionMatrix = glm::ortho<float>(-10, 10, -10, 10, 1.f, 7.5f);
         }
         else
         {
-            projectionMatrix = glm::perspective(glm::radians(45.0f), (GLfloat)1024 / (GLfloat)1024, 1.f, 7.5f); // ortho projection
+            projectionMatrix = glm::perspective(glm::radians(45.0f), (GLfloat)1024 / (GLfloat)1024, 1.f, 7.5f);
         }
 
         mEngineUniformBuffer.SetCameraMatrices(
@@ -215,7 +211,7 @@ void Renderer::GenerateShadowMaps()
 
         lightEnabled[i] = glm::mat4(lightComponent->GetCreatesShadows());
         if (!lightEnabled[i][0][0]) continue;
-        lightViewMatricies[i] = projectionMatrix * viewMatrix;// glm::lookAt(lightComponent->entity->transform->getWorldPosition(), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+        lightViewMatricies[i] = projectionMatrix * viewMatrix;
         lightComponent->BindShadowFrameBuffer();
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -278,8 +274,6 @@ void Renderer::FetchRenderables()
 {
     ComponentMask renderableComponentMask;
     // TODO: Add Materials to this.
-    size_t mask = static_cast<size_t>(ComponentType::Mesh) | static_cast<size_t>(ComponentType::Transform);
-    //renderableComponentMask |= renderableComponentMask.set(mask);
     renderableComponentMask.set(static_cast<size_t>(ComponentType::Mesh));
     renderableComponentMask.set(static_cast<size_t>(ComponentType::Transform));
     auto renderableEntities = EntityManager::getInstance().findEntitiesContainingComponentMask(renderableComponentMask);

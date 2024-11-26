@@ -158,7 +158,6 @@ namespace SceneParser
 
         LightComponent* lightComponent = new LightComponent(pEntity, lightParams);
         pEntity->addComponent(*lightComponent);
-        //lightComponent->SetParams(lightParams);
     }
 
     void ParseScript(Entity* pEntity, json pScriptParams)
