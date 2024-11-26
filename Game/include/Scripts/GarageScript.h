@@ -2,6 +2,9 @@
 
 #include <glad/glad.h>
 #include "Script.h"
+#include "Input.h"
+
+#include <functional>
 
 class OrbitScript;
 
@@ -12,6 +15,9 @@ struct GarageScriptParams : ScriptParams
     TransformComponent* selectedTarget = nullptr;
     std::vector<Entity*> cars = std::vector<Entity*>();
     int currSelectIndex = 0;
+
+    std::function<void(Input::ActionType)> orbitKeyCallback;
+    std::function<void(Input::ActionType)> selectionKeyCallback;
 };
 
 class GarageScript : public Script
@@ -31,6 +37,7 @@ public:
     // key callback bindings
     void bindOrbitKey();
     void bindSelectionKey();
+    void unbindAllControls();
 
     void SelectNextCar(); // selects next car in meatspin (only one-way through list)
     void ChooseCar(); // prompts currently selected car for race

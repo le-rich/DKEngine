@@ -1,19 +1,21 @@
 #include "Scripts/GarageScript.h"
 #include "Scripts/OrbitScript.h"
-#include "Input.h"
 
 #include <glm.hpp>
 
 GarageScript::GarageScript(Entity* mEntity) : Script(mEntity)
 {
-    bindOrbitKey();
-    bindSelectionKey();
 }
 
 GarageScript::~GarageScript() {}
 
 void GarageScript::Update(float deltaTime)
 {
+    // hax since unbinding the same key within ('enter') selectionKeyCallback callback crashes
+    if (mParams.carHasBeenSelected)
+    {
+        unbindAllControls();
+    }
 }
 
 void GarageScript::SetParameters(ScriptParams* pScriptParameters)
@@ -24,25 +26,38 @@ void GarageScript::SetParameters(ScriptParams* pScriptParameters)
 void GarageScript::bindOrbitKey()
 {
     Input& input = Input::GetInstance();
-    
-    input.RegisterKeyCallback(GLFW_KEY_SPACE, [&](Input::ActionType action) {
+
+    mParams.orbitKeyCallback = [&](Input::ActionType action) {
         if (action == Input::PRESS) {
             this->SelectNextCar();
         }
-        });
+        };
+    
+    input.RegisterKeyCallback(GLFW_KEY_SPACE, mParams.orbitKeyCallback);
 }
 
 void GarageScript::bindSelectionKey() 
 {
-    // TODO: bind enter to selected the target
     Input& input = Input::GetInstance();
 
-    input.RegisterKeyCallback(GLFW_KEY_ENTER, [&](Input::ActionType action) {
+    mParams.selectionKeyCallback = [&](Input::ActionType action) {
         if (action == Input::PRESS) {
             this->ChooseCar();
-            if (mParams.selectedTarget) { this->leaveGarage(); }
+            if (mParams.selectedTarget) {
+                leaveGarage();
+            }
         }
-        });
+        };
+
+    input.RegisterKeyCallback(GLFW_KEY_ENTER, mParams.selectionKeyCallback);
+}
+
+void GarageScript::unbindAllControls()
+{
+    Input& input = Input::GetInstance();
+    
+    input.UnregisterKeyCallback(GLFW_KEY_ENTER, mParams.selectionKeyCallback);
+    input.UnregisterKeyCallback(GLFW_KEY_SPACE, mParams.orbitKeyCallback);
 }
 
 void GarageScript::SelectNextCar()
