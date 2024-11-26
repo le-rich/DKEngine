@@ -102,8 +102,9 @@ int run_glfw() {
             std::chrono::duration<float> deltaTime = currentTime - previousTime;
             deltaTimeFloatSeconds = deltaTime.count();
             previousTime = currentTime;
-
-            game->Update(deltaTimeFloatSeconds);
+            if (!ui->isPaused()) {
+               game->Update(deltaTimeFloatSeconds);
+            }
             std::this_thread::sleep_for(std::chrono::microseconds(1));
         }
     });
@@ -121,7 +122,7 @@ int run_glfw() {
             previousTime = currentTime;
             fixedUpdateBuffer += std::chrono::duration_cast<std::chrono::milliseconds>(deltaTime).count();
 
-            if (fixedUpdateBuffer >= FIXED_UPDATE_INTERVAL) {
+            if (fixedUpdateBuffer >= FIXED_UPDATE_INTERVAL && !ui->isPaused()) {
                 physics->FixedUpdate();
                 fixedUpdateBuffer -= FIXED_UPDATE_INTERVAL;
             }
