@@ -9,14 +9,14 @@ class OrbitScript;
 
 struct GarageScriptParams : ScriptParams
 {
-    OrbitScript* mOrbitScript = nullptr;
-    bool mIsCarSelected = false;
-    TransformComponent* mChosenTarget = nullptr;
-    std::vector<Entity*> mCars = std::vector<Entity*>();
+    OrbitScript* orbitScript = nullptr;
+    bool isCarSelected = false;
+    TransformComponent* chosenTarget = nullptr;
+    std::vector<Entity*> cars = std::vector<Entity*>();
     int currSelectIndex = 0;
 
-    std::function<void(Input::ActionType)> mSelectCallback;
-    std::function<void(Input::ActionType)> mChooseCallback;
+    std::function<void(Input::ActionType)> selectCallback;
+    std::function<void(Input::ActionType)> chooseCallback;
 };
 
 class GarageScript : public Script
