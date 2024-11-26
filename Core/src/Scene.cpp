@@ -1,3 +1,5 @@
+#pragma once
+
 #include <vector>
 
 #include "Scene.h"
@@ -9,10 +11,12 @@
 #include "Managers/EntityManager.h"
 #include "Components/MeshComponent.h"
 #include "Components/ScriptComponent.h"
+#include "GarageScript.h"
 #include "OrbitScript.h"
 #include "TimerScript.h"
 #include "LapManagerScript.h"
 #include "LapCheckpointScript.h"
+//#include "Input.h"
 
 Scene::Scene()
 {
@@ -28,7 +32,32 @@ Scene::~Scene()
 void Scene::SpawnSceneDefinition()
 {
     SceneParser::LoadScene(SCENE_FILE);
-    //createGameManager(); // GameManager currently setup via SceneJSON
+
+    auto* entityManager = &(EntityManager::getInstance());
+
+    // Garage Room
+    Entity* garageRoomController = new Entity();
+    garageRoomController->SetDisplayName("Garage Controller");
+    EntityManager::getInstance().Instantiate(garageRoomController);
+
+    // spin
+    auto cameraEnt = entityManager->findFirstEntityByDisplayName("Main Camera");
+    auto orb = dynamic_cast<ScriptComponent*>(cameraEnt->getComponent(ComponentType::Script));
+    auto orbScript = orb->GetScript<OrbitScript>();
+
+    auto garageRoomEnt = entityManager->findFirstEntityByDisplayName("Garage Controller");
+    ScriptComponent* garageScriptComponent = new ScriptComponent(garageRoomEnt);
+    GarageScriptParams garageParams;
+    garageParams.orbitScript = orbScript;
+    garageParams.cars.push_back(entityManager->findFirstEntityByDisplayName("Test Car"));
+    garageParams.cars.push_back(entityManager->findFirstEntityByDisplayName("TestCar2"));
+    garageParams.chosenTarget = garageParams.cars[0]->transform;
+
+    garageScriptComponent->CreateAndAddScript<GarageScript>(&garageParams);
+    garageRoomEnt->addComponent(*garageScriptComponent);
+    auto garageScript = garageScriptComponent->GetScript<GarageScript>();
+    garageScript->BindSelectKey();
+    garageScript->BindChooseKey();
 }
 
 void Scene::createGameManager()
@@ -43,8 +72,12 @@ void Scene::createGameManager()
     ScriptComponent* gameManagerScriptComponent = new ScriptComponent(gameManagerEnt);
     gameManagerEnt->addComponent(*gameManagerScriptComponent);
 
-    TimerScriptParams timerParams;
     auto carEnt = entityManager->findFirstEntityByDisplayName("Test Car");
+
+    ScriptComponent* timerScriptComponent = new ScriptComponent(gameManagerEnt);
+    gameManagerEnt->addComponent(*timerScriptComponent);
+
+    TimerScriptParams timerParams;
     timerParams.m_TimerTarget = carEnt->transform;
     timerParams.m_OriginalPosition = carEnt->transform->getWorldPosition();
     gameManagerScriptComponent->CreateAndAddScript<TimerScript>(&timerParams);

@@ -110,7 +110,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Core\include;$(SolutionDir)UI\include;$(SolutionDir)Rendering\include;$(SolutionDir)Physics\include;$(SolutionDir)Game\include;$(SolutionDir)External\glm;$(SolutionDir)External\glm\gtc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\GLFW\include;$(SolutionDir)External\glad\include;$(SolutionDir)Core\include;$(SolutionDir)UI\include;$(SolutionDir)Rendering\include;$(SolutionDir)Physics\include;$(SolutionDir)Game\include;$(SolutionDir)External\glm;$(SolutionDir)External\glm\gtc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -126,7 +126,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Core\include;$(SolutionDir)UI\include;$(SolutionDir)Rendering\include;$(SolutionDir)Physics\include;$(SolutionDir)Game\include;$(SolutionDir)External\glm;$(SolutionDir)External\glm\gtc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\GLFW\include;$(SolutionDir)Core\include;$(SolutionDir)UI\include;$(SolutionDir)Rendering\include;$(SolutionDir)Physics\include;$(SolutionDir)Game\include;$(SolutionDir)External\glm;$(SolutionDir)External\glm\gtc;$(SolutionDir)External\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -140,6 +140,7 @@
     <ClInclude Include="include\Components\ScriptComponent.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\Script.h" />
+    <ClInclude Include="include\Scripts\GarageScript.h" />
     <ClInclude Include="include\Scripts\LapCheckpointScript.h" />
     <ClInclude Include="include\Scripts\LapManagerScript.h" />
     <ClInclude Include="include\Scripts\OrbitScript.h" />
@@ -148,6 +149,7 @@
   <ItemGroup>
     <ClCompile Include="src\Components\ScriptComponent.cpp" />
     <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\Scripts\GarageScript.cpp" />
     <ClCompile Include="src\Scripts\LapCheckpointScript.cpp" />
     <ClCompile Include="src\Scripts\LapManagerScript.cpp" />
     <ClCompile Include="src\Scripts\OrbitScript.cpp" />
