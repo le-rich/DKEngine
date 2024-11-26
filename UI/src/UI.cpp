@@ -4,6 +4,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+bool UI::paused = false;
+
 UI::UI(Scene* scene, const FrameBuffer* framebuffer, GLFWwindow* glfwWindow) {
 
    this->scene = scene;
