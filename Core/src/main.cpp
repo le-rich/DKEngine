@@ -136,7 +136,7 @@ int run_glfw() {
                 fixedUpdateBuffer -= FIXED_UPDATE_INTERVAL;
             }
             std::this_thread::sleep_for(std::chrono::microseconds(1));
-        	audioManager->Update(0.0);
+        	audioManager->Update(deltaTimeFloatSeconds);
         }
     });
 
