@@ -78,7 +78,8 @@ void drawHierarchyLine(Entity* entity) {
                     consoleLog("Found parent for GameObject: " + selectedEntity->GetDisplayName() + ", Parent: " + selectedEntity->getParent()->GetDisplayName());
 
                     consoleLog("Deleting child object with ID: " + selectedEntity->GetEntityID().str() + " from parent: " + selectedEntity->getParent()->GetDisplayName());
-                    selectedEntity->getParent()->removeChild(selectedEntity);
+
+                    EntityManager::getInstance().removeEntity(*selectedEntity);
 
                     // Log to confirm child removal process initiated
                     consoleLog("Child object removed from parent: " + selectedEntity->GetDisplayName());

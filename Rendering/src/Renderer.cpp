@@ -123,14 +123,16 @@ void Renderer::IssueMeshDrawCalls()
     for (auto& uuid : meshComponentUUIDs)
     {
         auto entity = EntityManager::getInstance().getEntity(uuid);
-        MeshComponent* meshComponent = dynamic_cast<MeshComponent*>(entity->getComponent(ComponentType::Mesh));
+        if (entity != nullptr) {
+           MeshComponent* meshComponent = dynamic_cast<MeshComponent*>(entity->getComponent(ComponentType::Mesh));
 
-        if (meshComponent != nullptr)
-        {
-            // TODO: Bug Physics/Core on way to get modelMatrix directly from transform
-            glm::mat4 modelMatrix = entity->transform->getTransformMatrix();
-            mEngineUniformBuffer.SetSubData(modelMatrix, 0);
-            meshComponent->getMesh()->Draw();
+           if (meshComponent != nullptr)
+           {
+              // TODO: Bug Physics/Core on way to get modelMatrix directly from transform
+              glm::mat4 modelMatrix = entity->transform->getTransformMatrix();
+              mEngineUniformBuffer.SetSubData(modelMatrix, 0);
+              meshComponent->getMesh()->Draw();
+           }
         }
     }
 }
