@@ -49,7 +49,7 @@ public:
         auto it = entityMap.find(eID);
         if (it != entityMap.end())
         {
-            entityMap.erase(it);
+           removeEntity(*(it->second));
         }
     }
 
@@ -59,6 +59,12 @@ public:
         auto it = entityMap.find(eID);
 
         if (it != entityMap.end()) {
+           while (it->second->getChildren().size() != 0) {
+              Entity* child = it->second->getChildren()[0];
+              removeEntity(*child);
+              child->getParent()->removeChild(child);
+           }
+           it->second->getParent()->removeChild(it->second);
             entityMap.erase(it);
         }
         else {
