@@ -281,5 +281,12 @@ void drawScriptComponent(Component* component)
    if (ImGui::CollapsingHeader("Script", ImGuiTreeNodeFlags_DefaultOpen)) {
       ScriptComponent* script = static_cast<ScriptComponent*>(component);
       int sectionWidth = 100;
+
+      ImGui::SetNextItemWidth(sectionWidth);
+      int count = script->getScriptCount();
+      ImGui::Text("Count");
+      ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - sectionWidth);
+      ImGui::SameLine(sectionWidth);
+      ImGui::Text(std::to_string(count).c_str());
    }
 }
