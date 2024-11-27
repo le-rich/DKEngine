@@ -1,4 +1,5 @@
 #include "Scripts/LapCheckpointScript.h"
+#include "../../../Core/include/Managers/EntityManager.h"
 
 LapCheckpointScript::LapCheckpointScript(Entity* mEntity) : Script(mEntity)
 {
@@ -21,9 +22,20 @@ void LapCheckpointScript::Update(float deltaTime)
 
 	if (!mParams.m_Registered && mParams.m_SelfBB->CheckCollision(*mParams.m_OtherBB))
 	{
+		std::vector<Entity*> children = entity->getChildren();
+		for (Entity* child : children) {
+			Component* c = child->getComponent(ComponentType::Mesh);
+			if (c)
+				child->removeComponent(*c);
+		}
+
 		mParams.m_LapManager->OnCheckpointTriggered(mParams.m_Index);
 	}
 }
+
+void LapCheckpointScript::addVisualIndicator(Entity* checkpointVisualEnt) {
+}
+
 
 void LapCheckpointScript::SetParameters(ScriptParams* pScriptParameters)
 {

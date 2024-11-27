@@ -9,7 +9,8 @@ enum class ScriptType
     OrbitScript = 0,
     TimerScript,
     LapCheckpointScript,
-    LapManagerScript
+    LapManagerScript,
+    GarageScript
 };
 
 std::unordered_map<std::string, ScriptType> const ScriptMap = {

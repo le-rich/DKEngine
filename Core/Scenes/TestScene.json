@@ -1,7 +1,7 @@
 {
   "assets": [
     {
-      "path": "TestAE2/",
+      "path": "TestAE3/",
       "file": [ "ae86.gltf" ]
     },
     {
@@ -30,15 +30,6 @@
           "type": "Script",
           "params": {
             "scripts": [
-              {
-                "script": "OrbitScript",
-                "params": {
-                  "target": "Test Car",
-                  "radius": 2,
-                  "speed": 1.5,
-                  "currentAngle": 0
-                }
-              }
             ]
           }
         }
@@ -178,7 +169,7 @@
     {
       "name": "Checkpoint 1",
       "transform": {
-        "localPosition": [],
+        "localPosition": [0, 0, 2.5],
         "localOrientation": [],
         "localScale": []
       },
@@ -202,7 +193,7 @@
     {
       "name": "Checkpoint 2",
       "transform": {
-        "localPosition": [ -1.25, 0, 0 ],
+        "localPosition": [ 0, 0, 8.5 ],
         "localOrientation": [],
         "localScale": []
       },
