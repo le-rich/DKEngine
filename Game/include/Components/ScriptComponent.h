@@ -55,6 +55,8 @@ public:
         }
     }
 
+    int getScriptCount() { return scripts.size(); }
+
     ScriptComponent& operator=(ScriptComponent& const other);
 
 private:

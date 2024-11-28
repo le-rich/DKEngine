@@ -12,9 +12,13 @@ protected:
 	std::shared_ptr<AE86::RigidBody> rb;
 
 public:
-	// RB Component Constructor at Scene Time
-	RigidBodyComponent(Entity* mEntity, std::shared_ptr<AE86::RigidBody> rigidBody, float mass = 1.0f);
+	std::shared_ptr<AE86::RigidBody> getRigidBody();
 
+	// init to a default mass like unity?
+	RigidBodyComponent(Entity* mEntity, std::shared_ptr<AE86::RigidBody> rigidBody, float mass = 1.0f);
+	
+	// constructor that creates an empty rigidbody
+	RigidBodyComponent(Entity* mEntity);
 	~RigidBodyComponent();
 
 	// getters and setters
@@ -23,8 +27,6 @@ public:
 
 	const glm::vec3 getVelocity() const;
 	void setVelocity(const glm::vec3& velocity);
-
-	std::shared_ptr<AE86::RigidBody> getRigidBody();
 
 	/** 
 	 *  The current force applied to the object across the 3 cardinal

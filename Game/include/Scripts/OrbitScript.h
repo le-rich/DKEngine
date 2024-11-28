@@ -7,7 +7,6 @@
 struct OrbitScriptParams : ScriptParams
 {
     TransformComponent* m_OrbitTarget = nullptr;
-    TransformComponent* m_OrbitTarget2 = nullptr;
 
     float m_Radius = 2;
     float m_Speed = 1.5f;
@@ -31,7 +30,6 @@ public:
         return std::make_unique<OrbitScript>(*this);
     }
 
-    void swapOrbitTargets();
     TransformComponent* getCurrentTarget();
 
 private:

@@ -24,6 +24,10 @@ struct CarControllerScriptParams : ScriptParams
 	float m_DifferentialRatio;
 	float m_TireGrip;
 	float m_CorneringStiffness;
+	float m_WheelFL;
+	float m_WheelFR;
+	float m_WheelRR;
+	float m_WheelRL;
 };
 
 class CarControllerScript : public Script

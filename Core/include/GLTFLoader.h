@@ -233,7 +233,7 @@ namespace GLTFLoader
     {
         int imageIndex = pTexture.source;
         tinygltf::Image image = pGltfModel.images[imageIndex];
-        std::shared_ptr<Texture> texture = std::make_shared<Texture>(pSourceFolder + image.uri);
+        std::shared_ptr<Texture> texture = std::make_shared<Texture>(pSourceFolder, image.uri);
         AssetManager::GetInstance().AddTexture(texture);
         return texture;
     }

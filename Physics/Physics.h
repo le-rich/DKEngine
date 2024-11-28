@@ -36,7 +36,7 @@ public:
        }
 
         world.startFrame();
-	}
+    }
 
     const char* GetName() const override {
         return "Physics";

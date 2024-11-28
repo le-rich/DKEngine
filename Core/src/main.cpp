@@ -82,8 +82,8 @@ int run_glfw() {
     Entity* cameraEnt = EntityManager::getInstance().findFirstEntityByDisplayName("Main Camera");
 
 	TransformComponent* CAR_TRANSFORM = testCarEntity->transform;
-    auto glfwWindow = window.GetWindow();
-    
+   auto glfwWindow = window.GetWindow();
+
     Physics* physics = new Physics();
     Renderer* renderer = new Renderer(&window);
     UI* ui = new UI(Core::getInstance().GetScene(), renderer->GetFrameBuffer(), glfwWindow);
@@ -118,8 +118,9 @@ int run_glfw() {
             std::chrono::duration<float> deltaTime = currentTime - previousTime;
             deltaTimeFloatSeconds = deltaTime.count();
             previousTime = currentTime;
-
-            game->Update(deltaTimeFloatSeconds);
+            if (!ui->isPaused()) {
+               game->Update(deltaTimeFloatSeconds);
+            }
             std::this_thread::sleep_for(std::chrono::microseconds(1));
         }
     });
@@ -136,7 +137,7 @@ int run_glfw() {
                 previousTime = currentTime;
                 fixedUpdateBuffer += std::chrono::duration_cast<std::chrono::milliseconds>(deltaTime).count();
 
-                if (fixedUpdateBuffer >= PHYSICS_UPDATE_INTERVAL) {
+                if (fixedUpdateBuffer >= PHYSICS_UPDATE_INTERVAL && !ui->isPaused()) {
                     physics->FixedUpdate();
                     fixedUpdateBuffer -= PHYSICS_UPDATE_INTERVAL;
                 }

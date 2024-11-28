@@ -49,13 +49,8 @@ void drawHierarchyLine(Entity* entity) {
         if (ImGui::MenuItem("Create Child GameObject")) {
             std::string childName = "New Entity";
             Entity* childObject = new Entity(childName);
+            EntityManager::getInstance().addEntityToMap(*childObject);
             entity->addChild(childObject);
-        }
-        if (ImGui::MenuItem("Add Component")) {
-            if (selectedEntity) {
-                //TODO Add component code here
-                consoleLog("Added Transform component to " + selectedEntity->GetDisplayName());
-            }
         }
 
         if (ImGui::MenuItem("Rename")) {
@@ -65,7 +60,9 @@ void drawHierarchyLine(Entity* entity) {
         }
 
         if (ImGui::MenuItem("Duplicate")) {
-           EntityManager::getInstance().duplicateEntity(entity);
+           if (selectedEntity != rootEntity) {
+              EntityManager::getInstance().duplicateEntity(entity);
+           }
         }
 
         if (ImGui::MenuItem("Delete GameObject")) {
@@ -78,7 +75,8 @@ void drawHierarchyLine(Entity* entity) {
                     consoleLog("Found parent for GameObject: " + selectedEntity->GetDisplayName() + ", Parent: " + selectedEntity->getParent()->GetDisplayName());
 
                     consoleLog("Deleting child object with ID: " + selectedEntity->GetEntityID().str() + " from parent: " + selectedEntity->getParent()->GetDisplayName());
-                    selectedEntity->getParent()->removeChild(selectedEntity);
+
+                    EntityManager::getInstance().removeEntity(*selectedEntity);
 
                     // Log to confirm child removal process initiated
                     consoleLog("Child object removed from parent: " + selectedEntity->GetDisplayName());

@@ -2,6 +2,7 @@
 #version 460 core
 
 layout(location = 0) in vec3 position;
+layout(location = 1) in vec3 normal;
 layout(location = 2) in vec2 texCoord;
 
 /* Global information sent by the engine */
@@ -13,23 +14,29 @@ layout (std140, binding = 0) uniform EngineUBO
     vec3    ubo_ViewPos;
 };
 
-out vec2 v_TexCoord;
-out vec3 v_WorldPos;
+out VS_OUT
+{
+    vec3 v_WorldPos;
+    vec2 v_TexCoord;
+}vs_out;
 
 void main()
 {
     vec4 worldPosition = ubo_Model * vec4(position, 1.0);
-    v_WorldPos = worldPosition.xyz;
+    vs_out.v_WorldPos = worldPosition.xyz;
 
     gl_Position = ubo_Projection * ubo_View * worldPosition;
-    v_TexCoord = texCoord;
+    vs_out.v_TexCoord = texCoord;
 }
 
 #shader fragment
 #version 460 core
 
-in vec2 v_TexCoord;
-in vec3 v_WorldPos;
+in VS_OUT
+{
+    vec3 v_WorldPos;
+    vec2 v_TexCoord;
+}fs_in;
 
 layout(std140, binding = 0) buffer LightSSBO
 {
@@ -47,6 +54,7 @@ vec3 gNormal = vec3(1.0f, 0.5f, 0.5f);
 vec2 gTexCoords;
 vec3 gViewDir;
 vec4 gDiffuseTexel;
+//vec4 gSpecularTexel;
 
 layout (location = 0) out vec4 FragColor;
 
@@ -84,8 +92,8 @@ vec3 CalculateDirectionalLight(mat4 plight)
 void main()
 {
     gNormal = normalize(gNormal);
-    gTexCoords = vec2(v_TexCoord);
-    gViewDir = normalize(v_WorldPos);
+    gTexCoords = vec2(fs_in.v_TexCoord);
+    gViewDir = normalize(fs_in.v_WorldPos);
     gDiffuseTexel  = texture(uDiffuseMap,  gTexCoords) * uDiffuse;
     vec3 lightSum = vec3(0.0);
     for (int i = 0; i < ssboLights.length(); ++i)

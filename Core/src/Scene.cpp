@@ -43,7 +43,7 @@ void Scene::SpawnSceneDefinition()
     EntityManager::getInstance().Instantiate(lightEntity);
     auto* entityManager = &(EntityManager::getInstance());
 
-    Entity* cameraEnt = entityManager->findFirstEntityByDisplayName("Main Camera");
+    //Entity* cameraEnt = entityManager->findFirstEntityByDisplayName("Main Camera");
 
     // TODO: JSONparser for Scene entities and scripts/components.
     // TODO: Figure out location and pathing of assets/non code files within solution
@@ -56,44 +56,46 @@ void Scene::SpawnSceneDefinition()
     GLTFLoader::LoadModelAsEntity(raceTrackEnt, MAP_SOURCE_FOLDER, MAP_MODEL_FILE);
     EntityManager::getInstance().Instantiate(raceTrackEnt);
 
-    raceTrackEnt->transform->setWorldPosition(glm::vec4(0.0f, -1.3f, 0.0f, 1.0f));
+    glm::vec4 trackPosition = glm::vec4(100.0f, 0.0f, 100.0f, 0.0f);
+
+    raceTrackEnt->transform->setWorldPosition(glm::vec4(0.0f, -1.3f, 0.0f, 1.0f) + trackPosition);
 
     Entity* carEnt = entityManager->findFirstEntityByDisplayName("Test Car");
 
     // TODO: make care controller params set-up method instead to clean up scene.cpp
-    RigidBodyComponent* rigidBodyComponent = new RigidBodyComponent(carEnt,
-        std::shared_ptr<AE86::RigidBody>(new AE86::RigidBody()),
-        1.0f);
-    carEnt->addComponent(*rigidBodyComponent);
-    ScriptComponent* carScriptComponent = new ScriptComponent(carEnt);
-    carEnt->addComponent(*carScriptComponent);
-    CarControllerScriptParams carParams;
-    // these are all stats for an AE86 (with a little bit of modification):
-    carParams.m_InverseMass =  1.0f / 1500.0f;
-    carParams.m_Height = 1.335f;
-    carParams.m_Width = 1.625f;
-    carParams.m_Length = 4.185f;
-    carParams.m_CGToFrontAxleDistance = 1.25f;
-    carParams.m_CGToRearAxleDistance = 1.25f;
-    carParams.m_CGHeight = 1.0f;
-    carParams.m_WheelBase = 2.50f;
-    carParams.m_WheelLength = 0.7f;
-    carParams.m_WheelWidth = 0.3f;
-    carParams.m_FrictionCoeff = 0.30f;
-    carParams.m_FrontalArea = 2.2f;
-    carParams.m_EngineForce = 8000.0f;
-    carParams.m_BrakeForce = 12000.0f;
-    carParams.m_DifferentialRatio = 3.42;
-    carParams.m_WheelRadius = 0.33f;
-    carParams.m_CorneringStiffness = -5.20f;
-    carParams.m_TireGrip = 2.0f;
-    carScriptComponent->CreateAndAddScript<CarControllerScript>(&carParams);
-    carScriptComponent->GetScript<CarControllerScript>()->SetUpInput();
+    // RigidBodyComponent* rigidBodyComponent = new RigidBodyComponent(carEnt,
+    //     std::shared_ptr<AE86::RigidBody>(new AE86::RigidBody()),
+    //     1.0f);
+    // carEnt->addComponent(*rigidBodyComponent);
+    // ScriptComponent* carScriptComponent = new ScriptComponent(carEnt);
+    // carEnt->addComponent(*carScriptComponent);
+    // CarControllerScriptParams carParams;
+    // // these are all stats for an AE86 (with a little bit of modification):
+    // carParams.m_InverseMass =  1.0f / 1500.0f;
+    // carParams.m_Height = 1.335f;
+    // carParams.m_Width = 1.625f;
+    // carParams.m_Length = 4.185f;
+    // carParams.m_CGToFrontAxleDistance = 1.25f;
+    // carParams.m_CGToRearAxleDistance = 1.25f;
+    // carParams.m_CGHeight = 1.0f;
+    // carParams.m_WheelBase = 2.50f;
+    // carParams.m_WheelLength = 0.7f;
+    // carParams.m_WheelWidth = 0.3f;
+    // carParams.m_FrictionCoeff = 0.30f;
+    // carParams.m_FrontalArea = 2.2f;
+    // carParams.m_EngineForce = 8000.0f;
+    // carParams.m_BrakeForce = 12000.0f;
+    // carParams.m_DifferentialRatio = 3.42;
+    // carParams.m_WheelRadius = 0.33f;
+    // carParams.m_CorneringStiffness = -5.20f;
+    // carParams.m_TireGrip = 2.0f;
+    // carScriptComponent->CreateAndAddScript<CarControllerScript>(&carParams);
+    // carScriptComponent->GetScript<CarControllerScript>()->SetUpInput();
 
-    ScriptComponent* cameraScriptComponent = dynamic_cast<ScriptComponent*>(cameraEnt->getComponent(ComponentType::Script));
-    FollowCamScriptParams followCamScriptParams;
-    followCamScriptParams.m_FollowTarget = carEnt->transform;
-    cameraScriptComponent->CreateAndAddScript<FollowCamScript>(&followCamScriptParams);
+    // ScriptComponent* cameraScriptComponent = dynamic_cast<ScriptComponent*>(cameraEnt->getComponent(ComponentType::Script));
+    // FollowCamScriptParams followCamScriptParams;
+    // followCamScriptParams.m_FollowTarget = carEnt->transform;
+    // cameraScriptComponent->CreateAndAddScript<FollowCamScript>(&followCamScriptParams);
 
 
     const std::string CUBE_SOURCE_FOLDER = "TestCube2/";
@@ -104,6 +106,8 @@ void Scene::SpawnSceneDefinition()
     GLTFLoader::LoadModelAsEntity(cubeEntity, CUBE_SOURCE_FOLDER, CUBE_MODEL_FILE);
     EntityManager::getInstance().Instantiate(cubeEntity);
     Entity* checkpoint1 = EntityManager::getInstance().findFirstEntityByDisplayName("Checkpoint 1");
+    glm::vec3 checkpointPos = trackPosition.xyz + checkpoint1->transform->getWorldPosition();
+    checkpoint1->transform->setWorldPosition(glm::vec4(checkpointPos, 1.0f));
     checkpoint1->addChild(cubeEntity);
     cubeEntity->setParent(checkpoint1);
     EntityManager::getInstance().addEntityToMap(*cubeEntity);
@@ -112,6 +116,8 @@ void Scene::SpawnSceneDefinition()
     cubeEntity = new Entity();
     GLTFLoader::LoadModelAsEntity(cubeEntity, CUBE_SOURCE_FOLDER, CUBE_MODEL_FILE);
     EntityManager::getInstance().Instantiate(cubeEntity);
+    checkpointPos = trackPosition.xyz + checkpoint2->transform->getWorldPosition();
+    checkpoint2->transform->setWorldPosition(glm::vec4(checkpointPos, 1.0f));
     checkpoint2->addChild(cubeEntity);
     cubeEntity->setParent(checkpoint2);
     EntityManager::getInstance().addEntityToMap(*cubeEntity);
@@ -122,6 +128,32 @@ void Scene::SpawnSceneDefinition()
     //testCar2->SetDisplayName("Test Car 2");
     //GLTFLoader::LoadModelAsEntity(testCar2, CAR_2_SOURCE_FOLDER, CAR_2_MODEL_FILE);
     //EntityManager::getInstance().Instantiate(testCar2);
+
+    //auto* entityManager = &(EntityManager::getInstance());
+
+    // Garage Room
+    Entity* garageRoomController = new Entity();
+    garageRoomController->SetDisplayName("Garage Controller");
+    EntityManager::getInstance().Instantiate(garageRoomController);
+
+    // spin
+    Entity* cameraEnt = entityManager->findFirstEntityByDisplayName("Main Camera");
+    ScriptComponent* orb = dynamic_cast<ScriptComponent*>(cameraEnt->getComponent(ComponentType::Script));
+    OrbitScript* orbScript = orb->GetScript<OrbitScript>();
+
+    auto garageRoomEnt = entityManager->findFirstEntityByDisplayName("Garage Controller");
+    ScriptComponent* garageScriptComponent = new ScriptComponent(garageRoomEnt);
+    GarageScriptParams garageParams;
+    garageParams.orbitScript = orbScript;
+    garageParams.cars.push_back(entityManager->findFirstEntityByDisplayName("Test Car"));
+    garageParams.cars.push_back(entityManager->findFirstEntityByDisplayName("TestCar2"));
+    garageParams.chosenTarget = garageParams.cars[0]->transform;
+
+    garageScriptComponent->CreateAndAddScript<GarageScript>(&garageParams);
+    garageRoomEnt->addComponent(*garageScriptComponent);
+    auto garageScript = garageScriptComponent->GetScript<GarageScript>();
+    garageScript->BindSelectKey();
+    garageScript->BindChooseKey();
 }
 
 void Scene::createGameManager()
@@ -137,52 +169,6 @@ void Scene::createGameManager()
     gameManagerEnt->addComponent(*gameManagerScriptComponent);
 
     auto carEnt = entityManager->findFirstEntityByDisplayName("Test Car");
-    
-    RigidBodyComponent* rigidBodyComponent = new RigidBodyComponent(carEnt, 
-        std::shared_ptr<AE86::RigidBody>(new AE86::RigidBody()), 
-       1.0f);
-    carEnt->addComponent(*rigidBodyComponent);
-
-    ScriptComponent* carScriptComponent = new ScriptComponent(carEnt);
-    carEnt->addComponent(*carScriptComponent);
-    //CarControllerScriptParams carParams;
-    //carParams.m_InverseMass = 0.95f;
-    //carParams.m_Height = 1.335f;
-    //carParams.m_Width = 1.625f;
-    //carParams.m_Length = 4.185f;
-    //carScriptComponent->AddScriptToComponent<CarControllerScript>(&carParams);
-
-    // making a 2nd car
-    auto carEnt2 = entityManager->findFirstEntityByDisplayName("Body");
-    carEnt2->transform->setLocalPosition(glm::vec3(1.5f, 0.0f, 0.0f));
-    carEnt2->transform->setLocalScale(glm::vec3(0.4f, 0.4f, 0.4f));
-    
-
-    OrbitScriptParams orbitParams;
-    orbitParams.m_OrbitTarget = carEnt->transform;
-    orbitParams.m_OrbitTarget2 = carEnt2->transform;
-    //cameraScriptComponent->AddScriptToComponent<OrbitScript>(&orbitParams);
-    //OrbitScript* orbitScript = cameraScriptComponent->GetScript<OrbitScript>();
-
-    // Garage Room
-    //Entity* garageRoomController = new Entity();
-    //garageRoomController->SetDisplayName("Garage Controller");
-    //EntityManager::getInstance().Instantiate(garageRoomController);
-
-    //auto garageRoomID = entityManager->findFirstEntityByDisplayName("Garage Controller");
-    //auto garageRoomEnt = entityManager->getEntity(garageRoomID);
-    //ScriptComponent* garageScriptComponent = new ScriptComponent(garageRoomEnt);
-    //garageRoomEnt->addComponent(*garageScriptComponent);
-
-    /*
-    input.RegisterKeyCallback(GLFW_KEY_SPACE, [orbitScript](Input::ActionType action) {
-        if (action == Input::PRESS) {
-            orbitScript->swapOrbitTargets();
-        }
-    });
-    */
-    // End Example
-
 
     ScriptComponent* timerScriptComponent = new ScriptComponent(gameManagerEnt);
     gameManagerEnt->addComponent(*timerScriptComponent);

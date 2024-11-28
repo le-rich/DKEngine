@@ -1,15 +1,22 @@
 #pragma once
 
-#include <glad/glad.h>
 #include "Script.h"
+#include "Input.h"
+
+#include <functional>
 
 class OrbitScript;
 
 struct GarageScriptParams : ScriptParams
 {
     OrbitScript* orbitScript = nullptr;
-    bool carHasBeenSelected = false;
-    Entity* selectedCar = nullptr;
+    bool isCarSelected = false;
+    TransformComponent* chosenTarget = nullptr;
+    std::vector<Entity*> cars = std::vector<Entity*>();
+    int currSelectIndex = 0;
+
+    std::function<void(Input::ActionType)> selectCallback;
+    std::function<void(Input::ActionType)> chooseCallback;
 };
 
 class GarageScript : public Script
@@ -26,14 +33,16 @@ public:
         return std::make_unique<GarageScript>(*this);
     }
 
-    // transport car to track
-    void leaveGarage();
-
     // key callback bindings
-    void bindOrbitKey();
-    void bindSelectionKey();
+    void BindSelectKey();
+    void BindChooseKey();
+    void UnbindAllControls();
 
-
+    void SelectNextCar(); // selects next car in meatspin (only one-way through list)
+    void ChooseCar(); // prompts currently selected car for race
+    void leaveGarage(); // transport car to track
 private:
     GarageScriptParams mParams{};
+    float unSelectedPosX = -10.0f; // remove later
+    
 };

@@ -1,7 +1,11 @@
 {
   "assets": [
     {
-      "path": "TestAE3/",
+      "path": "Car2Test/",
+      "file": [ "sportcar.017.gltf" ]
+    },
+    {
+      "path": "TestAE4/",
       "file": [ "ae86.gltf" ]
     },
     {
@@ -9,6 +13,7 @@
       "file": [ "Room.gltf" ]
     }
   ],
+  "skybox": "skybox_to_equirect_2.png",
   "entities": [
     {
       "name": "Main Camera",
@@ -30,6 +35,15 @@
           "type": "Script",
           "params": {
             "scripts": [
+              {
+                "script": "OrbitScript",
+                "params": {
+                  "target": "Test Car",
+                  "radius": 2,
+                  "speed": 1.5,
+                  "currentAngle": 0
+                }
+              }
             ]
           }
         }
@@ -169,7 +183,7 @@
     {
       "name": "Checkpoint 1",
       "transform": {
-        "localPosition": [0, 0, 2.5],
+        "localPosition": [ 0, 0, 5 ],
         "localOrientation": [],
         "localScale": []
       },
@@ -193,7 +207,7 @@
     {
       "name": "Checkpoint 2",
       "transform": {
-        "localPosition": [ 0, 0, 8.5 ],
+        "localPosition": [ 0, 0, 8.25 ],
         "localOrientation": [],
         "localScale": []
       },
@@ -225,6 +239,15 @@
       "components": {},
       "parent": "JSON TEST PARENT",
       "children": [ "JSON Test Child" ]
+    },
+    {
+      "name": "TestCar2",
+      "transform": {
+        "localPosition": [ -8, 0, 0 ],
+        "localOrientation": [],
+        "localScale": [ 0.4, 0.4, 0.4 ]
+      },
+      "components": {}
     }
   ],
   "gamemanager": {
@@ -242,7 +265,7 @@
             {
               "script": "LapManagerScript",
               "params": {
-                "checkpoints": ["Checkpoint 1", "Checkpoint 2"]
+                "checkpoints": [ "Checkpoint 1", "Checkpoint 2" ]
               }
             }
           ]
