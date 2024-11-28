@@ -24,15 +24,18 @@ struct CarControllerScriptParams : ScriptParams
 	float m_DifferentialRatio;
 	float m_TireGrip;
 	float m_CorneringStiffness;
-	float m_WheelFL;
-	float m_WheelFR;
-	float m_WheelRR;
-	float m_WheelRL;
+
 };
 
 class CarControllerScript : public Script
 {
 public:
+	/** 
+	 * Constructor for the car controlller.
+	 * Its entity requires four children, one for each tire,
+	 * named: WheelFR, WheelFL, WheelRR, WheelRL, respectively.
+	 * Its next update call WILL crash otherwise.
+	 */
 	CarControllerScript(Entity* mEntity);
 	~CarControllerScript();
 
@@ -55,8 +58,9 @@ private:
 	glm::vec3 acceleration;
 	glm::vec3 velocity;
 	float eulerAngle;
-	Entity* leftFrontTire;
-	Entity* rightFrontTire;
-	Entity* rearAxle;
+	Entity* wheelFL;
+	Entity* wheelFR;
+	Entity* wheelRR;
+	Entity* wheelRL;
 };
 

@@ -14,18 +14,10 @@ std::chrono::high_resolution_clock::time_point lastUpdateTime;
 CarControllerScript::CarControllerScript(Entity* mEntity) : Script(mEntity)
 {
     lastUpdateTime = std::chrono::high_resolution_clock::now();
-    std::vector<Entity*> children = mEntity->getChildren()[0]->getChildren();
-    for (Entity* child : children) {
-        if (child->GetDisplayName() == "FrontWheel_L") {
-            leftFrontTire = child;
-        }
-        if (child->GetDisplayName() == "FrontWheel_R") {
-            rightFrontTire = child;
-        }
-        if (child->GetDisplayName() == "RearWheels") {
-            rearAxle = child;
-        }
-    }
+    wheelFL = entity->findFirstChildByDisplayName("WheelFL");
+    wheelFR = entity->findFirstChildByDisplayName("WheelFR");
+    wheelRL = entity->findFirstChildByDisplayName("WheelRL");
+    wheelRR = entity->findFirstChildByDisplayName("WheelRR");
 }
 
 CarControllerScript::~CarControllerScript()
@@ -138,8 +130,8 @@ void CarControllerScript::FixedUpdate(float deltaTime)
     // equation of a cylinder's inertia
     double rearAxleInertia = 75.0 * mParams.m_WheelRadius * mParams.m_WheelRadius;
 
-    leftFrontTire->transform->setLocalOrientation(glm::angleAxis(-steerAngle, glm::vec3(0, 1, 0)));
-    rightFrontTire->transform->setLocalOrientation(glm::angleAxis(steerAngle, glm::vec3(0, 1, 0)));
+    wheelFL->transform->setLocalOrientation(glm::angleAxis(-steerAngle, glm::vec3(0, 1, 0)));
+    wheelFR->transform->setLocalOrientation(glm::angleAxis(steerAngle, glm::vec3(0, 1, 0)));
     
     glm::vec3 finalLongForce = carRotation * glm::vec3(0.0f, 0.0f, driveForce - dragForce - rollResistanceForce);
 
@@ -147,26 +139,25 @@ void CarControllerScript::FixedUpdate(float deltaTime)
     // TODO: verify that all of this is correct, clean up to remove redundant code.
     AE86::Vector3 frontRightTirePosition =
         AE86::Vector3(-(mParams.m_Width / 2.0f), 0.0f, mParams.m_CGToFrontAxleDistance);
-    AE86::Vector3 frontRightTireLatForce = calculateTireForce(carRigidBody.get(), rightFrontTire, deltaTime);
+    AE86::Vector3 frontRightTireLatForce = calculateTireForce(carRigidBody.get(), wheelFR, deltaTime);
 
     AE86::Vector3 frontLeftTirePosition =
         AE86::Vector3((mParams.m_Width / 2.0f), 0.0f, -mParams.m_CGToFrontAxleDistance);
-    AE86::Vector3 frontLeftTireLatForce = calculateTireForce(carRigidBody.get(), leftFrontTire, deltaTime);
+    AE86::Vector3 frontLeftTireLatForce = calculateTireForce(carRigidBody.get(), wheelFL, deltaTime);
 
     AE86::Vector3 backLeftTirePosition =
-        AE86::Vector3(-(mParams.m_Width / 2.0f), 0.0f, mParams.m_CGToRearAxleDistance);
-    AE86::Vector3 backLeftTireLatForce = calculateTireForce(carRigidBody.get(), rearAxle, deltaTime);
+        AE86::Vector3(-(mParams.m_Width / 2.0f), 0.0f, -mParams.m_CGToRearAxleDistance);
+    AE86::Vector3 backLeftTireLatForce = calculateTireForce(carRigidBody.get(), wheelRL, deltaTime);
 
     AE86::Vector3 backRightTirePosition =
         AE86::Vector3((mParams.m_Width / 2.0f), 0.0f, -mParams.m_CGToRearAxleDistance);
-    AE86::Vector3 backRightTireLatForce = calculateTireForce(carRigidBody.get(), rearAxle, deltaTime);
+    AE86::Vector3 backRightTireLatForce = calculateTireForce(carRigidBody.get(), wheelRR, deltaTime);
 
     carRigidBody->addForce(AE86::Vector3(finalLongForce.x, finalLongForce.y, finalLongForce.z));
     carRigidBody->addForceAtBodyPoint(frontLeftTireLatForce, frontLeftTirePosition);
     carRigidBody->addForceAtBodyPoint(frontRightTireLatForce, frontRightTirePosition);
     carRigidBody->addForceAtBodyPoint(backRightTireLatForce, backRightTirePosition);
     carRigidBody->addForceAtBodyPoint(backLeftTireLatForce, backLeftTirePosition);
-
 
 }
 

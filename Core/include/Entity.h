@@ -197,6 +197,21 @@ public:
         return children;
     }
 
+    // traverse tree hierarchy for first entity of name
+    Entity* findFirstChildByDisplayName(std::string entityName) {
+        // base case
+        if (entityDisplayName == entityName)
+            return this;
+
+        for (Entity* child : children) {
+            Entity* traversalResult = child->findFirstChildByDisplayName(entityName);
+            if (traversalResult)
+                return traversalResult;
+        }
+
+        return nullptr;
+    }
+
     // retrieve a specific component from a parent
     Component* getComponentFromParent(const ComponentType& componentType)
     {

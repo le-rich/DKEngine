@@ -36,7 +36,7 @@
 		},
 		{
 			"mesh":2,
-			"name":"WheelLL",
+			"name":"WheelRL",
 			"translation":[
 				0.0004634234355762601,
 				-0.1082395687699318,
@@ -185,7 +185,7 @@
 		{
 			"mimeType":"image/png",
 			"name":"fmesh_Material_001_BasssseColor_001df",
-			"uri":"textures/fmesh_Material_001_BasssseColor_001df.png"
+			"uri":"fmesh_Material_001_BasssseColor_001df.png"
 		}
 	],
 	"accessors":[
