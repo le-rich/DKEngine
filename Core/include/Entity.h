@@ -118,14 +118,13 @@ public:
     {
         this->entityID = uuidGen.getUUID();
         this->transform = new TransformComponent(this);
+        componentMask.set(static_cast<size_t>(ComponentType::Transform));
         // init code
     }
 
-    Entity(std::string DisplayName)
+    Entity(std::string DisplayName) : Entity()
     {
         this->entityDisplayName = DisplayName;
-        this->entityID = uuidGen.getUUID();
-        this->transform = new TransformComponent(this);
     }
 
     // Copy constructor
