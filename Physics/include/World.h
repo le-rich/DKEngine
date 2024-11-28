@@ -34,6 +34,9 @@ namespace AE86 {
 		// processes physics for the world
 		void runPhysics(real duration);
 
+		// ECS-friendly integrate
+		void integrate(std::vector<RigidBody*> rigidBodies, real duration);
+
 	protected:
 		// holds the rigid bodies being simulated
 		RigidBodies rigidBodyComponents;

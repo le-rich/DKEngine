@@ -22,6 +22,15 @@ namespace AE86 {
 		}
 	}
 
+	void World::integrate(std::vector<RigidBody*> rigidBodies, real duration) {
+		for (RigidBodies::iterator b = rigidBodies.begin();
+			b != rigidBodies.end();
+			++b) {
+
+			(*b)->integrate(duration);
+		}
+	}
+
 	void World::runPhysics(real duration) {
 		// TODO: add force registry code here.
 		// std::cout << "updating physics bodies\n";
