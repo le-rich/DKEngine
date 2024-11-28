@@ -1,6 +1,10 @@
 {
   "assets": [
     {
+      "path": "Car2Test/",
+      "file": [ "sportcar.017.gltf" ]
+    },
+    {
       "path": "TestAE2/",
       "file": [ "ae86.gltf" ]
     },
@@ -235,6 +239,15 @@
       "components": {},
       "parent": "JSON TEST PARENT",
       "children": [ "JSON Test Child" ]
+    },
+    {
+      "name": "TestCar2",
+      "transform": {
+        "localPosition": [ -8, 0, 0 ],
+        "localOrientation": [],
+        "localScale": [ 0.4, 0.4, 0.4 ]
+      },
+      "components": {}
     }
   ],
   "gamemanager": {

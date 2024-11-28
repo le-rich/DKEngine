@@ -32,8 +32,17 @@ public:
 
     }
 
+    static void setPaused(bool pause) {
+       paused = pause;
+    }
+
+    static bool isPaused() {
+       return paused;
+    }
+
 private:
 
+   static bool paused;
    GLFWwindow* window;
    Scene* scene;
    const FrameBuffer* framebuffer;
