@@ -7,7 +7,7 @@
 
 const static float AIR_DENSITY = 1.29f; // kg/m^3
 const static float TRANSMISSION_EFFICIENCY = 0.7f;
-const static float MAX_STEERING = (2 * M_PI / 45.0f);
+const static float MAX_STEERING = (2 * M_PI / 45.0f); // TODO: tweak steering max
 
 std::chrono::high_resolution_clock::time_point lastUpdateTime;
 
@@ -32,6 +32,7 @@ CarControllerScript::~CarControllerScript()
 {
 }
 
+// TODO: a better way to do fixed updates.
 double timeAccumulator = 0.0;
 const double FIXED_TIME_STEP = 0.008; // 8 milliseconds in seconds
 
@@ -69,6 +70,7 @@ void CarControllerScript::Update(float deltaTime) {
     }
 }
 
+// TODO: tweak and tune all of this, remove magic constants
 void CarControllerScript::FixedUpdate(float deltaTime)
 {
     RigidBodyComponent* carRigidBodyComponent = dynamic_cast<RigidBodyComponent*>(
@@ -96,6 +98,7 @@ void CarControllerScript::FixedUpdate(float deltaTime)
     double weight = mass * 9.81;
     AE86::Vector3 acceleration = carRigidBody->getLastFrameAcceleration();
 
+    // TODO: incorporate weight transfer into pitch/nosedive of car as it brakes/accels
     double weightTransfer =
         (mParams.m_CGHeight / mParams.m_WheelBase) * mass * acceleration.magnitude();
 
@@ -123,9 +126,10 @@ void CarControllerScript::FixedUpdate(float deltaTime)
         / mParams.m_WheelRadius;
 
 
-    double brakeForce = brake * mParams.m_BrakeForce * (velocity.z > 0) - (velocity.z < 0);
+    // TODO: fix brakeforce bug.
+    double brakeForce = brake * mParams.m_BrakeForce * ((velocity.z > 0) - (velocity.z < 0));
 
-    driveForce -= brakeForce;
+    driveForce += brakeForce;
 
     double tractionTorque = driveForce * mParams.m_WheelRadius;
 
@@ -140,6 +144,7 @@ void CarControllerScript::FixedUpdate(float deltaTime)
     glm::vec3 finalLongForce = carRotation * glm::vec3(0.0f, 0.0f, driveForce - dragForce - rollResistanceForce);
 
 
+    // TODO: verify that all of this is correct, clean up to remove redundant code.
     AE86::Vector3 frontRightTirePosition =
         AE86::Vector3(-(mParams.m_Width / 2.0f), 0.0f, mParams.m_CGToFrontAxleDistance);
     AE86::Vector3 frontRightTireLatForce = calculateTireForce(carRigidBody.get(), rightFrontTire, deltaTime);
@@ -156,7 +161,6 @@ void CarControllerScript::FixedUpdate(float deltaTime)
         AE86::Vector3((mParams.m_Width / 2.0f), 0.0f, -mParams.m_CGToRearAxleDistance);
     AE86::Vector3 backRightTireLatForce = calculateTireForce(carRigidBody.get(), rearAxle, deltaTime);
 
-
     carRigidBody->addForce(AE86::Vector3(finalLongForce.x, finalLongForce.y, finalLongForce.z));
     carRigidBody->addForceAtBodyPoint(frontLeftTireLatForce, frontLeftTirePosition);
     carRigidBody->addForceAtBodyPoint(frontRightTireLatForce, frontRightTirePosition);
@@ -168,6 +172,8 @@ void CarControllerScript::FixedUpdate(float deltaTime)
 
 
 // static test torque curve, ideally an mParam look-up
+// TODO: make this pull from mParams for custom torque curves
+// per car.
 float CarControllerScript::lookUpTorqueCurve(float rpm) {
     if (rpm >= 4400)
         return 50.0f;
@@ -219,7 +225,7 @@ void CarControllerScript::SetUpInput() {
         }
 
         if (action == Input::RELEASE) {
-            throttle = 0.0f;
+            throttle = 0.0f; // TODO: have the throttle slowly reset to zero instead.
         }
     });
 
@@ -234,7 +240,7 @@ void CarControllerScript::SetUpInput() {
             steerAngle -= steerAngle > -MAX_STEERING ? M_PI / 40.0f : 0;
 
         if (action == Input::RELEASE)
-            steerAngle = 0.0f;
+            steerAngle = 0.0f; // TODO: have the steering angle slowly reset to zero instead.
      });
 
     input.RegisterKeyCallback(GLFW_KEY_A, [&](Input::ActionType action) {
@@ -242,8 +248,8 @@ void CarControllerScript::SetUpInput() {
             steerAngle += steerAngle < MAX_STEERING ? M_PI / 40.0f : 0;
         
         if (action == Input::RELEASE)
-            steerAngle = 0.0f;
-
+            steerAngle = 0.0f; // TODO: have the steering angle slowly reset to zero instead.
+         
       });
 
     input.RegisterKeyCallback(GLFW_KEY_SPACE, [&](Input::ActionType action) {

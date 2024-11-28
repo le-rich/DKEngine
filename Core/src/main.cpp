@@ -103,6 +103,7 @@ int run_glfw() {
 	game->Initialize();
 	audioManager->Initialize();
 	
+    // TODO: componentize all of this, so it isn't hard-coded to two sounds/channels
 	FMOD::Sound* backgroundMusic = audioManager->LoadAudio("Assets/Audio/car-motor.mp3");
     FMOD::Sound* audienceSound = audioManager->LoadAudio("Assets/Audio/audience.mp3");
 	audioManager->PlayDynamicSound(backgroundMusic, true, {0, 50.0f, 0});

@@ -17,10 +17,9 @@ void FollowCamScript::Update(float deltaTime)
         return;
     }
 
-    // TODO: remove magic constants and make them mParams (follow dsitance :2.0f, height: 1.65f;)
-    glm::vec3 behind = mParams.m_FollowTarget->getBack() * 2.0f;
-    behind.y = 1.65f;
-    glm::vec3 targetPosition = mParams.m_FollowTarget->getLocalPosition() + behind;
+    glm::vec3 cameraOffset = mParams.m_FollowTarget->getBack() * mParams.m_Distance;
+    cameraOffset.y = mParams.m_Height;
+    glm::vec3 targetPosition = mParams.m_FollowTarget->getLocalPosition() + cameraOffset;
 
     glm::vec3 currentPosition = transform->getLocalPosition();
     glm::vec3 newPosition = glm::mix(currentPosition, targetPosition, mParams.m_Speed * deltaTime); // this is just GLM's lerp from what i can tell

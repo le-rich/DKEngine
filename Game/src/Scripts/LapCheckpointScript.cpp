@@ -22,6 +22,8 @@ void LapCheckpointScript::Update(float deltaTime)
 
 	if (!mParams.m_Registered && mParams.m_SelfBB->CheckCollision(*mParams.m_OtherBB))
 	{
+		// TODO: make this cleaner, maybe with a direct reference to the entity saved
+		// instead.
 		std::vector<Entity*> children = entity->getChildren();
 		for (Entity* child : children) {
 			Component* c = child->getComponent(ComponentType::Mesh);

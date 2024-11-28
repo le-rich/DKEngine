@@ -60,6 +60,7 @@ void Scene::SpawnSceneDefinition()
 
     Entity* carEnt = entityManager->findFirstEntityByDisplayName("Test Car");
 
+    // TODO: make care controller params set-up method instead to clean up scene.cpp
     RigidBodyComponent* rigidBodyComponent = new RigidBodyComponent(carEnt,
         std::shared_ptr<AE86::RigidBody>(new AE86::RigidBody()),
         1.0f);
@@ -67,6 +68,7 @@ void Scene::SpawnSceneDefinition()
     ScriptComponent* carScriptComponent = new ScriptComponent(carEnt);
     carEnt->addComponent(*carScriptComponent);
     CarControllerScriptParams carParams;
+    // these are all stats for an AE86 (with a little bit of modification):
     carParams.m_InverseMass =  1.0f / 1500.0f;
     carParams.m_Height = 1.335f;
     carParams.m_Width = 1.625f;
@@ -97,6 +99,7 @@ void Scene::SpawnSceneDefinition()
     const std::string CUBE_SOURCE_FOLDER = "TestCube2/";
     const std::string CUBE_MODEL_FILE = "testcube.gltf";
 
+    // TODO: move waypoint visual creation to the lapcheckpointscripts
     Entity* cubeEntity = new Entity();
     GLTFLoader::LoadModelAsEntity(cubeEntity, CUBE_SOURCE_FOLDER, CUBE_MODEL_FILE);
     EntityManager::getInstance().Instantiate(cubeEntity);
