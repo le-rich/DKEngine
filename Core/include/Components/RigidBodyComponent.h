@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Component.h"
-#include "../Physics/include/body.h"
+#include "Body.h"
 
 #include <glm.hpp>
 #include <string>

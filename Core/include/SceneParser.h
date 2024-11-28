@@ -432,7 +432,7 @@ namespace SceneParser
 
     void ParseGameManager(json& pEntityObjects)
     {
-        std::string name = "GameMangaer";
+        std::string name = "GameManager";
         Entity* entity = EntityManager::getInstance().findFirstEntityByDisplayName(name);
         if (entity == nullptr)
         {

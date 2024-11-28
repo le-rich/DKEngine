@@ -5,7 +5,7 @@
       "file": [ "sportcar.017.gltf" ]
     },
     {
-      "path": "TestAE2/",
+      "path": "TestAE4/",
       "file": [ "ae86.gltf" ]
     },
     {
@@ -172,7 +172,7 @@
     {
       "name": "Checkpoint 1",
       "transform": {
-        "localPosition": [],
+        "localPosition": [ 0, 0, 5 ],
         "localOrientation": [],
         "localScale": []
       },
@@ -196,7 +196,7 @@
     {
       "name": "Checkpoint 2",
       "transform": {
-        "localPosition": [ -1.25, 0, 0 ],
+        "localPosition": [ 0, 0, 8.25 ],
         "localOrientation": [],
         "localScale": []
       },

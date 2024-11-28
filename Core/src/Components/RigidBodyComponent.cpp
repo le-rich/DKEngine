@@ -1,10 +1,12 @@
+#pragma once
+
 #include "Entity.h"
 #include "Components/RigidBodyComponent.h"
 
 RigidBodyComponent::RigidBodyComponent(Entity* mEntity, std::shared_ptr<AE86::RigidBody> rigidBody, float mass)
 	: Component(mEntity), rb(rigidBody) {
-	rb->setMass(mass);
 	this->componentType = ComponentType::RigidBody;
+	rb->setMass(mass);
 }
 
 RigidBodyComponent::RigidBodyComponent(Entity* mEntity) : Component(mEntity) {
@@ -13,8 +15,8 @@ RigidBodyComponent::RigidBodyComponent(Entity* mEntity) : Component(mEntity) {
 	this->componentType = ComponentType::RigidBody;
 }
 
-
 RigidBodyComponent::~RigidBodyComponent() {}
+
 
 // getters and setter definitions
 

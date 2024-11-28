@@ -140,6 +140,8 @@
     <ClInclude Include="include\Components\ScriptComponent.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\Script.h" />
+    <ClInclude Include="include\Scripts\CarControllerScript.h" />
+    <ClInclude Include="include\Scripts\FollowCamScript.h" />
     <ClInclude Include="include\Scripts\GarageScript.h" />
     <ClInclude Include="include\Scripts\LapCheckpointScript.h" />
     <ClInclude Include="include\Scripts\LapManagerScript.h" />
@@ -149,6 +151,8 @@
   <ItemGroup>
     <ClCompile Include="src\Components\ScriptComponent.cpp" />
     <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\Scripts\CarControllerScript.cpp" />
+    <ClCompile Include="src\Scripts\FollowCamScript.cpp" />
     <ClCompile Include="src\Scripts\GarageScript.cpp" />
     <ClCompile Include="src\Scripts\LapCheckpointScript.cpp" />
     <ClCompile Include="src\Scripts\LapManagerScript.cpp" />

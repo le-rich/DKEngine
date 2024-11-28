@@ -1,5 +1,6 @@
 #pragma once
 #include "Components/MeshComponent.h"
+#include "Components/AudioComponent.h"
 #include "Components/RigidbodyComponent.h"
 #include "Managers/AssetManager.h"
 #include "Resources/Mesh.h"
@@ -123,7 +124,7 @@ namespace GLTFLoader
             std::vector<unsigned char> bufferData;
             if (!GetAttributeVector(pGltfModel, accessorNum, bufferData))
             {
-                std::printf("Failed to get attribute data");
+                std::printf("Failed to get attribute data\n");
                 continue;
             }
 
@@ -360,9 +361,10 @@ namespace GLTFLoader
         {
             // Add rigidbody
             std::shared_ptr<AE86::RigidBody> rb = std::make_shared<AE86::RigidBody>();
-            RigidBodyComponent rigidComponent(pEntity, rb);
-            pEntity->addComponent(rigidComponent);
+            RigidBodyComponent* rigidComponent = new RigidBodyComponent(pEntity, rb);
+            pEntity->addComponent(*rigidComponent);
         }
+
     }
 
     static void LoadChildEntities(Entity* pParentEntity, tinygltf::Model& const pGltfModel, std::vector<UUIDv4::UUID>& pMaterials, std::vector<int>& const pChildIndexes)
