@@ -139,6 +139,10 @@ void GarageScript::leaveGarage()
     /*============ FIX CAMERA ============*/
     mParams.orbitScript->setOrbitTarget(nullptr); // set to no follow target, TODO: actually remove the script
     Entity* cameraEnt = EntityManager::getInstance().findFirstEntityByDisplayName("Main Camera");
+    // starting position of camera to avoid initially slowly slerping to the track from the selection room
+    // TODO: remove hard-coded magic numbers and actually derive the values from the camerascriptcomponent
+    cameraEnt->transform->setLocalPosition(glm::vec3(100.0f, 1.65f, 97.0f));
+    cameraEnt->transform->setLocalOrientation(glm::quat(0, 0, 1, 0));
     ScriptComponent* cameraScriptComponent = dynamic_cast<ScriptComponent*>(cameraEnt->getComponent(ComponentType::Script));
     FollowCamScriptParams followCamScriptParams;
     followCamScriptParams.m_FollowTarget = selectedCarEnt->transform;
