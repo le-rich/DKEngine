@@ -26,7 +26,7 @@ void FollowCamScript::Update(float deltaTime)
     transform->setLocalPosition(newPosition);
 
     // -1 quaternion rotation appended bc car points positive Z dir, opengl cam -Z dir.
-    glm::quat targetOrientation = mParams.m_FollowTarget->getLocalOrientation() * glm::quat(0, 0, -1, 0); 
+    glm::quat targetOrientation = mParams.m_FollowTarget->getLocalOrientation() * glm::quat(0, 0, 1, 0); 
     glm::quat currentOrientation = transform->getLocalOrientation();
     glm::quat newOrientation = glm::slerp(currentOrientation, targetOrientation, mParams.m_Speed * deltaTime);
     transform->setLocalOrientation(newOrientation);

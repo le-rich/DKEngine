@@ -62,42 +62,6 @@ void Scene::SpawnSceneDefinition()
 
     Entity* carEnt = entityManager->findFirstEntityByDisplayName("Test Car");
 
-    // TODO: make care controller params set-up method instead to clean up scene.cpp
-    // RigidBodyComponent* rigidBodyComponent = new RigidBodyComponent(carEnt,
-    //     std::shared_ptr<AE86::RigidBody>(new AE86::RigidBody()),
-    //     1.0f);
-    // carEnt->addComponent(*rigidBodyComponent);
-    // ScriptComponent* carScriptComponent = new ScriptComponent(carEnt);
-    // carEnt->addComponent(*carScriptComponent);
-    // CarControllerScriptParams carParams;
-    // // these are all stats for an AE86 (with a little bit of modification):
-    // carParams.m_InverseMass =  1.0f / 1500.0f;
-    // carParams.m_Height = 1.335f;
-    // carParams.m_Width = 1.625f;
-    // carParams.m_Length = 4.185f;
-    // carParams.m_CGToFrontAxleDistance = 1.25f;
-    // carParams.m_CGToRearAxleDistance = 1.25f;
-    // carParams.m_CGHeight = 1.0f;
-    // carParams.m_WheelBase = 2.50f;
-    // carParams.m_WheelLength = 0.7f;
-    // carParams.m_WheelWidth = 0.3f;
-    // carParams.m_FrictionCoeff = 0.30f;
-    // carParams.m_FrontalArea = 2.2f;
-    // carParams.m_EngineForce = 8000.0f;
-    // carParams.m_BrakeForce = 12000.0f;
-    // carParams.m_DifferentialRatio = 3.42;
-    // carParams.m_WheelRadius = 0.33f;
-    // carParams.m_CorneringStiffness = -5.20f;
-    // carParams.m_TireGrip = 2.0f;
-    // carScriptComponent->CreateAndAddScript<CarControllerScript>(&carParams);
-    // carScriptComponent->GetScript<CarControllerScript>()->SetUpInput();
-
-    // ScriptComponent* cameraScriptComponent = dynamic_cast<ScriptComponent*>(cameraEnt->getComponent(ComponentType::Script));
-    // FollowCamScriptParams followCamScriptParams;
-    // followCamScriptParams.m_FollowTarget = carEnt->transform;
-    // cameraScriptComponent->CreateAndAddScript<FollowCamScript>(&followCamScriptParams);
-
-
     const std::string CUBE_SOURCE_FOLDER = "TestCube2/";
     const std::string CUBE_MODEL_FILE = "testcube.gltf";
 
@@ -121,15 +85,6 @@ void Scene::SpawnSceneDefinition()
     checkpoint2->addChild(cubeEntity);
     cubeEntity->setParent(checkpoint2);
     EntityManager::getInstance().addEntityToMap(*cubeEntity);
-
-
-    // making a 2nd car
-    //Entity* testCar2 = new Entity();
-    //testCar2->SetDisplayName("Test Car 2");
-    //GLTFLoader::LoadModelAsEntity(testCar2, CAR_2_SOURCE_FOLDER, CAR_2_MODEL_FILE);
-    //EntityManager::getInstance().Instantiate(testCar2);
-
-    //auto* entityManager = &(EntityManager::getInstance());
 
     // Garage Room
     Entity* garageRoomController = new Entity();

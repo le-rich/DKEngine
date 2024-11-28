@@ -153,6 +153,7 @@ void CarControllerScript::FixedUpdate(float deltaTime)
         AE86::Vector3((mParams.m_Width / 2.0f), 0.0f, -mParams.m_CGToRearAxleDistance);
     AE86::Vector3 backRightTireLatForce = calculateTireForce(carRigidBody.get(), wheelRR, deltaTime);
 
+    // TODO: VERIFY THE LATERAL FORCES
     carRigidBody->addForce(AE86::Vector3(finalLongForce.x, finalLongForce.y, finalLongForce.z));
     carRigidBody->addForceAtBodyPoint(frontLeftTireLatForce, frontLeftTirePosition);
     carRigidBody->addForceAtBodyPoint(frontRightTireLatForce, frontRightTirePosition);

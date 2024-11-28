@@ -8,7 +8,7 @@ struct FollowCamScriptParams : ScriptParams
 {
     TransformComponent* m_FollowTarget = nullptr;
 
-    float m_Distance = 2.0f;
+    float m_Distance = 3.0f;
     float m_Speed = 4.0f;
     float m_Height = 1.65f;
     float currentAngle = 0;

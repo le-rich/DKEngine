@@ -7,7 +7,6 @@ RigidBodyComponent::RigidBodyComponent(Entity* mEntity, std::shared_ptr<AE86::Ri
 	: Component(mEntity), rb(rigidBody) {
 	this->componentType = ComponentType::RigidBody;
 	rb->setMass(mass);
-	this->componentType = ComponentType::RigidBody;
 }
 
 RigidBodyComponent::RigidBodyComponent(Entity* mEntity) : Component(mEntity) {
