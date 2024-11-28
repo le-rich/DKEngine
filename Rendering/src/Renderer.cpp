@@ -13,42 +13,51 @@
 
 Renderer::Renderer(Window* window) : mScreenQuad(Quad.vertices, Quad.indices)
 {
-	windowRef = window;
+    windowRef = window;
 }
 
 Renderer::~Renderer() {}
 
 void Renderer::Initialize()
 {
-	System::Initialize();
+    System::Initialize();
 
-	// Get Camera if it exists
-	auto mainCameraUUID = EntityManager::getInstance().findFirstEntityByDisplayName("Main Camera");
-	auto mainCamera = EntityManager::getInstance().getEntity(mainCameraUUID);
-	if (mainCamera != nullptr)
-	{
-		this->mainCameraEntity = mainCamera;
-	}
-	else
-	{
-		std::cerr << "Error: Main Camera not found. The program will now exit." << std::endl;
-		std::cin.get();
-		std::exit(EXIT_FAILURE);  // Terminate program with failure status
-	}
+    // Get Camera if it exists
+    Entity* mainCamera = EntityManager::getInstance().findFirstEntityByDisplayName("Main Camera");
+    if (mainCamera != nullptr)
+    {
+        this->mainCameraEntity = mainCamera;
+    }
+    else
+    {
+        std::cerr << "Error: Main Camera not found. The program will now exit." << std::endl;
+        std::cin.get();
+        std::exit(EXIT_FAILURE);  // Terminate program with failure status
+    }
+    glGenTextures(1, &shadowMapTextureArray);
+    glBindTexture(GL_TEXTURE_2D_ARRAY, shadowMapTextureArray);
+    // Always set reasonable texture parameters
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
 }
 
 void Renderer::Update(float deltaTime)
 {
-	// TODO: Collect set of renderables here and use it.
-	FetchRenderables();
-
-	{
-		std::lock_guard<std::mutex> lock(windowRef->mMutex);
+    // TODO: Collect set of renderables here and use it.
+    // TODO: Lock Enttiies while grabbing
+    FetchRenderables();
+    FetchLights();
+    FetchSkybox();
+    {
+        std::lock_guard<std::mutex> lock(windowRef->mMutex);
         windowRef->SetWindowToCurrentThread();
 
-        // TODO: Create copy of Scene Graph/Entity manager to avoid race conditions with other threads
         // TODO: Revision, change such that renderables are taken and threads are spun up to do tasks within Renderer.
-        
+        GenerateShadowMaps();
+
         // Set FrameBuffer
         int width, height;
         glfwGetWindowSize(windowRef->GetWindow(), &width, &height);
@@ -62,132 +71,226 @@ void Renderer::Update(float deltaTime)
         //Perform Post Processing
         //Draw Frame Buffer
         WriteToFrameBuffer();
-	}
+    }
 
-    // Swap window buffers. can be moved to post update
     windowRef->SwapWindowBuffers();
 
-	for (auto ptr : renderablesThisFrame){
-		delete ptr;
-	}
-
-	renderablesThisFrame.clear();
+    for (auto ptr : renderablesThisFrame)
+    {
+        delete ptr;
+    }
+    renderablesThisFrame.clear();
+    lightsThisFrame.clear();
 }
 
 void Renderer::FixedUpdate() {}
 
 void Renderer::RenderToFrame(int pWidth, int pHeight)
 {
-	// Clear color and depth buffers for set Framebuffer
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_DEPTH_TEST);
+    // Clear color and depth buffers for set Framebuffer
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
 
-	SetEngineUBO(pWidth, pHeight);
-	//TODO: Replace with Scene based or Material based Draw
-	IssueMeshDrawCalls();
+    SetEngineUBO(pWidth, pHeight);
+    //TODO: Replace with Scene based or Material based Draw
+    IssueMeshDrawCalls();
 
-	// ============================
-	//Material Based:
-	//For each Material
-	//	Bind Material
-	//	Apply Material specific Uniforms
-	//	For each Primitive in Material
-	//		Bind Vertex Array
-	//		Bind Index Buffer
-	//		DrawCall
-	//	Unbind Material
-	//	
+    // ============================
+    //Material Based:
+    //For each Material
+    //	Bind Material
+    //	Apply Material specific Uniforms
+    //	For each Primitive in Material
+    //		Bind Vertex Array
+    //		Bind Index Buffer
+    //		DrawCall
+    //	Unbind Material
 
-	//shaderStorageBufferObject.Unbind();
+    skyboxThisFrame->Bind();
+    skyboxThisFrame->Draw();
+    //shaderStorageBufferObject.Unbind();
 }
 
 void Renderer::WriteToFrameBuffer()
 {
-	glDisable(GL_DEPTH_TEST);
-	glClear(GL_COLOR_BUFFER_BIT);
+    glDisable(GL_DEPTH_TEST);
+    glClear(GL_COLOR_BUFFER_BIT);
 
-	// Bind Screen Shader
-	mScreenShader->Use();
-	//AssetManager::GetInstance().GetDefaultShader()->Use();
-	// Bind Frame Texture
-	mFrameBuffer.BindFrameTexture();
-	// Draw Screen Quad
-	mScreenQuad.Draw();
+    // Bind Screen Shader
+    mScreenShader->Use();
+    // Bind Frame Texture
+    mFrameBuffer.BindFrameTexture();
+    // Draw Screen Quad
+    mScreenQuad.Draw();
 }
 
 void Renderer::IssueMeshDrawCalls()
 {
-	auto meshComponentUUIDs = EntityManager::getInstance().findEntitiesByComponent(ComponentType::Mesh);
+    auto meshComponentUUIDs = EntityManager::getInstance().findEntitiesByComponent(ComponentType::Mesh);
 
-	for (auto& uuid : meshComponentUUIDs)
-	{
-		auto entity = EntityManager::getInstance().getEntity(uuid);
-		MeshComponent* meshComponent = dynamic_cast<MeshComponent*>(entity->getComponent(ComponentType::Mesh));
-
-        if (meshComponent != nullptr)
+    for (auto& uuid : meshComponentUUIDs)
+    {
+        auto entity = EntityManager::getInstance().getEntity(uuid);
+        if (entity != nullptr)
         {
-            // TODO: Bug Physics/Core on way to get modelMatrix directly from transform
-            glm::mat4 modelMatrix = entity->transform->getTransformMatrix();
-            mEngineUniformBuffer.SetSubData(modelMatrix, 0);
-            meshComponent->getMesh()->Draw();
+            MeshComponent* meshComponent = dynamic_cast<MeshComponent*>(entity->getComponent(ComponentType::Mesh));
+
+            if (meshComponent != nullptr)
+            {
+                glm::mat4 modelMatrix = entity->transform->getTransformMatrix();
+                mEngineUniformBuffer.SetSubData(modelMatrix, 0);
+                meshComponent->getMesh()->DrawWithOwnMaterial();
+            }
         }
     }
 }
 
 void Renderer::SetEngineUBO(int pWidth, int pHeight)
 {
-	std::vector<glm::mat4> lightMatricies;
-	auto lightComponentUUIDs = EntityManager::getInstance().findEntitiesByComponent(ComponentType::Light);
-	for (auto& uuid : lightComponentUUIDs)
-	{
-		auto entity = EntityManager::getInstance().getEntity(uuid);
-		LightComponent* lightComponent = dynamic_cast<LightComponent*>(entity->getComponent(ComponentType::Light));
-		if (lightComponent == nullptr) continue;
-		lightMatricies.push_back(lightComponent->GenerateMatrix(lightComponent->entity->transform));
-	}
+    // CAMERA =====================
+    CameraComponent* cameraComponent = dynamic_cast<CameraComponent*>(mainCameraEntity->getComponent(ComponentType::Camera));
 
-	shaderStorageBufferObject.SendBlocks(lightMatricies.data(), lightMatricies.size() * sizeof(glm::mat4));
-	shaderStorageBufferObject.Bind(0);
+    if (cameraComponent != nullptr)
+    {
+        // Update Aspect Ratio if the window has resized
+        cameraComponent->updateAspectRatio(pWidth, pHeight);
 
-	// CAMERA =====================
-	CameraComponent* cameraComponent = dynamic_cast<CameraComponent*>(mainCameraEntity->getComponent(ComponentType::Camera));
+        cameraComponent->calculateViewMatrix(cameraComponent->entity->transform);
+        cameraComponent->calculateProjectionMatrix();
+        mEngineUniformBuffer.SetCameraMatrices(
+            cameraComponent->getViewMatrix(),
+            cameraComponent->getProjectionMatrix(),
+            mainCameraEntity->transform->getWorldPosition()
+        );
+    }
 
-	if (cameraComponent != nullptr)
-	{
-		// Update Aspect Ratio if the window has resized
-		cameraComponent->updateAspectRatio(pWidth, pHeight);
-
-		cameraComponent->calculateViewMatrix(cameraComponent->entity->transform);
-		cameraComponent->calculateProjectionMatrix();
-		mEngineUniformBuffer.SetCameraMatrices(
-			cameraComponent->getViewMatrix(),
-			cameraComponent->getProjectionMatrix(),
-			mainCameraEntity->transform->getWorldPosition()
-		);
-	}
+    BindShadowMaps();
 }
 
-void Renderer::FetchRenderables() 
+void Renderer::GenerateShadowMaps()
 {
-	ComponentMask renderableComponentMask;
-	// TODO: Add Materials to this.
-	renderableComponentMask |= renderableComponentMask.set(static_cast<size_t>(ComponentType::Mesh) | static_cast<size_t>(ComponentType::Transform));
-	auto renderableEntities = EntityManager::getInstance().findEntitiesByComponentMask(renderableComponentMask);
+    int numOfLights = lightsThisFrame.size();
 
-	for (auto renderEntity : renderableEntities)
-	{
-		TransformComponent* transformComponent = new TransformComponent(*(renderEntity->transform));
-		MeshComponent* meshComponent = dynamic_cast<MeshComponent*>(renderEntity->getComponent(ComponentType::Mesh));
-		// TODO: MaterialComponent pointer here.
-		Material* materialComponent = nullptr;
+    std::vector<glm::mat4> lightMatricies(numOfLights);
+    std::vector<glm::mat4> lightViewMatricies(numOfLights);
+    std::vector<glm::mat4> lightEnabled(numOfLights); // I also hate this but the SSBO fields not generated properly with bool, int, or vec2 types
 
-		Renderable* renderable = new Renderable(transformComponent);
-		if (meshComponent != nullptr && meshComponent->getMesh() != nullptr) 
-		{
-			renderable->mesh = meshComponent->getMesh();
-		}
+    glBindTexture(GL_TEXTURE_2D_ARRAY, shadowMapTextureArray);
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_DEPTH_COMPONENT16, 1024, 1024, numOfLights);
+    for (int i = 0; i < numOfLights; ++i)
+    {
+        auto lightComponent = lightsThisFrame[i];
+        lightMatricies[i] = lightComponent->GenerateMatrix(lightComponent->entity->transform);
 
-		renderablesThisFrame.push_back(renderable);
-	}
+        glm::vec3 lightPosition = lightComponent->entity->transform->getWorldPosition();
+        glm::quat lightOrientation = lightComponent->entity->transform->getWorldOrientation();
+
+        glm::mat4 rotationMatrix = glm::mat4_cast(glm::conjugate(lightOrientation));
+        glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0), -lightPosition);
+
+        glm::mat4 viewMatrix = rotationMatrix * translationMatrix;
+        glm::mat4 projectionMatrix;
+        if (lightComponent->GetType() == LightType::DirectionalLight)
+        {
+            projectionMatrix = glm::ortho<float>(-10, 10, -10, 10, 1.f, 7.5f);
+        }
+        else
+        {
+            projectionMatrix = glm::perspective(glm::radians(45.0f), (GLfloat)1024 / (GLfloat)1024, 1.f, 7.5f);
+        }
+
+        mEngineUniformBuffer.SetCameraMatrices(
+            viewMatrix,
+            projectionMatrix,
+            lightComponent->entity->transform->getWorldPosition()
+        );
+
+
+        lightEnabled[i] = glm::mat4(lightComponent->GetCreatesShadows());
+        if (!lightEnabled[i][0][0]) continue;
+        lightViewMatricies[i] = projectionMatrix * viewMatrix;
+        lightComponent->BindShadowFrameBuffer();
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glEnable(GL_CULL_FACE);
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
+        glCullFace(GL_FRONT);
+
+        mShadowMapShader->Use();
+        for (auto renderable : renderablesThisFrame)
+        {
+            glm::mat4 modelMatrix = renderable->worldTransform->getTransformMatrix();
+
+            mEngineUniformBuffer.SetSubData(modelMatrix, 0);
+            renderable->mesh->Draw();
+        }
+
+        glCopyImageSubData(
+            lightComponent->GetShadowMapID(), GL_TEXTURE_2D, 0, 0, 0, 0,
+            shadowMapTextureArray, GL_TEXTURE_2D_ARRAY, 0, 0, 0, i,
+            1024, 1024, 1);
+    }
+
+    mLightMatriciesSSBO.SendBlocks(lightMatricies.data(), lightMatricies.size() * sizeof(glm::mat4));
+    mLightViewsSSBO.SendBlocks(lightViewMatricies.data(), lightViewMatricies.size() * sizeof(glm::mat4));
+    mLightsEnabledSSBO.SendBlocks(lightEnabled.data(), lightEnabled.size() * sizeof(glm::mat4));
+
+    mLightMatriciesSSBO.Bind(0);
+    mLightViewsSSBO.Bind(1);
+    mLightsEnabledSSBO.Bind(2);
+}
+
+void Renderer::BindShadowMaps()
+{
+    glActiveTexture(GL_TEXTURE31);
+    glBindTexture(GL_TEXTURE_2D_ARRAY, shadowMapTextureArray);
+}
+
+void Renderer::FetchLights()
+{
+    std::vector<glm::mat4> lightMatricies;
+    auto lightComponentUUIDs = EntityManager::getInstance().findEntitiesByComponent(ComponentType::Light);
+    for (auto& uuid : lightComponentUUIDs)
+    {
+        auto entity = EntityManager::getInstance().getEntity(uuid);
+        LightComponent* lightComponent = dynamic_cast<LightComponent*>(entity->getComponent(ComponentType::Light));
+        if (lightComponent == nullptr) continue;
+        lightsThisFrame.push_back(lightComponent);
+    }
+
+}
+
+void Renderer::FetchSkybox()
+{
+    auto skyboxID = Core::getInstance().GetScene()->GetSkyboxID();
+    skyboxThisFrame = AssetManager::GetInstance().GetSkyboxByID(skyboxID);
+}
+
+void Renderer::FetchRenderables()
+{
+    ComponentMask renderableComponentMask;
+    // TODO: Add Materials to this.
+    renderableComponentMask.set(static_cast<size_t>(ComponentType::Mesh));
+    renderableComponentMask.set(static_cast<size_t>(ComponentType::Transform));
+    auto renderableEntities = EntityManager::getInstance().findEntitiesContainingComponentMask(renderableComponentMask);
+
+    for (auto renderEntity : renderableEntities)
+    {
+        TransformComponent* transformComponent = new TransformComponent(*(renderEntity->transform));
+        MeshComponent* meshComponent = dynamic_cast<MeshComponent*>(renderEntity->getComponent(ComponentType::Mesh));
+        // TODO: MaterialComponent pointer here.
+        Material* materialComponent = nullptr;
+
+        Renderable* renderable = new Renderable(transformComponent);
+        if (meshComponent != nullptr && meshComponent->getMesh() != nullptr)
+        {
+            renderable->mesh = meshComponent->getMesh();
+        }
+
+        renderablesThisFrame.push_back(renderable);
+    }
 }

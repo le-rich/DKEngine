@@ -10,13 +10,18 @@
 #include "Buffers/ShaderStorageBuffer.h"
 #include "Data/Shape.h"
 #include "Resources/Shader.h"
+#include "Resources/Skybox.h"
 #include "Resources/Primitives.h"
 #include "Window/Window.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+//Forward Decleration
+class LightComponent;
+
 static const std::string SCREEN_SHADER_PATH = "../Rendering/Shaders/screen.glsl";
+static const std::string SHADOWMAP_SHADER_PATH = "../Rendering/Shaders/shadowmap.glsl";
 
 struct Renderable {
     TransformComponent* worldTransform;
@@ -51,7 +56,10 @@ public:
 
     void RenderToFrame(int pWidth, int pHeight);
     void WriteToFrameBuffer();
+
+    void FetchLights();
     void FetchRenderables();
+    void FetchSkybox();
 
     const FrameBuffer* GetFrameBuffer() { return &mFrameBuffer; }
 
@@ -60,13 +68,22 @@ private:
 
     Entity* mainCameraEntity = nullptr;
     std::unique_ptr<Shader> mScreenShader = std::make_unique<Shader>(SCREEN_SHADER_PATH, "ScreenShader");
+    std::unique_ptr<Shader> mShadowMapShader = std::make_unique<Shader>(SHADOWMAP_SHADER_PATH, "ShadowMapShader");
     Primitive mScreenQuad;
     FrameBuffer mFrameBuffer;
 
     UniformBuffer mEngineUniformBuffer;
-    ShaderStorageBuffer shaderStorageBufferObject;
+    ShaderStorageBuffer mLightMatriciesSSBO;
+    ShaderStorageBuffer mLightViewsSSBO;
+    ShaderStorageBuffer mLightsEnabledSSBO;
+    GLuint shadowMapTextureArray;
+
+    std::vector<LightComponent*> lightsThisFrame;
     std::vector<Renderable*> renderablesThisFrame;
+    std::shared_ptr<Skybox> skyboxThisFrame;
 
     void IssueMeshDrawCalls();
     void SetEngineUBO(int pWidth, int pHeight);
+    void GenerateShadowMaps();
+    void BindShadowMaps();
 };

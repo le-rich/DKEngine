@@ -5,6 +5,7 @@
 
 enum VertexAttributeKeys
 {
+    DEFAULT = 0,
     POSITION,
     NORMAL,
     TEXCOORD_0
@@ -16,6 +17,7 @@ inline VertexAttributeKeys GetVertexAttributeFromString(std::string pVertexAttri
     if (pVertexAttribute.compare("NORMAL") == 0) return VertexAttributeKeys::NORMAL;
     if (pVertexAttribute.compare("TEXCOORD_0") == 0) return VertexAttributeKeys::TEXCOORD_0;
     std::printf("Unsupported attribute %s in gltf model!", pVertexAttribute.c_str());
+    return VertexAttributeKeys::DEFAULT;
 }
 
 

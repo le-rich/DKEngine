@@ -1,11 +1,13 @@
 #pragma once
 
-//#include <stdint.h>
-#include <glm.hpp>
-#include <gtc/quaternion.hpp>
-
 #include "Component.h"
 #include "Components/TransformComponent.h"
+
+//#include <stdint.h>
+#include <glad/glad.h>
+#include <glm.hpp>
+#include <gtc/quaternion.hpp>
+#include <unordered_map>
 
 enum LightType
 {
@@ -14,6 +16,14 @@ enum LightType
     DirectionalLight,
     SpotLight,
     AreaLight // Needs additional information that does not currently fit in generated matrix (reuse cutoff variables?)
+};
+
+std::unordered_map<std::string, LightType> const LightTypeMap = {
+        {"AmbientLight", LightType::AmbientLight},
+        {"PointLight", LightType::PointLight},
+        {"DirectionalLight", LightType::DirectionalLight},
+        {"SpotLight", LightType::SpotLight},
+        {"AreaLight", LightType::AreaLight},
 };
 
 struct LightParams
@@ -25,6 +35,7 @@ struct LightParams
     float quadratic = 1.0f;
     float cutoff = 12.0f;
     float outercutoff = 15.0f;
+    bool createsShadows = false;
     LightType type = AmbientLight;
 };
 
@@ -45,7 +56,10 @@ public:
     inline float GetQuadratic() const { return mQuadratic; }
     inline float GetCutoff() const { return mCutoff; }
     inline float GetOuterCutoff() const { return mOuterCutoff; }
-    inline float GetType() const { return mType; }
+    inline bool GetCreatesShadows() const { return mCreatesShadows; }
+    inline LightType GetType() const { return mType; }
+
+    inline GLuint GetShadowMapID() const { return mDepthTexture; }
 
     inline void SetColor(glm::vec4 pColor) { mColor = pColor; }
     inline void SetIntensity(float pIntensity) { mIntensity = pIntensity; }
@@ -56,7 +70,11 @@ public:
     inline void SetOuterCutoff(float pOuterCutoff) { mOuterCutoff = pOuterCutoff; }
     inline void SetType(LightType pType) { mType = pType; }
 
-    Component* clone() const override;
+    void SetParams(LightParams pParams);
+    void BindShadowFrameBuffer();
+    void BindShadowMap();
+
+    virtual Component* clone() const override;
 
 
 private:
@@ -67,6 +85,10 @@ private:
     float mQuadratic = 1.0f;
     float mCutoff = 12.0f;
     float mOuterCutoff = 15.0f;
+    bool mCreatesShadows = false;
     LightType mType = AmbientLight;
+
+    GLuint mShadowFrameBuffer = 0;
+    GLuint mDepthTexture = 0;
 };
 

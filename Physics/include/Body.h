@@ -1,7 +1,7 @@
 #pragma once
-#ifndef BODY_HEADER
+//#ifndef BODY_HEADER
 
-#define BODY_HEADER
+//#define BODY_HEADER
 
 #include "Core.h"
 
@@ -141,12 +141,17 @@ s		 */
 		void setVelocity(const Vector3& velocity);
 		Vector3 getVelocity() const;
 
+		Vector3 getVelocityAtWorldPoint(Vector3 point);
+
 		// Setters and getters for rotation
 		void setRotation(const Vector3& rotation);
+		void setRotation(real x, real y, real z);
 		Vector3 getRotation() const;
 
 		// Getter for force accum
 		Vector3 getForceAccum() const;
+
+		Vector3 getLastFrameAcceleration() const;
 
 		/*************************************/
 
@@ -233,4 +238,4 @@ s		 */
 	
 }
 
-#endif
+//#endif

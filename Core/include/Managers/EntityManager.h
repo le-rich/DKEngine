@@ -49,7 +49,7 @@ public:
         auto it = entityMap.find(eID);
         if (it != entityMap.end())
         {
-            entityMap.erase(it);
+           removeEntity(*(it->second));
         }
     }
 
@@ -59,6 +59,12 @@ public:
         auto it = entityMap.find(eID);
 
         if (it != entityMap.end()) {
+           while (it->second->getChildren().size() != 0) {
+              Entity* child = it->second->getChildren()[0];
+              removeEntity(*child);
+              child->getParent()->removeChild(child);
+           }
+           it->second->getParent()->removeChild(it->second);
             entityMap.erase(it);
         }
         else {
@@ -128,7 +134,7 @@ public:
     }
 
     // retrieve by display name
-    UUIDv4::UUID findFirstEntityByDisplayName(const std::string& displayName)
+    Entity* findFirstEntityByDisplayName(const std::string& displayName)
     {
         for (auto it = entityMap.begin(); it != entityMap.end(); ++it)
         {
@@ -137,13 +143,14 @@ public:
 
             if (entity->GetDisplayName() == displayName)
             {
-                return uuid;
+                return it->second;
             }
         }
 
         return nullptr;
     }
 
+    // Returns entities explicitly matching the component mask
     std::vector<Entity*> findEntitiesByComponentMask(ComponentMask componentMask) 
     {
         std::vector<Entity*> result;
@@ -153,6 +160,24 @@ public:
             Entity* entity = it->second;
 
             if (entity->GetComponentMask() == componentMask)
+            {
+                result.push_back(entity);
+            }
+        }
+
+        return result;
+    }
+
+    // Returns entities that contain the component mask
+    std::vector<Entity*> findEntitiesContainingComponentMask(ComponentMask componentMask)
+    {
+        std::vector<Entity*> result;
+        for (auto it = entityMap.begin(); it != entityMap.end(); ++it)
+        {
+            UUIDv4::UUID uuid = it->first;
+            Entity* entity = it->second;
+
+            if ((entity->GetComponentMask() & componentMask) == componentMask)
             {
                 result.push_back(entity);
             }
@@ -224,16 +249,21 @@ public:
         // create a new entity with a copy name
         Entity* duplicate = new Entity(originalEntity->GetDisplayName() + "_copy");
 
+        duplicate->transform = dynamic_cast<TransformComponent*>(originalEntity->transform->clone());
+
         // duplicate components
         for (const auto& comp : originalEntity->getComponents()) {
             duplicate->addComponent(*comp->clone());
         }
 
         // recursive duplicate children
-        for (auto* child : originalEntity->getChildren()) {
-            Entity* childDuplicate = duplicateEntity(child);
+        for(int i = 0; i < originalEntity->getChildren().size(); i++){
+            Entity* childDuplicate = duplicateEntity(originalEntity->getChildren()[i]);
+            childDuplicate->setParent(duplicate);
             duplicate->addChild(childDuplicate);
         }
+
+        duplicate->setParent(originalEntity->getParent());
 
         addEntityToMap(*duplicate);
 

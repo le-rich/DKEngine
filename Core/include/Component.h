@@ -3,6 +3,7 @@
 #include "Utils/IDUtils.h"
 
 #include <bitset>
+#include <unordered_map>
 #include <string>
 
 class Entity;
@@ -17,7 +18,17 @@ enum class ComponentType : uint8_t
     Light,
     Mesh,
     Script,
+    RigidBody,
     Count, // This needs to be last. It represents how many components there are for bitmask.
+};
+
+std::unordered_map<std::string, ComponentType> const ComponentMap = {
+    {"None", ComponentType::None},
+    {"Transform", ComponentType::Transform},
+    {"Camera", ComponentType::Camera},
+    {"Light", ComponentType::Light},
+    {"Mesh", ComponentType::Mesh},
+    {"Script", ComponentType::Script}
 };
 
 // Defines a type - Component Mask - that is a bitmask of components on an entity. Used for querying.
@@ -29,7 +40,6 @@ class Component
 public:
     Component(Entity* mEntity);
     virtual ~Component() = default;
-   
     Entity* entity;
 
     UUIDv4::UUID componentID;

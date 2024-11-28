@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include "System.h"
 #include "Managers\EntityManager.h"
@@ -6,74 +8,58 @@
 #include <mutex>
 #include <chrono>
 #include "Components/TransformComponent.h"
+#include <Components/RigidBodyComponent.h>
 
 
-// 120 HZ tick rate
-std::chrono::milliseconds PHYSICS_TICK_RATE = std::chrono::milliseconds(8);
+// tick rate in ms, 8ms = 120hz
+static float PHYSICS_UPDATE_INTERVAL = 8;
 
 class Physics : public System {
 public:
     AE86::World world;
-    std::chrono::time_point<std::chrono::high_resolution_clock> prevTime;
-    std::chrono::duration<double> timeBuffer;
-    AE86::RigidBody* body;
-    TransformComponent* CAR_TRANSFORM;
-    
-	Physics(TransformComponent* carTransform) {
-        CAR_TRANSFORM = carTransform;
+    std::mutex mtx;
+
+    Physics() {
         world = AE86::World();
-        prevTime = std::chrono::high_resolution_clock::now();
-        timeBuffer = std::chrono::milliseconds(0);
-        body = new AE86::RigidBody();
-        body->setAwake(true);
-        body->setInverseMass(0.95f);
-        body->setLinearDamping(0.50f);
-        body->setAngularDamping(0.50f);
-
-        glm::quat initOrientation = CAR_TRANSFORM->getLocalOrientation();
-        glm::vec3 initPosition = CAR_TRANSFORM->getLocalPosition();
-
-        body->setOrientation(AE86::Quaternion(initOrientation.w, initOrientation.x, initOrientation.y, initOrientation.z));
-        body->setPosition(AE86::Vector3(initPosition.x, initPosition.y, initPosition.z));
-        body->calculateDerivedData();
-
-        world.addRigidBody(body);
         world.startFrame();
-	}
+    }
 
     const char* GetName() const override {
         return "Physics";
     }
 
     void Update(float deltaTime) override {
-        // Update Loop logic here
-        //auto currentTime = std::chrono::high_resolution_clock::now();
-        //timeBuffer += currentTime - prevTime;
-        //prevTime = currentTime;
-
-        //if (timeBuffer >= PHYSICS_TICK_RATE) {
-        //    world.runPhysics((AE86::real) timeBuffer.count() / 1000.0f);
-        //}
     }
 
     void FixedUpdate() override {
-        // Update Loop logic here
+        // TODO: possible race conditions, need to lock scene graph here until all
+        // rb->updates are done.
+        std::vector<AE86::RigidBody*> rigidBodies;
+        std::vector<RigidBodyComponent*> components;
 
-        //std::cout << "PHYSICS - WE ARE GRABBING LOCK FOR CAR\n";
-        // std::lock_guard<std::mutex> lck(CAR_TRANSFORM->mtx);
+        std::vector<UUIDv4::UUID> rigidBodyEntitiesUUIDs = EntityManager::getInstance().findEntitiesByComponent(ComponentType::RigidBody);
+        for (UUIDv4::UUID rigidBodyEntityUUID : rigidBodyEntitiesUUIDs) {
+            Entity* rigidBodyEntity = EntityManager::getInstance().getEntity(rigidBodyEntityUUID);
+            RigidBodyComponent* rigidBodyComponent = dynamic_cast<RigidBodyComponent*>(
+                rigidBodyEntity->getComponent(ComponentType::RigidBody)
+            );
+            rigidBodyComponent->update();
+            AE86::RigidBody* rigidBody = rigidBodyComponent->getRigidBody().get();
+            rigidBodies.emplace_back(rigidBody);
+            components.emplace_back(rigidBodyComponent);
+        }
 
-        world.runPhysics(0.02);
+        world.integrate(rigidBodies, PHYSICS_UPDATE_INTERVAL / 1000.0f); // TODO: remove magic constant
 
-        //std::cout << "PHYSICS - WE HAVE DONE A PHYSICS TIME-STEP\n";
+        // update all transform positions after physics time-step
+        for (RigidBodyComponent* rigidBodyComponent : components) {
+            auto body = rigidBodyComponent->getRigidBody();
+            AE86::Vector3 updatedPosition = body->getPosition();
+            AE86::Quaternion updatedOrientation = body->getOrientation();
 
-        AE86::Vector3 updatedPosition = body->getPosition();
-        AE86::Quaternion updatedOrientation = body->getOrientation();
-
-        //std::cout << "PHYSICS - RB POSITION: " << updatedPosition.x << ", " << updatedPosition.y << ", " << updatedPosition.z << "\n";
-
-
-        CAR_TRANSFORM->setLocalPosition(glm::vec3(updatedPosition.x, updatedPosition.y, updatedPosition.z));
-        CAR_TRANSFORM->setLocalOrientation(glm::quat(updatedOrientation.r, updatedOrientation.i, updatedOrientation.j, updatedOrientation.k));
-        //std::cout << "PHYSICS - WE HAVE UPDATED THE TRANSFORM AND RELEASING LOCK\n";
+            TransformComponent* transform = rigidBodyComponent->entity->transform;
+            transform->setLocalPosition(glm::vec3(updatedPosition.x, updatedPosition.y, updatedPosition.z));
+            transform->setLocalOrientation(glm::quat(updatedOrientation.r, updatedOrientation.i, updatedOrientation.j, updatedOrientation.k));
+        }
     }
 };

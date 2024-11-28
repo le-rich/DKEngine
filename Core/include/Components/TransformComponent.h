@@ -74,6 +74,12 @@ public:
 	glm::vec3 getLocalScale() const;
 	void setLocalScale(glm::vec3 scale);
 
+    glm::vec3 getForward();
+    glm::vec3 getBack();
+    glm::vec3 getRight();
+    glm::vec3 getLeft();
+    glm::vec3 getUp();
+
     TransformComponent& operator=(const TransformComponent& other);
 
 	// copy constructor for clone

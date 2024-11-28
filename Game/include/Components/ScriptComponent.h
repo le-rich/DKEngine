@@ -1,8 +1,9 @@
 #pragma once
+#include "Script.h"
+
 #include <vector>
 #include <memory>
 
-#include "Script.h"
 
 class Component;
 class Entity;
@@ -11,7 +12,7 @@ class ScriptComponent : public Component
 {
 public:
 
-    ScriptComponent(Entity* mEntity);
+    ScriptComponent(Entity* entity);
     ~ScriptComponent();
     ScriptComponent(const ScriptComponent& other);
 
@@ -24,12 +25,26 @@ public:
     }
 
     template<typename T>
-    void AddScriptToComponent(ScriptParams* pScriptParams)
+    void CreateAndAddScript(ScriptParams* pScriptParams)
     {
         T* script;
         script = new T(entity);
         script->SetParameters(pScriptParams);
         this->AddScript<T>(*script);
+    }
+
+    template <typename T>
+    T* GetScript()
+    {
+        for (const auto& script : scripts)
+        {
+            T* subScript = dynamic_cast<T*>(script.get());
+            if (subScript != nullptr)
+            {
+                return subScript;
+            }
+        }
+        return nullptr;
     }
 
     void UpdateScripts(float deltaTime)
@@ -39,6 +54,8 @@ public:
             script->Update(deltaTime);
         }
     }
+
+    int getScriptCount() { return scripts.size(); }
 
     ScriptComponent& operator=(ScriptComponent& const other);
 

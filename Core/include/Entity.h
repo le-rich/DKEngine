@@ -3,6 +3,7 @@
 #include "Utils/IDUtils.h"
 #include "Component.h"
 #include "Components/TransformComponent.h"
+#include "Core.h"
 
 #include <algorithm>
 #include <memory>
@@ -117,14 +118,13 @@ public:
     {
         this->entityID = uuidGen.getUUID();
         this->transform = new TransformComponent(this);
+        componentMask.set(static_cast<size_t>(ComponentType::Transform));
         // init code
     }
 
-    Entity(std::string DisplayName)
+    Entity(std::string DisplayName) : Entity()
     {
         this->entityDisplayName = DisplayName;
-        this->entityID = uuidGen.getUUID();
-        this->transform = new TransformComponent(this);
     }
 
     // Copy constructor
@@ -194,6 +194,21 @@ public:
     const std::vector<Entity*>& getChildren() const
     {
         return children;
+    }
+
+    // traverse tree hierarchy for first entity of name
+    Entity* findFirstChildByDisplayName(std::string entityName) {
+        // base case
+        if (entityDisplayName == entityName)
+            return this;
+
+        for (Entity* child : children) {
+            Entity* traversalResult = child->findFirstChildByDisplayName(entityName);
+            if (traversalResult)
+                return traversalResult;
+        }
+
+        return nullptr;
     }
 
     // retrieve a specific component from a parent

@@ -1,0 +1,265 @@
+{
+  "assets": [
+    {
+      "path": "Car2Test/",
+      "file": [ "sportcar.017.gltf" ]
+    },
+    {
+      "path": "TestAE4/",
+      "file": [ "ae86.gltf" ]
+    },
+    {
+      "path": "TestRoom/",
+      "file": [ "Room.gltf" ]
+    }
+  ],
+  "skybox": "skybox_to_equirect_2.png",
+  "entities": [
+    {
+      "name": "Main Camera",
+      "transform": {
+        "localPosition": [ 0, 1, 0 ],
+        "localOrientation": [],
+        "localScale": []
+      },
+      "components": [
+        {
+          "type": "Camera",
+          "params": {
+            "fieldOfView": 90,
+            "farClipPlane": 1000,
+            "nearClipPlane": 0.3
+          }
+        },
+        {
+          "type": "Script",
+          "params": {
+            "scripts": [
+              {
+                "script": "OrbitScript",
+                "params": {
+                  "target": "Test Car",
+                  "radius": 2,
+                  "speed": 1.5,
+                  "currentAngle": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Light",
+      "transform": {
+        "localPosition": [ 0, 5, 0 ],
+        "localOrientation": [ 0.760, -0.649, 0, 0 ],
+        "localScale": []
+      },
+      "components": [
+        {
+          "type": "Light",
+          "params": {
+            "color": [ 1.0, 1.0, 1.0, 1.0 ],
+            "intensity": 0.2,
+            "constant": 0,
+            "linear": 0.0,
+            "quadratic": 1.0,
+            "cutoff": 12.0,
+            "outercutoff": 15.0,
+            "createsShadows": true,
+            "type": "DirectionalLight"
+          }
+        }
+      ]
+    },
+    {
+      "name": "FLLight",
+      "transform": {
+        "localPosition": [ -1.64, 1.95, 1.5 ],
+        "localOrientation": [ 0.836, -0.343, -0.396, -0.162 ],
+        "localScale": []
+      },
+      "components": [
+        {
+          "type": "Light",
+          "params": {
+            "color": [ 1.0, 1.0, 1.0, 1.0 ],
+            "intensity": 0.7,
+            "constant": 0.9,
+            "linear": 0.29,
+            "quadratic": 0.032,
+            "cutoff": 25.0,
+            "outercutoff": 30.0,
+            "createsShadows": true,
+            "type": "SpotLight"
+          }
+        }
+      ]
+    },
+    {
+      "name": "BRLight",
+      "transform": {
+        "localPosition": [ 1.4, 1.55, -2 ],
+        "localOrientation": [ 0.352, -0.887, -0.109, -0.275 ],
+        "localScale": []
+      },
+      "components": [
+        {
+          "type": "Light",
+          "params": {
+            "color": [ 1.0, 1.0, 1.0, 1.0 ],
+            "intensity": 0.7,
+            "constant": 0.9,
+            "linear": 0.29,
+            "quadratic": 0.032,
+            "cutoff": 25.0,
+            "outercutoff": 30.0,
+            "createsShadows": true,
+            "type": "SpotLight"
+          }
+        }
+      ]
+    },
+    {
+      "name": "BLLight",
+      "transform": {
+        "localPosition": [ -1.15, 1.6, -1.8 ],
+        "localOrientation": [ -0.065, -0.299, 0.825, 0.475 ],
+        "localScale": []
+      },
+      "components": [
+        {
+          "type": "Light",
+          "params": {
+            "color": [ 1.0, 1.0, 1.0, 1.0 ],
+            "intensity": 0.7,
+            "constant": 0.9,
+            "linear": 0.29,
+            "quadratic": 0.032,
+            "cutoff": 25.0,
+            "outercutoff": 30.0,
+            "createsShadows": true,
+            "type": "SpotLight"
+          }
+        }
+      ]
+    },
+    {
+      "name": "OverHeadLight",
+      "transform": {
+        "localPosition": [ 0, 2.6, 0 ],
+        "localOrientation": [ -0.707, -0.707, 0, 0 ],
+        "localScale": []
+      },
+      "components": [
+        {
+          "type": "Light",
+          "params": {
+            "color": [ 1.0, 1.0, 1.0, 1.0 ],
+            "intensity": 0.7,
+            "constant": 0.9,
+            "linear": 0.29,
+            "quadratic": 0.032,
+            "cutoff": 25.0,
+            "outercutoff": 30.0,
+            "createsShadows": true,
+            "type": "SpotLight"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Checkpoint 1",
+      "transform": {
+        "localPosition": [ 0, 0, 5 ],
+        "localOrientation": [],
+        "localScale": []
+      },
+      "components": [
+        {
+          "type": "Script",
+          "params": {
+            "scripts": [
+              {
+                "script": "LapCheckpointScript",
+                "params": {
+                  "other": "Test Car",
+                  "index": 1
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Checkpoint 2",
+      "transform": {
+        "localPosition": [ 0, 0, 8.25 ],
+        "localOrientation": [],
+        "localScale": []
+      },
+      "components": [
+        {
+          "type": "Script",
+          "params": {
+            "scripts": [
+              {
+                "script": "LapCheckpointScript",
+                "params": {
+                  "other": "Test Car",
+                  "index": 2
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Test OBJECT",
+      "transform": {
+        "localPosition": [],
+        "localOrientation": [],
+        "localScale": []
+      },
+      "components": {},
+      "parent": "JSON TEST PARENT",
+      "children": [ "JSON Test Child" ]
+    },
+    {
+      "name": "TestCar2",
+      "transform": {
+        "localPosition": [ -8, 0, 0 ],
+        "localOrientation": [],
+        "localScale": [ 0.4, 0.4, 0.4 ]
+      },
+      "components": {}
+    }
+  ],
+  "gamemanager": {
+    "components": [
+      {
+        "type": "Script",
+        "params": {
+          "scripts": [
+            {
+              "script": "TimerScript",
+              "params": {
+                "target": "Test Car"
+              }
+            },
+            {
+              "script": "LapManagerScript",
+              "params": {
+                "checkpoints": [ "Checkpoint 1", "Checkpoint 2" ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -1,5 +1,6 @@
 #pragma once
 #include "Components/MeshComponent.h"
+#include "Components/AudioComponent.h"
 #include "Components/RigidbodyComponent.h"
 #include "Managers/AssetManager.h"
 #include "Resources/Mesh.h"
@@ -123,7 +124,7 @@ namespace GLTFLoader
             std::vector<unsigned char> bufferData;
             if (!GetAttributeVector(pGltfModel, accessorNum, bufferData))
             {
-                std::printf("Failed to get attribute data");
+                std::printf("Failed to get attribute data\n");
                 continue;
             }
 
@@ -232,7 +233,7 @@ namespace GLTFLoader
     {
         int imageIndex = pTexture.source;
         tinygltf::Image image = pGltfModel.images[imageIndex];
-        std::shared_ptr<Texture> texture = std::make_shared<Texture>(pSourceFolder + image.uri);
+        std::shared_ptr<Texture> texture = std::make_shared<Texture>(pSourceFolder, image.uri);
         AssetManager::GetInstance().AddTexture(texture);
         return texture;
     }
@@ -349,7 +350,6 @@ namespace GLTFLoader
         if (meshIndex >= 0)
         {
             Mesh* mesh = GLTFLoader::LoadMesh(pGltfModel, pGltfModel.meshes[meshIndex], pMaterials);
-            //ComponentManager::AddMeshComponent(pEntity, mesh);
             MeshComponent* meshComponent = new MeshComponent(pEntity);
             meshComponent->setMesh(mesh);
             pEntity->addComponent(*meshComponent);
@@ -361,9 +361,10 @@ namespace GLTFLoader
         {
             // Add rigidbody
             std::shared_ptr<AE86::RigidBody> rb = std::make_shared<AE86::RigidBody>();
-            RigidBodyComponent rigidComponent(pEntity, rb);
-            pEntity->addComponent(rigidComponent);
+            RigidBodyComponent* rigidComponent = new RigidBodyComponent(pEntity, rb);
+            pEntity->addComponent(*rigidComponent);
         }
+
     }
 
     static void LoadChildEntities(Entity* pParentEntity, tinygltf::Model& const pGltfModel, std::vector<UUIDv4::UUID>& pMaterials, std::vector<int>& const pChildIndexes)
@@ -383,11 +384,11 @@ namespace GLTFLoader
     }
 
     // Loads given model file as an entity
-    static void LoadModelAsEntity(Entity* pEntity, std::string const pSourceFolder, std::string const pModelFile)
+    static void LoadModelAsEntity(Entity* pEntity, std::string const pSourcePath, std::string const pModelFile)
     {
         
-        tinygltf::Model gltfModel = LoadFromFile(DEFAULT_ASSET_FOLDER + pSourceFolder + pModelFile);
-        std::vector<UUIDv4::UUID> textures = LoadTextures(gltfModel, DEFAULT_ASSET_FOLDER + pSourceFolder);
+        tinygltf::Model gltfModel = LoadFromFile(DEFAULT_ASSET_FOLDER + pSourcePath + pModelFile);
+        std::vector<UUIDv4::UUID> textures = LoadTextures(gltfModel, DEFAULT_ASSET_FOLDER + pSourcePath);
         std::vector<UUIDv4::UUID> materials = LoadMaterials(gltfModel, textures);
 
         // Traverse nodes and assign entities and components to the entity for each child

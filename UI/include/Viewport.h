@@ -3,7 +3,8 @@
 #define VIEWPORT_H
 
 #include <imgui.h>
+#include "Buffers/FrameBuffer.h"
 
-void drawViewport();
+void drawViewport(const FrameBuffer* framebuffer);
 
 #endif

@@ -2,9 +2,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <queue>
-#include <iostream>
-
-#include "include/Body.h"
+#include <unordered_set>
+#include <unordered_map>
+#include <functional>
 
 class Input
 {
@@ -16,79 +16,68 @@ public:
         ActionType action;
     };
 
-    // Queue to store input events
-    static std::queue<InputEvent> eventQueue;
-
-    // Key callback functions for GLFW
-    static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
-    {
-        ActionType actionType = (action == GLFW_PRESS) ? PRESS : (action == GLFW_RELEASE ? RELEASE : HOLD);
-        eventQueue.push({ key, actionType });
+    // singleton instance
+    static Input& GetInstance() {
+        static Input instance;
+        return instance;
     }
 
-    // Mouse callback for GLFW 
-    static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
-    {
-        ActionType actionType = (action == GLFW_PRESS) ? PRESS : (action == GLFW_RELEASE ? RELEASE : HOLD);
-        eventQueue.push({ button, actionType });
-    }
-    
-    static void RunInputListener(AE86::RigidBody* rigidBody)
-    {
-        while (!eventQueue.empty())
-        {
-            InputEvent event = eventQueue.front();
-            eventQueue.pop();
+    // glfw key callbacks
+    static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+    static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 
-            // Checks for press, release or hold
-            if (event.action == PRESS)
-            {
-                if (event.key == GLFW_KEY_W)
-                {
-                    std::cout << "W key pressed" << std::endl;
-                }
-                else if (event.key == GLFW_KEY_S) 
-                {
-                    std::cout << "S key pressed" << std::endl;
-                }
-                else if (event.key == GLFW_KEY_A)
-                    std::cout << "A key pressed" << std::endl;
-                else if (event.key == GLFW_KEY_D)
-                    std::cout << "D key pressed" << std::endl;
-                else if (event.key == GLFW_MOUSE_BUTTON_LEFT)
-                    std::cout << "LMB clicked" << std::endl;
-                else if (event.key == GLFW_MOUSE_BUTTON_RIGHT)
-                    std::cout << "RMB clicked" << std::endl;
-            }
-            else if (event.action == HOLD)
-            {
-                if (event.key == GLFW_KEY_W) 
-                {
-                    rigidBody->addForce(AE86::Vector3(-5.0, 0.0, 0.0));
-                    std::cout << "holding W key" << std::endl;
-                }
-                else if (event.key == GLFW_KEY_S) 
-                {
-                    rigidBody->addForce(AE86::Vector3(5.0, 0.0, 0.0));
-                    std::cout << "holding S key" << std::endl; 
-                }
-                else if (event.key == GLFW_KEY_A)
-                    std::cout << "holding A key" << std::endl;
-                else if (event.key == GLFW_KEY_D)
-                    std::cout << "holding D key" << std::endl;
-                else if (event.key == GLFW_MOUSE_BUTTON_LEFT)
-                    std::cout << "Left mouse button is being held down" << std::endl;
-                else if (event.key == GLFW_MOUSE_BUTTON_RIGHT)
-                    std::cout << "Right mouse button is being held down" << std::endl;
-            }
-            else if (event.action == RELEASE)
-            {
-                // Can change this if we want to check on the release of a specific key
-                // e.g. if (event.code == GLFW_KEY_W)
-                std::cout << "released" << std::endl;
-            }
+    // callback addition/removal
+    void RegisterKeyCallback(int key, const std::function<void(ActionType)>& callback);
+    void UnregisterKeyCallback(int key, const std::function<void(ActionType)>& callback);
+    void UnregisterAllKeyCallbacks(int key);
+
+    void Update();
+
+    // quick query for external use to track what is active
+    bool IsKeyPressed(int key) const;
+    bool IsKeyHeld(int key) const;
+    bool IsMouseButtonPressed(int button) const;
+
+    void SetWindow(GLFWwindow* glfwWindow);
+
+private:
+    Input() = default;
+    ~Input() = default;
+
+    Input(const Input&) = delete;
+    Input& operator=(const Input&) = delete;
+
+    void ProcessKeyEvent(int key, ActionType action) {
+        eventQueue.push({ key, action });
+        if (action == PRESS) {
+            keyStates[key] = PRESS;
+        }
+        else if (action == RELEASE) {
+            keyStates[key] = RELEASE;
+            activeKeys.erase(key);
         }
     }
-};
 
-std::queue<Input::InputEvent> Input::eventQueue;
+    void ProcessMouseEvent(int button, ActionType action) {
+        eventQueue.push({ button, action });
+    }
+
+    // queue to store input events
+    std::queue<InputEvent> eventQueue;
+
+    // set to track active keys
+    std::unordered_set<int> activeKeys;
+
+    // disgusting map of keycodes to a list of callbacks
+    std::unordered_map<int, std::list<std::function<void(ActionType)>>> keyCallbacks;
+
+    // tracking the current state of each key
+    std::unordered_map<int, ActionType> keyStates;
+
+    // timers to differentiate between press and hold
+    std::unordered_map<int, double> keyTimers;
+    const double PRESS_DURATION_THRESHOLD = 200; // ms
+
+    // have to pass in the window for glfwGetKey
+    GLFWwindow* window = nullptr;
+};

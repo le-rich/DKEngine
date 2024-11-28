@@ -83,8 +83,10 @@
     <ClInclude Include="include\Components\CameraComponent.h" />
     <ClInclude Include="include\Utils\Logger.h" />
     <ClInclude Include="include\Entities\LightEntity.h" />
+    <ClInclude Include="include\Resources\Skybox.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Resources\Skybox.cpp" />
     <ClCompile Include="src\Entities\LightEntity.cpp" />
     <ClCompile Include="src\Buffers\ShaderStorageBuffer.cpp" />
     <ClCompile Include="src\Components\MeshComponent.cpp" />
@@ -103,9 +105,6 @@
     <ClCompile Include="src\Components\CameraComponent.cpp" />
     <ClCompile Include="src\Buffers\FrameBuffer.cpp" />
     <ClCompile Include="src\Resources\Primitives.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Shaders\screen.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

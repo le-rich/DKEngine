@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Component.h"
-#include "../Physics/include/body.h"
+#include "Body.h"
 
-#include <glm/glm.hpp>
+#include <glm.hpp>
 #include <string>
 
 class RigidBodyComponent : public Component {
@@ -12,8 +12,13 @@ protected:
 	std::shared_ptr<AE86::RigidBody> rb;
 
 public:
+	std::shared_ptr<AE86::RigidBody> getRigidBody();
+
 	// init to a default mass like unity?
 	RigidBodyComponent(Entity* mEntity, std::shared_ptr<AE86::RigidBody> rigidBody, float mass = 1.0f);
+	
+	// constructor that creates an empty rigidbody
+	RigidBodyComponent(Entity* mEntity);
 	~RigidBodyComponent();
 
 	// getters and setters

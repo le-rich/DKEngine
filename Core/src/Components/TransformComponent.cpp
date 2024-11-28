@@ -129,6 +129,27 @@ void TransformComponent::setLocalScale(glm::vec3 scale)
     mTransform.localScale.z = scale.z;
 }
 
+glm::vec3 TransformComponent::getForward() {
+    return mTransform.localOrientation * glm::vec3(0, 0, 1);
+}
+
+glm::vec3 TransformComponent::getBack() {
+    return mTransform.localOrientation * glm::vec3(0, 0, -1);
+}
+
+
+glm::vec3 TransformComponent::getRight() {
+    return mTransform.localOrientation * glm::vec3(-1, 0, 0);
+}
+
+glm::vec3 TransformComponent::getLeft() {
+    return mTransform.localOrientation * glm::vec3(1, 0, 0);
+}
+
+glm::vec3 TransformComponent::getUp() {
+    return mTransform.localOrientation * glm::vec3(0, 1, 0);
+}
+
 TransformComponent& TransformComponent::operator=(const TransformComponent& other)
 {
 	if (this == &other)
@@ -141,7 +162,6 @@ TransformComponent& TransformComponent::operator=(const TransformComponent& othe
     this->mTransform.localScale = other.mTransform.localScale;
 
 	// DO NOT copy mutex.
-
 	this->transformMatrix = other.transformMatrix;
 	this->entity->GetEntityID() == other.entity->GetEntityID();
 }

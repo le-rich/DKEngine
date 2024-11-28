@@ -1,5 +1,4 @@
 #include "Scripts/OrbitScript.h"
-
 #include "Components/TransformComponent.h"
 
 OrbitScript::OrbitScript(Entity *mEntity) : Script(mEntity)
@@ -33,4 +32,8 @@ void OrbitScript::Update(float deltaTime)
 void OrbitScript::SetParameters(ScriptParams* pScriptParameters)
 {
     mParams = *static_cast<OrbitScriptParams*>(pScriptParameters);
+}
+
+TransformComponent* OrbitScript::getCurrentTarget() {
+    return mParams.m_OrbitTarget;
 }

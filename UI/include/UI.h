@@ -11,6 +11,7 @@
 #include "DKWindows.h"  
 #include "MenuBar.h"
 #include "Scene.h"
+#include "Buffers/FrameBuffer.h"
 
 struct GLFWwindow;
 
@@ -18,7 +19,7 @@ class UI : public System {
 
 public:
 
-   UI(Scene* scene);
+   UI(Scene* scene, const FrameBuffer* framebuffer, GLFWwindow* glfwWindow);
 
     const char* GetName() const override {
         return "UI";
@@ -31,10 +32,21 @@ public:
 
     }
 
+    static void setPaused(bool pause) {
+       paused = pause;
+    }
+
+    static bool isPaused() {
+       return paused;
+    }
+
 private:
 
+   static bool paused;
    GLFWwindow* window;
    Scene* scene;
+   const FrameBuffer* framebuffer;
+   GLFWwindow* glfwWindow;
    
 };
 
