@@ -98,9 +98,6 @@ namespace SceneParser
 
     void ParseLight(Entity* pEntity, json pLightParams)
     {
-        LightComponent* lightComponent = new LightComponent(pEntity);
-        pEntity->addComponent(*lightComponent);
-
         LightParams lightParams;
         try
         {
@@ -154,7 +151,13 @@ namespace SceneParser
             pLightParams.at("outercutoff").get_to(lightParams.outercutoff);
         } OPTIONAL_EXCEPTION_HANDLER;
 
-        lightComponent->SetParams(lightParams);
+        try
+        {
+            pLightParams.at("createsShadows").get_to(lightParams.createsShadows);
+        } OPTIONAL_EXCEPTION_HANDLER;
+
+        LightComponent* lightComponent = new LightComponent(pEntity, lightParams);
+        pEntity->addComponent(*lightComponent);
     }
 
     void ParseScript(Entity* pEntity, json pScriptParams)

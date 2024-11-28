@@ -34,20 +34,30 @@ void Renderer::Initialize()
         std::cin.get();
         std::exit(EXIT_FAILURE);  // Terminate program with failure status
     }
+    glGenTextures(1, &shadowMapTextureArray);
+    glBindTexture(GL_TEXTURE_2D_ARRAY, shadowMapTextureArray);
+    // Always set reasonable texture parameters
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
 }
 
 void Renderer::Update(float deltaTime)
 {
     // TODO: Collect set of renderables here and use it.
+    // TODO: Lock Enttiies while grabbing
     FetchRenderables();
+    FetchLights();
     FetchSkybox();
     {
         std::lock_guard<std::mutex> lock(windowRef->mMutex);
         windowRef->SetWindowToCurrentThread();
 
-        // TODO: Create copy of Scene Graph/Entity manager to avoid race conditions with other threads
         // TODO: Revision, change such that renderables are taken and threads are spun up to do tasks within Renderer.
-        
+        GenerateShadowMaps();
+
         // Set FrameBuffer
         int width, height;
         glfwGetWindowSize(windowRef->GetWindow(), &width, &height);
@@ -63,14 +73,14 @@ void Renderer::Update(float deltaTime)
         WriteToFrameBuffer();
     }
 
-    // Swap window buffers. can be moved to post update
     windowRef->SwapWindowBuffers();
 
-    for (auto ptr : renderablesThisFrame){
+    for (auto ptr : renderablesThisFrame)
+    {
         delete ptr;
     }
-
     renderablesThisFrame.clear();
+    lightsThisFrame.clear();
 }
 
 void Renderer::FixedUpdate() {}
@@ -80,6 +90,7 @@ void Renderer::RenderToFrame(int pWidth, int pHeight)
     // Clear color and depth buffers for set Framebuffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
 
@@ -123,35 +134,22 @@ void Renderer::IssueMeshDrawCalls()
     for (auto& uuid : meshComponentUUIDs)
     {
         auto entity = EntityManager::getInstance().getEntity(uuid);
-        if (entity != nullptr) {
-           MeshComponent* meshComponent = dynamic_cast<MeshComponent*>(entity->getComponent(ComponentType::Mesh));
+        if (entity != nullptr)
+        {
+            MeshComponent* meshComponent = dynamic_cast<MeshComponent*>(entity->getComponent(ComponentType::Mesh));
 
-           if (meshComponent != nullptr)
-           {
-              // TODO: Bug Physics/Core on way to get modelMatrix directly from transform
-              glm::mat4 modelMatrix = entity->transform->getTransformMatrix();
-              mEngineUniformBuffer.SetSubData(modelMatrix, 0);
-              meshComponent->getMesh()->Draw();
-           }
+            if (meshComponent != nullptr)
+            {
+                glm::mat4 modelMatrix = entity->transform->getTransformMatrix();
+                mEngineUniformBuffer.SetSubData(modelMatrix, 0);
+                meshComponent->getMesh()->DrawWithOwnMaterial();
+            }
         }
     }
 }
 
 void Renderer::SetEngineUBO(int pWidth, int pHeight)
 {
-    std::vector<glm::mat4> lightMatricies;
-    auto lightComponentUUIDs = EntityManager::getInstance().findEntitiesByComponent(ComponentType::Light);
-    for (auto& uuid : lightComponentUUIDs)
-    {
-        auto entity = EntityManager::getInstance().getEntity(uuid);
-        LightComponent* lightComponent = dynamic_cast<LightComponent*>(entity->getComponent(ComponentType::Light));
-        if (lightComponent == nullptr) continue;
-        lightMatricies.push_back(lightComponent->GenerateMatrix(lightComponent->entity->transform));
-    }
-
-    shaderStorageBufferObject.SendBlocks(lightMatricies.data(), lightMatricies.size() * sizeof(glm::mat4));
-    shaderStorageBufferObject.Bind(0);
-
     // CAMERA =====================
     CameraComponent* cameraComponent = dynamic_cast<CameraComponent*>(mainCameraEntity->getComponent(ComponentType::Camera));
 
@@ -168,20 +166,117 @@ void Renderer::SetEngineUBO(int pWidth, int pHeight)
             mainCameraEntity->transform->getWorldPosition()
         );
     }
+
+    BindShadowMaps();
 }
 
-void Renderer::FetchSkybox() 
+void Renderer::GenerateShadowMaps()
+{
+    int numOfLights = lightsThisFrame.size();
+
+    std::vector<glm::mat4> lightMatricies(numOfLights);
+    std::vector<glm::mat4> lightViewMatricies(numOfLights);
+    std::vector<glm::mat4> lightEnabled(numOfLights); // I also hate this but the SSBO fields not generated properly with bool, int, or vec2 types
+
+    glBindTexture(GL_TEXTURE_2D_ARRAY, shadowMapTextureArray);
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_DEPTH_COMPONENT16, 1024, 1024, numOfLights);
+    for (int i = 0; i < numOfLights; ++i)
+    {
+        auto lightComponent = lightsThisFrame[i];
+        lightMatricies[i] = lightComponent->GenerateMatrix(lightComponent->entity->transform);
+
+        glm::vec3 lightPosition = lightComponent->entity->transform->getWorldPosition();
+        glm::quat lightOrientation = lightComponent->entity->transform->getWorldOrientation();
+
+        glm::mat4 rotationMatrix = glm::mat4_cast(glm::conjugate(lightOrientation));
+        glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0), -lightPosition);
+
+        glm::mat4 viewMatrix = rotationMatrix * translationMatrix;
+        glm::mat4 projectionMatrix;
+        if (lightComponent->GetType() == LightType::DirectionalLight)
+        {
+            projectionMatrix = glm::ortho<float>(-10, 10, -10, 10, 1.f, 7.5f);
+        }
+        else
+        {
+            projectionMatrix = glm::perspective(glm::radians(45.0f), (GLfloat)1024 / (GLfloat)1024, 1.f, 7.5f);
+        }
+
+        mEngineUniformBuffer.SetCameraMatrices(
+            viewMatrix,
+            projectionMatrix,
+            lightComponent->entity->transform->getWorldPosition()
+        );
+
+
+        lightEnabled[i] = glm::mat4(lightComponent->GetCreatesShadows());
+        if (!lightEnabled[i][0][0]) continue;
+        lightViewMatricies[i] = projectionMatrix * viewMatrix;
+        lightComponent->BindShadowFrameBuffer();
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glEnable(GL_CULL_FACE);
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
+        glCullFace(GL_FRONT);
+
+        mShadowMapShader->Use();
+        for (auto renderable : renderablesThisFrame)
+        {
+            glm::mat4 modelMatrix = renderable->worldTransform->getTransformMatrix();
+
+            mEngineUniformBuffer.SetSubData(modelMatrix, 0);
+            renderable->mesh->Draw();
+        }
+
+        glCopyImageSubData(
+            lightComponent->GetShadowMapID(), GL_TEXTURE_2D, 0, 0, 0, 0,
+            shadowMapTextureArray, GL_TEXTURE_2D_ARRAY, 0, 0, 0, i,
+            1024, 1024, 1);
+    }
+
+    mLightMatriciesSSBO.SendBlocks(lightMatricies.data(), lightMatricies.size() * sizeof(glm::mat4));
+    mLightViewsSSBO.SendBlocks(lightViewMatricies.data(), lightViewMatricies.size() * sizeof(glm::mat4));
+    mLightsEnabledSSBO.SendBlocks(lightEnabled.data(), lightEnabled.size() * sizeof(glm::mat4));
+
+    mLightMatriciesSSBO.Bind(0);
+    mLightViewsSSBO.Bind(1);
+    mLightsEnabledSSBO.Bind(2);
+}
+
+void Renderer::BindShadowMaps()
+{
+    glActiveTexture(GL_TEXTURE31);
+    glBindTexture(GL_TEXTURE_2D_ARRAY, shadowMapTextureArray);
+}
+
+void Renderer::FetchLights()
+{
+    std::vector<glm::mat4> lightMatricies;
+    auto lightComponentUUIDs = EntityManager::getInstance().findEntitiesByComponent(ComponentType::Light);
+    for (auto& uuid : lightComponentUUIDs)
+    {
+        auto entity = EntityManager::getInstance().getEntity(uuid);
+        LightComponent* lightComponent = dynamic_cast<LightComponent*>(entity->getComponent(ComponentType::Light));
+        if (lightComponent == nullptr) continue;
+        lightsThisFrame.push_back(lightComponent);
+    }
+
+}
+
+void Renderer::FetchSkybox()
 {
     auto skyboxID = Core::getInstance().GetScene()->GetSkyboxID();
     skyboxThisFrame = AssetManager::GetInstance().GetSkyboxByID(skyboxID);
 }
 
-void Renderer::FetchRenderables() 
+void Renderer::FetchRenderables()
 {
     ComponentMask renderableComponentMask;
     // TODO: Add Materials to this.
-    renderableComponentMask |= renderableComponentMask.set(static_cast<size_t>(ComponentType::Mesh) | static_cast<size_t>(ComponentType::Transform));
-    auto renderableEntities = EntityManager::getInstance().findEntitiesByComponentMask(renderableComponentMask);
+    renderableComponentMask.set(static_cast<size_t>(ComponentType::Mesh));
+    renderableComponentMask.set(static_cast<size_t>(ComponentType::Transform));
+    auto renderableEntities = EntityManager::getInstance().findEntitiesContainingComponentMask(renderableComponentMask);
 
     for (auto renderEntity : renderableEntities)
     {
@@ -191,7 +286,7 @@ void Renderer::FetchRenderables()
         Material* materialComponent = nullptr;
 
         Renderable* renderable = new Renderable(transformComponent);
-        if (meshComponent != nullptr && meshComponent->getMesh() != nullptr) 
+        if (meshComponent != nullptr && meshComponent->getMesh() != nullptr)
         {
             renderable->mesh = meshComponent->getMesh();
         }
