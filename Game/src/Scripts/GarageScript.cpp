@@ -7,6 +7,7 @@
 #include <Scripts/CarControllerScript.h>
 #include <Scripts/FollowCamScript.h>
 #include <Managers/EntityManager.h>
+#include <Scripts/LapCheckpointScript.h>
 
 GarageScript::GarageScript(Entity* mEntity) : Script(mEntity)
 {
@@ -147,6 +148,17 @@ void GarageScript::leaveGarage()
     FollowCamScriptParams followCamScriptParams;
     followCamScriptParams.m_FollowTarget = selectedCarEnt->transform;
     cameraScriptComponent->CreateAndAddScript<FollowCamScript>(&followCamScriptParams);
+
+    /*============ SET UP CHECKPOINTS =========*/
+    // need to set selected car's AABB.
+    LapCheckpointScriptParams lapCheckpointScriptParams;
+    lapCheckpointScriptParams.m_Other = selectedCarEnt->transform;
+
+    Entity* gameManagerEnt = EntityManager::getInstance().findFirstEntityByDisplayName("GameManager");
+    ScriptComponent* gameManagerScriptComponent = dynamic_cast<ScriptComponent*>(gameManagerEnt->getComponent(ComponentType::Script));
+    LapManagerScript* lapManagerScript = gameManagerScriptComponent->GetScript<LapManagerScript>();
+    lapCheckpointScriptParams.m_LapManager = lapManagerScript;
+    lapManagerScript->SetCheckpointParams(&lapCheckpointScriptParams);
 
 
 }

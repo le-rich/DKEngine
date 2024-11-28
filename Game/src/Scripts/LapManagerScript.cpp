@@ -23,6 +23,12 @@ void LapManagerScript::Update(float deltaTime)
 {
 }
 
+void LapManagerScript::SetCheckpointParams(ScriptParams* lapCheckpointScriptParams) {
+	for (LapCheckpointScript* lapCheckpointScript : mParams.m_Checkpoints) {
+		lapCheckpointScript->SetParameters(lapCheckpointScriptParams);
+	}
+}
+
 void LapManagerScript::SetParameters(ScriptParams* pScriptParameters)
 {
 	mParams = *static_cast<LapManagerScriptParams*>(pScriptParameters);

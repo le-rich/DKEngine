@@ -22,6 +22,9 @@ public:
 	
 	void OnCheckpointTriggered(int checkpointIndex);
 
+	/* A method for setting the parameters for every checkpoint under
+	 * the manager. Can manipulate an entire track in one go this way. */
+	void SetCheckpointParams(ScriptParams* lapCheckpointScriptParams);
 	void Update(float deltaTime) override;
 	void SetParameters(ScriptParams* pScriptParameters) override;
 	std::unique_ptr<Script> clone() const override {
