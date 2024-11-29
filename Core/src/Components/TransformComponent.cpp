@@ -152,10 +152,10 @@ glm::vec3 TransformComponent::getUp() {
 
 TransformComponent& TransformComponent::operator=(const TransformComponent& other)
 {
-	if (this == &other)
-	{
-		return *this;
-	}
+	//if (this == &other)
+	//{
+	//	return *this;
+	//}
 
     this->mTransform.localPosition = other.mTransform.localPosition;
     this->mTransform.localOrientation = other.mTransform.localOrientation;
@@ -164,6 +164,7 @@ TransformComponent& TransformComponent::operator=(const TransformComponent& othe
 	// DO NOT copy mutex.
 	this->transformMatrix = other.transformMatrix;
 	this->entity->GetEntityID() == other.entity->GetEntityID();
+    return *this;
 }
 
 TransformComponent::TransformComponent(const TransformComponent& other)

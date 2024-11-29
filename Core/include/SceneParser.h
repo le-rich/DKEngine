@@ -51,6 +51,9 @@ namespace SceneParser
     void ParseTransform(Entity* pEntity, json& transformObject)
     {
         Transform transform;
+        transform.localPosition = glm::vec3();
+        transform.localOrientation = glm::quat(1.f, 0, 0, 0);
+        transform.localScale = glm::vec3(1.f);
         try
         {
             std::vector<float> localPosition;

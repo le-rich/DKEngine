@@ -36,11 +36,11 @@ void Scene::SpawnSceneDefinition()
     SceneParser::LoadScene(SCENE_FILE);
     //createGameManager(); // GameManager currently setup via SceneJSON
 
-    LightEntity* lightEntity = new LightEntity();
-    lightEntity->SetDisplayName("Light");
-    lightEntity->transform->setLocalPosition(glm::vec3(0.f, 5.f, 0.f));
-    lightEntity->transform->setLocalOrientation(glm::quat(-0.5f, 0.5f, 0.5f, 0.f));
-    EntityManager::getInstance().Instantiate(lightEntity);
+    //LightEntity* lightEntity = new LightEntity();
+    //lightEntity->SetDisplayName("Light");
+    //lightEntity->transform->setLocalPosition(glm::vec3(0.f, 5.f, 0.f));
+    //lightEntity->transform->setLocalOrientation(glm::quat(-0.5f, 0.5f, 0.5f, 0.f));
+    //EntityManager::getInstance().Instantiate(lightEntity);
     auto* entityManager = &(EntityManager::getInstance());
 
     //Entity* cameraEnt = entityManager->findFirstEntityByDisplayName("Main Camera");
@@ -48,43 +48,50 @@ void Scene::SpawnSceneDefinition()
     // TODO: JSONparser for Scene entities and scripts/components.
     // TODO: Figure out location and pathing of assets/non code files within solution
 
-    const std::string MAP_SOURCE_FOLDER = "TestMap/";
-    const std::string MAP_MODEL_FILE = "track.gltf";
+    //const std::string MAP_SOURCE_FOLDER = "TestMap/";
+    //const std::string MAP_MODEL_FILE = "track.gltf";
 
-    Entity* raceTrackEnt = new Entity();
-    raceTrackEnt->SetDisplayName("Race Track");
-    GLTFLoader::LoadModelAsEntity(raceTrackEnt, MAP_SOURCE_FOLDER, MAP_MODEL_FILE);
-    EntityManager::getInstance().Instantiate(raceTrackEnt);
+    //Entity* raceTrackEnt = new Entity();
+    //raceTrackEnt->SetDisplayName("Race Track");
+    //GLTFLoader::LoadModelAsEntity(raceTrackEnt, MAP_SOURCE_FOLDER, MAP_MODEL_FILE);
+    //EntityManager::getInstance().Instantiate(raceTrackEnt);
 
     glm::vec4 trackPosition = glm::vec4(100.0f, 0.0f, 100.0f, 0.0f);
 
+    Entity* raceTrackEnt = entityManager->findFirstEntityByDisplayName("Race Track");
     raceTrackEnt->transform->setWorldPosition(glm::vec4(0.0f, -1.3f, 0.0f, 1.0f) + trackPosition);
 
     Entity* carEnt = entityManager->findFirstEntityByDisplayName("Test Car");
 
-    const std::string CUBE_SOURCE_FOLDER = "TestCube2/";
-    const std::string CUBE_MODEL_FILE = "testcube.gltf";
+    //const std::string CUBE_SOURCE_FOLDER = "TestCube2/";
+    //const std::string CUBE_MODEL_FILE = "testcube.gltf";
 
     // TODO: move waypoint visual creation to the lapcheckpointscripts
-    Entity* cubeEntity = new Entity();
-    GLTFLoader::LoadModelAsEntity(cubeEntity, CUBE_SOURCE_FOLDER, CUBE_MODEL_FILE);
-    EntityManager::getInstance().Instantiate(cubeEntity);
-    Entity* checkpoint1 = EntityManager::getInstance().findFirstEntityByDisplayName("Checkpoint 1");
-    glm::vec3 checkpointPos = trackPosition.xyz + checkpoint1->transform->getWorldPosition();
-    checkpoint1->transform->setWorldPosition(glm::vec4(checkpointPos, 1.0f));
-    checkpoint1->addChild(cubeEntity);
-    cubeEntity->setParent(checkpoint1);
-    EntityManager::getInstance().addEntityToMap(*cubeEntity);
+    //Entity* cubeEntity = new Entity();
+    //GLTFLoader::LoadModelAsEntity(cubeEntity, CUBE_SOURCE_FOLDER, CUBE_MODEL_FILE);
+    //EntityManager::getInstance().Instantiate(cubeEntity);
+    Entity* cubeEntity = entityManager->findFirstEntityByDisplayName("testcube");
+    cubeEntity->SetDisplayName("CheckpointModel1");
+    Entity* cubeEntityCopy = entityManager->duplicateEntity(cubeEntity);
+    cubeEntityCopy->SetDisplayName("CheckpointModel2");
+    
 
-    Entity* checkpoint2 = EntityManager::getInstance().findFirstEntityByDisplayName("Checkpoint 2");
-    cubeEntity = new Entity();
-    GLTFLoader::LoadModelAsEntity(cubeEntity, CUBE_SOURCE_FOLDER, CUBE_MODEL_FILE);
-    EntityManager::getInstance().Instantiate(cubeEntity);
-    checkpointPos = trackPosition.xyz + checkpoint2->transform->getWorldPosition();
-    checkpoint2->transform->setWorldPosition(glm::vec4(checkpointPos, 1.0f));
-    checkpoint2->addChild(cubeEntity);
-    cubeEntity->setParent(checkpoint2);
-    EntityManager::getInstance().addEntityToMap(*cubeEntity);
+    Entity* checkpoint1 = entityManager->findFirstEntityByDisplayName("Checkpoint 1");
+    //glm::vec3 checkpointPos = trackPosition.xyz + checkpoint1->transform->getWorldPosition();
+    //checkpoint1->transform->setWorldPosition(glm::vec4(checkpointPos, 1.0f));
+    //checkpoint1->addChild(cubeEntity);
+    cubeEntity->setParent(checkpoint1);
+    //EntityManager::getInstance().addEntityToMap(*cubeEntity);
+
+    Entity* checkpoint2 = entityManager->findFirstEntityByDisplayName("Checkpoint 2");
+    //cubeEntity = new Entity();
+    //GLTFLoader::LoadModelAsEntity(cubeEntity, CUBE_SOURCE_FOLDER, CUBE_MODEL_FILE);
+    //EntityManager::getInstance().Instantiate(cubeEntity);
+    //checkpointPos = trackPosition.xyz + checkpoint2->transform->getWorldPosition();
+    //checkpoint2->transform->setWorldPosition(glm::vec4(checkpointPos, 1.0f));
+    //checkpoint2->addChild(cubeEntityCopy);
+    cubeEntityCopy->setParent(checkpoint2);
+    //EntityManager::getInstance().addEntityToMap(*cubeEntity);
 
     // Garage Room
     Entity* garageRoomController = new Entity();
