@@ -1,5 +1,5 @@
 #include "Scripts/LapCheckpointScript.h"
-#include "../../../Core/include/Managers/EntityManager.h"
+#include "Managers/EntityManager.h"
 
 LapCheckpointScript::LapCheckpointScript(Entity* mEntity) : Script(mEntity)
 {

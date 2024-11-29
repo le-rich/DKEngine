@@ -1,10 +1,9 @@
 #pragma once
-
-#include <functional>
-
 #include "Script.h"
 #include "LapManagerScript.h"
-#include "../../../Physics/include/Aabb.h"
+#include "Aabb.h"
+
+#include <functional>
 
 struct LapCheckpointScriptParams : ScriptParams
 {
@@ -17,6 +16,7 @@ struct LapCheckpointScriptParams : ScriptParams
 	LapManagerScript* m_LapManager = nullptr;
 	int m_Index = 0;
 	bool m_Registered = false;
+	Entity* m_SourceModel = nullptr;
 };
 
 class LapCheckpointScript : public Script
