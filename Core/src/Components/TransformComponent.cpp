@@ -152,11 +152,6 @@ glm::vec3 TransformComponent::getUp() {
 
 TransformComponent& TransformComponent::operator=(const TransformComponent& other)
 {
-	//if (this == &other)
-	//{
-	//	return *this;
-	//}
-
     this->mTransform.localPosition = other.mTransform.localPosition;
     this->mTransform.localOrientation = other.mTransform.localOrientation;
     this->mTransform.localScale = other.mTransform.localScale;
