@@ -10,6 +10,7 @@
 #include <Components/TransformComponent.h>
 
 class AudioManager : public System {
+friend class AudioComponent;
 public:
 	AudioManager();
 
@@ -38,7 +39,7 @@ public:
 	void updateSoundPosition(glm::vec3 position);
 	
 private:
-	FMOD_VECTOR GetFMODVector(const glm::vec3& position);
+	static FMOD_VECTOR GetFMODVector(const glm::vec3& position);
 	FMOD::Channel* dynamicChannel = nullptr;
 	FMOD::Channel* staticChannel = nullptr;
 	glm::vec3 soundPosition;

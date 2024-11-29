@@ -76,13 +76,11 @@ FMOD_VECTOR AudioManager::GetFMODVector(const glm::vec3& position) {
 
 // TODO: Positioning of Camera , glm::vec3 cameraPosition, glm::vec3& carPosition
 void AudioManager::Update(float deltaTime) {
-    fmodSystem->update();
-    
-
     FMOD_VECTOR FMODListenerPosition = GetFMODVector(listenerPosition); // Listener at origin
-    FMOD_VECTOR audioPosition = GetFMODVector(soundPosition);
+
+    // TODO: get component mask of audio components and update(); each
     fmodSystem->set3DListenerAttributes(0, &FMODListenerPosition, nullptr, nullptr, nullptr);
-    dynamicChannel->set3DAttributes(&audioPosition, nullptr);
+    fmodSystem->update();
 }
 
 FMOD::System* AudioManager::GetSystem() {
