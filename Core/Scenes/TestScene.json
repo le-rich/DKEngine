@@ -257,28 +257,5 @@
       },
       "components": []
     }
-  ],
-  "gamemanager": {
-    "components": [
-      {
-        "type": "Script",
-        "params": {
-          "scripts": [
-            {
-              "script": "TimerScript",
-              "params": {
-                "target": "Test Car"
-              }
-            },
-            {
-              "script": "LapManagerScript",
-              "params": {
-                "checkpoints": [ "Checkpoint 1", "Checkpoint 2" ]
-              }
-            }
-          ]
-        }
-      }
-    ]
-  }
+  ]
 }
