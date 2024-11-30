@@ -19,6 +19,10 @@
     {
       "path": "TestCube2/",
       "file": [ "testcube.gltf" ]
+    },
+    {
+      "path": "TestModel/",
+      "file": [ "TestFace.gltf" ]
     }
   ],
   "skybox": "skybox_to_equirect_2.png",
@@ -227,9 +231,9 @@
     },
 
     {
-      "name": "Test OBJECT",
+      "name": "MrDirk",
       "transform": {
-        "localPosition": [],
+        "localPosition": [0, -10, 0],
         "localOrientation": [],
         "localScale": []
       },

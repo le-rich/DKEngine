@@ -37,7 +37,6 @@ void LapCheckpointScript::Update(float deltaTime)
 				//child->removeComponent(*c);
 			}
 		}
-
 		mParams.m_LapManager->OnCheckpointTriggered(mParams.m_Index);
 	}
 }

@@ -3,8 +3,6 @@
 #include "LapManagerScript.h"
 #include "Aabb.h"
 
-#include <functional>
-
 struct LapCheckpointScriptParams : ScriptParams
 {
 	TransformComponent* m_Self = nullptr;
@@ -16,7 +14,7 @@ struct LapCheckpointScriptParams : ScriptParams
 	LapManagerScript* m_LapManager = nullptr;
 	int m_Index = 0;
 	bool m_Registered = false;
-	Entity* m_SourceModel = nullptr;
+	Entity* m_CheckpointSourceModel = nullptr;
 };
 
 class LapCheckpointScript : public Script
