@@ -250,10 +250,13 @@ public:
         Entity* duplicate = new Entity(originalEntity->GetDisplayName() + "_copy");
 
         duplicate->transform = dynamic_cast<TransformComponent*>(originalEntity->transform->clone());
+        duplicate->transform->entity = duplicate;
 
         // duplicate components
         for (const auto& comp : originalEntity->getComponents()) {
-            duplicate->addComponent(*comp->clone());
+            auto newComp = comp->clone();
+            newComp->entity = duplicate;
+            duplicate->addComponent(*newComp);
         }
 
         // recursive duplicate children
