@@ -1,34 +1,34 @@
-﻿#ifndef AUDIOCOMPONENT_H
-#define AUDIOCOMPONENT_H
+﻿#ifndef AUDIOCOMP_H
+#define AUDIOCOMP_H
 
+#include "Component.h"
+
+#include <fmod.hpp>
 #include "Managers/AudioManager.h"
-#include "Entity.h"
-#include <string>
+#include <glm.hpp>
 
 class AudioComponent : public Component {
 public:
-    AudioComponent(Entity* entity, const std::string& audioFilePath);
-    ~AudioComponent();
+	AudioComponent(Entity* mEntity, AudioManager* audioManager);
+	AudioComponent(Entity* mEntity, AudioManager* audioManager, FMOD::ChannelGroup* channelGroup);
+	AudioComponent(Entity* mEntity, AudioManager* audioManager, FMOD::Sound* sound);
+	AudioComponent(Entity* mEntity, AudioManager* audioManager, FMOD::ChannelGroup* channelGroup, FMOD::Sound* sound);
 
-    void Play();
-    void Stop();
-    void Update();
-    void SetLooping(bool looping);
-    void PlayOnAwake(bool play);
-    bool IsPlaying() const;
-    
+	~AudioComponent();
 
-    Component* clone() const override;
+	void PlaySound(FMOD::Sound* sound, bool isLooping, bool isPaused);
 
+	void UpdateAttributes(float deltaTime);
+
+	AudioComponent(const AudioComponent& other);
+	Component* clone() const override;
+
+	FMOD::Channel* GetChannel();
 private:
-    void LoadAudio();
-
-    AudioManager* audioManager;
-    FMOD::Sound* sound;
-    FMOD::Channel* channel;
-    std::string filePath;
-    bool playOnAwake;
-    bool isLooping;
+	AudioManager* am = nullptr;
+	FMOD::Channel* channel = nullptr;
+	FMOD::ChannelGroup* group = nullptr;
+	glm::vec3 previousPosition;
 };
 
-#endif // AUDIOCOMPONENT_H
+#endif
