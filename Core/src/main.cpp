@@ -102,7 +102,6 @@ int run_glfw() {
 	game->Initialize();
 	audioManager->Initialize();
 	
-
 	FMOD::Sound* carMotor = audioManager->LoadAudio("Assets/Audio/car-motor.mp3");
     AudioComponent* carAudio = new AudioComponent(testCarEntity, audioManager);
     testCarEntity->addComponent(*carAudio); // TODO: Use in Game, not main, I suppose.
