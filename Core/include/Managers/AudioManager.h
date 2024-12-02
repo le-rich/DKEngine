@@ -30,7 +30,7 @@ public:
 	FMOD::Sound* LoadAudio(const std::string& filePath);
 	void Update(float deltaTime) override;
 	void FixedUpdate() override;
-	void updateListenerPosition(const Entity* listenerParent);
+	void updateListenerPosition(Entity* listenerParent);
 	
 private:
 	static FMOD_VECTOR GetFMODVector(const glm::vec3& position);

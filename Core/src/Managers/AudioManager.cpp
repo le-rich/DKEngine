@@ -36,24 +36,13 @@ FMOD::Sound* AudioManager::LoadAudio(const std::string& filePath) {
     return newSound;
 }
 
-void AudioManager::FixedUpdate() {}
-
-
-// void AudioManager::UpdateChannelPosition(FMOD::Channel* channel, const glm::vec3& position) {
-//     if (!channel) return;
-//
-//     FMOD_VECTOR fmodPosition = GetFMODVector(position);
-//     channel->set3DAttributes(&fmodPosition, nullptr);
-// }
+void AudioManager::FixedUpdate() {} // No use right now, just used for virtual override.
 
 FMOD_VECTOR AudioManager::GetFMODVector(const glm::vec3& position) {
     return { position.x, position.y, position.z };
 }
 
-// TODO: Positioning of Camera , glm::vec3 cameraPosition, glm::vec3& carPosition
 void AudioManager::Update(float deltaTime) {
-    FMOD_VECTOR FMODListenerPosition = GetFMODVector(listenerPosition);
-
     std::vector<UUIDv4::UUID> audioEntitiesUUIDs = EntityManager::getInstance().findEntitiesByComponent(ComponentType::Audio);
     for (UUIDv4::UUID audioEntityUUID : audioEntitiesUUIDs) {
         Entity* audioEntity = EntityManager::getInstance().getEntity(audioEntityUUID);
@@ -63,9 +52,6 @@ void AudioManager::Update(float deltaTime) {
         audioComponent->UpdateAttributes(deltaTime);
 
     }
-
-    fmodSystem->set3DListenerAttributes(0, &FMODListenerPosition, nullptr, nullptr, nullptr);
-
     fmodSystem->update();
 }
 
@@ -73,8 +59,7 @@ FMOD::System* AudioManager::GetSystem() {
     return fmodSystem;
 }
 
-void AudioManager::updateListenerPosition(const Entity* listenerParent) {
-
+void AudioManager::updateListenerPosition(Entity* listenerParent) {
     glm::vec3 posGlm = listenerParent->transform->getWorldPosition();
     FMOD_VECTOR pos = AudioManager::GetFMODVector(posGlm);
     FMOD_VECTOR vel = AudioManager::GetFMODVector(posGlm - listenerPosition);

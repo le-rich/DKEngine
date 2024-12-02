@@ -19,7 +19,7 @@ public:
 	void PlaySound(FMOD::Sound* sound, bool isLooping, bool isPaused);
 
 	void UpdateAttributes(float deltaTime);
-
+	
 	AudioComponent(const AudioComponent& other);
 	Component* clone() const override;
 
