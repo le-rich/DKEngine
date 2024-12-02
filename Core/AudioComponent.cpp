@@ -8,12 +8,14 @@
 AudioComponent::AudioComponent(Entity* mEntity, AudioManager* audioManager) : Component(mEntity) {
 	AudioComponent::previousPosition = entity->transform->getWorldPosition();
 	AudioComponent::am = audioManager;
+	this->componentType = ComponentType::Audio;
 };
 
 AudioComponent::AudioComponent(Entity* mEntity, AudioManager* audioManager, FMOD::ChannelGroup* channelGroup) : Component(mEntity) {
 	AudioComponent::previousPosition = entity->transform->getWorldPosition();
 	AudioComponent::am = audioManager;
 	AudioComponent::group = channelGroup;
+	this->componentType = ComponentType::Audio;
 };
 
 AudioComponent::AudioComponent(Entity* mEntity, AudioManager* audioManager, FMOD::Sound* sound) : AudioComponent(mEntity, audioManager){
@@ -52,7 +54,7 @@ void AudioComponent::PlaySound(FMOD::Sound* sound, bool isLooping, bool isPaused
 	}
 };
 
-void AudioComponent::update(float deltaTime) {
+void AudioComponent::UpdateAttributes(float deltaTime) {
 	glm::vec3 currentPosition = entity->transform->getWorldPosition();
 	FMOD_VECTOR vel = AudioManager::GetFMODVector((currentPosition - previousPosition) / deltaTime);
 	FMOD_VECTOR pos = AudioManager::GetFMODVector(currentPosition);
@@ -63,6 +65,8 @@ void AudioComponent::update(float deltaTime) {
 FMOD::Channel* AudioComponent::GetChannel() {
 	return channel;
 }
+
+AudioComponent::AudioComponent(const AudioComponent& other) : AudioComponent(other.entity, other.am, other.group) {} // Clone everyhing but channel, position will be updated.
 
 Component* AudioComponent::clone() const {
 	return new AudioComponent(*this);

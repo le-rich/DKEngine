@@ -1,10 +1,10 @@
-﻿#include "Managers/AudioManager.h"
-#include <iostream>
+﻿#include <Managers/AudioManager.h>
+#include <Components/AudioComponent.h>
+#include <Managers/EntityManager.h>
 
 AudioManager::AudioManager() {
     FMOD::System_Create(&fmodSystem);
     listenerPosition = glm::vec3(0.0f, 0.0f, 0.0f);
-    soundPosition = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 
 void AudioManager::Initialize()
@@ -38,30 +38,6 @@ FMOD::Sound* AudioManager::LoadAudio(const std::string& filePath) {
 
 void AudioManager::FixedUpdate() {}
 
-void AudioManager::PlayStaticSound(FMOD::Sound* sound, bool isLooping, const glm::vec3& position) {
-    PlaySound(sound, isLooping, position, staticChannel);
-}
-
-void AudioManager::PlayDynamicSound(FMOD::Sound* sound, bool isLooping, const glm::vec3& position) {
-    PlaySound(sound, isLooping, position, dynamicChannel);
-}
-
-void AudioManager::PlaySound(FMOD::Sound* sound, bool isLooping, const glm::vec3& position, FMOD::Channel* channel) {
-    
-    if (!sound) return;
-    if (isLooping)
-        sound->setMode(FMOD_LOOP_NORMAL);
-
-    FMOD_RESULT result = fmodSystem->playSound(sound, nullptr, false, &channel);
-    if (result == FMOD_OK && channel) {
-        channel->setLoopCount(-1);
-        channel->setVolume(1.0f);
-        FMOD_VECTOR audioPosition = GetFMODVector(soundPosition);
-        channel->set3DAttributes(&audioPosition, nullptr);
-        channel->setPaused(false);
-    }
-}
-
 
 // void AudioManager::UpdateChannelPosition(FMOD::Channel* channel, const glm::vec3& position) {
 //     if (!channel) return;
@@ -76,10 +52,20 @@ FMOD_VECTOR AudioManager::GetFMODVector(const glm::vec3& position) {
 
 // TODO: Positioning of Camera , glm::vec3 cameraPosition, glm::vec3& carPosition
 void AudioManager::Update(float deltaTime) {
-    FMOD_VECTOR FMODListenerPosition = GetFMODVector(listenerPosition); // Listener at origin
+    FMOD_VECTOR FMODListenerPosition = GetFMODVector(listenerPosition);
 
-    // TODO: get component mask of audio components and update(); each
+    std::vector<UUIDv4::UUID> audioEntitiesUUIDs = EntityManager::getInstance().findEntitiesByComponent(ComponentType::Audio);
+    for (UUIDv4::UUID audioEntityUUID : audioEntitiesUUIDs) {
+        Entity* audioEntity = EntityManager::getInstance().getEntity(audioEntityUUID);
+        AudioComponent* audioComponent = dynamic_cast<AudioComponent*>(
+            audioEntity->getComponent(ComponentType::Audio)
+        );
+        audioComponent->UpdateAttributes(deltaTime);
+
+    }
+
     fmodSystem->set3DListenerAttributes(0, &FMODListenerPosition, nullptr, nullptr, nullptr);
+
     fmodSystem->update();
 }
 
@@ -87,15 +73,14 @@ FMOD::System* AudioManager::GetSystem() {
     return fmodSystem;
 }
 
-void AudioManager::updateListenerPosition(glm::vec3 position) {
-    listenerPosition.x = position.x;
-    listenerPosition.y = position.y;
-    listenerPosition.z = position.z;
+void AudioManager::updateListenerPosition(const Entity* listenerParent) {
 
+    glm::vec3 posGlm = listenerParent->transform->getWorldPosition();
+    FMOD_VECTOR pos = AudioManager::GetFMODVector(posGlm);
+    FMOD_VECTOR vel = AudioManager::GetFMODVector(posGlm - listenerPosition);
+    FMOD_VECTOR forward = AudioManager::GetFMODVector(listenerParent->transform->getForward());
+    FMOD_VECTOR up = AudioManager::GetFMODVector(listenerParent->transform->getUp());
+
+    fmodSystem->set3DListenerAttributes(0, &pos, &vel, &forward, &up);
 }
 
-void AudioManager::updateSoundPosition(glm::vec3 position) {
-    soundPosition.x = position.x;
-    soundPosition.y = position.y;
-    soundPosition.z = position.z;
-}

@@ -82,14 +82,13 @@ int run_glfw() {
     Entity* cameraEnt = EntityManager::getInstance().findFirstEntityByDisplayName("Main Camera");
 
 	TransformComponent* CAR_TRANSFORM = testCarEntity->transform;
-   auto glfwWindow = window.GetWindow();
+    auto glfwWindow = window.GetWindow();
 
     Physics* physics = new Physics();
     Renderer* renderer = new Renderer(&window);
     UI* ui = new UI(Core::getInstance().GetScene(), renderer->GetFrameBuffer(), glfwWindow);
     Game* game = new Game();
     AudioManager* audioManager = new AudioManager();    
-	
 	
 	Core::getInstance().AddSystem(ui);
 	Core::getInstance().AddSystem(physics);
@@ -106,8 +105,8 @@ int run_glfw() {
     // TODO: componentize all of this, so it isn't hard-coded to two sounds/channels
 	FMOD::Sound* backgroundMusic = audioManager->LoadAudio("Assets/Audio/car-motor.mp3");
     FMOD::Sound* audienceSound = audioManager->LoadAudio("Assets/Audio/audience.mp3");
-	audioManager->PlayDynamicSound(backgroundMusic, true, {0, 50.0f, 0});
-    audioManager->PlayStaticSound(audienceSound, true, { 0, 0.0f, 0 });
+    // audioManager->PlayDynamicSound(backgroundMusic, true, {0, 50.0f, 0});
+    // audioManager->PlayStaticSound(audienceSound, true, { 0, 0.0f, 0 });
 
     std::thread gameThread([&]()
     {
@@ -142,9 +141,8 @@ int run_glfw() {
                     fixedUpdateBuffer -= PHYSICS_UPDATE_INTERVAL;
                 }
                 std::this_thread::sleep_for(std::chrono::microseconds(1));
-                audioManager->updateListenerPosition(cameraEnt->transform->getWorldPosition());
-                audioManager->updateSoundPosition(testCarEntity->transform->getWorldPosition());
-                audioManager->Update(0.0);
+                audioManager->updateListenerPosition(cameraEnt);
+                audioManager->Update(deltaTimeFloatSeconds);
         }
     });
 
