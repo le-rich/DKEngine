@@ -9,7 +9,7 @@ AudioManager::AudioManager() {
 
 void AudioManager::Initialize()
 {
-    fmodSystem->init(512, FMOD_INIT_3D_RIGHTHANDED, nullptr);
+    fmodSystem->init(512, 0, nullptr);
 }
 
 AudioManager::~AudioManager() {
