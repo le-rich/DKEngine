@@ -34,5 +34,5 @@ Component *MaterialComponent::clone() const
 
 Material *MaterialComponent::MakePrimitiveMaterialInstance() 
 { 
-    return nullptr; 
+    return nullptr;
 }
