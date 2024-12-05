@@ -4,6 +4,7 @@
 #include <Components/RigidBodyComponent.h>
 #include <Body.h>
 #include <Input.h>
+#include "Components/MeshComponent.h"
 
 const static float AIR_DENSITY = 1.29f; // kg/m^3
 const static float TRANSMISSION_EFFICIENCY = 0.7f;
@@ -200,12 +201,61 @@ void CarControllerScript::SetParameters(ScriptParams* pScriptParameters)
     auto width = mParams.m_Width;
     auto length = mParams.m_Length;
     AE86::real zero = 0;
+    
     carRigidBody->setInertiaTensor(AE86::Matrix3(
          (AE86::real) massScale * (height * height + length * length), 0.0f, 0.0f,
          0.0f, (AE86::real) massScale * (width * width * length * length), 0.0f,
          0.0f, 0.0f, (AE86::real)massScale * (width * width * height * height)
     ));
 }
+
+AE86::Matrix3 CalculateInertiaTensorFromVertices(const std::vector<glm::vec3>& vertices, float mass)
+{
+    if (vertices.empty()) {
+        throw std::invalid_argument("No Vertices.");
+    }
+
+    // Zero Vector3
+    glm::vec3 centerOfMass(0.0f);
+
+    // number of vertices becomes the total mass as we assume each is of equal weight
+    float vertexCount = vertices.size();
+
+    // Adding up all of x,y,z coordinates
+    for (const auto& vertex : vertices) {
+        centerOfMass += vertex;
+    }
+    centerOfMass = centerOfMass/vertexCount; // Basically Σm(x,y)/M
+
+    float Ixx = 0, Iyy = 0, Izz = 0;
+    float Ixy = 0, Ixz = 0, Iyz = 0;
+    
+    // Compute from each vertex
+    for (const auto& vertex : vertices) {
+        glm::vec3 relativePosition = vertex - centerOfMass;
+
+        float x = relativePosition.x, y = relativePosition.y, z = relativePosition.z;
+        
+        // Inertia Tensor components for current vertex.
+        // Multiplied by mass as "Mass per vertex"
+        Ixx += (y * y + z * z) * mass / vertexCount;
+        Iyy += (x * x + z * z) * mass / vertexCount;
+        Izz += (x * x + y * y) * mass / vertexCount;
+
+        Ixy -= x * y * mass / vertexCount;
+        Ixz -= x * z * mass / vertexCount;
+        Iyz -= y * z * mass / vertexCount;
+    }
+
+    AE86::Matrix3 inertiaTensor(
+        Ixx, Ixy, Ixz,
+        Ixy, Iyy, Iyz,
+        Ixz, Iyz, Izz
+    );
+
+    return inertiaTensor;
+}
+
 
 void CarControllerScript::SetUpInput() {
     gearRatio = 2.66f;
