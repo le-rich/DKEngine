@@ -2,9 +2,9 @@
 #define AUDIOCOMP_H
 
 #include "Component.h"
+#include "Managers/AudioManager.h"
 
 #include <fmod.hpp>
-#include "Managers/AudioManager.h"
 #include <glm.hpp>
 
 class AudioComponent : public Component {

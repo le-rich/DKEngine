@@ -102,7 +102,7 @@ int run_glfw() {
 	game->Initialize();
 	audioManager->Initialize();
 	
-	FMOD::Sound* carMotor = audioManager->LoadAudio("Assets/Audio/car-motor.mp3");
+    FMOD::Sound* carMotor = audioManager->LoadAudio("Assets/Audio/car-motor.mp3");
     AudioComponent* carAudio = new AudioComponent(testCarEntity, audioManager);
     testCarEntity->addComponent(*carAudio); // TODO: Use in Game, not main, I suppose.
     carAudio->PlaySound(carMotor, true, false);
@@ -123,7 +123,7 @@ int run_glfw() {
         }
     });
     
-    std::thread physicsThread([&]()
+    std::thread physicsAndAudioThread([&]()
         {
             double fixedUpdateBuffer = 0.0;
             auto previousTime = std::chrono::high_resolution_clock::now();
