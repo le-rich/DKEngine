@@ -1,9 +1,9 @@
 #pragma once
 
+#include "Script.h"
 #include <vector>
 
-#include "Script.h"
-
+struct LapCheckpointScriptParams;
 class LapCheckpointScript;
 
 struct LapManagerScriptParams : ScriptParams
@@ -24,7 +24,7 @@ public:
 
 	/* A method for setting the parameters for every checkpoint under
 	 * the manager. Can manipulate an entire track in one go this way. */
-	void SetCheckpointParams(ScriptParams* lapCheckpointScriptParams);
+	void SetCheckpointParams(LapCheckpointScriptParams* lapCheckpointScriptParams);
 	void Update(float deltaTime) override;
 	void SetParameters(ScriptParams* pScriptParameters) override;
 	std::unique_ptr<Script> clone() const override {
