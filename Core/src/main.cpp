@@ -182,7 +182,7 @@ int run_glfw() {
 	running = false;
     
     if (gameThread.joinable())      { gameThread.join(); }
-    if (physicsThread.joinable())   { physicsThread.join(); }
+    if (physicsAndAudioThread.joinable())   { physicsAndAudioThread.join(); }
     if (rendererThread.joinable())  { rendererThread.join(); }
 
 	for (auto sys : systems)
