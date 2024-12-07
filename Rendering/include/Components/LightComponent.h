@@ -62,8 +62,8 @@ public:
     inline LightType GetType() const { return mType; }
 
     inline GLuint GetShadowMapID() const { return mDepthTexture; }
-    inline glm::mat4 GetOrthoMatrix() const { return  glm::ortho<float>(-10, 10, -10, 10, mNearClip, mFarClip); }
-    inline glm::mat4 GetPerspectiveMatrix() const { return  glm::perspective(glm::radians(70.f), (float)mShadowMapSize / (float)mShadowMapSize, mNearClip, mFarClip); }
+    inline glm::mat4 GetOrthoMatrix() const { return  glm::ortho<float>(-mOrthoBoundry, mOrthoBoundry, -mOrthoBoundry, mOrthoBoundry, mNearClip, mFarClip); }
+    inline glm::mat4 GetPerspectiveMatrix() const { return  glm::perspective(glm::radians(mPerspectiveFOV), (float)mShadowMapSize / (float)mShadowMapSize, mNearClip, mFarClip); }
 
     inline void SetColor(glm::vec4 pColor) { mColor = pColor; }
     inline void SetIntensity(float pIntensity) { mIntensity = pIntensity; }
@@ -96,6 +96,8 @@ private:
     float mShadowMapSize = 4096;
     float mNearClip = 1.f;
     float mFarClip = 7.5;
+    float mOrthoBoundry = 10;
+    float mPerspectiveFOV = 70.f
 
     GLuint mShadowFrameBuffer = 0;
     GLuint mDepthTexture = 0;
