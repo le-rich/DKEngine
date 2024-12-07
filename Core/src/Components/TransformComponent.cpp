@@ -5,6 +5,8 @@
 
 #include <glm.hpp>
 #include <glm/gtc/quaternion.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/matrix_decompose.hpp>
 
 void TransformComponent::UpdateTransfomMatrix()
 {
@@ -65,7 +67,18 @@ glm::vec3 TransformComponent::getWorldPosition()
 glm::quat TransformComponent::getWorldOrientation()
 {
 	UpdateTransfomMatrix();
-	return transformMatrix * glm::mat4_cast(mTransform.localOrientation);
+	glm::mat4 worldTransform = transformMatrix * getLocalTransformMatrix();
+	glm::vec3 scale;
+	scale.x = glm::length(glm::vec3(worldTransform[0])); // Basis vector X
+	scale.y = glm::length(glm::vec3(worldTransform[1])); // Basis vector Y
+	scale.z = glm::length(glm::vec3(worldTransform[2])); // Basis vector Z
+
+	const glm::mat3 rotMtx(
+		glm::vec3(worldTransform[0]) / scale[0],
+		glm::vec3(worldTransform[1]) / scale[1],
+		glm::vec3(worldTransform[2]) / scale[2]);
+
+	return glm::quat_cast(rotMtx);
 }
 
 glm::vec3 TransformComponent::getLocalPosition() const
