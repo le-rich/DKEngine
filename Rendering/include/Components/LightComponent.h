@@ -97,7 +97,7 @@ private:
     float mNearClip = 1.f;
     float mFarClip = 7.5;
     float mOrthoBoundry = 10;
-    float mPerspectiveFOV = 70.f
+    float mPerspectiveFOV = 70.f;
 
     GLuint mShadowFrameBuffer = 0;
     GLuint mDepthTexture = 0;
