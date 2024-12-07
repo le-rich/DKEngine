@@ -39,6 +39,8 @@ struct LightParams
     LightType type = AmbientLight;
 };
 
+static const float MAX_SHADOW_SIZE = 4096;
+
 class LightComponent : public Component
 {
 public:
@@ -60,6 +62,8 @@ public:
     inline LightType GetType() const { return mType; }
 
     inline GLuint GetShadowMapID() const { return mDepthTexture; }
+    inline glm::mat4 GetOrthoMatrix() const { return  glm::ortho<float>(-mOrthoBoundry, mOrthoBoundry, -mOrthoBoundry, mOrthoBoundry, mNearClip, mFarClip); }
+    inline glm::mat4 GetPerspectiveMatrix() const { return  glm::perspective(glm::radians(mPerspectiveFOV), (float)mShadowMapSize / (float)mShadowMapSize, mNearClip, mFarClip); }
 
     inline void SetColor(glm::vec4 pColor) { mColor = pColor; }
     inline void SetIntensity(float pIntensity) { mIntensity = pIntensity; }
@@ -78,6 +82,7 @@ public:
 
 
 private:
+
     glm::vec4 mColor = { 1.0f, 1.0f, 1.0f, 1.0f };
     float mIntensity = 1.f;
     float mConstant = 0.0f;
@@ -87,6 +92,12 @@ private:
     float mOuterCutoff = 15.0f;
     bool mCreatesShadows = false;
     LightType mType = AmbientLight;
+
+    float mShadowMapSize = 4096;
+    float mNearClip = 1.f;
+    float mFarClip = 7.5;
+    float mOrthoBoundry = 10;
+    float mPerspectiveFOV = 70.f;
 
     GLuint mShadowFrameBuffer = 0;
     GLuint mDepthTexture = 0;

@@ -40,15 +40,19 @@ namespace GLTFLoader
     {
         switch (pDataType)
         {
-        case TINYGLTF_TYPE_SCALAR:
-            return 1;
-        case TINYGLTF_TYPE_VEC2:
-            return 2;
-        case TINYGLTF_TYPE_VEC3:
-            return 3;
-        default:
-            std::printf("Unsupported data type in gltf model!");
-            return 0;
+            case TINYGLTF_TYPE_SCALAR:
+                return 1;
+            case TINYGLTF_TYPE_VEC2:
+                return 2;
+            case TINYGLTF_TYPE_VEC3:
+                return 3;
+            case TINYGLTF_TYPE_VEC4:
+                return 4;
+            default:
+                #ifndef NDEBUG
+                std::printf("Unsupported data type in gltf model!");
+                #endif
+                return 0;
         }
     }
 
@@ -59,18 +63,21 @@ namespace GLTFLoader
     {
         switch (pComponentType)
         {
-        case TINYGLTF_COMPONENT_TYPE_BYTE:
-        case TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE:
-            return 1;
-        case TINYGLTF_COMPONENT_TYPE_SHORT:
-        case TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT:
-            return 2;
-        case TINYGLTF_COMPONENT_TYPE_INT:
-        case TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT:
-        case TINYGLTF_COMPONENT_TYPE_FLOAT:
-            return 4;
-        default:
-            std::printf("Unsupported data component type in gltf model!");
+            case TINYGLTF_COMPONENT_TYPE_BYTE:
+            case TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE:
+                return 1;
+            case TINYGLTF_COMPONENT_TYPE_SHORT:
+            case TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT:
+                return 2;
+            case TINYGLTF_COMPONENT_TYPE_INT:
+            case TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT:
+            case TINYGLTF_COMPONENT_TYPE_FLOAT:
+                return 4;
+            default:
+                #ifndef NDEBUG
+                std::printf("Unsupported data component type in gltf model!");
+                #endif
+                return 0;
         }
     }
 
@@ -124,7 +131,9 @@ namespace GLTFLoader
             std::vector<unsigned char> bufferData;
             if (!GetAttributeVector(pGltfModel, accessorNum, bufferData))
             {
+                #ifndef NDEBUG
                 std::printf("Failed to get attribute data\n");
+                #endif
                 continue;
             }
 
@@ -138,30 +147,32 @@ namespace GLTFLoader
             // TODO: Modify to support multi texturing
             switch (GetVertexAttributeFromString(attribType))
             {
-            case VertexAttributeKeys::POSITION:
-                for (int index = 0; index < vertices.size(); ++index)
-                {
-                    const int floatIndex = index * typeCount; // Offset
-                    vertices[index].mPosition = glm::vec3(floatVector[floatIndex], floatVector[floatIndex + 1], floatVector[floatIndex + 2]);
-                }
-                break;
-            case VertexAttributeKeys::NORMAL:
-                for (int index = 0; index < vertices.size(); ++index)
-                {
-                    int floatIndex = index * typeCount; // Offset
-                    vertices[index].mNormal = glm::vec3(floatVector[floatIndex], floatVector[floatIndex + 1], floatVector[floatIndex + 2]);
-                }
-                break;
-            case VertexAttributeKeys::TEXCOORD_0:
-                for (int index = 0; index < vertices.size(); ++index)
-                {
-                    int floatIndex = index * typeCount; // Offset
-                    vertices[index].mUVCoord = glm::vec2(floatVector[floatIndex], floatVector[floatIndex + 1]);
-                }
-                break;
-            default:
-                printf("Unsupported attribute data type!");
-                continue;
+                case VertexAttributeKeys::POSITION:
+                    for (int index = 0; index < vertices.size(); ++index)
+                    {
+                        const int floatIndex = index * typeCount; // Offset
+                        vertices[index].mPosition = glm::vec3(floatVector[floatIndex], floatVector[floatIndex + 1], floatVector[floatIndex + 2]);
+                    }
+                    break;
+                case VertexAttributeKeys::NORMAL:
+                    for (int index = 0; index < vertices.size(); ++index)
+                    {
+                        int floatIndex = index * typeCount; // Offset
+                        vertices[index].mNormal = glm::vec3(floatVector[floatIndex], floatVector[floatIndex + 1], floatVector[floatIndex + 2]);
+                    }
+                    break;
+                case VertexAttributeKeys::TEXCOORD_0:
+                    for (int index = 0; index < vertices.size(); ++index)
+                    {
+                        int floatIndex = index * typeCount; // Offset
+                        vertices[index].mUVCoord = glm::vec2(floatVector[floatIndex], floatVector[floatIndex + 1]);
+                    }
+                    break;
+                default:
+                    #ifndef NDEBUG
+                    std::printf("Unsupported attribute %s in gltf model!", attribType.c_str());
+                    #endif
+                    continue;
 
             }
         }
@@ -172,14 +183,33 @@ namespace GLTFLoader
             std::vector<unsigned char> bufferData;
             if (!GetAttributeVector(pGltfModel, pPrimitive.indices, bufferData))
             {
+                #ifndef NDEBUG
                 std::printf("Failed to get attribute data");
+                #endif          
             }
             const auto bufferDataSizeBytes = sizeof(unsigned char) * bufferData.size();
+            size_t componentType = pGltfModel.accessors[pPrimitive.indices].componentType;
+            size_t componentSize = GetComponentsSize(componentType);
 
             // Convert 2 byte data to uint32_t little-endian
-            for (int bufferIndex = 0; bufferIndex < bufferData.size(); bufferIndex += 2)
+            for (int bufferIndex = 0; bufferIndex < bufferData.size(); bufferIndex += componentSize)
             {
-                uint32_t index = ((uint32_t)bufferData[bufferIndex + 1] << 8 | (uint32_t)bufferData[bufferIndex]);
+                uint32_t index;
+                switch (componentSize)
+                {
+                    case 1:
+                        index = (uint32_t)bufferData[bufferIndex];
+                        break;
+                    case 2:
+                        index = ((uint32_t)bufferData[bufferIndex + 1] << 8 | (uint32_t)bufferData[bufferIndex]);
+                        break;
+                    case 4:
+                        index = ((uint32_t)bufferData[bufferIndex + 3] << 32 | (uint32_t)bufferData[bufferIndex + 2] << 16 | (uint32_t)bufferData[bufferIndex + 1] << 8 | (uint32_t)bufferData[bufferIndex]);
+                        break;
+                    default:
+                        index = ((uint32_t)bufferData[bufferIndex + 1] << 8 | (uint32_t)bufferData[bufferIndex]);
+                        break;
+                }
                 indices.push_back(index);
             }
         }
@@ -205,7 +235,9 @@ namespace GLTFLoader
         std::shared_ptr<Material> material = std::make_shared<Material>();
 
         // Set material properties
-        material->mBaseColorTextureID = pTextures[pMaterial.pbrMetallicRoughness.baseColorTexture.index];
+        int index = pMaterial.pbrMetallicRoughness.baseColorTexture.index;
+        if (index < 0) index = 0;
+        material->mBaseColorTextureID = pTextures[index];
         // Set to default shader
         material->mShaderID = AssetManager::GetInstance().GetDefaultShader()->GetAssetID();
 
@@ -386,7 +418,7 @@ namespace GLTFLoader
     // Loads given model file as an entity
     static void LoadModelAsEntity(Entity* pEntity, std::string const pSourcePath, std::string const pModelFile)
     {
-        
+
         tinygltf::Model gltfModel = LoadFromFile(DEFAULT_ASSET_FOLDER + pSourcePath + pModelFile);
         std::vector<UUIDv4::UUID> textures = LoadTextures(gltfModel, DEFAULT_ASSET_FOLDER + pSourcePath);
         std::vector<UUIDv4::UUID> materials = LoadMaterials(gltfModel, textures);

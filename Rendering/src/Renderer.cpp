@@ -179,7 +179,7 @@ void Renderer::GenerateShadowMaps()
     std::vector<glm::mat4> lightEnabled(numOfLights); // I also hate this but the SSBO fields not generated properly with bool, int, or vec2 types
 
     glBindTexture(GL_TEXTURE_2D_ARRAY, shadowMapTextureArray);
-    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_DEPTH_COMPONENT16, 1024, 1024, numOfLights);
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_DEPTH_COMPONENT16, MAX_SHADOW_SIZE, MAX_SHADOW_SIZE, numOfLights);
     for (int i = 0; i < numOfLights; ++i)
     {
         auto lightComponent = lightsThisFrame[i];
@@ -195,11 +195,11 @@ void Renderer::GenerateShadowMaps()
         glm::mat4 projectionMatrix;
         if (lightComponent->GetType() == LightType::DirectionalLight)
         {
-            projectionMatrix = glm::ortho<float>(-10, 10, -10, 10, 1.f, 7.5f);
+            projectionMatrix = lightComponent->GetOrthoMatrix();
         }
         else
         {
-            projectionMatrix = glm::perspective(glm::radians(45.0f), (GLfloat)1024 / (GLfloat)1024, 1.f, 7.5f);
+            projectionMatrix = lightComponent->GetPerspectiveMatrix();
         }
 
         mEngineUniformBuffer.SetCameraMatrices(
@@ -216,9 +216,9 @@ void Renderer::GenerateShadowMaps()
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_CULL_FACE);
+        glCullFace(GL_FRONT);
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);
-        glCullFace(GL_FRONT);
 
         mShadowMapShader->Use();
         for (auto renderable : renderablesThisFrame)
@@ -232,7 +232,7 @@ void Renderer::GenerateShadowMaps()
         glCopyImageSubData(
             lightComponent->GetShadowMapID(), GL_TEXTURE_2D, 0, 0, 0, 0,
             shadowMapTextureArray, GL_TEXTURE_2D_ARRAY, 0, 0, 0, i,
-            1024, 1024, 1);
+            MAX_SHADOW_SIZE, MAX_SHADOW_SIZE, 1);
     }
 
     mLightMatriciesSSBO.SendBlocks(lightMatricies.data(), lightMatricies.size() * sizeof(glm::mat4));
