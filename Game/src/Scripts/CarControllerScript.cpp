@@ -5,6 +5,7 @@
 #include <Body.h>
 #include <Input.h>
 #include "Components/MeshComponent.h"
+#include "Resources/Mesh.h"
 
 const static float AIR_DENSITY = 1.29f; // kg/m^3
 const static float TRANSMISSION_EFFICIENCY = 0.7f;
@@ -136,7 +137,7 @@ void CarControllerScript::FixedUpdate(float deltaTime)
     
     glm::vec3 finalLongForce = carRotation * glm::vec3(0.0f, 0.0f, driveForce - dragForce - rollResistanceForce);
 
-
+    
     // TODO: verify that all of this is correct, clean up to remove redundant code.
     AE86::Vector3 frontRightTirePosition =
         AE86::Vector3(-(mParams.m_Width / 2.0f), 0.0f, mParams.m_CGToFrontAxleDistance);
@@ -200,16 +201,27 @@ void CarControllerScript::SetParameters(ScriptParams* pScriptParameters)
     auto height = mParams.m_Height;
     auto width = mParams.m_Width;
     auto length = mParams.m_Length;
+
     AE86::real zero = 0;
-    
-    carRigidBody->setInertiaTensor(AE86::Matrix3(
-         (AE86::real) massScale * (height * height + length * length), 0.0f, 0.0f,
-         0.0f, (AE86::real) massScale * (width * width * length * length), 0.0f,
-         0.0f, 0.0f, (AE86::real)massScale * (width * width * height * height)
-    ));
+    MeshComponent* meshComponent = dynamic_cast<MeshComponent*>(entity->getComponent(ComponentType::Mesh));
+
+    Mesh* mesh = meshComponent->getMesh();
+    auto primitiveList = mesh->GetPrimitives();
+    std::vector<Vertex> uniqueVertices;
+    for (auto primitive : primitiveList)
+    {
+        auto vertices = primitive.GetLoadedVertices();
+
+        for (auto vertex : vertices) {
+            if (std::find(uniqueVertices.begin(), uniqueVertices.end(), vertex) == uniqueVertices.end()) {
+                uniqueVertices.push_back(vertex);
+            }
+        }
+    }
+    CalculateInertiaTensorFromVertices(uniqueVertices, 12);
 }
 
-AE86::Matrix3 CalculateInertiaTensorFromVertices(const std::vector<glm::vec3>& vertices, float mass)
+AE86::Matrix3 CarControllerScript::CalculateInertiaTensorFromVertices(const std::vector<Vertex>& vertices, float mass)
 {
     if (vertices.empty()) {
         throw std::invalid_argument("No Vertices.");
@@ -218,21 +230,21 @@ AE86::Matrix3 CalculateInertiaTensorFromVertices(const std::vector<glm::vec3>& v
     // Zero Vector3
     glm::vec3 centerOfMass(0.0f);
 
-    // number of vertices becomes the total mass as we assume each is of equal weight
+    // number of vertices becomes the total mass as we assume each is of equal weight when dealing with Verices
     float vertexCount = vertices.size();
 
     // Adding up all of x,y,z coordinates
     for (const auto& vertex : vertices) {
-        centerOfMass += vertex;
+        centerOfMass += vertex.mPosition;
     }
-    centerOfMass = centerOfMass/vertexCount; // Basically Σm(x,y)/M
+    centerOfMass = centerOfMass/vertexCount; // Basically Σm(x,y,z)/M
 
     float Ixx = 0, Iyy = 0, Izz = 0;
     float Ixy = 0, Ixz = 0, Iyz = 0;
     
     // Compute from each vertex
     for (const auto& vertex : vertices) {
-        glm::vec3 relativePosition = vertex - centerOfMass;
+        glm::vec3 relativePosition = vertex.mPosition - centerOfMass;
 
         float x = relativePosition.x, y = relativePosition.y, z = relativePosition.z;
         

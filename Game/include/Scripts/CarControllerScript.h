@@ -1,7 +1,9 @@
 #pragma once
 
 #include "Script.h"
+#include <Body.h>
 
+struct Vertex;
 
 struct CarControllerScriptParams : ScriptParams
 {
@@ -42,6 +44,7 @@ public:
 	void Update(float deltaTime) override;
 	void FixedUpdate(float deltaTime);
 	void SetParameters(ScriptParams* pScriptParameters) override;
+	AE86::Matrix3 CalculateInertiaTensorFromVertices(const std::vector<Vertex>& vertices, float mass);
 	std::unique_ptr<Script> clone() const override {
 		return std::make_unique<CarControllerScript>(*this);
 	}
