@@ -22,6 +22,6 @@ private:
 	AudioManager* am = nullptr;
 	glm::vec3 previousPosition;
 	static ListenerComponent* pInstance;
-	static std::mutex mutex_;
+    static std::mutex mutex_;
 };
 #endif

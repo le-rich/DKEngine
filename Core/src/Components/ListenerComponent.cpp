@@ -11,14 +11,14 @@ ListenerComponent* ListenerComponent::pInstance = nullptr;
 std::mutex ListenerComponent::mutex_;
 
 ListenerComponent* ListenerComponent::getInstance(Entity* mEntity, AudioManager* audioManager) {
-	if (pInstance == nullptr) {
-		std::lock_guard<std::mutex> lock(mutex_);
-		if (pInstance == nullptr) {
-			ListenerComponent* temp = new ListenerComponent(mEntity, audioManager);
-			pInstance = temp;
-		}
-	}
-	return pInstance;
+    if (pInstance == nullptr) {
+        std::lock_guard<std::mutex> lock(mutex_);
+        if (pInstance == nullptr) {
+            ListenerComponent* temp = new ListenerComponent(mEntity, audioManager);
+            pInstance = temp;
+        }
+    }
+    return pInstance;
 }
 
 ListenerComponent::ListenerComponent(Entity* mEntity, AudioManager* audioManager) : Component(mEntity) {

@@ -26,10 +26,10 @@
 #include "Components/AudioComponent.h"
 
 int run_glfw() {
-	std::atomic<bool> running(true);
-	float deltaTimeFloatSeconds;
+    std::atomic<bool> running(true);
+    float deltaTimeFloatSeconds;
 
-	// WINDOW ================================================== 
+    // WINDOW ================================================== 
     Window::InitWindow();
     Window window;
     if (window.GetWindow() == NULL)
@@ -59,19 +59,19 @@ int run_glfw() {
     window.SetWindowToCurrentThread();
     window.SetKeyCallback(Input::KeyCallback);
     window.SetMouseButtonCallback(Input::MouseButtonCallback);    
-	
-	// Load GLAD
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-	{
-		std::cout << "Failed to initialize GLAD" << std::endl;
-		return -1;
-	}
+    
+    // Load GLAD
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return -1;
+    }
 
-	// Set size of framebuffer
+    // Set size of framebuffer
     glViewport(0, 0, window.GetWidth(), window.GetHeight());
     window.SetFramebufferSizeCallback();
 
-	// ECS ======================================================
+    // ECS ======================================================
     std::vector<System*> systems;
 
     // keep before scene loading, to make sure initialized before components added
@@ -81,29 +81,29 @@ int run_glfw() {
 
     Scene* defaultScene = new Scene();
 
-	Core::getInstance().SetScene(defaultScene);
-	defaultScene->SpawnSceneDefinition();
+    Core::getInstance().SetScene(defaultScene);
+    defaultScene->SpawnSceneDefinition();
 
     Entity* testCarEntity = EntityManager::getInstance().findFirstEntityByDisplayName("Test Car");
     Entity* cameraEnt = EntityManager::getInstance().findFirstEntityByDisplayName("Main Camera");
 
-	TransformComponent* CAR_TRANSFORM = testCarEntity->transform;
+    TransformComponent* CAR_TRANSFORM = testCarEntity->transform;
     auto glfwWindow = window.GetWindow();
 
     Physics* physics = new Physics();
     Renderer* renderer = new Renderer(&window);
     UI* ui = new UI(Core::getInstance().GetScene(), renderer->GetFrameBuffer(), glfwWindow);
     Game* game = new Game();
-	
-	Core::getInstance().AddSystem(ui);
-	Core::getInstance().AddSystem(physics);
-	Core::getInstance().AddSystem(renderer);
-	Core::getInstance().AddSystem(game);
-
-	ui->Initialize();
-	physics->Initialize();
-	renderer->Initialize();
-	game->Initialize();
+    
+    Core::getInstance().AddSystem(ui);
+    Core::getInstance().AddSystem(physics);
+    Core::getInstance().AddSystem(renderer);
+    Core::getInstance().AddSystem(game);
+    
+    ui->Initialize();
+    physics->Initialize();
+    renderer->Initialize();
+    game->Initialize();
     
     std::thread gameThread([&]()
     {
@@ -144,7 +144,7 @@ int run_glfw() {
 
     std::thread rendererThread([&]() 
     {
-	    auto previousTime = std::chrono::high_resolution_clock::now();
+        auto previousTime = std::chrono::high_resolution_clock::now();
         while(running) 
         {
             auto currentTime = std::chrono::high_resolution_clock::now();
@@ -157,11 +157,11 @@ int run_glfw() {
         }
     });
 
-	// RUN =======================================================
-	double fixedUpdateBuffer = 0.0;
-	double FIXED_UPDATE_INTERVAL = 20; // in milliseconds
-	auto previousTime = std::chrono::high_resolution_clock::now();
-	
+    // RUN =======================================================
+    double fixedUpdateBuffer = 0.0;
+    double FIXED_UPDATE_INTERVAL = 20; // in milliseconds
+    auto previousTime = std::chrono::high_resolution_clock::now();
+    
     while (!glfwWindowShouldClose(glfwWindow))
     {
         auto currentTime = std::chrono::high_resolution_clock::now();
@@ -173,21 +173,21 @@ int run_glfw() {
         input.Update();
 
         ui->Update(deltaTimeFloatSeconds);
-	}
+    }
 
-	// TEARDOWN ==================================================
-	running = false;
+    // TEARDOWN ==================================================
+    running = false;
     
     if (gameThread.joinable())      { gameThread.join(); }
     if (physicsAndAudioThread.joinable())   { physicsAndAudioThread.join(); }
     if (rendererThread.joinable())  { rendererThread.join(); }
 
-	for (auto sys : systems)
-	{
-		sys->Kill();
-	}
+    for (auto sys : systems)
+    {
+        sys->Kill();
+    }
 
-	glfwTerminate();
+    glfwTerminate();
 }
 
 int main(int argc, char* argv[])

@@ -9,26 +9,26 @@
 
 class AudioComponent : public Component {
 public:
-	AudioComponent(Entity* mEntity, AudioManager* audioManager);
-	AudioComponent(Entity* mEntity, AudioManager* audioManager, FMOD::ChannelGroup* channelGroup);
-	AudioComponent(Entity* mEntity, AudioManager* audioManager, FMOD::Sound* sound);
-	AudioComponent(Entity* mEntity, AudioManager* audioManager, FMOD::ChannelGroup* channelGroup, FMOD::Sound* sound);
+    AudioComponent(Entity* mEntity, AudioManager* audioManager);
+    AudioComponent(Entity* mEntity, AudioManager* audioManager, FMOD::ChannelGroup* channelGroup);
+    AudioComponent(Entity* mEntity, AudioManager* audioManager, FMOD::Sound* sound);
+    AudioComponent(Entity* mEntity, AudioManager* audioManager, FMOD::ChannelGroup* channelGroup, FMOD::Sound* sound);
 
-	~AudioComponent();
+    ~AudioComponent();
 
-	void PlaySound(FMOD::Sound* sound, bool isLooping, bool isPaused);
+    void PlaySound(FMOD::Sound* sound, bool isLooping, bool isPaused);
 
-	void UpdateAttributes(float deltaTime);
-	
-	AudioComponent(const AudioComponent& other);
-	Component* clone() const override;
+    void UpdateAttributes(float deltaTime);
+    
+    AudioComponent(const AudioComponent& other);
+    Component* clone() const override;
 
-	FMOD::Channel* GetChannel();
+    FMOD::Channel* GetChannel();
 private:
-	AudioManager* am = nullptr;
-	FMOD::Channel* channel = nullptr;
-	FMOD::ChannelGroup* group = nullptr;
-	glm::vec3 previousPosition;
+    AudioManager* am = nullptr;
+    FMOD::Channel* channel = nullptr;
+    FMOD::ChannelGroup* group = nullptr;
+    glm::vec3 previousPosition;
 };
 
 #endif
