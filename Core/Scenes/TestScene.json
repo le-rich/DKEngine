@@ -24,6 +24,10 @@
       "path": "TestModel/",
       "file": [ "TestFace.gltf" ]
     },
+	{
+      "path": "TestTrack/",
+      "file": [ "track.gltf" ]
+    },
 	  {
       "path": "PBRMaterials/",
       "file": [ "PBRSphere.gltf" ]
@@ -78,7 +82,7 @@
     {
       "path": "PBRMaterials/textured-aluminum",
       "file": [ "textured-aluminum_roughness.png" ]
-    }
+    {
   ],
   "skybox": "skybox_to_equirect_2.png",
   "entities": [
@@ -117,9 +121,9 @@
       ]
     },
     {
-      "name": "Light",
+      "name": "Sun",
       "transform": {
-        "localPosition": [ 0, 5, 0 ],
+        "localPosition": [ 0, 105, 0 ],
         "localOrientation": [ 0.760, -0.649, 0, 0 ],
         "localScale": []
       },
@@ -128,7 +132,7 @@
           "type": "Light",
           "params": {
             "color": [ 1.0, 1.0, 1.0, 1.0 ],
-            "intensity": 0.2,
+            "intensity": 0.4,
             "constant": 0,
             "linear": 0.0,
             "quadratic": 1.0,
@@ -141,10 +145,10 @@
       ]
     },
     {
-      "name": "FLLight",
+      "name": "Ambient",
       "transform": {
-        "localPosition": [ -1.64, 1.95, 1.5 ],
-        "localOrientation": [ 0.836, -0.343, -0.396, -0.162 ],
+        "localPosition": [],
+        "localOrientation": [],
         "localScale": []
       },
       "components": [
@@ -152,23 +156,17 @@
           "type": "Light",
           "params": {
             "color": [ 1.0, 1.0, 1.0, 1.0 ],
-            "intensity": 0.7,
-            "constant": 0.9,
-            "linear": 0.29,
-            "quadratic": 0.032,
-            "cutoff": 25.0,
-            "outercutoff": 30.0,
-            "createsShadows": true,
-            "type": "SpotLight"
+            "intensity": 0.1,
+            "type": "AmbientLight"
           }
         }
       ]
     },
     {
-      "name": "BRLight",
+      "name": "FLight",
       "transform": {
-        "localPosition": [ 1.4, 1.55, -2 ],
-        "localOrientation": [ 0.352, -0.887, -0.109, -0.275 ],
+        "localPosition": [],
+        "localOrientation": [ 0.680238485, -0.193700418, -0.679906309, -0.193605840 ],
         "localScale": []
       },
       "components": [
@@ -186,13 +184,14 @@
             "type": "SpotLight"
           }
         }
-      ]
+      ],
+      "parent": "Fill Light"
     },
     {
-      "name": "BLLight",
+      "name": "BLight",
       "transform": {
-        "localPosition": [ -1.15, 1.6, -1.8 ],
-        "localOrientation": [ -0.065, -0.299, 0.825, 0.475 ],
+        "localPosition": [],
+        "localOrientation": [ 0.683176696, -0.183067799, -0.682843089, -0.182978421 ],
         "localScale": []
       },
       "components": [
@@ -210,13 +209,39 @@
             "type": "SpotLight"
           }
         }
-      ]
+      ],
+      "parent": "Back Light"
+    },
+    {
+      "name": "CLight",
+      "transform": {
+        "localPosition": [],
+        "localOrientation": [ 0.680480540, -0.192662567, -0.680245638, -0.1925959741 ],
+        "localScale": []
+      },
+      "components": [
+        {
+          "type": "Light",
+          "params": {
+            "color": [ 1.0, 1.0, 1.0, 1.0 ],
+            "intensity": 0.8,
+            "constant": 0.4,
+            "linear": 0.05,
+            "quadratic": 0.032,
+            "cutoff": 12.0,
+            "outercutoff": 30.0,
+            "createsShadows": true,
+            "type": "SpotLight"
+          }
+        }
+      ],
+      "parent": "Cut Light"
     },
     {
       "name": "OverHeadLight",
       "transform": {
-        "localPosition": [ 0, 2.6, 0 ],
-        "localOrientation": [ -0.707, -0.707, 0, 0 ],
+        "localPosition": [ 0, 5.4, 0 ],
+        "localOrientation": [ 0.7071068, -0.7071068, 0, 0 ],
         "localScale": []
       },
       "components": [
@@ -224,12 +249,12 @@
           "type": "Light",
           "params": {
             "color": [ 1.0, 1.0, 1.0, 1.0 ],
-            "intensity": 0.7,
-            "constant": 0.9,
-            "linear": 0.29,
-            "quadratic": 0.032,
-            "cutoff": 25.0,
-            "outercutoff": 30.0,
+            "intensity": 0.5,
+            "constant": 0.5,
+            "linear": 0.05,
+            "quadratic": 0.005,
+            "cutoff": 8.0,
+            "outercutoff": 15.0,
             "createsShadows": true,
             "type": "SpotLight"
           }
@@ -288,7 +313,7 @@
     {
       "name": "MrDirk",
       "transform": {
-        "localPosition": [0, -10, 0],
+        "localPosition": [ 0, -10, 0 ],
         "localOrientation": [],
         "localScale": []
       },
@@ -309,6 +334,14 @@
       "name": "Race Track",
       "transform": {
         "localPosition": [ 0, 98.7, 0 ]
+      },
+      "components": []
+    },
+    {
+      "name": "Track",
+      "transform": {
+        "localPosition": [ 0, 100, 0 ],
+        "localScale": [ 0.2, 0.2, 0.2 ]
       },
       "components": []
     }
