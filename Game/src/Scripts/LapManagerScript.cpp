@@ -23,9 +23,13 @@ void LapManagerScript::Update(float deltaTime)
 {
 }
 
-void LapManagerScript::SetCheckpointParams(ScriptParams* lapCheckpointScriptParams) {
+void LapManagerScript::SetCheckpointParams(LapCheckpointScriptParams* lapCheckpointScriptParams) 
+{
+	int i = 1;
 	for (LapCheckpointScript* lapCheckpointScript : mParams.m_Checkpoints) {
+		lapCheckpointScriptParams->m_Index = i;
 		lapCheckpointScript->SetParameters(lapCheckpointScriptParams);
+		++i;
 	}
 }
 

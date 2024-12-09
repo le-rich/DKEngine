@@ -19,6 +19,10 @@
     {
       "path": "TestCube2/",
       "file": [ "testcube.gltf" ]
+    },
+    {
+      "path": "TestModel/",
+      "file": [ "TestFace.gltf" ]
     }
   ],
   "skybox": "skybox_to_equirect_2.png",
@@ -180,7 +184,7 @@
     {
       "name": "Checkpoint 1",
       "transform": {
-        "localPosition": [ 100, 0, 105 ],
+        "localPosition": [ 0, 100, 5 ],
         "localOrientation": [],
         "localScale": []
       },
@@ -204,7 +208,7 @@
     {
       "name": "Checkpoint 2",
       "transform": {
-        "localPosition": [ 100, 0, 108.25 ],
+        "localPosition": [ 0, 100, 8.25 ],
         "localOrientation": [],
         "localScale": []
       },
@@ -227,9 +231,9 @@
     },
 
     {
-      "name": "Test OBJECT",
+      "name": "MrDirk",
       "transform": {
-        "localPosition": [],
+        "localPosition": [0, -10, 0],
         "localOrientation": [],
         "localScale": []
       },
@@ -249,32 +253,9 @@
     {
       "name": "Race Track",
       "transform": {
-        "localPosition": [ 100, -1.3, 100 ]
+        "localPosition": [ 0, 98.7, 0 ]
       },
       "components": []
     }
-  ],
-  "gamemanager": {
-    "components": [
-      {
-        "type": "Script",
-        "params": {
-          "scripts": [
-            {
-              "script": "TimerScript",
-              "params": {
-                "target": "Test Car"
-              }
-            },
-            {
-              "script": "LapManagerScript",
-              "params": {
-                "checkpoints": [ "Checkpoint 1", "Checkpoint 2" ]
-              }
-            }
-          ]
-        }
-      }
-    ]
-  }
+  ]
 }
