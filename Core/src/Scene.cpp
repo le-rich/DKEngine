@@ -11,6 +11,7 @@
 #include "Managers/EntityManager.h"
 #include "Components/MeshComponent.h"
 #include "Components/ScriptComponent.h"
+#include <Components/ListenerComponent.h>
 #include "GarageScript.h"
 #include "OrbitScript.h"
 #include "TimerScript.h"
@@ -18,7 +19,6 @@
 #include "LapCheckpointScript.h"
 #include "FollowCamScript.h"
 #include <CarControllerScript.h>
-#include <Components/ListenerComponent.h>
 //#include "Input.h"
 
 Scene::Scene()
@@ -35,63 +35,32 @@ Scene::~Scene()
 void Scene::SpawnSceneDefinition()
 {
     SceneParser::LoadScene(SCENE_FILE);
-    //createGameManager(); // GameManager currently setup via SceneJSON
+    createGameManager(); // GameManager currently setup via SceneJSON
 
-    LightEntity* lightEntity = new LightEntity();
-    lightEntity->SetDisplayName("Light");
-    lightEntity->transform->setLocalPosition(glm::vec3(0.f, 5.f, 0.f));
-    lightEntity->transform->setLocalOrientation(glm::quat(-0.5f, 0.5f, 0.5f, 0.f));
-    EntityManager::getInstance().Instantiate(lightEntity);
     auto* entityManager = &(EntityManager::getInstance());
 
-    //Entity* cameraEnt = entityManager->findFirstEntityByDisplayName("Main Camera");
-
-    // TODO: JSONparser for Scene entities and scripts/components.
-    // TODO: Figure out location and pathing of assets/non code files within solution
-
-    const std::string MAP_SOURCE_FOLDER = "TestMap/";
-    const std::string MAP_MODEL_FILE = "track.gltf";
-
-    Entity* raceTrackEnt = new Entity();
-    raceTrackEnt->SetDisplayName("Race Track");
-    GLTFLoader::LoadModelAsEntity(raceTrackEnt, MAP_SOURCE_FOLDER, MAP_MODEL_FILE);
-    EntityManager::getInstance().Instantiate(raceTrackEnt);
-
-    glm::vec4 trackPosition = glm::vec4(100.0f, 0.0f, 100.0f, 0.0f);
-
-    raceTrackEnt->transform->setWorldPosition(glm::vec4(0.0f, -1.3f, 0.0f, 1.0f) + trackPosition);
-
+    Entity* raceTrackEnt = entityManager->findFirstEntityByDisplayName("Race Track");
     Entity* carEnt = entityManager->findFirstEntityByDisplayName("Test Car");
 
-    const std::string CUBE_SOURCE_FOLDER = "TestCube2/";
-    const std::string CUBE_MODEL_FILE = "testcube.gltf";
-
     // TODO: move waypoint visual creation to the lapcheckpointscripts
-    Entity* cubeEntity = new Entity();
-    GLTFLoader::LoadModelAsEntity(cubeEntity, CUBE_SOURCE_FOLDER, CUBE_MODEL_FILE);
-    EntityManager::getInstance().Instantiate(cubeEntity);
-    Entity* checkpoint1 = EntityManager::getInstance().findFirstEntityByDisplayName("Checkpoint 1");
-    glm::vec3 checkpointPos = trackPosition.xyz + checkpoint1->transform->getWorldPosition();
-    checkpoint1->transform->setWorldPosition(glm::vec4(checkpointPos, 1.0f));
-    checkpoint1->addChild(cubeEntity);
-    cubeEntity->setParent(checkpoint1);
-    EntityManager::getInstance().addEntityToMap(*cubeEntity);
+    Entity* cubeEntity = entityManager->findFirstEntityByDisplayName("testcube");
+    cubeEntity->SetDisplayName("CheckpointModel1");
+    Entity* cubeEntityCopy = entityManager->duplicateEntity(cubeEntity);
+    cubeEntityCopy->SetDisplayName("CheckpointModel2");
 
-    Entity* checkpoint2 = EntityManager::getInstance().findFirstEntityByDisplayName("Checkpoint 2");
-    cubeEntity = new Entity();
-    GLTFLoader::LoadModelAsEntity(cubeEntity, CUBE_SOURCE_FOLDER, CUBE_MODEL_FILE);
-    EntityManager::getInstance().Instantiate(cubeEntity);
-    checkpointPos = trackPosition.xyz + checkpoint2->transform->getWorldPosition();
-    checkpoint2->transform->setWorldPosition(glm::vec4(checkpointPos, 1.0f));
-    checkpoint2->addChild(cubeEntity);
-    cubeEntity->setParent(checkpoint2);
-    EntityManager::getInstance().addEntityToMap(*cubeEntity);
+
+    Entity* checkpoint1 = entityManager->findFirstEntityByDisplayName("Checkpoint 1");
+    cubeEntity->setParent(checkpoint1);
+
+    Entity* checkpoint2 = entityManager->findFirstEntityByDisplayName("Checkpoint 2");
+    cubeEntityCopy->setParent(checkpoint2);
 
     // Garage Room
     Entity* garageRoomController = new Entity();
     garageRoomController->SetDisplayName("Garage Controller");
     EntityManager::getInstance().Instantiate(garageRoomController);
 
+    // TODO: We can have the GarageManager create/handle the orbit script and/or this is a State toggled by GameManager
     // spin
     Entity* cameraEnt = entityManager->findFirstEntityByDisplayName("Main Camera");
     ScriptComponent* orb = dynamic_cast<ScriptComponent*>(cameraEnt->getComponent(ComponentType::Script));
@@ -111,7 +80,7 @@ void Scene::SpawnSceneDefinition()
     auto garageRoomEnt = entityManager->findFirstEntityByDisplayName("Garage Controller");
     ScriptComponent* garageScriptComponent = new ScriptComponent(garageRoomEnt);
     GarageScriptParams garageParams;
-    garageParams.orbitScript = orbScript;
+    garageParams.orbitScript = orbScript; 
     garageParams.cars.push_back(entityManager->findFirstEntityByDisplayName("Test Car"));
     garageParams.cars.push_back(entityManager->findFirstEntityByDisplayName("TestCar2"));
     garageParams.chosenTarget = garageParams.cars[0]->transform;
@@ -125,43 +94,50 @@ void Scene::SpawnSceneDefinition()
 
 void Scene::createGameManager()
 {
-    Entity* gameManager = new Entity();
-    gameManager->SetDisplayName("GameManager");
-    EntityManager::getInstance().Instantiate(gameManager);
-
     auto* entityManager = &(EntityManager::getInstance());
-    auto gameManagerEnt = entityManager->findFirstEntityByDisplayName("GameManager");
+
+    Entity* gameManagerEnt = new Entity();
+    gameManagerEnt->SetDisplayName("GameManager");
+    entityManager->Instantiate(gameManagerEnt);
 
     ScriptComponent* gameManagerScriptComponent = new ScriptComponent(gameManagerEnt);
     gameManagerEnt->addComponent(*gameManagerScriptComponent);
 
     auto carEnt = entityManager->findFirstEntityByDisplayName("Test Car");
-
-    ScriptComponent* timerScriptComponent = new ScriptComponent(gameManagerEnt);
-    gameManagerEnt->addComponent(*timerScriptComponent);
-
     TimerScriptParams timerParams;
     timerParams.m_TimerTarget = carEnt->transform;
     timerParams.m_OriginalPosition = carEnt->transform->getWorldPosition();
     gameManagerScriptComponent->CreateAndAddScript<TimerScript>(&timerParams);
 
-    // Set LapManagerScript parameters & add to component
+    // Create Lap Manager
     LapManagerScriptParams lapManagerParams;
-
-    auto checkpoint1 = entityManager->findFirstEntityByDisplayName("Checkpoint 1");
-    auto checkpoint2 = entityManager->findFirstEntityByDisplayName("Checkpoint 2");
-    LapCheckpointScript* checkpointScript = dynamic_cast<ScriptComponent*>(checkpoint1->getComponent(ComponentType::Script))->GetScript<LapCheckpointScript>();
-    LapCheckpointScript* checkpointScript2 = dynamic_cast<ScriptComponent*>(checkpoint2->getComponent(ComponentType::Script))->GetScript<LapCheckpointScript>();
-
-    std::vector<LapCheckpointScript*> checkpoints = { checkpointScript, checkpointScript2 };
-    lapManagerParams.m_Checkpoints = checkpoints;
     gameManagerScriptComponent->CreateAndAddScript<LapManagerScript>(&lapManagerParams);
-
-    // Set LapManager vars of checkpoints
     LapManagerScript* lapManagerPointerFromScript = gameManagerScriptComponent->GetScript<LapManagerScript>();
-    checkpointScript->SetLapManager(lapManagerPointerFromScript);
-    checkpointScript2->SetLapManager(lapManagerPointerFromScript);
 
+    // Create Checkpoints
+    LapCheckpointScriptParams params;
+    Entity* targetEntity = EntityManager::getInstance().findFirstEntityByDisplayName("Test Car");
+    std::vector<LapCheckpointScript*> checkpoints;
+    for (int i = 1; ; ++i)
+    {
+        auto checkpoint = entityManager->findFirstEntityByDisplayName("Checkpoint " + std::to_string(i));
+        if (!checkpoint) break;
+        params.m_Index = i;
+        auto checkpointScriptComponent = dynamic_cast<ScriptComponent*>(checkpoint->getComponent(ComponentType::Script));
+        if (!checkpointScriptComponent)
+        {
+            checkpointScriptComponent = new ScriptComponent(checkpoint);
+            checkpoint->addComponent(*checkpointScriptComponent);
+        }
+        checkpointScriptComponent->CreateAndAddScript<LapCheckpointScript>(&params);
+
+        auto checkpointScript = checkpointScriptComponent->GetScript<LapCheckpointScript>();
+        lapManagerParams.m_Checkpoints.push_back(checkpointScript);
+        checkpointScript->SetLapManager(lapManagerPointerFromScript);
+    }
+
+    // Add Checkpoints to LapManager
+    lapManagerPointerFromScript->SetParameters(&lapManagerParams);
 }
 
 Entity* Scene::GetSceneCopy()
