@@ -7,10 +7,8 @@
 	"scenes":[
 		{
 			"name":"Scene",
-			"nodes":[
-				0,
-				1,
-				2
+			"nodes": [
+				4
 			]
 		}
 	],
@@ -39,18 +37,28 @@
 			]
 		},
 		{
-			"mesh":2,
-			"name":"pPlane1.002",
-			"scale":[
+			"mesh": 2,
+			"name": "pPlane1.002",
+			"scale": [
 				0.07885630428791046,
 				0.5182346105575562,
 				0.07041484862565994
 			],
-			"translation":[
+			"translation": [
 				-3.4774749279022217,
 				1.2196736335754395,
 				-5.3268256187438965
 			]
+		},
+		{
+			"name": "StartPoint",
+			"translation": [
+				0,1.3,0
+			]
+		},
+		{
+			"name": "Race Track",
+			"children": [0,1,2,3]
 		}
 	],
 	"materials":[

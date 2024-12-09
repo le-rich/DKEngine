@@ -94,7 +94,8 @@ void GarageScript::ChooseCar()
 void GarageScript::leaveGarage()
 {
     // TODO: logic to transport currently selected car to the track
-    mParams.chosenTarget->setWorldPosition(glm::vec4(100.0f, 0.f, 100.0f, 0.f));
+    auto startPoint = EntityManager::getInstance().findFirstEntityByDisplayName("StartPoint");
+    mParams.chosenTarget->setWorldPosition(glm::vec4(startPoint->transform->getWorldPosition(), 1));
 
     /* === BELOW code adds a car controller to the selected car. ==== */
     Entity* selectedCarEnt = mParams.cars[mParams.currSelectIndex];

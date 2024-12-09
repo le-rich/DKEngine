@@ -1,10 +1,11 @@
 #include "Resources/Texture.h"
+#include "Utils/Logger.h"
 
 #include <glad/glad.h>
 #include <iostream>
+#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-#include "Utils/Logger.h"
 
 
 Texture::Texture(const std::string& pPath)
@@ -14,7 +15,7 @@ Texture::Texture(const std::string& pPath)
     // OpenGL and STBI use different coordinate systems
     // That being said some textures work flipped and unflipped
     // Documentation recommends flipping all textures
-    stbi_set_flip_vertically_on_load(true);
+    stbi_set_flip_vertically_on_load(false);
     mBuffer = stbi_load(pPath.c_str(), &mWidth, &mHeight, &mBPP, 4);
 
     GLCall(glGenTextures(1, &mTextureID));
