@@ -74,6 +74,7 @@ int run_glfw() {
 	// ECS ======================================================
     std::vector<System*> systems;
 
+    // keep before scene loading, to make sure initialized before components added
     AudioManager* audioManager = AudioManager::GetInstance();
     Core::getInstance().AddSystem(audioManager);
     audioManager->Initialize();
