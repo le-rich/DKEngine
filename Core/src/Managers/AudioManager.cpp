@@ -1,10 +1,24 @@
 ﻿#include <Managers/AudioManager.h>
 #include <Components/AudioComponent.h>
 #include <Managers/EntityManager.h>
+#include <Components/ListenerComponent.h>
+
+AudioManager* AudioManager::pInstance;
+std::mutex AudioManager::mutex_;
+
+AudioManager* AudioManager::GetInstance() {
+    if (pInstance == nullptr) {
+        std::lock_guard<std::mutex> lock(mutex_);
+        if (pInstance == nullptr) {
+            AudioManager* temp = new AudioManager();
+            pInstance = temp;
+        }
+    }
+    return pInstance;
+}
 
 AudioManager::AudioManager() {
     FMOD::System_Create(&fmodSystem);
-    listenerPosition = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 
 void AudioManager::Initialize()
@@ -52,20 +66,19 @@ void AudioManager::Update(float deltaTime) {
         audioComponent->UpdateAttributes(deltaTime);
 
     }
+    std::vector<UUIDv4::UUID> listenerEntitiesUUIDs = EntityManager::getInstance().findEntitiesByComponent(ComponentType::Listener);
+    for (UUIDv4::UUID listenerEntityUUID : listenerEntitiesUUIDs) {
+        Entity* listenerEntity = EntityManager::getInstance().getEntity(listenerEntityUUID);
+        ListenerComponent* listenerComponent = dynamic_cast<ListenerComponent*>(
+            listenerEntity->getComponent(ComponentType::Audio)
+            );
+        listenerComponent->UpdatePosition(deltaTime);
+
+    }
+    
     fmodSystem->update();
 }
 
 FMOD::System* AudioManager::GetSystem() {
     return fmodSystem;
 }
-
-void AudioManager::updateListenerPosition(Entity* listenerParent) {
-    glm::vec3 posGlm = listenerParent->transform->getWorldPosition();
-    FMOD_VECTOR pos = AudioManager::GetFMODVector(posGlm);
-    FMOD_VECTOR vel = AudioManager::GetFMODVector(posGlm - listenerPosition);
-    FMOD_VECTOR forward = AudioManager::GetFMODVector(listenerParent->transform->getForward());
-    FMOD_VECTOR up = AudioManager::GetFMODVector(listenerParent->transform->getUp());
-
-    fmodSystem->set3DListenerAttributes(0, &pos, &vel, &forward, &up);
-}
-

@@ -12,14 +12,9 @@
 
 class AudioManager : public System {
 public:
-	AudioManager();
-
 	~AudioManager();
 
-	static AudioManager& GetInstance() {
-		static AudioManager instance;
-		return instance;
-	}
+	static AudioManager* GetInstance();
 	
 	const char* GetName() const override {
 		return "AudioManager";
@@ -30,12 +25,16 @@ public:
 	FMOD::Sound* LoadAudio(const std::string& filePath);
 	void Update(float deltaTime) override;
 	void FixedUpdate() override;
-	void updateListenerPosition(Entity* listenerParent);
 	static FMOD_VECTOR GetFMODVector(const glm::vec3& position);
 private:
-	glm::vec3 listenerPosition;
+	AudioManager();
 	FMOD::System* fmodSystem;
 	std::unordered_map<std::string, FMOD::Sound*> soundCache;
+	AudioManager(const AudioManager& lc) = delete;
+	AudioManager& operator= (const AudioManager& lc) = delete;
+
+	static AudioManager* pInstance;
+	static std::mutex mutex_;
 };
 
 #endif // AUDIOMANAGER_H
