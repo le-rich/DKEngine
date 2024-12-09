@@ -18,6 +18,7 @@
 #include "LapCheckpointScript.h"
 #include "FollowCamScript.h"
 #include <CarControllerScript.h>
+#include <Components/ListenerComponent.h>
 //#include "Input.h"
 
 Scene::Scene()
@@ -95,6 +96,17 @@ void Scene::SpawnSceneDefinition()
     Entity* cameraEnt = entityManager->findFirstEntityByDisplayName("Main Camera");
     ScriptComponent* orb = dynamic_cast<ScriptComponent*>(cameraEnt->getComponent(ComponentType::Script));
     OrbitScript* orbScript = orb->GetScript<OrbitScript>();
+
+    // Audio setup
+    AudioManager* am = AudioManager::GetInstance();
+    FMOD::Sound* carMotor = am->LoadAudio("Assets/Audio/car-motor.mp3");
+    AudioComponent* carAudio = new AudioComponent(carEnt, am);
+    carEnt->addComponent(*carAudio);
+    carAudio->PlaySound(carMotor, true, false);
+    
+    ListenerComponent* listener = ListenerComponent::getInstance(cameraEnt, am);
+    cameraEnt->addComponent(*listener);
+
 
     auto garageRoomEnt = entityManager->findFirstEntityByDisplayName("Garage Controller");
     ScriptComponent* garageScriptComponent = new ScriptComponent(garageRoomEnt);
