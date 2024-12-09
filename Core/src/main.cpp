@@ -82,7 +82,7 @@ int run_glfw() {
     Entity* cameraEnt = EntityManager::getInstance().findFirstEntityByDisplayName("Main Camera");
 
 	TransformComponent* CAR_TRANSFORM = testCarEntity->transform;
-   auto glfwWindow = window.GetWindow();
+  	auto glfwWindow = window.GetWindow();
 
     Physics* physics = new Physics();
     Renderer* renderer = new Renderer(&window);

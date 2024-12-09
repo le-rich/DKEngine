@@ -37,6 +37,7 @@ namespace SceneParser
     };
 
     static const std::string ASSET_KEY = "assets";
+	static const std::string TEXTURE_KEY = "textures";
     static const std::string SKYBOX_KEY = "skybox";
     static const std::string ENTITY_KEY = "entities";
     static const std::string GAMEMANAGER_KEY = "gamemanager";
@@ -255,6 +256,24 @@ namespace SceneParser
         }
     }
 
+	vvoid ParseTextures(json& pTextureObjects)
+	{
+		for (auto& texture: pTextureObjects)
+		{
+			try
+			{
+				const std::string path = texture.at("path").template get < std::string > ();
+				auto files = texture.at("file").template get<std::vector<std::string>>();
+
+				for (const std::string file : files)
+				{
+					std::shared_ptr<Texture> texture = std::make_shared<Texture>(path, file);
+					AssetManager::GetInstance().Addtexture(texture);
+				}
+			}
+		}
+	}
+
     void ParseSkybox(json& pSkyboxObject)
     {
         // Create Skybox object if not exist
@@ -395,11 +414,18 @@ namespace SceneParser
         }
         DEFAULT_EXCEPTION_HANDLER;
 
+		try
+		{
+			json textureObjects = sceneJSON.at(TEXTURE_KEY);
+			ParseTextures(textureObjects);
+		}
+
         try
         {
             json skyboxObject = sceneJSON.at(SKYBOX_KEY);
             ParseSkybox(skyboxObject);
-        }DEFAULT_EXCEPTION_HANDLER;
+        }
+		DEFAULT_EXCEPTION_HANDLER;
 
         try
         {

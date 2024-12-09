@@ -23,6 +23,61 @@
     {
       "path": "TestModel/",
       "file": [ "TestFace.gltf" ]
+    },
+	  {
+      "path": "PBRMaterials/",
+      "file": [ "PBRSphere.gltf" ]
+    }
+  ],
+  "textures": [
+    {
+      "path": "PBRMaterials/rocky-rugged-terrain",
+      "file": [ "rocky-rugged-terrain_1_albedo.png" ]
+    },
+    {
+      "path": "PBRMaterials/rocky-rugged-terrain",
+      "file": [ "rocky-rugged-terrain_1_ao.png" ]
+    },
+    {
+      "path": "PBRMaterials/rocky-rugged-terrain",
+      "file": [ "rocky-rugged-terrain_1_height.png" ]
+    },
+    {
+      "path": "PBRMaterials/rocky-rugged-terrain",
+      "file": [ "rocky-rugged-terrain_1_metallic.png" ]
+    },
+    {
+      "path": "PBRMaterials/rocky-rugged-terrain",
+      "file": [ "rocky-rugged-terrain_1_normal-ogl.png" ]
+    },
+    {
+      "path": "PBRMaterials/rocky-rugged-terrain",
+      "file": [ "rocky-rugged-terrain_1_roughness.png" ]
+    },
+    {
+      "path": "PBRMaterials/textured-aluminum",
+      "file": [ "textured-aluminum_albedo.png" ]
+    },
+    {
+      "path": "PBRMaterials/textured-aluminum",
+      "file": [ "textured-aluminum_ao.png" ]
+    },
+    {
+      "path": "PBRMaterials/textured-aluminum",
+      "file": [ "textured-aluminum_height.png" ]
+    },
+
+    {
+      "path": "PBRMaterials/textured-aluminum",
+      "file": [ "textured-aluminum_metallic.png" ]
+    },
+    {
+      "path": "PBRMaterials/textured-aluminum",
+      "file": [ "textured-aluminum_normal-ogl.png" ]
+    },
+    {
+      "path": "PBRMaterials/textured-aluminum",
+      "file": [ "textured-aluminum_roughness.png" ]
     }
   ],
   "skybox": "skybox_to_equirect_2.png",

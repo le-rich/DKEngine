@@ -38,6 +38,15 @@ public:
     std::string heightMapPath;          // TODO
     std::string aoMapPath;              // TODO
     std::string emissionMapPath;        // TODO
+
+	/* These maps get loaded by the asset manager, which get registered as UUIDs
+	Then we generate a material instance that registers itself with a UUID 
+	Then when inside a mesh component, we check for a MaterialComponent 
+	otherwise we default to its OwnMaterial or a default material instance.
+
+	If the mateiralComponent is not a null pointer, we Draw().
+
+	*/
    
 protected:
     Material* materialInstance = nullptr;
