@@ -65,5 +65,6 @@ private:
 	Entity* wheelFR;
 	Entity* wheelRR;
 	Entity* wheelRL;
+	Entity* body;
 };
 

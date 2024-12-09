@@ -16,10 +16,12 @@ std::chrono::high_resolution_clock::time_point lastUpdateTime;
 CarControllerScript::CarControllerScript(Entity* mEntity) : Script(mEntity)
 {
     lastUpdateTime = std::chrono::high_resolution_clock::now();
+    body = entity->findFirstChildByDisplayName("Body");
     wheelFL = entity->findFirstChildByDisplayName("WheelFL");
     wheelFR = entity->findFirstChildByDisplayName("WheelFR");
     wheelRL = entity->findFirstChildByDisplayName("WheelRL");
     wheelRR = entity->findFirstChildByDisplayName("WheelRR");
+    
 }
 
 CarControllerScript::~CarControllerScript()
@@ -201,24 +203,43 @@ void CarControllerScript::SetParameters(ScriptParams* pScriptParameters)
     auto height = mParams.m_Height;
     auto width = mParams.m_Width;
     auto length = mParams.m_Length;
-
     AE86::real zero = 0;
-    MeshComponent* meshComponent = dynamic_cast<MeshComponent*>(entity->getComponent(ComponentType::Mesh));
-
+    
+    MeshComponent* meshComponent = dynamic_cast<MeshComponent*>(body->getComponent(ComponentType::Mesh));
+    
+    if (meshComponent == nullptr)
+        return;
+    
     Mesh* mesh = meshComponent->getMesh();
     auto primitiveList = mesh->GetPrimitives();
     std::vector<Vertex> uniqueVertices;
     for (auto primitive : primitiveList)
     {
         auto vertices = primitive.GetLoadedVertices();
-
+        
+        if (vertices.empty())
+            continue;
+        
         for (auto vertex : vertices) {
             if (std::find(uniqueVertices.begin(), uniqueVertices.end(), vertex) == uniqueVertices.end()) {
                 uniqueVertices.push_back(vertex);
             }
         }
     }
-    CalculateInertiaTensorFromVertices(uniqueVertices, 12);
+    AE86::Matrix3 inertiaTensor;
+    
+    try {
+        inertiaTensor = CalculateInertiaTensorFromVertices(uniqueVertices, 12);
+    } catch (const std::exception& ex) {
+        std::cerr << "Inertia tensor calculation failed: " << ex.what() << std::endl;
+        return;
+    }    carRigidBody->setInertiaTensor(inertiaTensor);
+    
+//     carRigidBody->setInertiaTensor(AE86::Matrix3(
+//      (AE86::real) massScale * (height * height + length * length), 0.0f, 0.0f,
+//      0.0f, (AE86::real) massScale * (width * width * length * length), 0.0f,
+//      0.0f, 0.0f, (AE86::real)massScale * (width * width * height * height)
+// ));
 }
 
 AE86::Matrix3 CarControllerScript::CalculateInertiaTensorFromVertices(const std::vector<Vertex>& vertices, float mass)
@@ -235,7 +256,7 @@ AE86::Matrix3 CarControllerScript::CalculateInertiaTensorFromVertices(const std:
 
     // Adding up all of x,y,z coordinates
     for (const auto& vertex : vertices) {
-        centerOfMass += vertex.mPosition;
+        centerOfMass += normalize(vertex.mPosition);
     }
     centerOfMass = centerOfMass/vertexCount; // Basically Σm(x,y,z)/M
 
