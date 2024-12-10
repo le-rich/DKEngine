@@ -26,7 +26,7 @@ static const std::string SHADOWMAP_SHADER_PATH = "../Rendering/Shaders/shadowmap
 struct Renderable {
     TransformComponent* worldTransform;
     Mesh* mesh = nullptr;
-    Material* material = nullptr; // TODO: To be changed to MaterialComponent.
+    Material* material = nullptr;
 
     Renderable(TransformComponent* transform) : worldTransform(transform) {}
 

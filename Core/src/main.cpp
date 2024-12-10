@@ -41,21 +41,6 @@ int run_glfw() {
     Input& input = Input::GetInstance();
     input.SetWindow(window.GetWindow());
     
-    // the following is how you can call register a callback THIS IS JUST EXAMPLE CODE FOR PEOPLE TO USE
-    /*
-    input.RegisterKeyCallback(GLFW_KEY_W, [](Input::ActionType action) {
-        if (action == Input::HOLD) {
-            std::cout << "W KEY HELD" << std::endl;
-        }
-        else if (action == Input::RELEASE) {
-            std::cout << "W KEY RELEASED" << std::endl;
-        }
-        else if (action == Input::PRESS) {
-            std::cout << "W KEY PRESESD" << std::endl;
-        }
-        });
-    */
-
     window.SetWindowToCurrentThread();
     window.SetKeyCallback(Input::KeyCallback);
     window.SetMouseButtonCallback(Input::MouseButtonCallback);    
@@ -89,8 +74,7 @@ int run_glfw() {
     UI* ui = new UI(Core::getInstance().GetScene(), renderer->GetFrameBuffer(), glfwWindow);
     Game* game = new Game();
     AudioManager* audioManager = new AudioManager();    
-	
-	
+		
 	Core::getInstance().AddSystem(ui);
 	Core::getInstance().AddSystem(physics);
 	Core::getInstance().AddSystem(renderer);

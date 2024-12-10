@@ -2,6 +2,12 @@
 #include "Managers/AssetManager.h"
 
 Material::Material() {}
+Material::Material(const UUIDv4::UUID& pShaderID, const UUIDv4::UUID& pBaseColorTextureID)
+{
+	mShaderID = pShaderID;
+	mBaseColorTextureID = pBaseColorTextureID;
+}
+
 Material::~Material() {}
 
 void Material::Bind()

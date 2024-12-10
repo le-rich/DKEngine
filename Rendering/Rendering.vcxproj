@@ -62,7 +62,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\Buffers\ShaderStorageBuffer.h" />
-    <ClInclude Include="include\Components\MaterialComponent.h" />
     <ClInclude Include="include\Components\MeshComponent.h" />
     <ClInclude Include="include\Data\Shape.h" />
     <ClInclude Include="include\Resources\Asset.h" />
@@ -87,7 +86,6 @@
     <ClInclude Include="include\Resources\Skybox.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Components\MaterialComponent.cpp" />
     <ClCompile Include="src\Resources\Skybox.cpp" />
     <ClCompile Include="src\Entities\LightEntity.cpp" />
     <ClCompile Include="src\Buffers\ShaderStorageBuffer.cpp" />

@@ -256,21 +256,22 @@ namespace SceneParser
         }
     }
 
-	vvoid ParseTextures(json& pTextureObjects)
+	void ParseTextures(json& pTextureObjects)
 	{
 		for (auto& texture: pTextureObjects)
 		{
 			try
 			{
-				const std::string path = texture.at("path").template get < std::string > ();
+				const std::string path = texture.at("path").template get <std::string> ();
 				auto files = texture.at("file").template get<std::vector<std::string>>();
 
 				for (const std::string file : files)
 				{
 					std::shared_ptr<Texture> texture = std::make_shared<Texture>(path, file);
-					AssetManager::GetInstance().Addtexture(texture);
+					AssetManager::GetInstance().AddTexture(texture);
 				}
 			}
+			DEFAULT_EXCEPTION_HANDLER;
 		}
 	}
 
@@ -419,6 +420,7 @@ namespace SceneParser
 			json textureObjects = sceneJSON.at(TEXTURE_KEY);
 			ParseTextures(textureObjects);
 		}
+		DEFAULT_EXCEPTION_HANDLER;
 
         try
         {

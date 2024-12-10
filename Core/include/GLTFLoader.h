@@ -170,7 +170,7 @@ namespace GLTFLoader
                     break;
                 default:
                     #ifndef NDEBUG
-                    std::printf("Unsupported attribute %s in gltf model!", attribType.c_str());
+                    std::printf("Unsupported attribute %s in gltf model! \n", attribType.c_str());
                     #endif
                     continue;
 

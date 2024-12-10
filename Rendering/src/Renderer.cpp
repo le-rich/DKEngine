@@ -273,7 +273,6 @@ void Renderer::FetchSkybox()
 void Renderer::FetchRenderables()
 {
     ComponentMask renderableComponentMask;
-    // TODO: Add Materials to this.
     renderableComponentMask.set(static_cast<size_t>(ComponentType::Mesh));
     renderableComponentMask.set(static_cast<size_t>(ComponentType::Transform));
     auto renderableEntities = EntityManager::getInstance().findEntitiesContainingComponentMask(renderableComponentMask);
@@ -282,8 +281,6 @@ void Renderer::FetchRenderables()
     {
         TransformComponent* transformComponent = new TransformComponent(*(renderEntity->transform));
         MeshComponent* meshComponent = dynamic_cast<MeshComponent*>(renderEntity->getComponent(ComponentType::Mesh));
-        // TODO: MaterialComponent pointer here.
-        Material* materialComponent = nullptr;
 
         Renderable* renderable = new Renderable(transformComponent);
         if (meshComponent != nullptr && meshComponent->getMesh() != nullptr)

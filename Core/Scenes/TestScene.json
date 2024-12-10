@@ -82,7 +82,7 @@
     {
       "path": "PBRMaterials/textured-aluminum",
       "file": [ "textured-aluminum_roughness.png" ]
-    {
+    }
   ],
   "skybox": "skybox_to_equirect_2.png",
   "entities": [
@@ -317,7 +317,7 @@
         "localOrientation": [],
         "localScale": []
       },
-      "components": {},
+      "components": [],
       "parent": "JSON TEST PARENT",
       "children": [ "JSON Test Child" ]
     },
