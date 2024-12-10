@@ -1,19 +1,20 @@
 #include "Component.h"
 #include "Components/TransformComponent.h"
+#include "Components/RigidBodyComponent.h"
+#include "Components/AudioComponent.h"
+#include "Managers/EntityManager.h"
 #include "Core.h"
 #include "Entity.h"
 #include "Input.h"
-#include "Managers/EntityManager.h"
+#include "System.h"
 #include "Game.h"
 #include "Physics.h"
 #include "Renderer.h"
+#include "Audio.h"
 #include "Scene.h"
-#include "System.h"
 #include "UI.h"
 #include "Utils/IDUtils.h"
 #include "Window/Window.h"
-#include "Managers/AudioManager.h"
-
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -22,8 +23,7 @@
 #include <iostream>
 #include <mutex>
 #include <thread>
-#include <Components/RigidBodyComponent.h>
-#include "Components/AudioComponent.h"
+
 
 int run_glfw() {
     std::atomic<bool> running(true);
@@ -74,11 +74,6 @@ int run_glfw() {
     // ECS ======================================================
     std::vector<System*> systems;
 
-    // keep before scene loading, to make sure initialized before components added
-    AudioManager* audioManager = AudioManager::GetInstance();
-    Core::getInstance().AddSystem(audioManager);
-    audioManager->Initialize();
-
     Scene* defaultScene = new Scene();
 
     Core::getInstance().SetScene(defaultScene);
@@ -94,16 +89,19 @@ int run_glfw() {
     Renderer* renderer = new Renderer(&window);
     UI* ui = new UI(Core::getInstance().GetScene(), renderer->GetFrameBuffer(), glfwWindow);
     Game* game = new Game();
+    Audio* audio = new Audio();
     
     Core::getInstance().AddSystem(ui);
     Core::getInstance().AddSystem(physics);
     Core::getInstance().AddSystem(renderer);
     Core::getInstance().AddSystem(game);
+    Core::getInstance().AddSystem(audio);
     
     ui->Initialize();
     physics->Initialize();
     renderer->Initialize();
     game->Initialize();
+    audio->Initialize();
     
     std::thread gameThread([&]()
     {
@@ -138,7 +136,7 @@ int run_glfw() {
                     fixedUpdateBuffer -= PHYSICS_UPDATE_INTERVAL;
                 }
                 std::this_thread::sleep_for(std::chrono::microseconds(1));
-                audioManager->Update(deltaTimeFloatSeconds);
+                audio->Update(deltaTimeFloatSeconds);
         }
     });
 

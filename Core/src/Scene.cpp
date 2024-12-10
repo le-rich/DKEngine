@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 #include "Scene.h"
 
 #include "Entities/CameraEntity.h"
@@ -9,17 +7,20 @@
 //#include "GLTFLoader.h"
 #include "SceneParser.h"
 #include "Managers/EntityManager.h"
+#include "Managers/FMODManager.h"
 #include "Components/MeshComponent.h"
 #include "Components/ScriptComponent.h"
-#include <Components/ListenerComponent.h>
+#include "Components/ListenerComponent.h"
 #include "GarageScript.h"
 #include "OrbitScript.h"
 #include "TimerScript.h"
 #include "LapManagerScript.h"
 #include "LapCheckpointScript.h"
 #include "FollowCamScript.h"
-#include <CarControllerScript.h>
+#include "CarControllerScript.h"
 //#include "Input.h"
+
+#include <vector>
 
 Scene::Scene()
 {
@@ -66,14 +67,14 @@ void Scene::SpawnSceneDefinition()
     ScriptComponent* orb = dynamic_cast<ScriptComponent*>(cameraEnt->getComponent(ComponentType::Script));
     OrbitScript* orbScript = orb->GetScript<OrbitScript>();
 
-    // Audio setup
-    AudioManager* am = AudioManager::GetInstance();
-    FMOD::Sound* carMotor = am->LoadAudio("Assets/Audio/car-motor.mp3");
-    AudioComponent* carAudio = new AudioComponent(carEnt, am);
+    // Audio setup, Car Noise + Camera Listener
+    FMODManager* audioManager = FMODManager::GetInstance();
+    FMOD::Sound* carMotorSound = audioManager->LoadAudio("Assets/Audio/car-motor.mp3");
+    AudioComponent* carAudio = new AudioComponent(carEnt);
     carEnt->addComponent(*carAudio);
-    carAudio->PlaySound(carMotor, true, false);
+    carAudio->PlaySound(carMotorSound, true, false);
     
-    ListenerComponent* listener = ListenerComponent::getInstance(cameraEnt, am);
+    ListenerComponent* listener = new ListenerComponent(cameraEnt, 0);
     cameraEnt->addComponent(*listener);
 
 

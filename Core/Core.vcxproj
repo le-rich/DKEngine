@@ -156,6 +156,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Audio.cpp" />
     <ClCompile Include="src\Component.cpp" />
     <ClCompile Include="src\Components\AudioComponent.cpp" />
     <ClCompile Include="src\Components\ListenerComponent.cpp" />
@@ -163,10 +164,10 @@
     <ClCompile Include="src\Components\TransformComponent.cpp" />
     <ClCompile Include="src\Core.cpp" />
     <ClCompile Include="src\Entity.cpp" />
+    <ClCompile Include="src\FMODManager.cpp" />
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Managers\AssetManager.cpp" />
-    <ClCompile Include="src\Managers\AudioManager.cpp" />
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\Utils\IDUtils.cpp" />
     <ClCompile Include="src\Window\Window.cpp" />
@@ -180,6 +181,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Audio.h" />
     <ClInclude Include="include\Component.h" />
     <ClInclude Include="include\Components\AudioComponent.h" />
     <ClInclude Include="include\Components\ListenerComponent.h" />
@@ -190,7 +192,7 @@
     <ClInclude Include="include\GLTFLoader.h" />
     <ClInclude Include="include\Input.h" />
     <ClInclude Include="include\Managers\AssetManager.h" />
-    <ClInclude Include="include\Managers\AudioManager.h" />
+    <ClInclude Include="include\Managers\FMODManager.h" />
     <ClInclude Include="include\Managers\EntityManager.h" />
     <ClInclude Include="include\Scene.h" />
     <ClInclude Include="include\SceneParser.h" />

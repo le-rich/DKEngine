@@ -1,44 +1,25 @@
+#include "Entity.h"
+#include "Components/ListenerComponent.h"
 
 
-#include <Entity.h>
-#include <Components/ListenerComponent.h>
-#include <Managers/AudioManager.h>
-
-#include <fmod.hpp>
-#include <glm.hpp>
-
-ListenerComponent* ListenerComponent::pInstance = nullptr;
-std::mutex ListenerComponent::mutex_;
-
-ListenerComponent* ListenerComponent::getInstance(Entity* mEntity, AudioManager* audioManager) {
-    if (pInstance == nullptr) {
-        std::lock_guard<std::mutex> lock(mutex_);
-        if (pInstance == nullptr) {
-            ListenerComponent* temp = new ListenerComponent(mEntity, audioManager);
-            pInstance = temp;
-        }
-    }
-    return pInstance;
-}
-
-ListenerComponent::ListenerComponent(Entity* mEntity, AudioManager* audioManager) : Component(mEntity) {
-	ListenerComponent::previousPosition = entity->transform->getWorldPosition();
-	ListenerComponent::am = audioManager;
+ListenerComponent::ListenerComponent(Entity* mEntity, int listener) : Component(mEntity) {
+    ListenerComponent::previousPosition = entity->transform->getWorldPosition();
+    ListenerComponent::listener = listener;
 }
 
 void ListenerComponent::UpdatePosition(float deltaTime) {
-	glm::vec3 posGlm = entity->transform->getWorldPosition();
-	FMOD_VECTOR pos = AudioManager::GetFMODVector(posGlm);
-	FMOD_VECTOR vel = AudioManager::GetFMODVector(posGlm - previousPosition);
-	FMOD_VECTOR forward = AudioManager::GetFMODVector(entity->transform->getForward());
-	FMOD_VECTOR up = AudioManager::GetFMODVector(entity->transform->getUp());
-	am->GetSystem()->set3DListenerAttributes(0, &pos, &vel, &forward, &up);
-	previousPosition = posGlm;
+    FMODManager* fmodMan = FMODManager::GetInstance();
+    glm::vec3 posGlm = entity->transform->getWorldPosition();
+    FMOD_VECTOR pos = FMODManager::GetFMODVector(posGlm);
+    FMOD_VECTOR vel = FMODManager::GetFMODVector(posGlm - previousPosition);
+    FMOD_VECTOR forward = FMODManager::GetFMODVector(entity->transform->getForward());
+    FMOD_VECTOR up = FMODManager::GetFMODVector(entity->transform->getUp());
+    fmodMan->GetFMODSystem()->set3DListenerAttributes(0, &pos, &vel, &forward, &up);
+    previousPosition = posGlm;
 }
 
 ListenerComponent::~ListenerComponent() = default;
 
 Component* ListenerComponent::clone() const {
-	return nullptr;
+    return new ListenerComponent(*this);
 };
-

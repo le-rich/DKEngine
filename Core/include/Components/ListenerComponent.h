@@ -1,27 +1,22 @@
 #ifndef LSTNCOMP_H
-#define LSTNCMOP_H
+#define LSTNCOMP_H
 
-#include <Component.h>
-#include <Managers/AudioManager.h>
+#include "Component.h"
+#include "Managers/FMODManager.h"
 
 #include <fmod.hpp>
 #include <glm.hpp>
 
 class ListenerComponent : public Component {
 public:
-	static ListenerComponent* getInstance(Entity* mEntity, AudioManager* audioManager);
+    ListenerComponent(Entity* mEntity, int listener);
+    ~ListenerComponent();
 
-	void UpdatePosition(float deltaTime);
+    void UpdatePosition(float deltaTime);
+    Component* clone() const override;
 private:
-	Component* clone() const;
-	ListenerComponent(Entity* mEntity, AudioManager* audioManager);
-	~ListenerComponent();
-	ListenerComponent(const ListenerComponent& lc) = delete;
-	ListenerComponent& operator= (const ListenerComponent& lc) = delete;
-
-	AudioManager* am = nullptr;
-	glm::vec3 previousPosition;
-	static ListenerComponent* pInstance;
-    static std::mutex mutex_;
+    FMODManager* am = nullptr;
+    glm::vec3 previousPosition;
+    int listener;
 };
 #endif

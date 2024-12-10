@@ -2,17 +2,17 @@
 #define AUDIOCOMP_H
 
 #include "Component.h"
-#include "Managers/AudioManager.h"
+#include "Managers/FMODManager.h"
 
 #include <fmod.hpp>
 #include <glm.hpp>
 
 class AudioComponent : public Component {
 public:
-    AudioComponent(Entity* mEntity, AudioManager* audioManager);
-    AudioComponent(Entity* mEntity, AudioManager* audioManager, FMOD::ChannelGroup* channelGroup);
-    AudioComponent(Entity* mEntity, AudioManager* audioManager, FMOD::Sound* sound);
-    AudioComponent(Entity* mEntity, AudioManager* audioManager, FMOD::ChannelGroup* channelGroup, FMOD::Sound* sound);
+    AudioComponent(Entity* mEntity);
+    AudioComponent(Entity* mEntity, FMOD::ChannelGroup* channelGroup);
+    AudioComponent(Entity* mEntity, FMOD::Sound* sound);
+    AudioComponent(Entity* mEntity, FMOD::ChannelGroup* channelGroup, FMOD::Sound* sound);
 
     ~AudioComponent();
 
@@ -25,7 +25,6 @@ public:
 
     FMOD::Channel* GetChannel();
 private:
-    AudioManager* am = nullptr;
     FMOD::Channel* channel = nullptr;
     FMOD::ChannelGroup* group = nullptr;
     glm::vec3 previousPosition;
