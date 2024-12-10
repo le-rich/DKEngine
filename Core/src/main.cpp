@@ -178,6 +178,7 @@ int run_glfw() {
 	}
 
 	glfwTerminate();
+	return 0;
 }
 
 int main(int argc, char* argv[])
@@ -185,8 +186,6 @@ int main(int argc, char* argv[])
     // Nobody dare touch this... I'm watching you... ?_?
     std::cout << "Do you know what DK Stands for? Donkey Kong? Nah. Drift King." << std::endl;
 
-    run_glfw();
-
-    return 0;
+    return run_glfw();
 }
 
