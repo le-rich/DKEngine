@@ -13,7 +13,10 @@ class FMODManager {
 public:
     ~FMODManager();
 
-    static FMODManager* GetInstance();
+    static FMODManager* GetInstance() {
+        static FMODManager* pInstance = new FMODManager();
+        return pInstance;
+    }
 
     FMOD::Sound* LoadAudio(const std::string& filePath);
     static FMOD_VECTOR GetFMODVector(const glm::vec3& position);
@@ -24,9 +27,9 @@ private:
     std::unordered_map<std::string, FMOD::Sound*> soundCache;
     FMODManager(const FMODManager& lc) = delete;
     FMODManager& operator= (const FMODManager& lc) = delete;
-
-    static FMODManager* pInstance;
-    static std::mutex mutex_;
 };
+
+static FMODManager* pInstance = FMODManager::GetInstance();
+
 
 #endif // FMODMANAGER_H

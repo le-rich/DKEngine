@@ -15,7 +15,6 @@ public:
     void UpdatePosition(float deltaTime);
     Component* clone() const override;
 private:
-    FMODManager* am = nullptr;
     glm::vec3 previousPosition;
     int listener;
 };

@@ -1,17 +1,7 @@
 ﻿#include "Managers/FMODManager.h"
 
-FMODManager* FMODManager::pInstance;
-std::mutex FMODManager::mutex_;
 
-FMODManager* FMODManager::GetInstance() {
-    if (pInstance == nullptr) {
-        std::lock_guard<std::mutex> lock(mutex_);
-        if (pInstance == nullptr) {
-            pInstance = new FMODManager();
-        }
-    }
-    return pInstance;
-}
+
 
 FMODManager::FMODManager() {
     FMOD::System_Create(&fmodSystem);
