@@ -30,6 +30,8 @@ namespace AE86 {
 
 #define REAL_MAX DBL_MAX
 
+#define R_PI 3.14159265358979323846 // pi
+
 #define real_abs fabs
 #define real_sqrt sqrt
 #define real_pow pow

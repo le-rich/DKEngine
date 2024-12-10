@@ -134,6 +134,7 @@
   <ItemGroup>
     <ClInclude Include="include\Aabb.h" />
     <ClInclude Include="include\Body.h" />
+    <ClInclude Include="include\BoundingVolume.h" />
     <ClInclude Include="include\Core.h" />
     <ClInclude Include="include\FGen.h" />
     <ClInclude Include="include\PContacts.h" />
