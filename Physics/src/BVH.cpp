@@ -110,8 +110,8 @@ namespace AE86 {
 
 		// if both of the tested bvhns are leaves, then possible collision
 		if (isLeaf() && other->isLeaf()) {
-			contacts->body[0] = body;
-			contacts->body[1] = other->body;
+			contacts->bodies[0] = body;
+			contacts->bodies[1] = other->body;
 			return 1;
 		}
 
