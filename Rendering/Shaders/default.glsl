@@ -156,7 +156,7 @@ vec3 BlinnPhong(vec3 plightDir, vec3 plightColor, float pluminosity, vec3 F0, fl
 vec3 CalculateDirectionalLight(mat4 plight, float shadow, vec3 F0)
 {
     // Directional light: plight[1].rgb = direction
-    return BlinnPhong(-plight[1].rgb, UnPackColor(plight[2][0]), plight[3][3] * shadow, F0, gRoughness, gMetallic);
+    return BlinnPhong(plight[1].rgb, UnPackColor(plight[2][0]), plight[3][3] * shadow, F0, gRoughness, gMetallic);
 }
 
 vec3 CalcPointLight(mat4 pLight, float shadow, vec3 F0)
@@ -180,7 +180,7 @@ vec3 CalculateSpotLight(mat4 pLight, float shadow, vec3 F0)
     const vec3 lightDirection = normalize(lightPosition - fs_in.v_WorldPos);  
     const float luminosity    = LuminosityFromAttenuation(pLight);
 
-    float theta = dot(lightDirection, normalize(-pLight[1].rgb)); 
+    float theta = dot(lightDirection, normalize(pLight[1].rgb)); 
     float epsilon = (pLight[3][1] -  pLight[3][2]);
     float spotIntensity = clamp((theta - pLight[3][2]) / epsilon, 0.0, 1.0);
 
