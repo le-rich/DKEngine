@@ -132,7 +132,7 @@ vec3 FresnelSchlick(float cosTheta, vec3 F0)
 
 vec3 BlinnPhong(vec3 plightDir, vec3 plightColor, float pluminosity, vec3 F0, float roughness, float metallic)
 {
-    float NdotL = max(dot(gNormal, -plightDir), 0.0);
+    float NdotL = max(dot(gNormal, plightDir), 0.0);
 
     vec3 halfwayDir = normalize(plightDir + gViewDir);
     float NdotH = max(dot(gNormal, halfwayDir), 0.0);
@@ -165,8 +165,8 @@ vec3 CalcPointLight(mat4 pLight, float shadow, vec3 F0)
     const vec3 lightColor     = UnPackColor(pLight[2][0]);
     const float intensity     = pLight[3][3];
 
-    const vec3 lightDirection  = normalize(fs_in.v_WorldPos - lightPosition);
-    const float luminosity      = LuminosityFromAttenuation(pLight);
+    const vec3 lightDirection = normalize(lightPosition - fs_in.v_WorldPos);
+    const float luminosity    = LuminosityFromAttenuation(pLight);
 
     return BlinnPhong(lightDirection, lightColor, intensity * luminosity * shadow, F0, gRoughness, gMetallic);
 }
@@ -177,8 +177,8 @@ vec3 CalculateSpotLight(mat4 pLight, float shadow, vec3 F0)
     const vec3 lightColor     = UnPackColor(pLight[2][0]);
     const float intensity     = pLight[3][3];
 
-    const vec3 lightDirection  = normalize(fs_in.v_WorldPos - lightPosition);
-    const float luminosity      = LuminosityFromAttenuation(pLight);
+    const vec3 lightDirection = normalize(lightPosition - fs_in.v_WorldPos);  
+    const float luminosity    = LuminosityFromAttenuation(pLight);
 
     float theta = dot(lightDirection, normalize(-pLight[1].rgb)); 
     float epsilon = (pLight[3][1] -  pLight[3][2]);
@@ -230,6 +230,9 @@ vec3 CalculateLightSum()
             vec3 lightDirection  = normalize(ssboLights[i][0].rgb - fs_in.v_WorldPos);
             float bias = max(0.05 * (1.0 - dot(gNormal, lightDirection)), 0.005);  
             shadow = ShadowCalculation(i, bias);
+        } else 
+        {
+            shadow = 1.0;
         }
 
         switch(int(ssboLights[i][3][0]))
@@ -270,12 +273,12 @@ void main()
 		vec3 normalMap = texture(uNormalMap, gTexCoords).xyz * 2.0 - 1.0;
 	    gNormal = normalize(fs_in.v_TBN * normalMap);
 	} else {
-        gNormal = normalize(fs_in.v_Normal);
+        gNormal = normalize(fs_in.v_TBN * fs_in.v_Normal);
 	}
 
 	gMetallic = (textureSize(uMetallicMap, 0).x > 0) ? texture(uMetallicMap, gTexCoords).r : 0.0;
 	gRoughness = (textureSize(uRoughnessMap, 0).x > 0) ? texture(uRoughnessMap, gTexCoords).r : 1.0;
-	gAmbientOcclusion = (textureSize(uAmbientOcclusionMap, 0).x > 0) ? texture(uAmbientOcclusionMap, gTexCoords).r : 1.0;
+	gAmbientOcclusion = (textureSize(uAmbientOcclusionMap, 0).x > 0) ? texture(uAmbientOcclusionMap, gTexCoords).r : 0.1;
 
     gViewDir = normalize(ubo_ViewPos - fs_in.v_WorldPos);
 
