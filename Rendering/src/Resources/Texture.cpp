@@ -64,7 +64,8 @@ void Texture::BindToSlot(size_t pSlot) const
     GLCall(glBindTexture(mType, mTextureID));
 }
 
-void Texture::Unbind() const
+void Texture::Unbind(size_t pSlot) const
 {
+    GLCall(glActiveTexture(GL_TEXTURE0 + pSlot));
     GLCall(glBindTexture(mType, 0));
 }

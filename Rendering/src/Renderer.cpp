@@ -176,7 +176,7 @@ void Renderer::GenerateShadowMaps()
 
     std::vector<glm::mat4> lightMatricies(numOfLights);
     std::vector<glm::mat4> lightViewMatricies(numOfLights);
-    std::vector<int> lightEnabled(numOfLights); // I also hate this but the SSBO fields not generated properly with bool, int, or vec2 types
+    std::vector<glm::mat4> lightEnabled(numOfLights); // I also hate this but the SSBO fields not generated properly with bool, int, or vec2 types
 
     glBindTexture(GL_TEXTURE_2D_ARRAY, shadowMapTextureArray);
     glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_DEPTH_COMPONENT16, MAX_SHADOW_SIZE, MAX_SHADOW_SIZE, numOfLights);
@@ -210,7 +210,7 @@ void Renderer::GenerateShadowMaps()
 
 
         lightEnabled[i] = (lightComponent->GetCreatesShadows() ? 1 : 0);
-        if (!lightEnabled[i]) continue;
+        if (!lightEnabled[i][0][0]) continue;
         lightViewMatricies[i] = projectionMatrix * viewMatrix;
         lightComponent->BindShadowFrameBuffer();
 
@@ -237,7 +237,7 @@ void Renderer::GenerateShadowMaps()
 
     mLightMatriciesSSBO.SendBlocks(lightMatricies.data(), lightMatricies.size() * sizeof(glm::mat4));
     mLightViewsSSBO.SendBlocks(lightViewMatricies.data(), lightViewMatricies.size() * sizeof(glm::mat4));
-    mLightsEnabledSSBO.SendBlocks(lightEnabled.data(), lightEnabled.size() * sizeof(int));
+    mLightsEnabledSSBO.SendBlocks(lightEnabled.data(), lightEnabled.size() * sizeof(glm::mat4));
 
     mLightMatriciesSSBO.Bind(0);
     mLightViewsSSBO.Bind(1);

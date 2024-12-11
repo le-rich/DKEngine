@@ -17,6 +17,6 @@ public:
 
 	void Bind() const;
 	void BindToSlot(size_t pSlot) const;
-	void Unbind() const;
+	void Unbind(size_t pSlot = 0) const;
 };
 

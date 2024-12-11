@@ -26,13 +26,14 @@ out VS_OUT
 
 void main()
 {
-    vec3 worldNormal = normalize(mat3(ubo_Model) * normal);
-    vec3 worldTangent = normalize(mat3(ubo_Model) * tangent);
+    vec3 worldTangent = normalize(vec3(ubo_Model * vec4(tangent, 0)));
+    vec3 worldNormal = normalize(vec3(ubo_Model * vec4(normal, 0)));
+    worldTangent = normalize(worldTangent - dot(worldTangent, worldNormal) * worldNormal);
     vec3 worldBitangent = cross(worldNormal, worldTangent);
 
-    vs_out.v_TBN = mat3(worldTangent, worldBitangent, worldNormal);
+    vs_out.v_TBN = transpose(mat3(worldTangent, worldBitangent, worldNormal));
 
-    vs_out.v_Normal = worldNormal;
+    vs_out.v_Normal = normal;
 
     vec4 worldPosition = ubo_Model * vec4(position, 1.0);
     vs_out.v_WorldPos = worldPosition.xyz;
@@ -77,11 +78,12 @@ layout (std140, binding = 0) uniform EngineUBO
     vec3    ubo_ViewPos;
 };
 
-uniform sampler2D uDiffuseMap;
-uniform sampler2D uNormalMap;            // Normal map
-uniform sampler2D uMetallicMap;          // Metallic map
-uniform sampler2D uRoughnessMap;         // Roughness map
-uniform sampler2D uAmbientOcclusionMap;  // AO map
+layout (binding = 0) uniform sampler2D uDiffuseMap;
+layout (binding = 1) uniform sampler2D uMetallicMap;          // Metallic map
+layout (binding = 2) uniform sampler2D uNormalMap;            // Normal map
+layout (binding = 3) uniform sampler2D uHeightMap;            // Height map
+layout (binding = 4) uniform sampler2D uAmbientOcclusionMap;  // AO map
+layout (binding = 5) uniform sampler2D uRoughnessMap;         // Roughness map
 
 layout(binding = 31) uniform sampler2DArray uShadowsMap;
 
@@ -127,15 +129,16 @@ float LuminosityFromAttenuation(mat4 pLight)
 
 vec3 FresnelSchlick(float cosTheta, vec3 F0)
 {
-    return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
+    return F0 + (1.0 - F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
 }
 
 vec3 BlinnPhong(vec3 plightDir, vec3 plightColor, float pluminosity, vec3 F0, float roughness, float metallic)
 {
+    plightDir = fs_in.v_TBN * plightDir;
     float NdotL = max(dot(gNormal, plightDir), 0.0);
 
     vec3 halfwayDir = normalize(plightDir + gViewDir);
-    float NdotH = max(dot(gNormal, halfwayDir), 0.0);
+    float NdotH = max(dot(halfwayDir, gNormal), 0.0);
 
     float glossiness = 1.0 - roughness;
     float specularExponent = glossiness * 128.0; 
@@ -156,7 +159,7 @@ vec3 BlinnPhong(vec3 plightDir, vec3 plightColor, float pluminosity, vec3 F0, fl
 vec3 CalculateDirectionalLight(mat4 plight, float shadow, vec3 F0)
 {
     // Directional light: plight[1].rgb = direction
-    return BlinnPhong(plight[1].rgb, UnPackColor(plight[2][0]), plight[3][3] * shadow, F0, gRoughness, gMetallic);
+    return BlinnPhong(-plight[1].rgb, UnPackColor(plight[2][0]), plight[3][3] * shadow, F0, gRoughness, gMetallic) ;
 }
 
 vec3 CalcPointLight(mat4 pLight, float shadow, vec3 F0)
@@ -165,10 +168,10 @@ vec3 CalcPointLight(mat4 pLight, float shadow, vec3 F0)
     const vec3 lightColor     = UnPackColor(pLight[2][0]);
     const float intensity     = pLight[3][3];
 
-    const vec3 lightDirection = normalize(lightPosition - fs_in.v_WorldPos);
+    const vec3 lightDirection = normalize(fs_in.v_WorldPos - lightPosition);
     const float luminosity    = LuminosityFromAttenuation(pLight);
 
-    return BlinnPhong(lightDirection, lightColor, intensity * luminosity * shadow, F0, gRoughness, gMetallic);
+    return BlinnPhong(lightDirection, lightColor, intensity * luminosity  * shadow, F0, gRoughness, gMetallic);
 }
 
 vec3 CalculateSpotLight(mat4 pLight, float shadow, vec3 F0)
@@ -177,14 +180,14 @@ vec3 CalculateSpotLight(mat4 pLight, float shadow, vec3 F0)
     const vec3 lightColor     = UnPackColor(pLight[2][0]);
     const float intensity     = pLight[3][3];
 
-    const vec3 lightDirection = normalize(lightPosition - fs_in.v_WorldPos);  
+    const vec3 lightDirection = normalize(fs_in.v_WorldPos - lightPosition);  
     const float luminosity    = LuminosityFromAttenuation(pLight);
 
-    float theta = dot(lightDirection, normalize(pLight[1].rgb)); 
+    float theta = dot(lightDirection, normalize(-pLight[1].rgb)); 
     float epsilon = (pLight[3][1] -  pLight[3][2]);
     float spotIntensity = clamp((theta - pLight[3][2]) / epsilon, 0.0, 1.0);
 
-    return BlinnPhong(lightDirection, lightColor, intensity * luminosity * shadow * spotIntensity, F0, gRoughness, gMetallic);
+    return BlinnPhong(lightDirection, lightColor, intensity * luminosity * shadow * spotIntensity, F0, gRoughness, gMetallic) ;
 }
 
 float ShadowCalculation(int i, float bias)
@@ -259,7 +262,7 @@ vec3 CalculateLightSum()
 
     // Apply AO again to final result if desired (if not already done per light)
     // But since we did it in ambient, we can also do a global multiplier:
-    lightSum *= gAmbientOcclusion;
+    // lightSum *= gAmbientOcclusion;
 
     return lightSum;
 }
@@ -270,8 +273,8 @@ void main()
     gDiffuseTexel  = texture(uDiffuseMap,  gTexCoords) * uDiffuse;
 
 	if (textureSize(uNormalMap, 0).x > 0) {
-		vec3 normalMap = texture(uNormalMap, gTexCoords).xyz * 2.0 - 1.0;
-	    gNormal = normalize(fs_in.v_TBN * normalMap);
+		vec3 normalMap = -texture(uNormalMap, gTexCoords).rgb * 2.0 - 1.0;
+	    gNormal = normalize(normalMap);
 	} else {
         gNormal = normalize(fs_in.v_TBN * fs_in.v_Normal);
 	}
@@ -280,7 +283,11 @@ void main()
 	gRoughness = (textureSize(uRoughnessMap, 0).x > 0) ? texture(uRoughnessMap, gTexCoords).r : 1.0;
 	gAmbientOcclusion = (textureSize(uAmbientOcclusionMap, 0).x > 0) ? texture(uAmbientOcclusionMap, gTexCoords).r : 0.1;
 
-    gViewDir = normalize(ubo_ViewPos - fs_in.v_WorldPos);
+//    gMetallic = 0;
+//    gRoughness = 1;
+//    gAmbientOcclusion = 1;
+
+    gViewDir = fs_in.v_TBN * normalize(ubo_ViewPos - fs_in.v_WorldPos);
 
     vec3 color = CalculateLightSum();
     FragColor = vec4(color, gDiffuseTexel.a);
