@@ -2,8 +2,6 @@
 #include <gtc/matrix_transform.hpp>
 #include <gtc/quaternion.hpp>
 
-const int SHADOWMAP_SIZE = 1024;
-
 LightComponent::LightComponent(Entity* pEntity) : Component(pEntity)
 {
     this->componentType = ComponentType::Light;
@@ -21,7 +19,7 @@ mConstant(params.constant), mLinear(params.linear), mQuadratic(params.quadratic)
         // Depth texture. Slower than a depth buffer, but you can sample it later in your shader
         glGenTextures(1, &mDepthTexture);
         glBindTexture(GL_TEXTURE_2D, mDepthTexture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, SHADOWMAP_SIZE, SHADOWMAP_SIZE, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, mShadowMapSize, mShadowMapSize, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
@@ -91,7 +89,7 @@ void LightComponent::SetParams(LightParams pLightParams)
 void LightComponent::BindShadowFrameBuffer()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, mShadowFrameBuffer);
-    glViewport(0, 0, SHADOWMAP_SIZE, SHADOWMAP_SIZE);
+    glViewport(0, 0, mShadowMapSize, mShadowMapSize);
 }
 
 void LightComponent::BindShadowMap()

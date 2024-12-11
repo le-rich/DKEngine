@@ -39,6 +39,8 @@ struct LightParams
     LightType type = AmbientLight;
 };
 
+static const float MAX_SHADOW_SIZE = 4096;
+
 class LightComponent : public Component
 {
 public:
@@ -57,9 +59,16 @@ public:
     inline float GetCutoff() const { return mCutoff; }
     inline float GetOuterCutoff() const { return mOuterCutoff; }
     inline bool GetCreatesShadows() const { return mCreatesShadows; }
+    inline float GetShadowMapSize() const { return mShadowMapSize; }
+    inline float GetNearClip() const { return mNearClip; }
+    inline float GetFarClip() const { return mFarClip; }
+    inline float GetOrthoBoundry() const { return mOrthoBoundry; }
+    inline float GetPerspectiveFOV() const { return mPerspectiveFOV; }
     inline LightType GetType() const { return mType; }
 
     inline GLuint GetShadowMapID() const { return mDepthTexture; }
+    inline glm::mat4 GetOrthoMatrix() const { return  glm::ortho<float>(-mOrthoBoundry, mOrthoBoundry, -mOrthoBoundry, mOrthoBoundry, mNearClip, mFarClip); }
+    inline glm::mat4 GetPerspectiveMatrix() const { return  glm::perspective(glm::radians(mPerspectiveFOV), (float)mShadowMapSize / (float)mShadowMapSize, mNearClip, mFarClip); }
 
     inline void SetColor(glm::vec4 pColor) { mColor = pColor; }
     inline void SetIntensity(float pIntensity) { mIntensity = pIntensity; }
@@ -68,6 +77,12 @@ public:
     inline void SetQuadratic(float pQuadratic) { mQuadratic = pQuadratic; }
     inline void SetCutoff(float pCutoff) { mCutoff = pCutoff; }
     inline void SetOuterCutoff(float pOuterCutoff) { mOuterCutoff = pOuterCutoff; }
+    inline void SetCreatesShadows(bool pCreatesShadows) { mCreatesShadows = pCreatesShadows; }
+    inline void SetShadowMapSize(float pShadowMapSize) { mShadowMapSize = pShadowMapSize; }
+    inline void SetNearClip(float pNearClip) { mNearClip = pNearClip; }
+    inline void SetFarClip(float pFarClip) { mFarClip = pFarClip; }
+    inline void SetOrthoBoundry(float pOrthoBoundry) { mOrthoBoundry = pOrthoBoundry; }
+    inline void SetPerspectiveFOV(float pPerspectiveFOV) { mPerspectiveFOV = pPerspectiveFOV; }
     inline void SetType(LightType pType) { mType = pType; }
 
     void SetParams(LightParams pParams);
@@ -78,6 +93,7 @@ public:
 
 
 private:
+
     glm::vec4 mColor = { 1.0f, 1.0f, 1.0f, 1.0f };
     float mIntensity = 1.f;
     float mConstant = 0.0f;
@@ -87,6 +103,12 @@ private:
     float mOuterCutoff = 15.0f;
     bool mCreatesShadows = false;
     LightType mType = AmbientLight;
+
+    float mShadowMapSize = 4096;
+    float mNearClip = 1.f;
+    float mFarClip = 7.5;
+    float mOrthoBoundry = 10;
+    float mPerspectiveFOV = 70.f;
 
     GLuint mShadowFrameBuffer = 0;
     GLuint mDepthTexture = 0;

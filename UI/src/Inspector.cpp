@@ -131,7 +131,7 @@ void drawTransformComponent() {
 void drawLightComponent(Component* component) {
    if (ImGui::CollapsingHeader("Light", ImGuiTreeNodeFlags_DefaultOpen)) {
       LightComponent* light = static_cast<LightComponent*>(component);
-      int sectionWidth = 100;
+      int sectionWidth = 115;
 
       ImGui::SetNextItemWidth(sectionWidth);
       const char* types[] = { "Ambient", "Point", "Directional", "Spot", "Area" };
@@ -151,6 +151,15 @@ void drawLightComponent(Component* component) {
       ImGui::SameLine(sectionWidth);
       if (ImGui::DragFloat("##Intensity", &intensity, 0.1f, 0.0f)) {
          light->SetIntensity(intensity);
+      }
+
+      ImGui::SetNextItemWidth(sectionWidth);
+      glm::vec4 color = light->GetColor();
+      ImGui::Text("Color");
+      ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - sectionWidth);
+      ImGui::SameLine(sectionWidth);
+      if (ImGui::ColorPicker4("##Color", &color[0])) {
+         light->SetColor(color);
       }
 
       ImGui::SetNextItemWidth(sectionWidth);
@@ -197,12 +206,74 @@ void drawLightComponent(Component* component) {
       if (ImGui::DragFloat("##OuterCutoff", &outerCutoff, 0.1f)) {
          light->SetOuterCutoff(outerCutoff);
       }
+
+      ImGui::SetNextItemWidth(sectionWidth);
+      bool createShadows = light->GetCreatesShadows();
+      ImGui::Text("Shadows");
+      ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - sectionWidth);
+      ImGui::SameLine(sectionWidth);
+      if (ImGui::Checkbox("##Shadows", &createShadows)) {
+         light->SetCreatesShadows(createShadows);
+      }
+
+      ImGui::SetNextItemWidth(sectionWidth);
+      float shadowMapSize = light->GetShadowMapSize();
+      ImGui::Text("Shadow Map Size");
+      ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - sectionWidth);
+      ImGui::SameLine(sectionWidth);
+      if (ImGui::DragFloat("##ShadowMapSize", &shadowMapSize, 1.0f, 1.0f, 4096.0f)) {
+         light->SetShadowMapSize(shadowMapSize);
+      }
+
+      ImGui::SetNextItemWidth(sectionWidth);
+      float nearClip = light->GetNearClip();
+      ImGui::Text("Near Clip");
+      ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - sectionWidth);
+      ImGui::SameLine(sectionWidth);
+      if (ImGui::DragFloat("##NearClip", &nearClip, 0.01f, 0.01f, 10.0f)) {
+         light->SetNearClip(nearClip);
+      }
+
+      ImGui::SetNextItemWidth(sectionWidth);
+      float farClip = light->GetFarClip();
+      ImGui::Text("Far Clip");
+      ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - sectionWidth);
+      ImGui::SameLine(sectionWidth);
+      if (ImGui::DragFloat("##FarClip", &farClip, 1.0f, 10.0f, 1000.0f)) {
+         light->SetFarClip(farClip);
+      }
+
+      ImGui::SetNextItemWidth(sectionWidth);
+      float orthoBoundry = light->GetOrthoBoundry();
+      ImGui::Text("Ortho Boundary");
+      ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - sectionWidth);
+      ImGui::SameLine(sectionWidth);
+      if (ImGui::DragFloat("##OrthoBoundry", &orthoBoundry, 0.1f, 0.1f, 100.0f)) {
+         light->SetOrthoBoundry(orthoBoundry);
+      }
+
+      ImGui::SetNextItemWidth(sectionWidth);
+      float perspectiveFOV = light->GetPerspectiveFOV();
+      ImGui::Text("Perspective FOV");
+      ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - sectionWidth);
+      ImGui::SameLine(sectionWidth);
+      if (ImGui::DragFloat("##PerspectiveFOV", &perspectiveFOV, 0.1f, 10.0f, 180.0f)) {
+         light->SetPerspectiveFOV(perspectiveFOV);
+      }
+
    }
 }
 void drawMeshComponent(Component* component) {
    if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen)) {
       MeshComponent* mesh = static_cast<MeshComponent*>(component);
       int sectionWidth = 100;
+
+      ImGui::SetNextItemWidth(sectionWidth);
+      UUIDv4::UUID id = mesh->GetComponentID();
+      ImGui::Text("ID");
+      ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - sectionWidth);
+      ImGui::SameLine(sectionWidth);
+      ImGui::Text("%s", id.str().c_str());
    }
 }
 
