@@ -29,7 +29,6 @@ std::shared_ptr<Material> AssetManager::GetMaterialByID(UUIDv4::UUID& pID)
         return result->second;
     }
 
-    std::cerr << "Error: Material with UUID " << pID << " not found in the map." << std::endl;
     return nullptr;
 }
 

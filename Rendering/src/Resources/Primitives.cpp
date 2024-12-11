@@ -50,6 +50,7 @@ void Primitive::InitPrimitive()
     mVertexBufferLayout.Push<float>(3); // 3: x, y, z	pos coords
     mVertexBufferLayout.Push<float>(3); // 3: x, y, z	normal coords
     mVertexBufferLayout.Push<float>(2); // 3: x, y		uv coords
+    mVertexBufferLayout.Push<float>(3); // 3: x, y, z   tangent coords
 
     mVertexArray = std::make_shared<VertexArray>();
     mVertexArray->AddBuffer(*mVertexBuffer, mVertexBufferLayout);

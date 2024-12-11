@@ -169,12 +169,18 @@ namespace GLTFLoader
                         vertices[index].mUVCoord = glm::vec2(floatVector[floatIndex], floatVector[floatIndex + 1]);
                     }
                     break;
+                case VertexAttributeKeys::TANGENT:
+                    for (int index = 0; index < vertices.size(); ++index)
+                    {
+                        const int floatIndex = index * typeCount; // Offset
+                        vertices[index].mTangent = glm::vec3(floatVector[floatIndex], floatVector[floatIndex + 1], floatVector[floatIndex + 2]);
+                    }
+                    break;
                 default:
                     #ifndef NDEBUG
                     std::printf("Unsupported attribute %s in gltf model! \n", attribType.c_str());
                     #endif
                     continue;
-
             }
         }
 

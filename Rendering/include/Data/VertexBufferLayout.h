@@ -8,7 +8,8 @@ enum VertexAttributeKeys
     DEFAULT = 0,
     POSITION,
     NORMAL,
-    TEXCOORD_0
+    TEXCOORD_0,
+    TANGENT
 };
 
 inline VertexAttributeKeys GetVertexAttributeFromString(std::string pVertexAttribute)
@@ -16,6 +17,7 @@ inline VertexAttributeKeys GetVertexAttributeFromString(std::string pVertexAttri
     if (pVertexAttribute.compare("POSITION") == 0) return VertexAttributeKeys::POSITION;
     if (pVertexAttribute.compare("NORMAL") == 0) return VertexAttributeKeys::NORMAL;
     if (pVertexAttribute.compare("TEXCOORD_0") == 0) return VertexAttributeKeys::TEXCOORD_0;
+    if (pVertexAttribute.compare("TANGENT") == 0) return VertexAttributeKeys::TANGENT;
     return VertexAttributeKeys::DEFAULT;
 }
 
