@@ -4,7 +4,6 @@
 //#define BODY_HEADER
 
 #include "Core.h"
-#include "vec3.hpp"
 
 namespace AE86 {
 	/** The basic simulation object in our engine. */

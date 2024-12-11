@@ -149,13 +149,12 @@ vec3 CalculateSpotLight(mat4 pLight, float shadow)
     const vec3  lightDirection  = normalize(fs_in.v_WorldPos - lightPosition);
     const float luminosity      = LuminosityFromAttenuation(pLight);
 
-    vec3 lightsum = BlinnPhong(lightDirection, lightColor, intensity * luminosity * shadow);
-
-    float theta = dot(lightDirection, -pLight[1].rgb); 
+    float theta = dot(lightDirection, normalize(-pLight[1].rgb)); 
     const float epsilon = (pLight[3][1] -  pLight[3][2]);
     const float spotIntensity = clamp((theta - pLight[3][2]) / epsilon, 0.0, 1.0);
 
-    return lightsum * spotIntensity;
+    vec3 lightsum = BlinnPhong(lightDirection, lightColor, intensity * luminosity * shadow * spotIntensity);
+    return lightsum;
 }
 
 float ShadowCalculation(int i, float bias)
