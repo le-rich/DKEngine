@@ -3,10 +3,8 @@
 #include "Component.h"
 #include "Components/TransformComponent.h"
 
-//#include <stdint.h>
 #include <glad/glad.h>
 #include <glm.hpp>
-#include <gtc/quaternion.hpp>
 #include <unordered_map>
 
 enum LightType
@@ -89,6 +87,8 @@ public:
     void BindShadowFrameBuffer();
     void BindShadowMap();
 
+    bool CheckIfPointExistsInFrustum(glm::vec3 lightPos, glm::mat4 lightTransformMatrix, glm::vec3 worldPoint);
+
     virtual Component* clone() const override;
 
 
@@ -109,6 +109,8 @@ private:
     float mFarClip = 7.5;
     float mOrthoBoundry = 10;
     float mPerspectiveFOV = 70.f;
+
+    const float mFrustumClipModifier = 1000.f;
 
     GLuint mShadowFrameBuffer = 0;
     GLuint mDepthTexture = 0;

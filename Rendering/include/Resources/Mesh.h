@@ -1,6 +1,6 @@
 #pragma once
-#include <vector>
 #include "Resources/Primitives.h"
+#include <vector>
 
 class Mesh
 {

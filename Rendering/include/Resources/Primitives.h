@@ -14,8 +14,8 @@
 class Primitive
 {
 public:
-    Primitive(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices);
-    Primitive(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const UUIDv4::UUID& pMaterialID);
+    Primitive(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, std::vector<double> pMinValue = {}, std::vector<double> pMaxValue = {});
+    Primitive(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const UUIDv4::UUID& pMaterialID, std::vector<double> pMinValue = {}, std::vector<double> pMaxValue = {});
     ~Primitive();
 
     void Draw();
@@ -23,6 +23,9 @@ public:
     std::vector<Vertex> GetLoadedVertices();
     inline void SetMaterial(UUIDv4::UUID& pMaterialID) { mMaterialID = pMaterialID; }
     inline const UUIDv4::UUID GetMaterial() { return mMaterialID; }
+
+    inline const glm::vec3 GetBoundingMin() { return mMinBoundVertex; }
+    inline const glm::vec3 GetBoundingMax() { return mMaxBoundVertex; }
 
 private:
     std::shared_ptr<VertexBuffer> mVertexBuffer;
@@ -33,5 +36,6 @@ private:
     std::vector<uint32_t> mLoadedIndices;
     UUIDv4::UUID mMaterialID;
 
+    glm::vec3 mMinBoundVertex, mMaxBoundVertex;
     void InitPrimitive();
 };

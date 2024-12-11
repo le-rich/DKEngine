@@ -63,6 +63,7 @@
   <ItemGroup>
     <ClInclude Include="include\Buffers\ShaderStorageBuffer.h" />
     <ClInclude Include="include\Components\MeshComponent.h" />
+    <ClInclude Include="include\Data\IFrustum.h" />
     <ClInclude Include="include\Data\Shape.h" />
     <ClInclude Include="include\Resources\Asset.h" />
     <ClInclude Include="include\Buffers\IndexBuffer.h" />

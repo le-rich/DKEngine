@@ -1,4 +1,6 @@
 #include "Components/LightComponent.h"
+#include "Entity.h"
+
 #include <gtc/matrix_transform.hpp>
 #include <gtc/quaternion.hpp>
 
@@ -7,7 +9,7 @@ LightComponent::LightComponent(Entity* pEntity) : Component(pEntity)
     this->componentType = ComponentType::Light;
 }
 
-LightComponent::LightComponent(Entity* pEntity, LightParams params) : Component(pEntity), mColor(params.color), mIntensity(params.intensity), 
+LightComponent::LightComponent(Entity* pEntity, LightParams params) : Component(pEntity), mColor(params.color), mIntensity(params.intensity),
 mConstant(params.constant), mLinear(params.linear), mQuadratic(params.quadratic), mCutoff(params.cutoff), mOuterCutoff(params.outercutoff), mCreatesShadows(params.createsShadows), mType(params.type)
 {
     this->componentType = ComponentType::Light;
@@ -95,6 +97,41 @@ void LightComponent::BindShadowFrameBuffer()
 void LightComponent::BindShadowMap()
 {
     glBindTexture(GL_TEXTURE_2D, mDepthTexture);
+}
+
+bool LightComponent::CheckIfPointExistsInFrustum(glm::vec3 lightPos, glm::mat4 lightTransformMatrix, glm::vec3 worldPoint)
+{
+    auto farDist = mFarClip ;
+    auto nearDist = mNearClip ;
+
+    auto posRel2lightera = worldPoint - lightPos;
+
+    auto lightForward = -glm::normalize(glm::vec3(lightTransformMatrix[0][2], lightTransformMatrix[1][2], lightTransformMatrix[2][2]));
+    auto zProjection = glm::dot(posRel2lightera, lightForward);
+    if (zProjection > farDist || zProjection < nearDist)
+    {
+        return false;
+    }
+
+    auto tang = tan(glm::radians(90.f) * 0.5);
+    auto lightUp = glm::normalize(glm::vec3(lightTransformMatrix[0][1], lightTransformMatrix[1][1], lightTransformMatrix[2][1]));
+    auto yProjection = glm::dot(posRel2lightera, lightUp);
+    auto minAngle = zProjection * tang;
+
+    if (yProjection > minAngle || yProjection < -minAngle)
+    {
+        return false;
+    }
+
+    auto lightRight = glm::normalize(glm::vec3(lightTransformMatrix[0][0], lightTransformMatrix[1][0], lightTransformMatrix[2][0]));
+    auto xProjection = glm::dot(posRel2lightera, lightRight);
+    minAngle *= (float)mShadowMapSize / (float)mShadowMapSize;
+
+    if (xProjection > minAngle || xProjection < -minAngle)
+    {
+        return false;
+    }
+    return true;
 }
 
 Component* LightComponent::clone() const
