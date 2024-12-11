@@ -50,9 +50,9 @@ namespace GLTFLoader
             case TINYGLTF_TYPE_VEC4:
                 return 4;
             default:
-                #ifndef NDEBUG
+#ifndef NDEBUG
                 std::printf("Unsupported data type in gltf model!");
-                #endif
+#endif
                 return 0;
         }
     }
@@ -75,9 +75,9 @@ namespace GLTFLoader
             case TINYGLTF_COMPONENT_TYPE_FLOAT:
                 return 4;
             default:
-                #ifndef NDEBUG
+#ifndef NDEBUG
                 std::printf("Unsupported data component type in gltf model!");
-                #endif
+#endif
                 return 0;
         }
     }
@@ -132,9 +132,9 @@ namespace GLTFLoader
             std::vector<unsigned char> bufferData;
             if (!GetAttributeVector(pGltfModel, accessorNum, bufferData))
             {
-                #ifndef NDEBUG
+#ifndef NDEBUG
                 std::printf("Failed to get attribute data\n");
-                #endif
+#endif
                 continue;
             }
 
@@ -177,9 +177,9 @@ namespace GLTFLoader
                     }
                     break;
                 default:
-                    #ifndef NDEBUG
+#ifndef NDEBUG
                     std::printf("Unsupported attribute %s in gltf model! \n", attribType.c_str());
-                    #endif
+#endif
                     continue;
             }
         }
@@ -190,9 +190,9 @@ namespace GLTFLoader
             std::vector<unsigned char> bufferData;
             if (!GetAttributeVector(pGltfModel, pPrimitive.indices, bufferData))
             {
-                #ifndef NDEBUG
+#ifndef NDEBUG
                 std::printf("Failed to get attribute data");
-                #endif          
+#endif          
             }
             const auto bufferDataSizeBytes = sizeof(unsigned char) * bufferData.size();
             size_t componentType = pGltfModel.accessors[pPrimitive.indices].componentType;
@@ -254,7 +254,28 @@ namespace GLTFLoader
         // Set material properties
         int index = pMaterial.pbrMetallicRoughness.baseColorTexture.index;
         if (index < 0) index = 0;
-        material->mBaseColorTextureID = pTextures[index];
+        material->SetTexture(0, pTextures[index]);
+        //material->mBaseColorTextureID = pTextures[index];
+        
+        index = pMaterial.pbrMetallicRoughness.metallicRoughnessTexture.index;
+        if (index >= 0)
+        {
+            // GLTF Schema dictates metallic and roughness are the same texture
+            material->SetTexture(1, pTextures[index]);
+        }
+
+        index = pMaterial.normalTexture.index;
+        if (index >= 0)
+        {
+            material->SetTexture(2, pTextures[index]);
+        }
+        //material->SetTexture(3, height->GetAssetID());
+        index = pMaterial.occlusionTexture.index;
+        if (index >= 0)
+        {
+            material->SetTexture(4, pTextures[index]);
+        }
+        //material->SetTexture(5, roughness->GetAssetID());
         // Set to default shader
         material->mShaderID = AssetManager::GetInstance().GetDefaultShader()->GetAssetID();
 
@@ -393,7 +414,7 @@ namespace GLTFLoader
         // Check for duplicates and name occordingly.
         std::string name = node.name;
         int version = 1;
-        while (EntityManager::getInstance().findFirstEntityByDisplayName(name) != nullptr) 
+        while (EntityManager::getInstance().findFirstEntityByDisplayName(name) != nullptr)
         {
             name = node.name + std::to_string(version);
             ++version;

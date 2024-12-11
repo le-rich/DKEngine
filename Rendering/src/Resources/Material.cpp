@@ -5,101 +5,32 @@ Material::Material() {}
 Material::Material(const UUIDv4::UUID& pShaderID, const UUIDv4::UUID& pBaseColorTextureID)
 {
 	mShaderID = pShaderID;
-	mBaseColorTextureID = pBaseColorTextureID;
-
+    texturesIDs[0] = pBaseColorTextureID;
 }
 
 Material::~Material() {}
 
 void Material::Bind()
 {
-    AssetManager::GetInstance().GetTextureByID(mBaseColorTextureID)->Bind();
     AssetManager::GetInstance().GetShaderByID(mShaderID)->Use();
 
-    std::shared_ptr<Texture> texture = AssetManager::GetInstance().GetTextureByID(mMetallicMapID);
-    if (texture != nullptr) 
+    // Get Texture UUID
+    // Fetch from Asset Manager Texture
+    // Bind to slot i
+    for (size_t i = 0; i < PBR_SUPPORTED_TEXTURE_COUNT; ++i)
     {
-        texture->BindToSlot(1);
-    }
-
-    texture = AssetManager::GetInstance().GetTextureByID(mNormalMapID);
-    if (texture != nullptr) 
-    {
-        texture->BindToSlot(2);
-    }
-
-    texture = AssetManager::GetInstance().GetTextureByID(mHeightMapID);
-    if (texture != nullptr) 
-    {
-        texture->BindToSlot(3);
-    }
-
-    texture = AssetManager::GetInstance().GetTextureByID(mAmbientOcclusionMapID);
-    if (texture != nullptr) 
-    {
-        texture->BindToSlot(4);
-    }
-
-    texture = AssetManager::GetInstance().GetTextureByID(mRoughnessMapID);
-    if (texture != nullptr) 
-    {
-        texture->BindToSlot(5);
-    }
-
-    for (size_t i = 0; i < texturesIDs.size(); ++i)
-    {
-        // Get Texture UUID
-        // Fetch from Asset Manager Texture
-        // Bind to slot i
-        //AssetManager::GetInstance().GetTextureByID(texturesIDs.at(i))->BindToSlot(i);
+        auto texture = AssetManager::GetInstance().GetTextureByID(texturesIDs[i]);
+        if (texture == nullptr) continue;
+        texture->BindToSlot(i);
     }
 }
 
 void Material::Unbind()
 {
-    AssetManager::GetInstance().GetTextureByID(mBaseColorTextureID)->Unbind();
-    //for (size_t i = 0; i < texturesIDs.size(); ++i)
-    //{
-    //    // Get Texture UUID
-    //    // Fetch from Asset Manager Texture
-    //    // Unbind       
-    //    AssetManager::GetInstance().GetTextureByID(texturesIDs.at(i))->Unbind();
-    //}
-    std::shared_ptr<Texture> texture = AssetManager::GetInstance().GetTextureByID(mMetallicMapID);
-    if (texture != nullptr)
+    for (size_t i = 0; i < PBR_SUPPORTED_TEXTURE_COUNT; ++i)
     {
-        texture->Unbind(1);
-
+        auto texture = AssetManager::GetInstance().GetTextureByID(texturesIDs[i]);
+        if (texture == nullptr) continue;
+        texture->Unbind(i);
     }
-
-    texture = AssetManager::GetInstance().GetTextureByID(mNormalMapID);
-    if (texture != nullptr)
-    {
-        texture->Unbind(2);
-
-    }
-
-    texture = AssetManager::GetInstance().GetTextureByID(mHeightMapID);
-    if (texture != nullptr)
-    {
-        texture->Unbind(3);
-
-    }
-
-    texture = AssetManager::GetInstance().GetTextureByID(mAmbientOcclusionMapID);
-    if (texture != nullptr)
-    {
-        texture->Unbind(4);
-
-    }
-
-    texture = AssetManager::GetInstance().GetTextureByID(mRoughnessMapID);
-    if (texture != nullptr)
-    {
-        texture->Unbind(5);
-
-    }
-
-
-    texturesIDs.clear();
 }

@@ -60,26 +60,27 @@ void Scene::SpawnSceneDefinition()
     EntityManager::getInstance().Instantiate(garageRoomController);
 
     Entity* pbrSphere = entityManager->findFirstEntityByDisplayName("PBRSphere");
-    if (pbrSphere != nullptr) 
+    if (pbrSphere != nullptr)
     {
         pbrSphere->transform->setWorldPosition(glm::vec4(-2, 1, 0, 1));
         pbrSphere->transform->setLocalScale(glm::vec4(0.5f, 0.5f, 0.5f, 1));
     }
     pbrSphere = entityManager->findFirstEntityByDisplayName("PBRSphere1");
-    if (pbrSphere != nullptr) 
+    if (pbrSphere != nullptr)
     {
         pbrSphere->transform->setWorldPosition(glm::vec4(-1, 1, 0, 1));
         pbrSphere->transform->setLocalScale(glm::vec4(0.5f, 0.5f, 0.5f, 1));
 
     }
     pbrSphere = entityManager->findFirstEntityByDisplayName("PBRSphere2");
-    if (pbrSphere != nullptr) 
+    if (pbrSphere != nullptr)
     {
         pbrSphere->transform->setWorldPosition(glm::vec4(0, 1, 0, 1));
         pbrSphere->transform->setLocalScale(glm::vec4(0.5f, 0.5f, 0.5f, 1));
 
         MeshComponent* meshComponent = dynamic_cast<MeshComponent*>(pbrSphere->getComponent(ComponentType::Mesh));
-        if (meshComponent != nullptr){
+        if (meshComponent != nullptr)
+        {
             auto albedo = AssetManager::GetInstance().GetTextureByName("rocky-rugged-terrain_1_albedo.png");
             auto ao = AssetManager::GetInstance().GetTextureByName("rocky-rugged-terrain_1_ao.png");
             auto height = AssetManager::GetInstance().GetTextureByName("rocky-rugged-terrain_1_height.png");
@@ -96,28 +97,28 @@ void Scene::SpawnSceneDefinition()
             AssetManager::GetInstance().AddMaterial(newMaterial);
             auto materialUUID = newMaterial->GetAssetID();
 
-            for (auto primitive : primitives) 
+            for (auto primitive : primitives)
             {
                 primitive->mMaterialID = materialUUID;
 
                 std::shared_ptr<Material> primMaterial = AssetManager::GetInstance().GetMaterialByID(materialUUID);
-                primMaterial->mBaseColorTextureID = albedo->GetAssetID();
-                primMaterial->mAmbientOcclusionMapID = ao->GetAssetID();
-                primMaterial->mHeightMapID = height->GetAssetID();
-                primMaterial->mMetallicMapID = metallic->GetAssetID();
-                primMaterial->mNormalMapID = normal->GetAssetID();
-                primMaterial->mRoughnessMapID = roughness->GetAssetID();
+                primMaterial->SetTexture(0, albedo->GetAssetID());
+                primMaterial->SetTexture(1, metallic->GetAssetID());
+                primMaterial->SetTexture(2, normal->GetAssetID());
+                primMaterial->SetTexture(3, height->GetAssetID());
+                primMaterial->SetTexture(4, ao->GetAssetID());
+                primMaterial->SetTexture(5, roughness->GetAssetID());
             }
         }
     }
     pbrSphere = entityManager->findFirstEntityByDisplayName("PBRSphere3");
-    if (pbrSphere != nullptr) 
+    if (pbrSphere != nullptr)
     {
         pbrSphere->transform->setWorldPosition(glm::vec4(1, 1, 0, 1));
         pbrSphere->transform->setLocalScale(glm::vec4(0.5f, 0.5f, 0.5f, 1));
     }
     pbrSphere = entityManager->findFirstEntityByDisplayName("PBRSphere4");
-    if (pbrSphere != nullptr) 
+    if (pbrSphere != nullptr)
     {
         pbrSphere->transform->setWorldPosition(glm::vec4(2, 1, 0, 1));
         pbrSphere->transform->setLocalScale(glm::vec4(0.5f, 0.5f, 0.5f, 1));
@@ -132,7 +133,7 @@ void Scene::SpawnSceneDefinition()
     auto garageRoomEnt = entityManager->findFirstEntityByDisplayName("Garage Controller");
     ScriptComponent* garageScriptComponent = new ScriptComponent(garageRoomEnt);
     GarageScriptParams garageParams;
-    garageParams.orbitScript = orbScript; 
+    garageParams.orbitScript = orbScript;
     garageParams.cars.push_back(entityManager->findFirstEntityByDisplayName("Test Car"));
     garageParams.cars.push_back(entityManager->findFirstEntityByDisplayName("TestCar2"));
     garageParams.chosenTarget = garageParams.cars[0]->transform;
