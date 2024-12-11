@@ -103,7 +103,6 @@ void GarageScript::leaveGarage()
     mParams.chosenTarget->setWorldPosition(glm::vec4(startPoint->transform->getWorldPosition(), 1));
     /* === BELOW code adds a car controller to the selected car. ==== */
     Entity* selectedCarEnt = mParams.cars[mParams.currSelectIndex];
-    selectedCarEnt->transform->setWorldPosition(glm::vec4(100, 0, 100, 1));
     ScriptComponent* carScriptComponent = dynamic_cast<ScriptComponent*>(selectedCarEnt->getComponent(ComponentType::Script));
     if (!carScriptComponent) {
         carScriptComponent = new ScriptComponent(selectedCarEnt);
@@ -167,7 +166,6 @@ void GarageScript::leaveGarage()
 
     /*====== SETUP LISTENER ======*/
   
-
     ListenerComponent* listener = new ListenerComponent(cameraEnt, 0);
     cameraEnt->addComponent(*listener);
 
