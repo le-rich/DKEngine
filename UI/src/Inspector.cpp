@@ -203,6 +203,13 @@ void drawMeshComponent(Component* component) {
    if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen)) {
       MeshComponent* mesh = static_cast<MeshComponent*>(component);
       int sectionWidth = 100;
+
+      ImGui::SetNextItemWidth(sectionWidth);
+      UUIDv4::UUID id = mesh->GetComponentID();
+      ImGui::Text("ID");
+      ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - sectionWidth);
+      ImGui::SameLine(sectionWidth);
+      ImGui::Text("%s", id.str().c_str());
    }
 }
 
