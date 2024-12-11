@@ -229,13 +229,14 @@ void CarControllerScript::SetParameters(ScriptParams* pScriptParameters)
     AE86::Matrix3 inertiaTensor;
     
     try {
-        inertiaTensor = CalculateInertiaTensorFromVertices(uniqueVertices, 1);
+        inertiaTensor = CalculateInertiaTensorFromVertices(uniqueVertices, 1000);
     } catch (const std::exception& ex) {
         std::cerr << "Inertia tensor calculation failed: " << ex.what() << std::endl;
         return;
     }
 
     carRigidBody->setInertiaTensor(inertiaTensor);
+
 }
 
 AE86::Matrix3 CarControllerScript::CalculateInertiaTensorFromVertices(const std::vector<Vertex>& vertices, float mass)
