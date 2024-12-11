@@ -3,6 +3,7 @@
 #include "Components/AudioComponent.h"
 #include "Components/RigidbodyComponent.h"
 #include "Managers/AssetManager.h"
+#include "Managers/EntityManager.h"
 #include "Resources/Mesh.h"
 #include "Resources/Material.h"
 #include "Resources/Texture.h"
@@ -383,7 +384,15 @@ namespace GLTFLoader
 
     static void LoadEntity(Entity* pEntity, tinygltf::Node& const node, tinygltf::Model& const pGltfModel, std::vector<UUIDv4::UUID>& pMaterials)
     {
-        pEntity->SetDisplayName(node.name);
+        // Check for duplicates and name occordingly.
+        std::string name = node.name;
+        int version = 1;
+        while (EntityManager::getInstance().findFirstEntityByDisplayName(name) != nullptr) 
+        {
+            name = node.name + std::to_string(version);
+            ++version;
+        }
+        pEntity->SetDisplayName(name);
 
         Transform nodeTransform = GetNodeLocalTransformMatrix(node);
         pEntity->transform->setTransform(nodeTransform);

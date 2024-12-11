@@ -31,6 +31,22 @@
 	  {
       "path": "PBRMaterials/",
       "file": [ "PBRSphere.gltf" ]
+    },
+	  {
+      "path": "PBRMaterials/",
+      "file": [ "PBRSphere.gltf" ]
+    },
+	  {
+      "path": "PBRMaterials/",
+      "file": [ "PBRSphere.gltf" ]
+    },
+	  {
+      "path": "PBRMaterials/",
+      "file": [ "PBRSphere.gltf" ]
+    },
+	  {
+      "path": "PBRMaterials/",
+      "file": [ "PBRSphere.gltf" ]
     }
   ],
   "textures": [
@@ -308,7 +324,6 @@
         }
       ]
     },
-
     {
       "name": "MrDirk",
       "transform": {

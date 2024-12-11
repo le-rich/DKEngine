@@ -59,6 +59,37 @@ void Scene::SpawnSceneDefinition()
     garageRoomController->SetDisplayName("Garage Controller");
     EntityManager::getInstance().Instantiate(garageRoomController);
 
+    Entity* pbrSphere = entityManager->findFirstEntityByDisplayName("PBRSphere");
+    if (pbrSphere != nullptr) 
+    {
+        pbrSphere->transform->setWorldPosition(glm::vec4(-2, 1, 0, 1));
+        pbrSphere->transform->setLocalScale(glm::vec4(0.5f, 0.5f, 0.5f, 1));
+    }
+    pbrSphere = entityManager->findFirstEntityByDisplayName("PBRSphere1");
+    if (pbrSphere != nullptr) 
+    {
+        pbrSphere->transform->setWorldPosition(glm::vec4(-1, 1, 0, 1));
+        pbrSphere->transform->setLocalScale(glm::vec4(0.5f, 0.5f, 0.5f, 1));
+    }
+    pbrSphere = entityManager->findFirstEntityByDisplayName("PBRSphere2");
+    if (pbrSphere != nullptr) 
+    {
+        pbrSphere->transform->setWorldPosition(glm::vec4(0, 1, 0, 1));
+        pbrSphere->transform->setLocalScale(glm::vec4(0.5f, 0.5f, 0.5f, 1));
+    }
+    pbrSphere = entityManager->findFirstEntityByDisplayName("PBRSphere3");
+    if (pbrSphere != nullptr) 
+    {
+        pbrSphere->transform->setWorldPosition(glm::vec4(1, 1, 0, 1));
+        pbrSphere->transform->setLocalScale(glm::vec4(0.5f, 0.5f, 0.5f, 1));
+    }
+    pbrSphere = entityManager->findFirstEntityByDisplayName("PBRSphere4");
+    if (pbrSphere != nullptr) 
+    {
+        pbrSphere->transform->setWorldPosition(glm::vec4(2, 1, 0, 1));
+        pbrSphere->transform->setLocalScale(glm::vec4(0.5f, 0.5f, 0.5f, 1));
+    }
+
     // TODO: We can have the GarageManager create/handle the orbit script and/or this is a State toggled by GameManager
     // spin
     Entity* cameraEnt = entityManager->findFirstEntityByDisplayName("Main Camera");
