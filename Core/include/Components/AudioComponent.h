@@ -1,34 +1,35 @@
-﻿#ifndef AUDIOCOMPONENT_H
-#define AUDIOCOMPONENT_H
+﻿#ifndef AUDIOCOMP_H
+#define AUDIOCOMP_H
 
-#include "Managers/AudioManager.h"
-#include "Entity.h"
-#include <string>
+#include "Component.h"
+#include "Managers/FMODManager.h"
+
+#include <fmod.hpp>
+#include <glm.hpp>
 
 class AudioComponent : public Component {
 public:
-    AudioComponent(Entity* entity, const std::string& audioFilePath);
+    AudioComponent(Entity* mEntity);
+    AudioComponent(Entity* mEntity, FMOD::ChannelGroup* channelGroup);
+    AudioComponent(Entity* mEntity, FMOD::Sound* sound);
+    AudioComponent(Entity* mEntity, FMOD::ChannelGroup* channelGroup, FMOD::Sound* sound);
+
     ~AudioComponent();
 
-    void Play();
-    void Stop();
-    void Update();
-    void SetLooping(bool looping);
-    void PlayOnAwake(bool play);
-    bool IsPlaying() const;
-    
+    void PlaySound(FMOD::Sound* sound, bool isLooping, bool isPaused);
 
+    void UpdateAttributes(float deltaTime);
+    
+    AudioComponent(const AudioComponent& other);
     Component* clone() const override;
 
+    FMOD::Channel* GetChannel();
 private:
-    void LoadAudio();
-
-    AudioManager* audioManager;
-    FMOD::Sound* sound;
-    FMOD::Channel* channel;
-    std::string filePath;
-    bool playOnAwake;
-    bool isLooping;
+    FMOD::Channel* channel = nullptr;
+    FMOD::ChannelGroup* group = nullptr;
+    glm::vec3 previousPosition;
+    float updateInterval = 0.02f; // Update every 20ms
+    float accumulatedTime = 0.0f;
 };
 
-#endif // AUDIOCOMPONENT_H
+#endif

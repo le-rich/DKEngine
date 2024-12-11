@@ -1,78 +1,72 @@
-﻿
+﻿#include "Entity.h"
 #include "Components/AudioComponent.h"
-#include "Managers/AssetManager.h"
-#include "Managers/AudioManager.h"
-#include "Entity.h"
+#include "Managers/FMODManager.h"
 
-AudioComponent::AudioComponent(Entity* entity, const std::string& audioFilePath)
-    : Component(entity), sound(nullptr), channel(nullptr), filePath(audioFilePath), playOnAwake(false), isLooping(false) {
-    audioManager = &AudioManager::GetInstance();
-    LoadAudio();
-    if (playOnAwake) {
-        Play();
+
+AudioComponent::AudioComponent(Entity* mEntity) : Component(mEntity) {
+    AudioComponent::previousPosition = entity->transform->getWorldPosition();
+    this->componentType = ComponentType::Audio;
+};
+
+AudioComponent::AudioComponent(Entity* mEntity, FMOD::ChannelGroup* channelGroup) : Component(mEntity) {
+    AudioComponent::previousPosition = entity->transform->getWorldPosition();
+    AudioComponent::group = channelGroup;
+    this->componentType = ComponentType::Audio;
+};
+
+AudioComponent::AudioComponent(Entity* mEntity, FMOD::Sound* sound) : AudioComponent(mEntity) {
+    FMOD_VECTOR pos = FMODManager::GetFMODVector(previousPosition);
+    FMODManager::GetInstance()->GetFMODSystem()->playSound(sound, group, true, &channel);
+    channel->set3DAttributes(&pos, nullptr);
+};
+
+
+AudioComponent::AudioComponent(Entity* mEntity, FMOD::ChannelGroup* channelGroup, FMOD::Sound* sound) : AudioComponent(mEntity, channelGroup) {
+    FMOD_VECTOR pos = FMODManager::GetFMODVector(previousPosition);
+    FMOD_RESULT result = FMODManager::GetInstance()->GetFMODSystem()->playSound(sound, group, true, &channel);
+    if (result == FMOD_OK) {
+        channel->setChannelGroup(group);
+        channel->set3DAttributes(&pos, nullptr);
     }
-}
+};
 
-AudioComponent::~AudioComponent() {
-    Stop();
-    if (sound) {
-        sound->release();
+AudioComponent::~AudioComponent() {};
+
+void AudioComponent::PlaySound(FMOD::Sound* sound, bool isLooping, bool isPaused) {
+    if (!sound) { return; }
+
+    if (isLooping) { sound->setMode(FMOD_LOOP_NORMAL); }
+
+    FMOD_RESULT result = FMODManager::GetInstance()->GetFMODSystem()->playSound(sound, group, true, &channel);
+    if (result == FMOD_OK && channel) {
+        channel->setLoopCount(-1);
+        FMOD_VECTOR pos = FMODManager::GetFMODVector(entity->transform->getWorldPosition());
+        channel->set3DAttributes(&pos, nullptr);
+        channel->setPaused(isPaused);
     }
-}
+};
 
-void AudioComponent::SetLooping(bool looping)
-{
-    isLooping = looping;
-}
+void AudioComponent::UpdateAttributes(float deltaTime) {
+    accumulatedTime += deltaTime;
 
-void AudioComponent::PlayOnAwake(bool play)
-{
-    playOnAwake = play;
-}
-
-void PlayOnAwake(bool playOnAwake);
-
-void AudioComponent::LoadAudio() {
-    if (!audioManager) {
-        std::cerr << "AudioManager not available!" << std::endl;
-        return;
+    if (accumulatedTime >= updateInterval) {
+        glm::vec3 currentPosition = entity->transform->getWorldPosition();
+        FMOD_VECTOR vel = FMODManager::GetFMODVector((currentPosition - previousPosition) / accumulatedTime);
+        FMOD_VECTOR pos = FMODManager::GetFMODVector(currentPosition);
+        if (channel) {
+            channel->set3DAttributes(&pos, &vel);
+        }
+        previousPosition = currentPosition;
+        accumulatedTime = 0.0f;
     }
+};
 
-    sound = audioManager->LoadAudio(filePath);
-    if (!sound) {
-        std::cerr << "Failed to load audio: " << filePath << std::endl;
-    }
+FMOD::Channel* AudioComponent::GetChannel() {
+    return channel;
 }
 
-void AudioComponent::Play() {
-    if (!sound) {
-        LoadAudio();
-    }
-
-    if (sound) {
-        audioManager->PlaySound(sound, isLooping, channel, entity->transform->getLocalPosition());
-        playOnAwake = true;
-    }
-}
-
-void AudioComponent::Stop() {
-    if (channel) {
-        channel->stop();
-        channel = nullptr;
-        playOnAwake = false;
-    }
-}
-
-void AudioComponent::Update() {
-    if (channel) {
-        audioManager->UpdateChannelPosition(channel, entity->transform->getLocalPosition());
-    }
-}
-
-bool AudioComponent::IsPlaying() const {
-    return playOnAwake;
-}
+AudioComponent::AudioComponent(const AudioComponent& other) : AudioComponent(other.entity, other.group) {} // Clone everyhing but channel, position will be updated.
 
 Component* AudioComponent::clone() const {
     return new AudioComponent(*this);
-}
+};

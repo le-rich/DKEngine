@@ -20,6 +20,8 @@ enum class ComponentType : uint8_t
     Script,
     RigidBody,
     Material,
+    Audio,
+    Listener,
     Count, // This needs to be last. It represents how many components there are for bitmask.
 };
 
@@ -31,6 +33,8 @@ std::unordered_map<std::string, ComponentType> const ComponentMap = {
     {"Mesh", ComponentType::Mesh},
     {"Script", ComponentType::Script},
     {"RigidBody", ComponentType::RigidBody},
+    {"Audio", ComponentType::Audio},
+    {"Listener", ComponentType::Listener},
     {"Material", ComponentType::Material}
 };
 

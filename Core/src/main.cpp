@@ -1,19 +1,20 @@
 #include "Component.h"
 #include "Components/TransformComponent.h"
+#include "Components/RigidBodyComponent.h"
+#include "Components/AudioComponent.h"
+#include "Managers/EntityManager.h"
 #include "Core.h"
 #include "Entity.h"
 #include "Input.h"
-#include "Managers/EntityManager.h"
+#include "System.h"
 #include "Game.h"
 #include "Physics.h"
 #include "Renderer.h"
+#include "Audio.h"
 #include "Scene.h"
-#include "System.h"
 #include "UI.h"
 #include "Utils/IDUtils.h"
 #include "Window/Window.h"
-#include "Managers/AudioManager.h"
-
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -22,14 +23,13 @@
 #include <iostream>
 #include <mutex>
 #include <thread>
-#include <Components/RigidBodyComponent.h>
-#include "Components/AudioComponent.h"
+
 
 int run_glfw() {
-	std::atomic<bool> running(true);
-	float deltaTimeFloatSeconds;
+    std::atomic<bool> running(true);
+    float deltaTimeFloatSeconds;
 
-	// WINDOW ================================================== 
+    // WINDOW ================================================== 
     Window::InitWindow();
     Window window;
     if (window.GetWindow() == NULL)
@@ -44,55 +44,50 @@ int run_glfw() {
     window.SetWindowToCurrentThread();
     window.SetKeyCallback(Input::KeyCallback);
     window.SetMouseButtonCallback(Input::MouseButtonCallback);    
-	
-	// Load GLAD
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-	{
-		std::cout << "Failed to initialize GLAD" << std::endl;
-		return -1;
-	}
+    
+    // Load GLAD
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return -1;
+    }
 
-	// Set size of framebuffer
+    // Set size of framebuffer
     glViewport(0, 0, window.GetWidth(), window.GetHeight());
     window.SetFramebufferSizeCallback();
 
-	// ECS ======================================================
+    // ECS ======================================================
     std::vector<System*> systems;
+
     Scene* defaultScene = new Scene();
 
-	Core::getInstance().SetScene(defaultScene);
-	defaultScene->SpawnSceneDefinition();
+    Core::getInstance().SetScene(defaultScene);
+    defaultScene->SpawnSceneDefinition();
 
     Entity* testCarEntity = EntityManager::getInstance().findFirstEntityByDisplayName("Test Car");
     Entity* cameraEnt = EntityManager::getInstance().findFirstEntityByDisplayName("Main Camera");
 
-	TransformComponent* CAR_TRANSFORM = testCarEntity->transform;
-  	auto glfwWindow = window.GetWindow();
+    TransformComponent* CAR_TRANSFORM = testCarEntity->transform;
+    auto glfwWindow = window.GetWindow();
 
     Physics* physics = new Physics();
     Renderer* renderer = new Renderer(&window);
     UI* ui = new UI(Core::getInstance().GetScene(), renderer->GetFrameBuffer(), glfwWindow);
     Game* game = new Game();
-    AudioManager* audioManager = new AudioManager();    
-		
-	Core::getInstance().AddSystem(ui);
-	Core::getInstance().AddSystem(physics);
-	Core::getInstance().AddSystem(renderer);
-	Core::getInstance().AddSystem(game);
-	// Core::getInstance().AddSystem(audioManager);
-
-	ui->Initialize();
-	physics->Initialize();
-	renderer->Initialize();
-	game->Initialize();
-	// audioManager->Initialize();
-	
-    // TODO: componentize all of this, so it isn't hard-coded to two sounds/channels
-	// FMOD::Sound* backgroundMusic = audioManager->LoadAudio("Assets/Audio/car-motor.mp3");
-    // FMOD::Sound* audienceSound = audioManager->LoadAudio("Assets/Audio/audience.mp3");
-	// audioManager->PlayDynamicSound(backgroundMusic, true, {0, 50.0f, 0});
-    // audioManager->PlayStaticSound(audienceSound, true, { 0, 0.0f, 0 });
-
+    Audio* audio = new Audio();
+    
+    Core::getInstance().AddSystem(ui);
+    Core::getInstance().AddSystem(physics);
+    Core::getInstance().AddSystem(renderer);
+    Core::getInstance().AddSystem(game);
+    Core::getInstance().AddSystem(audio);
+    
+    ui->Initialize();
+    physics->Initialize();
+    renderer->Initialize();
+    game->Initialize();
+    audio->Initialize();
+    
     std::thread gameThread([&]()
     {
         auto previousTime = std::chrono::high_resolution_clock::now();
@@ -109,7 +104,7 @@ int run_glfw() {
         }
     });
     
-    std::thread physicsThread([&]()
+    std::thread physicsAndAudioThread([&]()
         {
             double fixedUpdateBuffer = 0.0;
             auto previousTime = std::chrono::high_resolution_clock::now();
@@ -126,15 +121,13 @@ int run_glfw() {
                     fixedUpdateBuffer -= PHYSICS_UPDATE_INTERVAL;
                 }
                 std::this_thread::sleep_for(std::chrono::microseconds(1));
-                // audioManager->updateListenerPosition(cameraEnt->transform->getWorldPosition());
-                // audioManager->updateSoundPosition(testCarEntity->transform->getWorldPosition());
-                // audioManager->Update(0.0);
+                audio->Update(deltaTimeFloatSeconds);
         }
     });
 
     std::thread rendererThread([&]() 
     {
-	    auto previousTime = std::chrono::high_resolution_clock::now();
+        auto previousTime = std::chrono::high_resolution_clock::now();
         while(running) 
         {
             auto currentTime = std::chrono::high_resolution_clock::now();
@@ -147,11 +140,11 @@ int run_glfw() {
         }
     });
 
-	// RUN =======================================================
-	double fixedUpdateBuffer = 0.0;
-	double FIXED_UPDATE_INTERVAL = 20; // in milliseconds
-	auto previousTime = std::chrono::high_resolution_clock::now();
-	
+    // RUN =======================================================
+    double fixedUpdateBuffer = 0.0;
+    double FIXED_UPDATE_INTERVAL = 20; // in milliseconds
+    auto previousTime = std::chrono::high_resolution_clock::now();
+    
     while (!glfwWindowShouldClose(glfwWindow))
     {
         auto currentTime = std::chrono::high_resolution_clock::now();
@@ -163,22 +156,21 @@ int run_glfw() {
         input.Update();
 
         ui->Update(deltaTimeFloatSeconds);
-	}
+    }
 
-	// TEARDOWN ==================================================
-	running = false;
+    // TEARDOWN ==================================================
+    running = false;
     
     if (gameThread.joinable())      { gameThread.join(); }
-    if (physicsThread.joinable())   { physicsThread.join(); }
+    if (physicsAndAudioThread.joinable())   { physicsAndAudioThread.join(); }
     if (rendererThread.joinable())  { rendererThread.join(); }
 
-	for (auto sys : systems)
-	{
-		sys->Kill();
-	}
+    for (auto sys : systems)
+    {
+        sys->Kill();
+    }
 
-	glfwTerminate();
-	return 0;
+    glfwTerminate();
 }
 
 int main(int argc, char* argv[])
