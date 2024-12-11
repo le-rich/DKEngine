@@ -67,7 +67,6 @@ std::shared_ptr<Texture> AssetManager::GetTextureByID(const UUIDv4::UUID& pID)
         return result->second;
     }
 
-    std::cerr << "Error: Texture with UUID " << pID << " not found in the map." << std::endl;
     return nullptr;
 }
 

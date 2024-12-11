@@ -147,7 +147,7 @@
           "type": "Light",
           "params": {
             "color": [ 1.0, 1.0, 1.0, 1.0 ],
-            "intensity": 0.4,
+            "intensity": 1.0,
             "constant": 0,
             "linear": 0.0,
             "quadratic": 1.0,

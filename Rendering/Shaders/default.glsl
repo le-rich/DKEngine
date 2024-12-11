@@ -266,13 +266,12 @@ void main()
     gTexCoords = vec2(fs_in.v_TexCoord);
     gDiffuseTexel  = texture(uDiffuseMap,  gTexCoords) * uDiffuse;
 
-    vec3 normalMap;
 	if (textureSize(uNormalMap, 0).x > 0) {
-		normalMap = texture(uNormalMap, gTexCoords).xyz * 2.0 - 1.0;
+		vec3 normalMap = texture(uNormalMap, gTexCoords).xyz * 2.0 - 1.0;
+	    gNormal = normalize(fs_in.v_TBN * normalMap);
 	} else {
-		normalMap = vec3(0.0, 0.0, 1.0);
+        gNormal = normalize(fs_in.v_Normal);
 	}
-	gNormal = normalize(fs_in.v_TBN * normalMap);
 
 	gMetallic = (textureSize(uMetallicMap, 0).x > 0) ? texture(uMetallicMap, gTexCoords).r : 0.0;
 	gRoughness = (textureSize(uRoughnessMap, 0).x > 0) ? texture(uRoughnessMap, gTexCoords).r : 1.0;
