@@ -229,17 +229,13 @@ void CarControllerScript::SetParameters(ScriptParams* pScriptParameters)
     AE86::Matrix3 inertiaTensor;
     
     try {
-        inertiaTensor = CalculateInertiaTensorFromVertices(uniqueVertices, 12);
+        inertiaTensor = CalculateInertiaTensorFromVertices(uniqueVertices, 1);
     } catch (const std::exception& ex) {
         std::cerr << "Inertia tensor calculation failed: " << ex.what() << std::endl;
         return;
-    }    carRigidBody->setInertiaTensor(inertiaTensor);
-    
-//     carRigidBody->setInertiaTensor(AE86::Matrix3(
-//      (AE86::real) massScale * (height * height + length * length), 0.0f, 0.0f,
-//      0.0f, (AE86::real) massScale * (width * width * length * length), 0.0f,
-//      0.0f, 0.0f, (AE86::real)massScale * (width * width * height * height)
-// ));
+    }
+
+    carRigidBody->setInertiaTensor(inertiaTensor);
 }
 
 AE86::Matrix3 CarControllerScript::CalculateInertiaTensorFromVertices(const std::vector<Vertex>& vertices, float mass)
@@ -256,8 +252,9 @@ AE86::Matrix3 CarControllerScript::CalculateInertiaTensorFromVertices(const std:
 
     // Adding up all of x,y,z coordinates
     for (const auto& vertex : vertices) {
-        centerOfMass += normalize(vertex.mPosition);
+        centerOfMass += vertex.mPosition;
     }
+    
     centerOfMass = centerOfMass/vertexCount; // Basically Σm(x,y,z)/M
 
     float Ixx = 0, Iyy = 0, Izz = 0;
