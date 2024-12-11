@@ -2,6 +2,8 @@
 
 #include "Component.h"
 #include "Entity.h"
+#include "Resources/Primitives.h"
+#include "Mesh.h"
 
 MeshComponent::MeshComponent(Entity *mEntity) : Component(mEntity)
 {
@@ -17,6 +19,11 @@ void MeshComponent::setMesh(Mesh *mesh)
 
 Mesh* MeshComponent::getMesh() {
     return this->mesh;
+}
+
+std::vector<Primitive*> MeshComponent::getPrimitives() 
+{
+    return getMesh()->getPrimitives();
 }
 
 MeshComponent::MeshComponent(const MeshComponent& other)

@@ -70,6 +70,22 @@ std::shared_ptr<Texture> AssetManager::GetTextureByID(const UUIDv4::UUID& pID)
     return nullptr;
 }
 
+std::shared_ptr<Asset> AssetManager::GetTextureByName(std::string pName)
+{
+    for (auto it = mTextureMap.begin(); it != mTextureMap.end(); ++it)
+    {
+        UUIDv4::UUID uuid = it->first;
+        std::shared_ptr<Texture> texture = it->second;
+
+        if (texture->GetDisplayName() == pName)
+        {
+            return it->second;
+        }
+    }
+
+    return nullptr;
+}
+
 std::shared_ptr<Skybox> AssetManager::GetSkyboxByName(std::string pName)
 {
     for (auto it = mSkyboxMap.begin(); it != mSkyboxMap.end(); ++it)

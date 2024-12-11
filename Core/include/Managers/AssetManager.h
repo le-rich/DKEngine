@@ -41,6 +41,7 @@ public:
     std::shared_ptr<Skybox> GetSkyboxByID(UUIDv4::UUID& pID);
     std::shared_ptr<Texture> GetTextureByID(const UUIDv4::UUID& pID);
 
+    std::shared_ptr<Asset> GetTextureByName(std::string pName);
 
     std::shared_ptr<Skybox> GetSkyboxByName(std::string pName);
     

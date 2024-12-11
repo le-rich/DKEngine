@@ -119,7 +119,7 @@ namespace GLTFLoader
     /*
     * Returns primitive object
     */
-    static Primitive ProcessPrimitive(tinygltf::Model pGltfModel, tinygltf::Primitive pPrimitive, std::vector<UUIDv4::UUID>& materials)
+    static Primitive* ProcessPrimitive(tinygltf::Model pGltfModel, tinygltf::Primitive pPrimitive, std::vector<UUIDv4::UUID>& materials)
     {
         std::vector<Vertex> vertices;
         int numOfElements = GetMaxElementCount(pGltfModel, pPrimitive);
@@ -225,12 +225,12 @@ namespace GLTFLoader
         {
             // Defaults to highly visible missing texture default material.
             auto default_material = AssetManager::GetInstance().GetDefaultMaterial()->GetAssetID();
-            Primitive primitive(vertices, indices, default_material);
+            Primitive* primitive = new Primitive(vertices, indices, default_material);
             return primitive;
         }
         else
         {
-            Primitive primitive(vertices, indices, materials[pPrimitive.material]);
+            Primitive* primitive = new Primitive(vertices, indices, materials[pPrimitive.material]);
             return primitive;
         }
     }

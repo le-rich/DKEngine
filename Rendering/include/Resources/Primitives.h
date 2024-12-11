@@ -21,8 +21,9 @@ public:
     void Draw();
     void DrawWithOwnMaterial();
     inline void SetMaterial(UUIDv4::UUID& pMaterialID) { mMaterialID = pMaterialID; }
-    inline const UUIDv4::UUID GetMaterial() { return mMaterialID; }
+    inline UUIDv4::UUID GetMaterial() { return mMaterialID; }
 
+    UUIDv4::UUID mMaterialID;
 private:
     std::shared_ptr<VertexBuffer> mVertexBuffer;
     std::shared_ptr<IndexBuffer> mIndexBuffer;
@@ -30,7 +31,6 @@ private:
     VertexBufferLayout mVertexBufferLayout;
     std::vector<Vertex> mLoadedVertices;
     std::vector<uint32_t> mLoadedIndices;
-    UUIDv4::UUID mMaterialID;
 
     void InitPrimitive();
 };

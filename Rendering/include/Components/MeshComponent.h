@@ -1,5 +1,8 @@
 #pragma once
 #include "Component.h"
+#include "Resources/Primitives.h"
+
+#include <vector>
 
 class Mesh;
 
@@ -15,6 +18,7 @@ public:
     
     void setMesh(Mesh* mesh);
     Mesh* getMesh();
+    std::vector<Primitive*> getPrimitives();
 
     MeshComponent& operator=(MeshComponent& const other);
 

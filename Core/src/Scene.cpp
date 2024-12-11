@@ -70,12 +70,45 @@ void Scene::SpawnSceneDefinition()
     {
         pbrSphere->transform->setWorldPosition(glm::vec4(-1, 1, 0, 1));
         pbrSphere->transform->setLocalScale(glm::vec4(0.5f, 0.5f, 0.5f, 1));
+
     }
     pbrSphere = entityManager->findFirstEntityByDisplayName("PBRSphere2");
     if (pbrSphere != nullptr) 
     {
         pbrSphere->transform->setWorldPosition(glm::vec4(0, 1, 0, 1));
         pbrSphere->transform->setLocalScale(glm::vec4(0.5f, 0.5f, 0.5f, 1));
+
+        MeshComponent* meshComponent = dynamic_cast<MeshComponent*>(pbrSphere->getComponent(ComponentType::Mesh));
+        if (meshComponent != nullptr){
+            auto albedo = AssetManager::GetInstance().GetTextureByName("rocky-rugged-terrain_1_albedo.png");
+            auto ao = AssetManager::GetInstance().GetTextureByName("rocky-rugged-terrain_1_ao.png");
+            auto height = AssetManager::GetInstance().GetTextureByName("rocky-rugged-terrain_1_height.png");
+            auto metallic = AssetManager::GetInstance().GetTextureByName("rocky-rugged-terrain_1_metallic.png");
+            auto normal = AssetManager::GetInstance().GetTextureByName("rocky-rugged-terrain_1_normal-ogl.png");
+            auto roughness = AssetManager::GetInstance().GetTextureByName("rocky-rugged-terrain_1_roughness.png");
+
+            std::vector<Primitive*> primitives = meshComponent->getPrimitives();
+
+            std::shared_ptr<Material> newMaterial = std::make_shared<Material>(
+                AssetManager::GetInstance().GetDefaultShader()->GetAssetID(),
+                albedo->GetAssetID()
+            );
+            AssetManager::GetInstance().AddMaterial(newMaterial);
+            auto materialUUID = newMaterial->GetAssetID();
+
+            for (auto primitive : primitives) 
+            {
+                primitive->mMaterialID = materialUUID;
+
+                std::shared_ptr<Material> primMaterial = AssetManager::GetInstance().GetMaterialByID(materialUUID);
+                primMaterial->mBaseColorTextureID = albedo->GetAssetID();
+                primMaterial->mAmbientOcclusionMapID = ao->GetAssetID();
+                primMaterial->mHeightMapID = height->GetAssetID();
+                primMaterial->mMetallicMapID = metallic->GetAssetID();
+                primMaterial->mNormalMapID = normal->GetAssetID();
+                primMaterial->mRoughnessMapID = roughness->GetAssetID();
+            }
+        }
     }
     pbrSphere = entityManager->findFirstEntityByDisplayName("PBRSphere3");
     if (pbrSphere != nullptr) 
