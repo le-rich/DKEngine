@@ -20,6 +20,7 @@ public:
 
     void Draw();
     void DrawWithOwnMaterial();
+    std::vector<Vertex> GetLoadedVertices();
     inline void SetMaterial(UUIDv4::UUID& pMaterialID) { mMaterialID = pMaterialID; }
     inline UUIDv4::UUID GetMaterial() { return mMaterialID; }
 

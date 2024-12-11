@@ -1,6 +1,8 @@
 #include "../include/Body.h"
 #include <cassert>
 
+#include "vec3.hpp"
+
 namespace AE86 {
 
     /**

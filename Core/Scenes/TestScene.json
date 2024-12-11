@@ -1,12 +1,12 @@
 {
   "assets": [
     {
-      "path": "Car2Test/",
-      "file": [ "sportcar.017.gltf" ]
-    },
-    {
       "path": "TestAE4/",
       "file": [ "ae86.gltf" ]
+    },
+    {
+      "path": "Car2Test/",
+      "file": [ "sportcar.017.gltf" ]
     },
     {
       "path": "TestRoom/",
@@ -24,27 +24,27 @@
       "path": "TestModel/",
       "file": [ "TestFace.gltf" ]
     },
-	{
+    {
       "path": "TestTrack/",
       "file": [ "track.gltf" ]
     },
-	  {
+    {
       "path": "PBRMaterials/",
       "file": [ "PBRSphere.gltf" ]
     },
-	  {
+    {
       "path": "PBRMaterials/",
       "file": [ "PBRSphere.gltf" ]
     },
-	  {
+    {
       "path": "PBRMaterials/",
       "file": [ "PBRSphere.gltf" ]
     },
-	  {
+    {
       "path": "PBRMaterials/",
       "file": [ "PBRSphere.gltf" ]
     },
-	  {
+    {
       "path": "PBRMaterials/",
       "file": [ "PBRSphere.gltf" ]
     }

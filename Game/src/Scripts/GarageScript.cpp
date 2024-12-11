@@ -20,7 +20,7 @@ void GarageScript::Update(float deltaTime)
     // hax since unbinding the same key within ('enter') chooseCallback callback crashes
     if (mParams.isCarSelected)
     {
-        UnbindAllControls();
+        // UnbindAllControls();
     }
 }
 
