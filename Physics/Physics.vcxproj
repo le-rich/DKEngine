@@ -152,6 +152,7 @@
     <ClCompile Include="src\Aabb.cpp" />
     <ClCompile Include="src\Body.cpp" />
     <ClCompile Include="src\BoundingVolume.cpp" />
+    <ClCompile Include="src\BVH.cpp" />
     <ClCompile Include="src\FGen.cpp" />
     <ClCompile Include="src\PContacts.cpp" />
     <ClCompile Include="src\PLinks.cpp" />

@@ -27,11 +27,12 @@ namespace AE86 {
 		BVHNode* parent;
 
 		// creates a new node in the hierarchy with the given parent node
-		BVHNode(BVHNode* parent, const BoundingVolumeClass& volume,
+		BVHNode(BVHNode* parent, const BoundingVolume& volume,
 			RigidBody* body = NULL)
 			: parent(parent), volume(volume), body(body)
 		{
-			children[0] = children[1] = NULL;
+			children[0] = NULL;
+			children[1] = NULL;
 		}
 
 		bool isLeaf() const {
@@ -44,14 +45,14 @@ namespace AE86 {
 		 * number of collisions. Returns an unsigned int containing the number
 		 * of potential collisions detected.
 		 */
-		unsigned getPotentialContacts(PotentialContact* contacts,
+		unsigned getPossibleContacts(PossibleContact* contacts,
 			unsigned limit) const;
 
 		/*
 		 * Inserts rigidbody and bounding volume into the hierarchy.
 		 * Can create further bounding volumes as a result.
 		 */
-		void insert(RigidBody* body, const BoundingVolume& volume);
+		void insert(RigidBody* newBody, const BoundingVolume& newVolume);
 
 		/*
 		 * Deletes the node, also removing it from the hierarchy.
@@ -70,9 +71,9 @@ namespace AE86 {
 		 * limit number of contacts, returns an unsigned int of the number of
 		 * potential contacts detected.
 		 */
-		unsigned getPotentialContactsWith(
+		unsigned getPossibleContactsWith(
 			const BVHNode<BoundingVolume>* other,
-			PotentialContact* contacts,
+			PossibleContact* contacts,
 			unsigned limit) const;
 
 		/*
