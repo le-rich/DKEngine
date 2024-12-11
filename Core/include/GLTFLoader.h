@@ -121,6 +121,7 @@ namespace GLTFLoader
     */
     static Primitive* ProcessPrimitive(tinygltf::Model pGltfModel, tinygltf::Primitive pPrimitive, std::vector<UUIDv4::UUID>& materials)
     {
+        std::vector<double> minValues, maxValues;
         std::vector<Vertex> vertices;
         int numOfElements = GetMaxElementCount(pGltfModel, pPrimitive);
         vertices.resize(numOfElements);
@@ -154,6 +155,8 @@ namespace GLTFLoader
                         const int floatIndex = index * typeCount; // Offset
                         vertices[index].mPosition = glm::vec3(floatVector[floatIndex], floatVector[floatIndex + 1], floatVector[floatIndex + 2]);
                     }
+                    minValues = pGltfModel.accessors[accessorNum].minValues;
+                    maxValues = pGltfModel.accessors[accessorNum].maxValues;
                     break;
                 case VertexAttributeKeys::NORMAL:
                     for (int index = 0; index < vertices.size(); ++index)
@@ -225,12 +228,12 @@ namespace GLTFLoader
         {
             // Defaults to highly visible missing texture default material.
             auto default_material = AssetManager::GetInstance().GetDefaultMaterial()->GetAssetID();
-            Primitive* primitive = new Primitive(vertices, indices, default_material);
+            Primitive* primitive = new Primitive(vertices, indices, default_material, minValues, maxValues);
             return primitive;
         }
         else
         {
-            Primitive* primitive = new Primitive(vertices, indices, materials[pPrimitive.material]);
+            Primitive* primitive = new Primitive(vertices, indices, materials[pPrimitive.material], minValues, maxValues);
             return primitive;
         }
     }

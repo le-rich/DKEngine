@@ -114,6 +114,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Scenes\TestScene.json" />
+    <None Include="Scenes\FrustumTest.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scenes\TestScene.json" />

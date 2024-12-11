@@ -1,15 +1,31 @@
 #include "Resources/Primitives.h"
 #include "Managers/AssetManager.h"
 
-Primitive::Primitive(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices) :
+Primitive::Primitive(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices, std::vector<double> pMinValue, std::vector<double> pMaxValue) :
     mLoadedVertices(vertices), mLoadedIndices(indices)
 {
+    for (int i = 0; i < pMinValue.size(); ++i)
+    {
+        mMinBoundVertex[i] = pMinValue[i];
+    }
+    for (int i = 0; i < pMinValue.size(); ++i)
+    {
+        mMaxBoundVertex[i] = pMaxValue[i];
+    }
     InitPrimitive();
 }
 
-Primitive::Primitive(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices, const UUIDv4::UUID& pMaterialID) :
+Primitive::Primitive(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices, const UUIDv4::UUID& pMaterialID, std::vector<double> pMinValue, std::vector<double> pMaxValue) :
     mLoadedVertices(vertices), mLoadedIndices(indices), mMaterialID(pMaterialID)
 {
+    for (int i = 0; i < pMinValue.size(); ++i)
+    {
+        mMinBoundVertex[i] = pMinValue[i];
+    }
+    for (int i = 0; i < pMinValue.size(); ++i)
+    {
+        mMaxBoundVertex[i] = pMaxValue[i];
+    }
     InitPrimitive();
 }
 

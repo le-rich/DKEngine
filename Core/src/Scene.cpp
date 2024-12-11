@@ -34,7 +34,7 @@ Scene::~Scene()
 void Scene::SpawnSceneDefinition()
 {
     SceneParser::LoadScene(SCENE_FILE);
-    createGameManager(); // GameManager currently setup via SceneJSON
+    createGameManager();
 
     auto* entityManager = &(EntityManager::getInstance());
 
