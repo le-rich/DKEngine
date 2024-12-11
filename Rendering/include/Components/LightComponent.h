@@ -59,6 +59,11 @@ public:
     inline float GetCutoff() const { return mCutoff; }
     inline float GetOuterCutoff() const { return mOuterCutoff; }
     inline bool GetCreatesShadows() const { return mCreatesShadows; }
+    inline float GetShadowMapSize() const { return mShadowMapSize; }
+    inline float GetNearClip() const { return mNearClip; }
+    inline float GetFarClip() const { return mFarClip; }
+    inline float GetOrthoBoundry() const { return mOrthoBoundry; }
+    inline float GetPerspectiveFOV() const { return mPerspectiveFOV; }
     inline LightType GetType() const { return mType; }
 
     inline GLuint GetShadowMapID() const { return mDepthTexture; }
@@ -72,6 +77,12 @@ public:
     inline void SetQuadratic(float pQuadratic) { mQuadratic = pQuadratic; }
     inline void SetCutoff(float pCutoff) { mCutoff = pCutoff; }
     inline void SetOuterCutoff(float pOuterCutoff) { mOuterCutoff = pOuterCutoff; }
+    inline void SetCreatesShadows(bool pCreatesShadows) { mCreatesShadows = pCreatesShadows; }
+    inline void SetShadowMapSize(float pShadowMapSize) { mShadowMapSize = pShadowMapSize; }
+    inline void SetNearClip(float pNearClip) { mNearClip = pNearClip; }
+    inline void SetFarClip(float pFarClip) { mFarClip = pFarClip; }
+    inline void SetOrthoBoundry(float pOrthoBoundry) { mOrthoBoundry = pOrthoBoundry; }
+    inline void SetPerspectiveFOV(float pPerspectiveFOV) { mPerspectiveFOV = pPerspectiveFOV; }
     inline void SetType(LightType pType) { mType = pType; }
 
     void SetParams(LightParams pParams);
