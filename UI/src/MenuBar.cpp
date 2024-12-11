@@ -12,14 +12,6 @@ void createMenuBar() {
             Component* light = new LightComponent(getSelectedEntity());
             getSelectedEntity()->addComponent(*light);
          }
-         if (ImGui::MenuItem("Mesh Component (Default Contructor Crashes)") && getSelectedEntity()->getComponent(ComponentType::Mesh) == nullptr) {
-            Component* mesh = new MeshComponent(getSelectedEntity());
-            getSelectedEntity()->addComponent(*mesh);
-         }
-         if (ImGui::MenuItem("RigidBody Component") && getSelectedEntity()->getComponent(ComponentType::RigidBody) == nullptr) {
-            Component* rigidBody = new RigidBodyComponent(getSelectedEntity());
-            getSelectedEntity()->addComponent(*rigidBody);
-         }
          if (ImGui::MenuItem("Camera Component") && getSelectedEntity()->getComponent(ComponentType::Camera) == nullptr) {
             Component* camera = new CameraComponent(getSelectedEntity());
             getSelectedEntity()->addComponent(*camera);
