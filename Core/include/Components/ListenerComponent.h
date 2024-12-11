@@ -17,5 +17,7 @@ public:
 private:
     glm::vec3 previousPosition;
     int listener;
+    float updateInterval = 0.02f; // Update every 20ms
+    float accumulatedTime = 0.0f;
 };
 #endif

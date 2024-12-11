@@ -3,7 +3,7 @@
 
 #include "System.h"
 
-#include <glm/vec3.hpp>
+#include <vec3.hpp>
 #include <fmod.hpp>
 
 #include <unordered_map>

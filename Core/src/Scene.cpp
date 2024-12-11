@@ -68,15 +68,14 @@ void Scene::SpawnSceneDefinition()
     OrbitScript* orbScript = orb->GetScript<OrbitScript>();
 
     // Audio setup, Car Noise + Camera Listener
-    FMODManager* audioManager = FMODManager::GetInstance();
-    FMOD::Sound* carMotorSound = audioManager->LoadAudio("Assets/Audio/car-motor.mp3");
-    AudioComponent* carAudio = new AudioComponent(carEnt);
-    carEnt->addComponent(*carAudio);
-    carAudio->PlaySound(carMotorSound, true, false);
+    // FMODManager* audioManager = FMODManager::GetInstance();
+    // FMOD::Sound* carMotorSound = audioManager->LoadAudio("Assets/Audio/car-motor.mp3");
+    // AudioComponent* carAudio = new AudioComponent(carEnt);
+    // carEnt->addComponent(*carAudio);
+    // carAudio->PlaySound(carMotorSound, true, false);
     
-    ListenerComponent* listener = new ListenerComponent(cameraEnt, 0);
-    cameraEnt->addComponent(*listener);
-
+    // ListenerComponent* listener = new ListenerComponent(cameraEnt, 0);
+    // cameraEnt->addComponent(*listener);
 
     auto garageRoomEnt = entityManager->findFirstEntityByDisplayName("Garage Controller");
     ScriptComponent* garageScriptComponent = new ScriptComponent(garageRoomEnt);

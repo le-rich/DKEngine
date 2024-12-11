@@ -4,6 +4,7 @@
 #include <Components/RigidBodyComponent.h>
 #include <Body.h>
 #include <Input.h>
+#include <Components/AudioComponent.h>
 
 const static float AIR_DENSITY = 1.29f; // kg/m^3
 const static float TRANSMISSION_EFFICIENCY = 0.7f;
@@ -160,6 +161,18 @@ void CarControllerScript::FixedUpdate(float deltaTime)
     carRigidBody->addForceAtBodyPoint(backRightTireLatForce, backRightTirePosition);
     carRigidBody->addForceAtBodyPoint(backLeftTireLatForce, backLeftTirePosition);
 
+    AudioComponent* carAudioComponent = dynamic_cast<AudioComponent*>(
+        entity->getComponent(ComponentType::Audio)
+        );
+
+    FMOD::Channel* channel = carAudioComponent->GetChannel();
+    if (channel) {
+        channel->setFrequency(currentFrequency);
+    }
+
+    if (!isAccelerating) {
+        currentFrequency += currentFrequency > minFrequency ? -4000 : 0;
+    }
 }
 
 
@@ -214,6 +227,8 @@ void CarControllerScript::SetUpInput() {
     input.RegisterKeyCallback(GLFW_KEY_W, [&](Input::ActionType action) {
         if (action == Input::HOLD || action == Input::PRESS) {
             throttle += throttle < 100.0f ? 10.0f : 0.0;
+            // currentFrequency += currentFrequency < maxFrequency ? 2000 : -10000;
+            // isAccelerating = true;
         }
 
         if (action == Input::RELEASE) {
@@ -224,7 +239,12 @@ void CarControllerScript::SetUpInput() {
     input.RegisterKeyCallback(GLFW_KEY_S, [&](Input::ActionType action) {
         if (action == Input::HOLD || action == Input::PRESS) {
             throttle -= throttle >= 10 ? 10.0f : 0.0;
+            //currentFrequency += currentFrequency < 2*maxFrequency/3 ? 1000 : -10000;
+            //isAccelerating = true;
         }
+        //if (action == Input::RELEASE) {
+        //    isAccelerating = false;
+        //}
     });
 
     input.RegisterKeyCallback(GLFW_KEY_D, [&](Input::ActionType action) {

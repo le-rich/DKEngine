@@ -47,13 +47,18 @@ void AudioComponent::PlaySound(FMOD::Sound* sound, bool isLooping, bool isPaused
 };
 
 void AudioComponent::UpdateAttributes(float deltaTime) {
-    glm::vec3 currentPosition = entity->transform->getWorldPosition();
-    FMOD_VECTOR vel = FMODManager::GetFMODVector((currentPosition - previousPosition) / deltaTime);
-    FMOD_VECTOR pos = FMODManager::GetFMODVector(currentPosition);
-    if (channel) {
-        channel->set3DAttributes(&pos, &vel);
+    accumulatedTime += deltaTime;
+
+    if (accumulatedTime >= updateInterval) {
+        glm::vec3 currentPosition = entity->transform->getWorldPosition();
+        FMOD_VECTOR vel = FMODManager::GetFMODVector((currentPosition - previousPosition) / accumulatedTime);
+        FMOD_VECTOR pos = FMODManager::GetFMODVector(currentPosition);
+        if (channel) {
+            channel->set3DAttributes(&pos, &vel);
+        }
+        previousPosition = currentPosition;
+        accumulatedTime = 0.0f;
     }
-    previousPosition = currentPosition;
 };
 
 FMOD::Channel* AudioComponent::GetChannel() {

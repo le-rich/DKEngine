@@ -28,6 +28,8 @@ private:
     FMOD::Channel* channel = nullptr;
     FMOD::ChannelGroup* group = nullptr;
     glm::vec3 previousPosition;
+    float updateInterval = 0.02f; // Update every 20ms
+    float accumulatedTime = 0.0f;
 };
 
 #endif

@@ -30,7 +30,7 @@ void Audio::Update(float deltaTime) {
     for (UUIDv4::UUID listenerEntityUUID : listenerEntitiesUUIDs) {
         Entity* listenerEntity = EntityManager::getInstance().getEntity(listenerEntityUUID);
         ListenerComponent* listenerComponent = dynamic_cast<ListenerComponent*>(
-            listenerEntity->getComponent(ComponentType::Audio)
+            listenerEntity->getComponent(ComponentType::Listener)
             );
         listenerComponent->UpdatePosition(deltaTime);
 
