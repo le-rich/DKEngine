@@ -164,10 +164,10 @@
     <ClCompile Include="src\Components\TransformComponent.cpp" />
     <ClCompile Include="src\Core.cpp" />
     <ClCompile Include="src\Entity.cpp" />
-    <ClCompile Include="src\FMODManager.cpp" />
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Managers\AssetManager.cpp" />
+    <ClCompile Include="src\Managers\FMODManager.cpp" />
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\Utils\IDUtils.cpp" />
     <ClCompile Include="src\Window\Window.cpp" />
