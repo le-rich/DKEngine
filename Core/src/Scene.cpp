@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 #include "Scene.h"
 
 #include "Entities/CameraEntity.h"
@@ -9,8 +7,10 @@
 //#include "GLTFLoader.h"
 #include "SceneParser.h"
 #include "Managers/EntityManager.h"
+#include "Managers/FMODManager.h"
 #include "Components/MeshComponent.h"
 #include "Components/ScriptComponent.h"
+#include "Components/ListenerComponent.h"
 #include "GarageScript.h"
 #include "OrbitScript.h"
 #include "TimerScript.h"
@@ -19,6 +19,8 @@
 #include "FollowCamScript.h"
 #include "CarControllerScript.h"
 //#include "Input.h"
+
+#include <vector>
 
 Scene::Scene()
 {
@@ -64,6 +66,16 @@ void Scene::SpawnSceneDefinition()
     Entity* cameraEnt = entityManager->findFirstEntityByDisplayName("Main Camera");
     ScriptComponent* orb = dynamic_cast<ScriptComponent*>(cameraEnt->getComponent(ComponentType::Script));
     OrbitScript* orbScript = orb->GetScript<OrbitScript>();
+
+    // Audio setup, Car Noise + Camera Listener
+    // FMODManager* audioManager = FMODManager::GetInstance();
+    // FMOD::Sound* carMotorSound = audioManager->LoadAudio("Assets/Audio/car-motor.mp3");
+    // AudioComponent* carAudio = new AudioComponent(carEnt);
+    // carEnt->addComponent(*carAudio);
+    // carAudio->PlaySound(carMotorSound, true, false);
+    
+    // ListenerComponent* listener = new ListenerComponent(cameraEnt, 0);
+    // cameraEnt->addComponent(*listener);
 
     auto garageRoomEnt = entityManager->findFirstEntityByDisplayName("Garage Controller");
     ScriptComponent* garageScriptComponent = new ScriptComponent(garageRoomEnt);

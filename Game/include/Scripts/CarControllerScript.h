@@ -62,5 +62,10 @@ private:
 	Entity* wheelFR;
 	Entity* wheelRR;
 	Entity* wheelRL;
+	// Audio testing
+	float currentFrequency = 8000;
+	float maxFrequency = 72000.0f;
+	float minFrequency = 28000.0f;
+	bool isAccelerating = false;
 };
 
