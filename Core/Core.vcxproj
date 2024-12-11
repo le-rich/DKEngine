@@ -72,15 +72,15 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>..\External\glad\include;..\External\GLFW\include;..\Rendering\include;$(IncludePath)</IncludePath>
-    <IncludePath>..\External\glad\include;..\External\GLFW\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\External\glad\include;..\External\GLFW\include;..\FMOD\inc;$(IncludePath)</IncludePath>
     <LibraryPath>..\External\GLFW\x64\lib;$(LibraryPath)</LibraryPath>
-    <PublicIncludeDirectories>..\External\GLFW\include;..\External\glad\include;..\Rendering\include;..\Physics\include;$(PublicIncludeDirectories)</PublicIncludeDirectories>
+    <PublicIncludeDirectories>..\External\GLFW\include;..\External\glad\include;..\Rendering\include;..\Physics\include;..\FMOD\inc;$(PublicIncludeDirectories)</PublicIncludeDirectories>
     <AllProjectIncludesArePublic>true</AllProjectIncludesArePublic>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LibraryPath>..\External\GLFW\x64\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath>..\External\glad\include;..\External\GLFW\include;..\Rendering\include;$(IncludePath)</IncludePath>
-    <PublicIncludeDirectories>..\External\GLFW\include;..\External\glad\include;..\Rendering\include;$(PublicIncludeDirectories)</PublicIncludeDirectories>
+    <IncludePath>..\External\glad\include;..\External\GLFW\include;..\Rendering\include;..\FMOD\inc;$(IncludePath)</IncludePath>
+    <PublicIncludeDirectories>..\External\GLFW\include;..\External\glad\include;..\Rendering\include;..\FMOD\inc;$(PublicIncludeDirectories)</PublicIncludeDirectories>
     <AllProjectIncludesArePublic>true</AllProjectIncludesArePublic>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
@@ -140,7 +140,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\glm\gtc;$(SolutionDir)External\;$(SolutionDir)External\GLFW\x64\include;$(SolutionDir)External\stb;$(SolutionDir)External\glad\include;$(SolutionDir)External\tinygltf;$(SolutionDir)Core\include\;$(SolutionDir)UI\include;$(SolutionDir)Rendering\;$(SolutionDir)Physics\;$(SolutionDir)External\glm;$(SolutionDir)External\stb;$(SolutionDir)External\imgui\include;$(SolutionDir)Game\include;$(SolutionDir)Game\include\Scripts\;$(SolutionDir)External\FMOD;$(SolutionDir)External\FMOD\inc;$(SolutionDir)Physics\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\glm\gtc;$(SolutionDir)External\;$(SolutionDir)External\GLFW\x64\include;$(SolutionDir)External\stb;$(SolutionDir)External\glad\include;$(SolutionDir)External\tinygltf;$(SolutionDir)Core\include\;$(SolutionDir)UI\include;$(SolutionDir)Rendering\;$(SolutionDir)Physics\;$(SolutionDir)External\glm;$(SolutionDir)External\imgui\include;$(SolutionDir)Game\include;$(SolutionDir)Game\include\Scripts\;$(SolutionDir)External\FMOD\inc;$(SolutionDir)Physics\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -156,7 +156,10 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Audio.cpp" />
     <ClCompile Include="src\Component.cpp" />
+    <ClCompile Include="src\Components\AudioComponent.cpp" />
+    <ClCompile Include="src\Components\ListenerComponent.cpp" />
     <ClCompile Include="src\Components\RigidBodyComponent.cpp" />
     <ClCompile Include="src\Components\TransformComponent.cpp" />
     <ClCompile Include="src\Core.cpp" />
@@ -164,7 +167,7 @@
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Managers\AssetManager.cpp" />
-    <ClCompile Include="src\Managers\AudioManager.cpp" />
+    <ClCompile Include="src\Managers\FMODManager.cpp" />
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\Utils\IDUtils.cpp" />
     <ClCompile Include="src\Window\Window.cpp" />
@@ -178,7 +181,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Audio.h" />
     <ClInclude Include="include\Component.h" />
+    <ClInclude Include="include\Components\AudioComponent.h" />
+    <ClInclude Include="include\Components\ListenerComponent.h" />
     <ClInclude Include="include\Components\RigidBodyComponent.h" />
     <ClInclude Include="include\Components\TransformComponent.h" />
     <ClInclude Include="include\Core.h" />
@@ -186,7 +192,7 @@
     <ClInclude Include="include\GLTFLoader.h" />
     <ClInclude Include="include\Input.h" />
     <ClInclude Include="include\Managers\AssetManager.h" />
-    <ClInclude Include="include\Managers\AudioManager.h" />
+    <ClInclude Include="include\Managers\FMODManager.h" />
     <ClInclude Include="include\Managers\EntityManager.h" />
     <ClInclude Include="include\Scene.h" />
     <ClInclude Include="include\SceneParser.h" />

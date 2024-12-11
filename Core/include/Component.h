@@ -19,6 +19,8 @@ enum class ComponentType : uint8_t
     Mesh,
     Script,
     RigidBody,
+    Audio,
+    Listener,
     Count, // This needs to be last. It represents how many components there are for bitmask.
 };
 

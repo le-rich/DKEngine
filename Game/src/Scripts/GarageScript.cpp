@@ -1,13 +1,18 @@
 #include "Scripts/GarageScript.h"
 #include "Scripts/OrbitScript.h"
 
+#include "Components/ScriptComponent.h"
+#include "Components/RigidBodyComponent.h"
+#include "Scripts/CarControllerScript.h"
+#include "Scripts/FollowCamScript.h"
+#include "Managers/EntityManager.h"
+#include "Managers/FMODManager.h"
+#include "Components/AudioComponent.h"
+#include "Scripts/LapCheckpointScript.h"
+
 #include <glm.hpp>
-#include <Components/ScriptComponent.h>
-#include <Components/RigidBodyComponent.h>
-#include <Scripts/CarControllerScript.h>
-#include <Scripts/FollowCamScript.h>
-#include <Managers/EntityManager.h>
-#include <Scripts/LapCheckpointScript.h>
+#include <Components/ListenerComponent.h>
+
 
 GarageScript::GarageScript(Entity* mEntity) : Script(mEntity)
 {
@@ -96,7 +101,6 @@ void GarageScript::leaveGarage()
     // TODO: logic to transport currently selected car to the track
     auto startPoint = EntityManager::getInstance().findFirstEntityByDisplayName("StartPoint");
     mParams.chosenTarget->setWorldPosition(glm::vec4(startPoint->transform->getWorldPosition(), 1));
-
     /* === BELOW code adds a car controller to the selected car. ==== */
     Entity* selectedCarEnt = mParams.cars[mParams.currSelectIndex];
     ScriptComponent* carScriptComponent = dynamic_cast<ScriptComponent*>(selectedCarEnt->getComponent(ComponentType::Script));
@@ -104,6 +108,13 @@ void GarageScript::leaveGarage()
         carScriptComponent = new ScriptComponent(selectedCarEnt);
         selectedCarEnt->addComponent(*carScriptComponent);
     }
+
+    // Audio
+    FMODManager* audioManager = FMODManager::GetInstance();
+    FMOD::Sound* carMotorSound = audioManager->LoadAudio("Assets/Audio/PorscheMotor.mp3");
+    AudioComponent* carAudio = new AudioComponent(selectedCarEnt);
+    selectedCarEnt->addComponent(*carAudio);
+    carAudio->PlaySound(carMotorSound, true, false);
 
 
     RigidBodyComponent* rigidBodyComponent = new RigidBodyComponent(selectedCarEnt,
@@ -148,7 +159,15 @@ void GarageScript::leaveGarage()
     ScriptComponent* cameraScriptComponent = dynamic_cast<ScriptComponent*>(cameraEnt->getComponent(ComponentType::Script));
     FollowCamScriptParams followCamScriptParams;
     followCamScriptParams.m_FollowTarget = selectedCarEnt->transform;
+    followCamScriptParams.m_Speed = 40;
+    followCamScriptParams.m_Distance = 1.5;
+    followCamScriptParams.m_Height = 1;
     cameraScriptComponent->CreateAndAddScript<FollowCamScript>(&followCamScriptParams);
+
+    /*====== SETUP LISTENER ======*/
+  
+    ListenerComponent* listener = new ListenerComponent(cameraEnt, 0);
+    cameraEnt->addComponent(*listener);
 
     /*============ SET UP CHECKPOINTS =========*/
     // need to set selected car's AABB.
