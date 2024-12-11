@@ -196,6 +196,7 @@
     <ClInclude Include="include\Window\Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Scenes\FrustumTest.json" />
     <None Include="Scenes\TestScene.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

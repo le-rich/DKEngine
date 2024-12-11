@@ -1,8 +1,8 @@
 #pragma once
+#include "Data/Vertex.h"
+
 #include <glm.hpp>
 #include <vector>
-
-#include "Data/Vertex.h"
 
 // Base struct for shapes
 struct Shape

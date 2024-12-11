@@ -129,6 +129,13 @@ void Renderer::WriteToFrameBuffer()
 
 void Renderer::IssueMeshDrawCalls()
 {
+    // CAMERA =====================
+    CameraComponent* cameraComponent = dynamic_cast<CameraComponent*>(mainCameraEntity->getComponent(ComponentType::Camera));
+    if (cameraComponent == nullptr)
+    {
+        return;
+    }
+
     auto meshComponentUUIDs = EntityManager::getInstance().findEntitiesByComponent(ComponentType::Mesh);
 
     for (auto& uuid : meshComponentUUIDs)
@@ -142,7 +149,36 @@ void Renderer::IssueMeshDrawCalls()
             {
                 glm::mat4 modelMatrix = entity->transform->getTransformMatrix();
                 mEngineUniformBuffer.SetSubData(modelMatrix, 0);
-                meshComponent->getMesh()->DrawWithOwnMaterial();
+                //meshComponent->getMesh()->DrawWithOwnMaterial();
+
+                for (auto primitive : meshComponent->getMesh()->mPrimitives)
+                {
+                    auto minBound = modelMatrix * glm::vec4(primitive.GetBoundingMin(), 1.f);
+                    auto maxBound = modelMatrix * glm::vec4(primitive.GetBoundingMax(), 1.f);
+
+                    auto bound1 = glm::vec3(minBound[0], minBound[1], minBound[2]);
+                    auto bound2 = glm::vec3(minBound[0], minBound[1], maxBound[2]);
+                    auto bound3 = glm::vec3(minBound[0], maxBound[1], minBound[2]);
+                    auto bound4 = glm::vec3(minBound[0], maxBound[1], maxBound[2]);
+                    auto bound5 = glm::vec3(maxBound[0], minBound[1], minBound[2]);
+                    auto bound6 = glm::vec3(maxBound[0], minBound[1], maxBound[2]);
+                    auto bound7 = glm::vec3(maxBound[0], maxBound[1], maxBound[2]);
+                    auto bound8 = glm::vec3(maxBound[0], maxBound[1], maxBound[2]);
+
+                    if (cameraComponent->CheckIfPointExistsInFrustum(bound1) ||
+                        cameraComponent->CheckIfPointExistsInFrustum(bound2) ||
+                        cameraComponent->CheckIfPointExistsInFrustum(bound3) ||
+                        cameraComponent->CheckIfPointExistsInFrustum(bound4) ||
+                        cameraComponent->CheckIfPointExistsInFrustum(bound5) ||
+                        cameraComponent->CheckIfPointExistsInFrustum(bound6) ||
+                        cameraComponent->CheckIfPointExistsInFrustum(bound7) ||
+                        cameraComponent->CheckIfPointExistsInFrustum(bound8)
+                        )
+                    {
+                        primitive.DrawWithOwnMaterial();
+                    }
+
+                }
             }
         }
     }
@@ -226,7 +262,35 @@ void Renderer::GenerateShadowMaps()
             glm::mat4 modelMatrix = renderable->worldTransform->getTransformMatrix();
 
             mEngineUniformBuffer.SetSubData(modelMatrix, 0);
-            renderable->mesh->Draw();
+            for (auto primitive : renderable->mesh->mPrimitives)
+            {
+                auto minBound = modelMatrix * glm::vec4(primitive.GetBoundingMin(), 1.f);
+                auto maxBound = modelMatrix * glm::vec4(primitive.GetBoundingMax(), 1.f);
+
+                auto bound1 = glm::vec3(minBound[0], minBound[1], minBound[2]);
+                auto bound2 = glm::vec3(minBound[0], minBound[1], maxBound[2]);
+                auto bound3 = glm::vec3(minBound[0], maxBound[1], minBound[2]);
+                auto bound4 = glm::vec3(minBound[0], maxBound[1], maxBound[2]);
+                auto bound5 = glm::vec3(maxBound[0], minBound[1], minBound[2]);
+                auto bound6 = glm::vec3(maxBound[0], minBound[1], maxBound[2]);
+                auto bound7 = glm::vec3(maxBound[0], maxBound[1], maxBound[2]);
+                auto bound8 = glm::vec3(maxBound[0], maxBound[1], maxBound[2]);
+
+                if (lightComponent->CheckIfPointExistsInFrustum(lightPosition, viewMatrix, bound1) ||
+                    lightComponent->CheckIfPointExistsInFrustum(lightPosition, viewMatrix, bound2) ||
+                    lightComponent->CheckIfPointExistsInFrustum(lightPosition, viewMatrix, bound3) ||
+                    lightComponent->CheckIfPointExistsInFrustum(lightPosition, viewMatrix, bound4) ||
+                    lightComponent->CheckIfPointExistsInFrustum(lightPosition, viewMatrix, bound5) ||
+                    lightComponent->CheckIfPointExistsInFrustum(lightPosition, viewMatrix, bound6) ||
+                    lightComponent->CheckIfPointExistsInFrustum(lightPosition, viewMatrix, bound7) ||
+                    lightComponent->CheckIfPointExistsInFrustum(lightPosition, viewMatrix, bound8)
+                    )
+                {
+                    //printf("shadow");
+                    primitive.Draw();
+                }
+            }
+            //renderable->mesh->Draw();
         }
 
         glCopyImageSubData(

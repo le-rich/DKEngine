@@ -1,8 +1,11 @@
 #include "Components/CameraComponent.h"
 
-#include <glad/glad.h>
 #include "Component.h"
 #include "Entity.h"
+
+#include <glad/glad.h>
+#include <glm.hpp>
+//#include <gtc/quaternion.hpp>
 
 CameraComponent::CameraComponent(Entity* mEntity) : Component(mEntity)
 {
@@ -12,25 +15,55 @@ CameraComponent::CameraComponent(Entity* mEntity) : Component(mEntity)
 CameraComponent::~CameraComponent()
 {}
 
-void CameraComponent::calculateViewMatrix(TransformComponent* transform) 
+void CameraComponent::calculateViewMatrix(TransformComponent* transform)
 {
-    glm::vec3 cameraPosition = transform->getWorldPosition();
-    glm::quat cameraOrientation = transform->getWorldOrientation();
-
-    glm::mat4 rotationMatrix = glm::mat4_cast(glm::conjugate(cameraOrientation));
-    glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0), -cameraPosition);
-
-    m_viewMatrix = rotationMatrix * translationMatrix;
+    m_viewMatrix = glm::inverse(transform->getTransformMatrix());
 }
 
-void CameraComponent::calculateProjectionMatrix() 
+void CameraComponent::calculateProjectionMatrix()
 {
-    this->m_projectionMatrix = glm::perspective(glm::radians(fieldOfView), aspectRatio, nearClipPlane, farClipPlane);    
+    this->m_projectionMatrix = glm::perspective(glm::radians(fieldOfView), aspectRatio, nearClipPlane, farClipPlane);
 }
 
-void CameraComponent::updateAspectRatio(int width, int height) 
+void CameraComponent::updateAspectRatio(int width, int height)
 {
-   this-> aspectRatio = static_cast<float>(width) / static_cast<float>(height);
+    this->aspectRatio = static_cast<float>(width) / static_cast<float>(height);
+}
+
+bool CameraComponent::CheckIfPointExistsInFrustum(glm::vec3 worldPoint)
+{
+    auto farDist = getFarClipPlane();
+    auto nearDist = getNearClipPlane();
+
+    auto camPos = entity->transform->getWorldPosition();
+    auto posRel2Camera = worldPoint - camPos;
+
+    auto camForward = -GetForwardVector();
+    auto zProjection = glm::dot(posRel2Camera, camForward);
+    if (zProjection > farDist || zProjection < nearDist)
+    {
+        return false;
+    }
+
+    auto tang = tan(glm::radians(getFieldOfView()) * 0.5);
+    auto camUp = GetUpVector();
+    auto yProjection = glm::dot(posRel2Camera, camUp);
+    auto minAngle = zProjection * tang;
+
+    if (yProjection > minAngle || yProjection < -minAngle)
+    {
+        return false;
+    }
+
+    auto camRight = GetRightVector();
+    auto xProjection = glm::dot(posRel2Camera, camRight);
+    minAngle *= getAspectRatio();
+
+    if (xProjection > minAngle || xProjection < -minAngle) 
+    {
+        return false;
+    }
+    return true;
 }
 
 CameraComponent& CameraComponent::operator=(CameraComponent& const other)
@@ -58,6 +91,7 @@ CameraComponent::CameraComponent(const CameraComponent& other)
     this->componentType = ComponentType::Camera;
 }
 
-Component* CameraComponent::clone() const {
+Component* CameraComponent::clone() const
+{
     return new CameraComponent(*this);
 }

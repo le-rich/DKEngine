@@ -34,9 +34,14 @@ public:
     void setNearClipPlane(float ncp) { nearClipPlane = ncp; }
     void setAspectRatio(float ar) { aspectRatio = ar; }
 
+    inline glm::vec3 GetRightVector() { return glm::normalize(glm::vec3(m_viewMatrix[0][0], m_viewMatrix[1][0], m_viewMatrix[2][0])); }
+    inline glm::vec3 GetUpVector() { return glm::normalize(glm::vec3(m_viewMatrix[0][1], m_viewMatrix[1][1], m_viewMatrix[2][1])); }
+    inline glm::vec3 GetForwardVector() { return glm::normalize(glm::vec3(m_viewMatrix[0][2], m_viewMatrix[1][2], m_viewMatrix[2][2])); }
+
+    bool CheckIfPointExistsInFrustum(glm::vec3 worldPoint);
+
     CameraComponent& operator=(CameraComponent& const other);
 private:
     glm::mat4 m_viewMatrix{};
     glm::mat4 m_projectionMatrix{};
-
 };

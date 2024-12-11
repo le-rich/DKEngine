@@ -1,0 +1,47 @@
+{
+  "assets": [
+    {
+      "path": "TestCube2/",
+      "file": [ "testcube.gltf" ]
+    }
+  ],
+  "skybox": "skybox_to_equirect_2.png",
+  "entities": [
+    {
+      "name": "Ambient",
+      "transform": {
+        "localPosition": [],
+        "localOrientation": [],
+        "localScale": []
+      },
+      "components": [
+        {
+          "type": "Light",
+          "params": {
+            "color": [ 1.0, 1.0, 1.0, 1.0 ],
+            "intensity": 1,
+            "type": "AmbientLight"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Main Camera",
+      "transform": {
+        "localPosition": [ 0, 1, 1 ],
+        "localOrientation": [],
+        "localScale": []
+      },
+      "components": [
+        {
+          "type": "Camera",
+          "params": {
+            "fieldOfView": 90,
+            "farClipPlane": 1000,
+            "nearClipPlane": 0.01
+          }
+        }
+      ]
+    }
+  ]
+}
