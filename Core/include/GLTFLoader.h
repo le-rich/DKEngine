@@ -261,7 +261,10 @@ namespace GLTFLoader
         if (index >= 0)
         {
             // GLTF Schema dictates metallic and roughness are the same texture
+            // metallic on B channel
+            // roughness on G channel
             material->SetTexture(1, pTextures[index]);
+            material->SetTexture(5, pTextures[index]);
         }
 
         index = pMaterial.normalTexture.index;

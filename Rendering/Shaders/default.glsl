@@ -279,8 +279,11 @@ void main()
         gNormal = normalize(fs_in.v_TBN * fs_in.v_Normal);
 	}
 
-	gMetallic = (textureSize(uMetallicMap, 0).x > 0) ? texture(uMetallicMap, gTexCoords).r : 0.0;
-	gRoughness = (textureSize(uRoughnessMap, 0).x > 0) ? texture(uRoughnessMap, gTexCoords).r : 1.0;
+    // GLTF Schema dictates metallic and roughness are the same texture
+    // metallic on B channel
+    // roughness on G channel
+	gMetallic = (textureSize(uMetallicMap, 0).x > 0) ? texture(uMetallicMap, gTexCoords).b : 0.0;
+	gRoughness = (textureSize(uRoughnessMap, 0).x > 0) ? texture(uRoughnessMap, gTexCoords).g : 1.0;
 	gAmbientOcclusion = (textureSize(uAmbientOcclusionMap, 0).x > 0) ? texture(uAmbientOcclusionMap, gTexCoords).r : 0.1;
 
 //    gMetallic = 0;
