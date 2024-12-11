@@ -214,8 +214,18 @@ namespace GLTFLoader
             }
         }
 
-        Primitive primitive(vertices, indices, materials[pPrimitive.material]);
-        return primitive;
+        if (materials.empty())
+        {
+            // Defaults to highly visible missing texture default material.
+            auto default_material = AssetManager::GetInstance().GetDefaultMaterial()->GetAssetID();
+            Primitive primitive(vertices, indices, default_material);
+            return primitive;
+        }
+        else
+        {
+            Primitive primitive(vertices, indices, materials[pPrimitive.material]);
+            return primitive;
+        }
     }
 
     /*

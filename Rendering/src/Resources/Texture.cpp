@@ -27,18 +27,18 @@ Texture::Texture(const std::string& pPath)
     GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
     GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE))
 
-        if (mBuffer)
-        {
-            GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, mBuffer));
-            GLCall(glBindTexture(GL_TEXTURE_2D, 0));
-            stbi_image_free(mBuffer);
-        }
-        else
-        {
-            std::cout << "\nError: Failed to load texture" << std::endl;
-            std::cout << stbi_failure_reason() << std::endl;
-            __debugbreak();
-        }
+    if (mBuffer)
+    {
+        GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, mBuffer));
+        GLCall(glBindTexture(GL_TEXTURE_2D, 0));
+        stbi_image_free(mBuffer);
+    }
+    else
+    {
+        std::cout << "\nError: Failed to load texture" << std::endl;
+        std::cout << stbi_failure_reason() << std::endl;
+        __debugbreak();
+    }
 }
 
 Texture::Texture(const std::string& pPath, const std::string& pFileName) 

@@ -26,6 +26,10 @@ public:
     std::shared_ptr<Shader> GetDefaultShader() { return DEFAULT_SHADER; }
     std::shared_ptr<Shader> GetEquirectShader() { return EQUIRECT_CUBEMAP_SHADER; }
     std::shared_ptr<Shader> GetSkyboxShader() { return SKYBOX_SHADER; }
+    
+    std::shared_ptr<Texture> GetDefaultTexture() { return DEFAULT_TEXTURE; }
+    
+    std::shared_ptr<Material> GetDefaultMaterial() { return DEFAULT_MATERIAL; }
 
     void AddMaterial(std::shared_ptr<Material> pMaterial);
     void AddShader(std::shared_ptr<Shader> pShader);
@@ -51,9 +55,9 @@ private:
     std::shared_ptr<Shader> EQUIRECT_CUBEMAP_SHADER = std::make_shared<Shader>(EQUIRECT_CUBEMAP_SHADER_PATH, "equirectCubemap");
     std::shared_ptr<Shader> SKYBOX_SHADER = std::make_shared<Shader>(SKYBOX_SHADER_PATH, "skybox");
 	
-	std::shared_ptr<Texture> DEFAULT_TEXTURE = std::make_shared<Texture>(DEFAULT_SHADER_PATH, "MissingTexturePattern.png");
+    std::shared_ptr<Texture> DEFAULT_TEXTURE = std::make_shared<Texture>(DEFAULT_MISSING_TEXTURE_PATH , "MissingTexturePattern.png");
 
-	std::shared_ptr<Material> DEFAULT_MATERIAL = std::make_shared<Material>(DEFAULT_SHADER->GetAssetID(), DEFAULT_TEXTURE->GetAssetID());
+    std::shared_ptr<Material> DEFAULT_MATERIAL = std::make_shared<Material>(DEFAULT_SHADER->GetAssetID(), DEFAULT_TEXTURE->GetAssetID());
 
     std::map<UUIDv4::UUID, std::shared_ptr<Material>> mMaterialMap;
     std::map<UUIDv4::UUID, std::shared_ptr<Shader>> mShaderMap;
@@ -65,8 +69,8 @@ private:
     {
         mShaderMap.insert({ DEFAULT_SHADER->GetAssetID(), DEFAULT_SHADER });
         mShaderMap.insert({ SKYBOX_SHADER->GetAssetID(), SKYBOX_SHADER });
-		mTextureMap.insert({ DEFAULT_TEXTURE->GetAssetID(), DEFAULT_TEXTURE });
-		mMaterialMap.insert({ DEFAULT_MATERIAL->GetAssetID(), DEFAULT_MATERIAL });
+	    mTextureMap.insert({ DEFAULT_TEXTURE->GetAssetID(), DEFAULT_TEXTURE });
+	    mMaterialMap.insert({ DEFAULT_MATERIAL->GetAssetID(), DEFAULT_MATERIAL });
     }
 
 public:
