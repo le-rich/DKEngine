@@ -151,7 +151,7 @@ void Renderer::IssueMeshDrawCalls()
                 mEngineUniformBuffer.SetSubData(modelMatrix, 0);
                 //meshComponent->getMesh()->DrawWithOwnMaterial();
 
-                for (auto primitive : meshComponent->getMesh()->mPrimitives)
+                for (auto primitive : meshComponent->getMesh()->GetPrimitives())
                 {
                     auto minBound = modelMatrix * glm::vec4(primitive.GetBoundingMin(), 1.f);
                     auto maxBound = modelMatrix * glm::vec4(primitive.GetBoundingMax(), 1.f);
@@ -262,7 +262,7 @@ void Renderer::GenerateShadowMaps()
             glm::mat4 modelMatrix = renderable->worldTransform->getTransformMatrix();
 
             mEngineUniformBuffer.SetSubData(modelMatrix, 0);
-            for (auto primitive : renderable->mesh->mPrimitives)
+            for (auto primitive : renderable->mesh->GetPrimitives())
             {
                 auto minBound = modelMatrix * glm::vec4(primitive.GetBoundingMin(), 1.f);
                 auto maxBound = modelMatrix * glm::vec4(primitive.GetBoundingMax(), 1.f);

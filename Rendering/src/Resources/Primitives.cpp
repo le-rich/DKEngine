@@ -31,6 +31,11 @@ Primitive::Primitive(const std::vector<Vertex>& vertices, const std::vector<GLui
 
 Primitive::~Primitive() {}
 
+std::vector<Vertex> Primitive::GetLoadedVertices()
+{
+    return mLoadedVertices;
+}
+
 // Renders primitive
 // Does not change bound material on draw.
 void Primitive::Draw()
