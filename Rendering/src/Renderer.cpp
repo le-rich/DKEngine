@@ -42,6 +42,13 @@ void Renderer::Initialize()
     glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
+    IMGUI_CHECKVERSION();
+    imguiContext = ImGui::CreateContext();
+    ImGui::SetCurrentContext(imguiContext);
+    ImGuiIO& io = ImGui::GetIO();
+
+    ImGui_ImplGlfw_InitForOpenGL(windowRef->GetWindow(), true);
+    ImGui_ImplOpenGL3_Init("#version 430");
 }
 
 void Renderer::Update(float deltaTime)
@@ -72,6 +79,21 @@ void Renderer::Update(float deltaTime)
         //Draw Frame Buffer
         WriteToFrameBuffer();
     }
+
+    ImGui::SetCurrentContext(imguiContext);
+
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+
+    // Example ImGui Window
+    ImGui::Begin("Example ImGui Window");
+    ImGui::Text("Hello, World!");
+    ImGui::Text("Frame Time: %.3f ms", deltaTime * 1000.0f);
+    ImGui::End();
+
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
     windowRef->SwapWindowBuffers();
 

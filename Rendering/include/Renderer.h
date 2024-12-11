@@ -14,6 +14,11 @@
 #include "Resources/Primitives.h"
 #include "Window/Window.h"
 
+#include <imgui.h>
+#include <imgui_internal.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -81,6 +86,8 @@ private:
     std::vector<LightComponent*> lightsThisFrame;
     std::vector<Renderable*> renderablesThisFrame;
     std::shared_ptr<Skybox> skyboxThisFrame;
+
+    ImGuiContext* imguiContext;
 
     void IssueMeshDrawCalls();
     void SetEngineUBO(int pWidth, int pHeight);

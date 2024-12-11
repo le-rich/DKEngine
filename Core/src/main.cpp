@@ -158,7 +158,8 @@ int run_glfw() {
             deltaTimeFloatSeconds = deltaTime.count();
             previousTime = currentTime;
 
-            renderer->Update(deltaTimeFloatSeconds);      
+            renderer->Update(deltaTimeFloatSeconds);    
+            ui->Update(deltaTimeFloatSeconds);
             std::this_thread::sleep_for(std::chrono::microseconds(1));
         }
     });
@@ -178,7 +179,7 @@ int run_glfw() {
         window.PollEvents();
         input.Update();
 
-        ui->Update(deltaTimeFloatSeconds);
+
 	}
 
 	// TEARDOWN ==================================================

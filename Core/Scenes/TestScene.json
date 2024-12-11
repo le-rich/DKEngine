@@ -19,10 +19,6 @@
     {
       "path": "TestCube2/",
       "file": [ "testcube.gltf" ]
-    },
-    {
-      "path": "TestModel/",
-      "file": [ "TestFace.gltf" ]
     }
   ],
   "skybox": "skybox_to_equirect_2.png",

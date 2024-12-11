@@ -52,12 +52,12 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Core\include;$(SolutionDir)External\stb;$(SolutionDir)External\glm\gtc;$(SolutionDir)External\glm;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\glad\include;$(SolutionDir)Rendering\include\Utils;$(SolutionDir)Rendering\include\Resources;$(SolutionDir)Rendering\include\Entities;$(SolutionDir)Rendering\include\Data;$(SolutionDir)Rendering\include\Components;$(SolutionDir)Rendering\include\Buffers;$(SolutionDir)Rendering\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\imgui\include;$(SolutionDir)Core\include;$(SolutionDir)External\stb;$(SolutionDir)External\glm\gtc;$(SolutionDir)External\glm;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\glad\include;$(SolutionDir)Rendering\include\Utils;$(SolutionDir)Rendering\include\Resources;$(SolutionDir)Rendering\include\Entities;$(SolutionDir)Rendering\include\Data;$(SolutionDir)Rendering\include\Components;$(SolutionDir)Rendering\include\Buffers;$(SolutionDir)Rendering\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Core\include;$(SolutionDir)External\stb;$(SolutionDir)External\glm\gtc;$(SolutionDir)External\glm;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\glad\include;$(SolutionDir)Rendering\include\Utils;$(SolutionDir)Rendering\include\Resources;$(SolutionDir)Rendering\include\Entities;$(SolutionDir)Rendering\include\Data;$(SolutionDir)Rendering\include\Components;$(SolutionDir)Rendering\include\Buffers;$(SolutionDir)Rendering\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\imgui\include;$(SolutionDir)Core\include;$(SolutionDir)External\stb;$(SolutionDir)External\glm\gtc;$(SolutionDir)External\glm;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\glad\include;$(SolutionDir)Rendering\include\Utils;$(SolutionDir)Rendering\include\Resources;$(SolutionDir)Rendering\include\Entities;$(SolutionDir)Rendering\include\Data;$(SolutionDir)Rendering\include\Components;$(SolutionDir)Rendering\include\Buffers;$(SolutionDir)Rendering\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>

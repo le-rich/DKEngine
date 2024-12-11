@@ -19,6 +19,7 @@ enum class ComponentType : uint8_t
     Mesh,
     Script,
     RigidBody,
+    UI,
     Count, // This needs to be last. It represents how many components there are for bitmask.
 };
 
@@ -28,7 +29,9 @@ std::unordered_map<std::string, ComponentType> const ComponentMap = {
     {"Camera", ComponentType::Camera},
     {"Light", ComponentType::Light},
     {"Mesh", ComponentType::Mesh},
-    {"Script", ComponentType::Script}
+    {"Script", ComponentType::Script},
+    {"RigidBody", ComponentType::RigidBody},
+    {"UI", ComponentType::UI}
 };
 
 // Defines a type - Component Mask - that is a bitmask of components on an entity. Used for querying.

@@ -47,6 +47,7 @@ private:
    Scene* scene;
    const FrameBuffer* framebuffer;
    GLFWwindow* glfwWindow;
+   ImGuiContext* context;
    
 };
 

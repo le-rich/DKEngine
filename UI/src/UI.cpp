@@ -23,7 +23,8 @@ UI::UI(Scene* scene, const FrameBuffer* framebuffer, GLFWwindow* glfwWindow) {
 
    // Initialize ImGui
    IMGUI_CHECKVERSION();
-   ImGui::CreateContext();
+   context = ImGui::CreateContext();
+   ImGui::SetCurrentContext(context);
    ImGuiIO& io = ImGui::GetIO();
    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
    ImGui::StyleColorsDark();
@@ -33,6 +34,7 @@ UI::UI(Scene* scene, const FrameBuffer* framebuffer, GLFWwindow* glfwWindow) {
 }
 
 void UI::Update(float deltaTime) {
+   ImGui::SetCurrentContext(context);
    // Update Loop logic here
    if (!glfwWindowShouldClose(window)) {
       glfwMakeContextCurrent(window);
