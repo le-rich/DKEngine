@@ -100,8 +100,7 @@ void GarageScript::leaveGarage()
 {
     // TODO: logic to transport currently selected car to the track
     auto startPoint = EntityManager::getInstance().findFirstEntityByDisplayName("StartPoint");
-    //mParams.chosenTarget->setWorldPosition(glm::vec4(startPoint->transform->getWorldPosition(), 1));
-    // mParams.chosenTarget->setWorldPosition(glm::vec4(100,0,100, 1));
+    mParams.chosenTarget->setWorldPosition(glm::vec4(startPoint->transform->getWorldPosition(), 1));
     /* === BELOW code adds a car controller to the selected car. ==== */
     Entity* selectedCarEnt = mParams.cars[mParams.currSelectIndex];
     selectedCarEnt->transform->setWorldPosition(glm::vec4(100, 0, 100, 1));
@@ -113,7 +112,7 @@ void GarageScript::leaveGarage()
 
     // Audio
     FMODManager* audioManager = FMODManager::GetInstance();
-    FMOD::Sound* carMotorSound = audioManager->LoadAudio("Assets/Audio/car-motor.mp3");
+    FMOD::Sound* carMotorSound = audioManager->LoadAudio("Assets/Audio/PorscheMotor.mp3");
     AudioComponent* carAudio = new AudioComponent(selectedCarEnt);
     selectedCarEnt->addComponent(*carAudio);
     carAudio->PlaySound(carMotorSound, true, false);
@@ -161,7 +160,7 @@ void GarageScript::leaveGarage()
     ScriptComponent* cameraScriptComponent = dynamic_cast<ScriptComponent*>(cameraEnt->getComponent(ComponentType::Script));
     FollowCamScriptParams followCamScriptParams;
     followCamScriptParams.m_FollowTarget = selectedCarEnt->transform;
-    followCamScriptParams.m_Speed = 20;
+    followCamScriptParams.m_Speed = 40;
     followCamScriptParams.m_Distance = 1.5;
     followCamScriptParams.m_Height = 1;
     cameraScriptComponent->CreateAndAddScript<FollowCamScript>(&followCamScriptParams);

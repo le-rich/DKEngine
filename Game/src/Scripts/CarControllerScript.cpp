@@ -19,6 +19,14 @@ CarControllerScript::CarControllerScript(Entity* mEntity) : Script(mEntity)
     wheelFR = entity->findFirstChildByDisplayName("WheelFR");
     wheelRL = entity->findFirstChildByDisplayName("WheelRL");
     wheelRR = entity->findFirstChildByDisplayName("WheelRR");
+
+    AudioComponent* carAudioComponent = dynamic_cast<AudioComponent*>(
+        entity->getComponent(ComponentType::Audio)
+        );
+    FMOD::Channel* channel = carAudioComponent->GetChannel();
+    if (channel) {
+        channel->setFrequency(currentFrequency);
+    }
 }
 
 CarControllerScript::~CarControllerScript()
@@ -171,7 +179,7 @@ void CarControllerScript::FixedUpdate(float deltaTime)
     }
 
     if (!isAccelerating) {
-        currentFrequency += currentFrequency > minFrequency ? -4000 : 0;
+        currentFrequency += currentFrequency > minFrequency ? -500 : 0;
     }
 }
 
@@ -227,24 +235,38 @@ void CarControllerScript::SetUpInput() {
     input.RegisterKeyCallback(GLFW_KEY_W, [&](Input::ActionType action) {
         if (action == Input::HOLD || action == Input::PRESS) {
             throttle += throttle < 100.0f ? 10.0f : 0.0;
-            // currentFrequency += currentFrequency < maxFrequency ? 2000 : -10000;
-            // isAccelerating = true;
+            if (currentFrequency < 3 * maxFrequency / 4) {
+                currentFrequency += currentFrequency < maxFrequency ? 1000 : -1000;
+            }
+            else if (currentFrequency < 9 * maxFrequency / 10) {
+                currentFrequency += currentFrequency < maxFrequency ? 250 : -250;
+            }
+            else {
+                currentFrequency += currentFrequency < maxFrequency ? 100 : -100;
+            }
+            isAccelerating = true;
         }
 
         if (action == Input::RELEASE) {
             throttle = 0.0f; // TODO: have the throttle slowly reset to zero instead.
+            isAccelerating = false;
         }
     });
 
     input.RegisterKeyCallback(GLFW_KEY_S, [&](Input::ActionType action) {
         if (action == Input::HOLD || action == Input::PRESS) {
             throttle -= throttle >= 10 ? 10.0f : 0.0;
-            //currentFrequency += currentFrequency < 2*maxFrequency/3 ? 1000 : -10000;
-            //isAccelerating = true;
+            if (currentFrequency < 5 * maxFrequency / 8) {
+                currentFrequency += currentFrequency < maxFrequency ? 1000 : -5000;
+            }
+            else {
+                currentFrequency += currentFrequency < 2 * maxFrequency / 3 ? 100 : -100;
+            }
+            isAccelerating = true;
         }
-        //if (action == Input::RELEASE) {
-        //    isAccelerating = false;
-        //}
+        if (action == Input::RELEASE) {
+            isAccelerating = false;
+        }
     });
 
     input.RegisterKeyCallback(GLFW_KEY_D, [&](Input::ActionType action) {
