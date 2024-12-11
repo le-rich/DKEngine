@@ -134,6 +134,8 @@
   <ItemGroup>
     <ClInclude Include="include\Aabb.h" />
     <ClInclude Include="include\Body.h" />
+    <ClInclude Include="include\BoundingVolume.h" />
+    <ClInclude Include="include\BVH.h" />
     <ClInclude Include="include\Core.h" />
     <ClInclude Include="include\FGen.h" />
     <ClInclude Include="include\PContacts.h" />
@@ -149,6 +151,8 @@
   <ItemGroup>
     <ClCompile Include="src\Aabb.cpp" />
     <ClCompile Include="src\Body.cpp" />
+    <ClCompile Include="src\BoundingVolume.cpp" />
+    <ClCompile Include="src\BVH.cpp" />
     <ClCompile Include="src\FGen.cpp" />
     <ClCompile Include="src\PContacts.cpp" />
     <ClCompile Include="src\PLinks.cpp" />

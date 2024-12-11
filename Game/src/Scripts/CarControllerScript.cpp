@@ -16,6 +16,8 @@ CarControllerScript::CarControllerScript(Entity* mEntity) : Script(mEntity)
 {
     lastUpdateTime = std::chrono::high_resolution_clock::now();
     body = entity->findFirstChildByDisplayName("Body");
+    if (!body)
+        body = entity;
     wheelFL = entity->findFirstChildByDisplayName("WheelFL");
     wheelFR = entity->findFirstChildByDisplayName("WheelFR");
     wheelRL = entity->findFirstChildByDisplayName("WheelRL");
@@ -235,6 +237,12 @@ void CarControllerScript::SetParameters(ScriptParams* pScriptParameters)
     }
 
     carRigidBody->setInertiaTensor(inertiaTensor);
+
+    // carRigidBody->setInertiaTensor(AE86::Matrix3(
+    //     (AE86::real)massScale * (height * height + length * length), 0.0f, 0.0f,
+    //     0.0f, (AE86::real)massScale * (width * width * length * length), 0.0f,
+    //     0.0f, 0.0f, (AE86::real)massScale * (width * width * height * height)
+    // ));
 
 }
 

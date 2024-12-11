@@ -54,6 +54,12 @@
     <ClInclude Include="include\Aabb.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\BoundingVolume.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BVH.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pointmass.cpp">
@@ -81,6 +87,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Aabb.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BoundingVolume.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BVH.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
